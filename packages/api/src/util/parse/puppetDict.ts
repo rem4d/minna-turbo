@@ -1,3 +1,4 @@
+/*
 import puppeteer, { Browser } from "puppeteer";
 
 let browser: Browser | undefined;
@@ -15,8 +16,11 @@ const getBrowser = async () => {
   }
   return browser;
 };
+*/
 
 export const DeepLDictionary = async (searchText: string) => {
+  return { en: [searchText] };
+  /*
   const browser = await getBrowser();
 
   // "In this kind of place, socks are taken offand left. (i.e., the action is unfinished)",
@@ -59,4 +63,5 @@ export const DeepLDictionary = async (searchText: string) => {
       en: [],
     };
   }
+  */
 };
