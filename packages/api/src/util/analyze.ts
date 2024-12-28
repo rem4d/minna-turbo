@@ -9,7 +9,7 @@ export const analyze = async (
   let unknownKanjis = "";
   let knownKanjis = "";
 
-  let tmpText = undefined;
+  let tmpText: string | undefined = undefined;
 
   if (!sen || !sen.text) {
     throw new Error(

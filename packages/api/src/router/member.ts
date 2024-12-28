@@ -66,7 +66,7 @@ export const memberRouter = router({
           }
 
           // tmpToken.en = member.en;
-          let readings = [];
+          let readings: { reading: string }[] = [];
           if (member.pos_detail_1 === "suffix") {
             readings = [{ reading: tmpToken.reading }];
           } else {

@@ -1,5 +1,5 @@
 import { initTRPC } from "@trpc/server";
-import * as trpcExpress from "@trpc/server/adapters/express";
+// import * as trpcExpress from "@trpc/server/adapters/express";
 // import superjson from "superjson";
 import { ZodError } from "zod";
 import db from "./db";
@@ -16,13 +16,13 @@ import db from "./db";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (
-  options: trpcExpress.CreateExpressContextOptions,
-) => {
-  return {
-    db,
+export const createTRPCContext = async () =>
+  // options: trpcExpress.CreateExpressContextOptions,
+  {
+    return {
+      db,
+    };
   };
-};
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   // transformer: superjson,

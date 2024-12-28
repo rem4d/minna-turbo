@@ -77,7 +77,7 @@ export const tokenize = async (text: string) => {
     // console.log("Checking issue: ", wordToReplace);
     const arr = Array.from(wordToReplace);
     let arrIndex = 0;
-    let tokenIndexesToRemove = [];
+    let tokenIndexesToRemove: number[] = [];
     let resultStr = "";
 
     for (let i = 0; i < mojiTokens.length; i++) {
@@ -112,25 +112,21 @@ export const tokenize = async (text: string) => {
       if (typeof firstIndex === "number") {
         // console.log(`Remove tokens with indexes: `, tokenIndexesToRemove);
         // console.log(`Put new element: `, wordToReplace);
-        mojiTokens = mojiTokens.toSpliced(
-          firstIndex,
-          tokenIndexesToRemove.length,
-          {
-            word_id: 0,
-            word_type: "REPLACED",
-            word_position: _mojiTokens[firstIndex]?.word_position ?? 0,
-            surface_form: wordToReplace,
-            basic_form: wordToReplace,
-            pos: wordFilterRule.pos ?? "noun",
-            pos_detail_1: "replaced",
-            reading: wordFilterRule.reading[0],
-            pos_detail_2: "",
-            pos_detail_3: "",
-            pronunciation: "",
-            conjugated_form: "",
-            conjugated_type: "",
-          },
-        );
+        mojiTokens.splice(firstIndex, tokenIndexesToRemove.length, {
+          word_id: 0,
+          word_type: "REPLACED",
+          word_position: _mojiTokens[firstIndex]?.word_position ?? 0,
+          surface_form: wordToReplace,
+          basic_form: wordToReplace,
+          pos: wordFilterRule.pos ?? "noun",
+          pos_detail_1: "replaced",
+          reading: wordFilterRule.reading[0],
+          pos_detail_2: "",
+          pos_detail_3: "",
+          pronunciation: "",
+          conjugated_form: "",
+          conjugated_type: "",
+        });
       }
     }
   });
