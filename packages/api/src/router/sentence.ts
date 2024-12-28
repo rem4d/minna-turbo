@@ -63,7 +63,7 @@ export const sentenceRouter = router({
       });
     }
 
-    let additional: Sentence[] = [];
+    const additional: Sentence[] = [];
     if (userKanjiMap.size > 0) {
       const keys = [...userKanjiMap.keys()];
       const kanjiString = keys.join("");
@@ -83,7 +83,7 @@ export const sentenceRouter = router({
 
       // add furigana to any unknown_by_user kanji in the sentence
       if (foundA) {
-        for (let addit of foundA) {
+        for (const addit of foundA) {
           const result = await analyze(addit, userKanjiMap);
           additional.push({
             ...addit,
@@ -129,7 +129,7 @@ export const sentenceRouter = router({
           allKanjiMap.set(d.kanji, d);
         });
       }
-      for (let s of data.data) {
+      for (const s of data.data) {
         if (cnt > MAX) break;
         console.log(`Processing ${s.id}`);
         const result = await analyze(s, allKanjiMap);
