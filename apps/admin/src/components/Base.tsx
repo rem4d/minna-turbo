@@ -1,0 +1,46 @@
+import { Container, TabNav } from "@radix-ui/themes";
+import { Outlet, useMatch, useNavigate } from "react-router-dom";
+
+export function Base() {
+  const homeMatch = useMatch("/");
+  const newMatch = useMatch("/new");
+  const statsMatch = useMatch("/stats");
+  const simulatorMatch = useMatch("/simulator");
+  const dictionaryMatch = useMatch("/dictionary");
+  const navigate = useNavigate();
+
+  return (
+    <Container>
+      <TabNav.Root mb="4">
+        <TabNav.Link onClick={() => navigate("/")} active={Boolean(homeMatch)}>
+          Sentences
+        </TabNav.Link>
+        <TabNav.Link
+          onClick={() => navigate("/new")}
+          active={Boolean(newMatch)}
+        >
+          New
+        </TabNav.Link>
+        <TabNav.Link
+          onClick={() => navigate("/stats")}
+          active={Boolean(statsMatch)}
+        >
+          Statistics
+        </TabNav.Link>
+        <TabNav.Link
+          onClick={() => navigate("/simulator")}
+          active={Boolean(simulatorMatch)}
+        >
+          Simulator
+        </TabNav.Link>
+        <TabNav.Link
+          onClick={() => navigate("/dictionary")}
+          active={Boolean(dictionaryMatch)}
+        >
+          Dictionary
+        </TabNav.Link>
+      </TabNav.Root>
+      <Outlet />
+    </Container>
+  );
+}

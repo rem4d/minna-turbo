@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: Epkyoka;
+  font-optical-sizing: auto;
+  src: url("./assets/fonts/epkyouka2.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Klee";
+  font-optical-sizing: auto;
+  src: url("./assets/fonts/klee.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.no-scroll::-webkit-scrollbar {
+  display: none; /* Убрать скроллбар в Chrome, Safari и Opera */
+}
+
+rt {
+  user-select: none;
+}

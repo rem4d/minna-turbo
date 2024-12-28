@@ -1,0 +1,15 @@
+{
+	"extends": "@rem4d/typescript-config/tsconfig.base.json",
+	"include": ["src"],
+	"exclude": ["node_modules"],
+  "compilerOptions": {
+    // "baseUrl": ".",
+    // "paths": {
+    //   "@/*": ["./src/*"]
+    // },
+		// "jsx": "react-jsx",
+		"lib": ["es2023", "DOM"]
+  },
+}
+
+

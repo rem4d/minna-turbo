@@ -1,0 +1,31 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
+    "clean": {
+      "cache": false
+    }
+  },
+  "globalEnv": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL",
+    "OPENAI_API_KEY",
+    "NODE_ENV",
+    "PORT",
+    "HOST"
+  ],
+  "globalPassThroughEnv": [
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_URL",
+    "OPENAI_API_KEY",
+    "NODE_ENV",
+    "PORT",
+    "HOST"
+  ]
+}
