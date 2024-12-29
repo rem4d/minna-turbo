@@ -11,6 +11,32 @@ import { sleep } from "../util/sleep";
 import { DeepLDictionary } from "../util/parse/puppetDict";
 
 export const memberRouter = router({
+  setInvalid: publicProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      const { error } = await ctx.db
+        .from("sentence_members")
+        .update({ is_invalid: true })
+        .eq("id", input);
+
+      if (error) {
+        throw new Error("Error when update.");
+      }
+      return true;
+    }),
+  setHidden: publicProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      const { error } = await ctx.db
+        .from("sentence_members")
+        .update({ is_hidden: true })
+        .eq("id", input);
+
+      if (error) {
+        throw new Error("Error when update.");
+      }
+      return true;
+    }),
   updateMeaning: publicProcedure
     .input(
       z.object({
@@ -44,7 +70,7 @@ export const memberRouter = router({
         .eq("pos", pos)
         .eq("is_hidden", false)
         .eq("is_invalid", false)
-        .order("created_at", { ascending: false })
+        .order("created_at", { ascending: true })
         .range((page - 1) * limit, page * limit);
 
       if (error) {

@@ -14,7 +14,6 @@ import {
 } from "@radix-ui/themes";
 import useOpenAi from "../../useOpenAi";
 import { SentenceMemberOutput } from "../../types";
-import useTokenizer from "../../useTokenizer";
 import { useParams } from "react-router-dom";
 import { initTTS } from "../../utils/tts";
 import { api } from "@/utils/api";
@@ -34,8 +33,15 @@ export const EditSentencePage: FC = () => {
   const { data: sentence } = api.sentence.getById.useQuery(Number(id), {
     enabled: !!id,
   });
+
   const updateMutation = api.sentence.update.useMutation();
 
+  const { data: members } = api.member.sentenceMembers.useQuery(
+    { text: sentence?.text ?? "" },
+    {
+      enabled: !!sentence?.text,
+    },
+  );
   useEffect(() => {
     if (sentence) {
       setInput(sentence.text);
@@ -47,17 +53,6 @@ export const EditSentencePage: FC = () => {
     }
   }, [sentence]);
 
-  // useLayoutEffect(() => {
-  //   if (id) {
-  //     const fetchData = async (id: string) => {
-  //       const response = await fetch("/api/sentence/get?id=" + id);
-  //       const { data } = await response.json();
-  //       setSentence(data);
-  //     };
-  //     fetchData(id);
-  //   }
-  // }, [id]);
-
   const {
     onSubmitGrammarCheck,
     openAiLoading,
@@ -65,13 +60,6 @@ export const EditSentencePage: FC = () => {
     correct,
     translation: openAiTranslation,
   } = useOpenAi();
-
-  const { onTokenize, onGetMemberReadings, tokenizedHtml, members } =
-    useTokenizer();
-
-  const onTokenizeClick = () => {
-    onTokenize(input);
-  };
 
   const onPlayAudio = async () => {
     await initTTS(input);
@@ -85,13 +73,7 @@ export const EditSentencePage: FC = () => {
     openUrl(`https://jisho.org/search/${m.basic_form}`);
   }, []);
 
-  const onGetReadingsClick = () => {
-    onGetMemberReadings();
-  };
-
-  // const removeMember = (p: Member) => {
-  //   setMembersCopy(membersCopy.filter((m) => m.original !== p.original));
-  // };
+  const onGetReadingsClick = () => {};
 
   const handleUpdateData = () => {
     if (typeof id !== "string") {
@@ -289,38 +271,39 @@ export const EditSentencePage: FC = () => {
               className="font-klee text-xl"
               gap="4"
             >
-              <div className="col-span-4">
-                <Flex direction="column" gapY="4" align="start">
-                  <Button onClick={onTokenizeClick}>Tokenize</Button>
-                  <Text
-                    size="6"
-                    dangerouslySetInnerHTML={{
-                      __html: tokenizedHtml,
-                    }}
-                  />
-                  <Heading size="4">Members</Heading>
-                </Flex>
-              </div>
-              {members.map((m) => (
-                <Flex key={m.basic_form} direction="column">
-                  <Text
-                    size="6"
-                    onClick={() => onMemberClick(m)}
-                    className="cursor-pointer whitespace-nowrap"
-                    dangerouslySetInnerHTML={{
-                      __html: m.html,
-                    }}
-                  />
-                  <Text className="select-none" size="2">
-                    {m.meaning}
-                  </Text>
-                  <Box>
-                    <Badge color="sky" size="1">
-                      {m.pos}
-                    </Badge>
-                  </Box>
-                </Flex>
-              ))}
+              {/* <div className="col-span-4"> */}
+              {/*   <Flex direction="column" gapY="4" align="start"> */}
+              {/*     <Button onClick={onTokenizeClick}>Tokenize</Button> */}
+              {/*     <Text */}
+              {/*       size="6" */}
+              {/*       dangerouslySetInnerHTML={{ */}
+              {/*         __html: tokenizedHtml, */}
+              {/*       }} */}
+              {/*     /> */}
+              {/*     <Heading size="4">Members</Heading> */}
+              {/*   </Flex> */}
+              {/* </div> */}
+              {members?.members &&
+                members.members.map((m) => (
+                  <Flex key={m.basic_form} direction="column">
+                    <Text
+                      size="6"
+                      onClick={() => onMemberClick(m)}
+                      className="cursor-pointer whitespace-nowrap"
+                      dangerouslySetInnerHTML={{
+                        __html: m.html,
+                      }}
+                    />
+                    <Text className="select-none" size="2">
+                      {m.meaning}
+                    </Text>
+                    <Box>
+                      <Badge color="sky" size="1">
+                        {m.pos}
+                      </Badge>
+                    </Box>
+                  </Flex>
+                ))}
             </Grid>
             <Flex gap="4" direction="column">
               <Button onClick={onGetReadingsClick}>Get readings</Button>

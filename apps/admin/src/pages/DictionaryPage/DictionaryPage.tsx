@@ -42,6 +42,16 @@ export const DictionaryPage: FC = () => {
       utils.member.membesByPos.invalidate();
     },
   });
+  const setHiddenMutation = api.member.setHidden.useMutation({
+    onSuccess() {
+      utils.member.membesByPos.invalidate();
+    },
+  });
+  const setInvalidMutation = api.member.setInvalid.useMutation({
+    onSuccess() {
+      utils.member.membesByPos.invalidate();
+    },
+  });
 
   const { data: correspondingSentences } =
     api.sentence.findContainingText.useQuery(
@@ -123,6 +133,20 @@ export const DictionaryPage: FC = () => {
     [membersByPos],
   );
 
+  const onSetInvalidClick = useCallback(
+    (id: number) => {
+      setInvalidMutation.mutate(id);
+    },
+    [setInvalidMutation],
+  );
+
+  const onSetHiddenClick = useCallback(
+    (id: number) => {
+      setHiddenMutation.mutate(id);
+    },
+    [setHiddenMutation],
+  );
+
   return (
     <Box>
       <Flex align="start" direction="column" gap="4">
@@ -201,21 +225,28 @@ export const DictionaryPage: FC = () => {
                             </Button>
                           </DropdownMenu.Trigger>
                           <DropdownMenu.Content>
-                            <DropdownMenu.Item>Find on jisho</DropdownMenu.Item>
-                            <DropdownMenu.Item
-                              onClick={(e) => onEditMeaningClick(e, m.id)}
-                            >
-                              Edit meaning
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Separator />
                             <DropdownMenu.Item
                               onClick={() => onFindSentencesClick(m.id)}
                             >
                               Find sentences
                             </DropdownMenu.Item>
+                            {/* <DropdownMenu.Item>Find on jisho</DropdownMenu.Item> */}
                             <DropdownMenu.Separator />
-                            <DropdownMenu.Item>Set invalid</DropdownMenu.Item>
-                            <DropdownMenu.Item>Set hidden</DropdownMenu.Item>
+                            <DropdownMenu.Item
+                              onClick={(e) => onEditMeaningClick(e, m.id)}
+                            >
+                              Edit meaning
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item
+                              onClick={() => onSetInvalidClick(m.id)}
+                            >
+                              Set invalid
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item
+                              onClick={() => onSetHiddenClick(m.id)}
+                            >
+                              Set hidden
+                            </DropdownMenu.Item>
                           </DropdownMenu.Content>
                         </DropdownMenu.Root>
                       </Table.Cell>
