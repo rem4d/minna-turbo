@@ -1,20 +1,20 @@
 {
   "name": "minna-turbo",
-  "private": true,
   "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
-  "dependencies": {},
   "devDependencies": {
     "turbo": "^2.3.3",
     "typescript": "~5.6.2"
   },
   "packageManager": "npm@10.9.2",
+  "private": true,
+  "scripts": {
+    "build": "tsc -b && vite build",
+    "clean": "git clean -xdf node_modules",
+    "dev": "vite",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "type": "module",
   "workspaces": [
     "apps/*",
     "packages/*",

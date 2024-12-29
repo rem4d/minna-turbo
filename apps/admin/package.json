@@ -1,24 +1,16 @@
 {
   "name": "admin",
-  "private": true,
   "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite --clearScreen false",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "clean": "git clean -xdf .cache .turbo dist node_modules"
-  },
   "dependencies": {
     "@andresaya/edge-tts": "^1.2.4",
     "@radix-ui/react-icons": "^1.3.2",
     "@radix-ui/themes": "^3.1.6",
-    "@rem4d/api": "^1.0.0",
-    "@rem4d/eslint-config": "^0.3.0",
-    "@rem4d/typescript-config": "^0.0.0",
+    "@rem4d/api": "1.0.0",
+    "@rem4d/eslint-config": "0.3.0",
+    "@rem4d/typescript-config": "0.0.0",
     "@tanstack/react-query": "^5.59.20",
     "@tanstack/react-query-devtools": "^5.59.20",
-    "@trpc/client": "^11.0.0-rc.648",
+    "@trpc/client": "^11.0.0-rc.666",
     "@trpc/react-query": "^11.0.0-rc.648",
     "@types/node": "^22.10.2",
     "dotenv": "^16.4.7",
@@ -42,5 +34,13 @@
     "vite-plugin-svgr": "^4.3.0",
     "vite-tsconfig-paths": "^5.1.4"
   },
-  "packageManager": "npm@10.9.2"
+  "packageManager": "npm@10.9.2",
+  "private": true,
+  "scripts": {
+    "build": "tsc -b && vite build",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "vite --clearScreen false",
+    "lint": "eslint ."
+  },
+  "type": "module"
 }

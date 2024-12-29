@@ -1,26 +1,12 @@
 {
   "name": "@rem4d/api",
-  "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    }
-  },
-  "license": "ISC",
-  "scripts": {
-    "dev": "tsc",
-    "build": "tsc",
-    "clean": "git clean -xdf .cache .turbo dist node_modules"
-  },
-  "author": "",
   "description": "",
+  "version": "1.0.0",
+  "author": "",
   "dependencies": {
     "@sglkc/kuromoji": "^1.1.0",
     "@supabase/supabase-js": "^2.47.10",
-    "@trpc/server": "^11.0.0-rc.648",
+    "@trpc/server": "^11.0.0-rc.666",
     "dotenv": "^16.4.7",
     "envalid": "^8.0.0",
     "openai": "^4.77.0",
@@ -29,7 +15,21 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@rem4d/eslint-config": "^0.3.0",
+    "@rem4d/eslint-config": "0.3.0",
     "@types/redis": "^4.0.10"
-  }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "license": "ISC",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc"
+  },
+  "type": "module"
 }

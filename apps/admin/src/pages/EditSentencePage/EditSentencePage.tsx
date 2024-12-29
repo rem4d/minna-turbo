@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { openUrl } from "../../utils";
 import {
   Flex,
@@ -13,7 +13,7 @@ import {
   Code,
 } from "@radix-ui/themes";
 import useOpenAi from "../../useOpenAi";
-import { SentenceMemberOutput, SentenceUpdateParams } from "../../types";
+import { SentenceMemberOutput } from "../../types";
 import useTokenizer from "../../useTokenizer";
 import { useParams } from "react-router-dom";
 import { initTTS } from "../../utils/tts";
