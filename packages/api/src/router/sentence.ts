@@ -3,8 +3,44 @@ import { publicProcedure, router } from "../trpc";
 import { clamp } from "../util/math";
 import { Kanji, Sentence } from "../types";
 import { analyze } from "../util/analyze";
+import { tokenize } from "../util/tokenizer/tokenize";
 
 export const sentenceRouter = router({
+  findContainingText: publicProcedure
+    .input(
+      z.object({
+        text: z.string(),
+        pos: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const filterText =
+        input.pos === "verb"
+          ? input.text.substring(0, input.text.length - 1)
+          : input.text;
+      const { data, error } = await ctx.db
+        .from("sentences")
+        .select()
+        .like("text", `%${filterText}%`);
+      if (error) {
+        throw new Error("No sentences found.");
+      }
+
+      const result: Sentence[] = [];
+
+      for (const sentence of data) {
+        const _tokens = await tokenize(sentence.text);
+        const tokens = _tokens.filter((t) => t.pos === input.pos);
+
+        for (const t of tokens) {
+          if (input.text === t.basic_form) {
+            result.push(sentence);
+          }
+        }
+      }
+
+      return result;
+    }),
   getById: publicProcedure.input(z.number()).query(async ({ ctx, input }) => {
     const { data, error } = await ctx.db
       .from("sentences")
