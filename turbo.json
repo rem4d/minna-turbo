@@ -1,5 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [".env"],
   "tasks": {
     "build": {
       "outputs": ["dist/**"]
@@ -16,16 +17,8 @@
     "SUPABASE_ANON_KEY",
     "SUPABASE_URL",
     "OPENAI_API_KEY",
-    "NODE_ENV",
     "PORT",
     "HOST"
   ],
-  "globalPassThroughEnv": [
-    "SUPABASE_ANON_KEY",
-    "SUPABASE_URL",
-    "OPENAI_API_KEY",
-    "NODE_ENV",
-    "PORT",
-    "HOST"
-  ]
+  "globalPassThroughEnv": ["NODE_ENV"]
 }
