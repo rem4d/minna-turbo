@@ -13,14 +13,11 @@ import {
   Code,
 } from "@radix-ui/themes";
 import useOpenAi from "../../useOpenAi";
-import {
-  Sentence,
-  SentenceMemberOutput,
-  SentenceUpdateParams,
-} from "../../types";
+import { SentenceMemberOutput, SentenceUpdateParams } from "../../types";
 import useTokenizer from "../../useTokenizer";
 import { useParams } from "react-router-dom";
 import { initTTS } from "../../utils/tts";
+import { api } from "@/utils/api";
 
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
@@ -30,9 +27,14 @@ export const EditSentencePage: FC = () => {
   const [translation, setTranslation] = useState("");
   const [en, setEn] = useState("");
   const [ru, setRu] = useState("");
-  const [sentence, setSentence] = useState<Sentence | null>(null);
+  // const [sentence, setSentence] = useState<Sentence | null>(null);
 
   const { id } = useParams();
+
+  const { data: sentence } = api.sentence.getById.useQuery(Number(id), {
+    enabled: !!id,
+  });
+  const updateMutation = api.sentence.update.useMutation();
 
   useEffect(() => {
     if (sentence) {
@@ -45,16 +47,16 @@ export const EditSentencePage: FC = () => {
     }
   }, [sentence]);
 
-  useLayoutEffect(() => {
-    if (id) {
-      const fetchData = async (id: string) => {
-        const response = await fetch("/api/sentence/get?id=" + id);
-        const { data } = await response.json();
-        setSentence(data);
-      };
-      fetchData(id);
-    }
-  }, [id]);
+  // useLayoutEffect(() => {
+  //   if (id) {
+  //     const fetchData = async (id: string) => {
+  //       const response = await fetch("/api/sentence/get?id=" + id);
+  //       const { data } = await response.json();
+  //       setSentence(data);
+  //     };
+  //     fetchData(id);
+  //   }
+  // }, [id]);
 
   const {
     onSubmitGrammarCheck,
@@ -92,36 +94,20 @@ export const EditSentencePage: FC = () => {
   // };
 
   const handleUpdateData = () => {
-    console.log(1, en);
-    if (!id) {
-      alert("No id");
+    if (typeof id !== "string") {
       return;
     }
-    const makeReq = async () => {
-      console.log(2, en);
-      setIsSaving(true);
-      const body: SentenceUpdateParams & { id: string } = {
-        id,
+    updateMutation.mutate({
+      id: id,
+      input: {
         text: input,
         ruby: rubyHtml,
         translation,
         en,
         ru,
-        textWithFurigana: textWithFuriganaHtml,
-      };
-      console.log(body);
-      const response = await fetch("/api/sentence/update", {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      await response.json();
-      setIsSaving(false);
-    };
-
-    makeReq();
+        text_with_furigana: textWithFuriganaHtml,
+      },
+    });
   };
 
   const handleDeleteData = () => {

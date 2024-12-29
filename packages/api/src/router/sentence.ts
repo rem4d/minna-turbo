@@ -5,6 +5,17 @@ import { Kanji, Sentence } from "../types";
 import { analyze } from "../util/analyze";
 
 export const sentenceRouter = router({
+  getById: publicProcedure.input(z.number()).query(async ({ ctx, input }) => {
+    const { data, error } = await ctx.db
+      .from("sentences")
+      .select()
+      .eq("id", input)
+      .single();
+    if (error) {
+      throw new Error("No sentence found.");
+    }
+    return data;
+  }),
   list: publicProcedure
     .input(z.object({ maxPerPage: z.number().gt(0), page: z.number().gt(0) }))
     .query(async ({ ctx, input }) => {
@@ -17,7 +28,7 @@ export const sentenceRouter = router({
         .not("updated_at", "is", null)
         .range(input.page, input.page + input.maxPerPage);
       if (error) {
-        console.log(error);
+        throw new Error(error.message);
       }
       return data;
     }),
