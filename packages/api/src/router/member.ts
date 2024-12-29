@@ -11,6 +11,47 @@ import { sleep } from "../util/sleep";
 import { DeepLDictionary } from "../util/parse/puppetDict";
 
 export const memberRouter = router({
+  updateMeaning: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        meaning: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { data, error } = await ctx.db
+        .from("sentence_members")
+        .update({
+          en: input.meaning,
+        })
+        .eq("id", input.id)
+        .select()
+        .single();
+      if (error) {
+        throw new Error("Error when update.");
+      }
+      return data;
+    }),
+  membesByPos: publicProcedure
+    .input(z.object({ pos: z.string(), limit: z.number(), page: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const pos = input.pos;
+      const limit = input.limit;
+      const page = input.page;
+      const { data, error } = await ctx.db
+        .from("sentence_members")
+        .select()
+        .eq("pos", pos)
+        .eq("is_hidden", false)
+        .eq("is_invalid", false)
+        .order("created_at", { ascending: false })
+        .range((page - 1) * limit, page * limit);
+
+      if (error) {
+        throw new Error("Not found.");
+      }
+      return data;
+    }),
   sentenceMembers: publicProcedure
     .input(z.object({ text: z.string() }))
     .query(async ({ input, ctx }) => {
@@ -22,7 +63,7 @@ export const memberRouter = router({
       const japaneseNameRegex = /[一-龠]{2}(?=さん)/;
       const japaneseNameMatches = text.match(japaneseNameRegex);
 
-      for (let token of tokens) {
+      for (const token of tokens) {
         // ignore specific types of speech
         if (typesToIgnore.includes(token.pos)) {
           continue;
@@ -128,12 +169,12 @@ export const memberRouter = router({
       let checkingIndex = 0;
       // console.log(existingMembersMap);
 
-      for (let sentence of data.data) {
+      for (const sentence of data.data) {
         checkingIndex++;
 
         const tokens = await tokenize(sentence.text);
 
-        for (let t of tokens) {
+        for (const t of tokens) {
           if (typesToIgnore.includes(t.pos)) {
             continue;
           }
@@ -141,7 +182,7 @@ export const memberRouter = router({
 
           if (existingMembersMap.get(T_KEY)) {
           } else {
-            let newMemberInput: SentenceMemberInput = {
+            const newMemberInput: SentenceMemberInput = {
               basic_form: t.basic_form,
               pos: t.pos,
               original_sentence: sentence.text,

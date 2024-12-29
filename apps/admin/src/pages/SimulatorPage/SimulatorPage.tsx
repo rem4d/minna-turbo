@@ -10,16 +10,14 @@ import {
   DataList,
   Code,
 } from "@radix-ui/themes";
-import { useCallback, useEffect, useState } from "react";
-import { initTTS } from "../../utils/tts";
-import { openUrl } from "../../utils";
+import { useCallback, useState } from "react";
+import { initTTS } from "@/utils/tts";
+import { openUrl } from "@/utils";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../utils/api";
+import { api } from "@/utils/api";
 
 export const SimulatorPage = () => {
-  const [loadingMembers] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [members] = useState<SentenceMemberOutput[]>([]);
   const [showFurigana, setShowFurigana] = useState(false);
 
   const { data: list, isLoading: loadingSentence } =
@@ -29,9 +27,13 @@ export const SimulatorPage = () => {
 
   const sentence = list?.[activeIndex];
 
-  useEffect(() => {
-    // load members
-  }, [sentence]);
+  const { data: members, isLoading: loadingMembers } =
+    api.member.sentenceMembers.useQuery(
+      { text: sentence?.text ?? "" },
+      {
+        enabled: !!sentence?.text,
+      },
+    );
 
   const onPlayAudio = async () => {
     if (list && list[activeIndex]) {
@@ -102,7 +104,8 @@ export const SimulatorPage = () => {
             {loadingMembers && <span>Loading members...</span>}
             <Grid columns="4" className="font-klee text-xl" gap="4">
               {!loadingMembers &&
-                members.map((m) => (
+                members?.members &&
+                members.members.map((m) => (
                   <Flex key={m.basic_form} direction="column">
                     <Text
                       size="6"

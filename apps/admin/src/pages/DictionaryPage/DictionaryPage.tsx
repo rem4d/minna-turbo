@@ -1,125 +1,177 @@
-import { Sentence } from "../../types";
-import { Box, Button, Flex, Heading, Table, Text } from "@radix-ui/themes";
+import { api } from "@/utils/api";
+import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-  type FC,
-} from "react";
+  Box,
+  Button,
+  DropdownMenu,
+  Flex,
+  IconButton,
+  SegmentedControl,
+  Table,
+  TextField,
+} from "@radix-ui/themes";
+import { useCallback, useEffect, useRef, useState, type FC } from "react";
 
 export const DictionaryPage: FC = () => {
-  const [loading, setLoading] = useState(false);
-  const [list, setList] = useState<Sentence[]>([]);
-  const [pageNumber, setPageNumber] = useState(0);
-  const MAX_PER_PAGE = 200;
+  const [isEditingMeaning, setIsEditingMeaning] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingValue, setEditingValue] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const MAX_PER_PAGE = 50;
 
-  const makeReqM = useCallback(
-    (page: number) => {
-      const makeReq = async ({ page }: { page: number }) => {
-        setLoading(true);
-        const response = await fetch(
-          "/api/sentence/list" + `?page=${page}&max_per_page=${MAX_PER_PAGE}`,
-        );
-        const data: { data: Sentence[] } = await response.json();
-        // const d = data.data.sort((a, b) => (a.id < b.id ? 1 : -1));
-        // const cur = d.filter(
-        //   (a) => typeof a.level !== "undefined" && a.level < 100,
-        // );
-        // console.log(cur.length);
-        setList(data.data);
-        setLoading(false);
-      };
-      makeReq({ page });
-    },
-    [MAX_PER_PAGE],
-  );
+  const editInputRef = useRef<HTMLInputElement>(null);
+
+  const handleDocumentClick = useCallback((e: MouseEvent) => {
+    if (e.target) {
+      const eq = (e.target as HTMLInputElement).isEqualNode(
+        editInputRef.current,
+      );
+      if (!eq) {
+        setIsEditingMeaning(false);
+      }
+      console.log(eq);
+    }
+  }, []);
 
   useEffect(() => {
-    makeReqM(pageNumber);
-  }, [pageNumber, makeReqM]);
+    document.addEventListener("click", handleDocumentClick);
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [handleDocumentClick]);
 
-  useLayoutEffect(() => {
-    makeReqM(0);
-  }, [makeReqM]);
+  const { data: membersByPos } = api.member.membesByPos.useQuery({
+    pos: "verb",
+    limit: MAX_PER_PAGE,
+    page: pageNumber,
+  });
 
-  const onRowClick = (id: number) => {
-    window.open("/edit/" + id, "_blank");
-  };
+  const utils = api.useUtils();
+  const updateMeaningMutation = api.member.updateMeaning.useMutation({
+    onSuccess() {
+      utils.member.membesByPos.invalidate();
+    },
+  });
 
-  const onNavClick = (direction: "prev" | "next") => () => {
-    if (direction === "prev") {
-      setPageNumber(Math.min(0, pageNumber - 1));
-    } else {
-      setPageNumber(pageNumber + 1);
-    }
-  };
+  const onEditValueChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEditingValue(e.target.value);
+    },
+    [],
+  );
+
+  const onEditMeaningClick = useCallback(
+    (e: React.MouseEvent<HTMLElement>, id: number) => {
+      e.stopPropagation();
+      setEditingId(id);
+      setIsEditingMeaning(true);
+      const found = membersByPos?.find((m) => m.id === id);
+      if (found) {
+        setEditingValue(found.en ?? "");
+      }
+    },
+    [membersByPos],
+  );
+
+  const onInputKeydown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.code === "Enter") {
+        setEditingId(null);
+        setEditingValue("");
+        setIsEditingMeaning(false);
+        if (editingId) {
+          updateMeaningMutation.mutate({
+            id: editingId,
+            meaning: editingValue,
+          });
+        }
+      }
+    },
+    [editingId, editingValue, updateMeaningMutation],
+  );
 
   return (
     <Box>
-      <Flex gap="4">
-        <Heading>Dictionary</Heading>
-        <Text color="gray">Total {list.length > 0 ? list.length : ""}</Text>
-        <Flex gap="4">
-          <Button disabled={pageNumber === 0} onClick={onNavClick("prev")}>
-            Prev
-          </Button>
-          <Button
-            disabled={list.length < MAX_PER_PAGE}
-            onClick={onNavClick("next")}
+      <Flex align="start" direction="column" gap="4">
+        <SegmentedControl.Root defaultValue="inbox">
+          <SegmentedControl.Item value="inbox">verb</SegmentedControl.Item>
+          <SegmentedControl.Item value="drafts">noun</SegmentedControl.Item>
+          <SegmentedControl.Item value="sent">adjective</SegmentedControl.Item>
+        </SegmentedControl.Root>
+        <Flex gap="2">
+          <IconButton
+            onClick={() => setPageNumber(pageNumber - 1)}
+            disabled={pageNumber === 1}
           >
-            Next
-          </Button>
+            <ArrowLeftIcon width="18" height="18" />
+          </IconButton>
+          <IconButton
+            onClick={() => setPageNumber(pageNumber + 1)}
+            disabled={membersByPos && membersByPos.length < MAX_PER_PAGE}
+          >
+            <ArrowRightIcon width="18" height="18" />
+          </IconButton>
         </Flex>
-      </Flex>
-      <div>{loading ? "Loading..." : <>&nbsp;</>}</div>
-      <Table.Root size="3" variant="ghost">
-        <Table.Header>
-          <Table.Row>
-            <Table.ColumnHeaderCell>
-              <Text color="gray">index</Text>
-            </Table.ColumnHeaderCell>
-            {/* <Table.ColumnHeaderCell>id</Table.ColumnHeaderCell> */}
-            <Table.ColumnHeaderCell>text</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>text_with_furigana</Table.ColumnHeaderCell>
-            {/* <Table.ColumnHeaderCell>translation</Table.ColumnHeaderCell> */}
-            <Table.ColumnHeaderCell>en</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>ru</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>source</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>level</Table.ColumnHeaderCell>
-            {/* <Table.ColumnHeaderCell>unknown_kanji_n</Table.ColumnHeaderCell> */}
-          </Table.Row>
-        </Table.Header>
+        {membersByPos && membersByPos.length > 0 && (
+          <Table.Root size="3" variant="ghost">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeaderCell>id</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>basic form</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>meaning</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>pos</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell></Table.ColumnHeaderCell>
+              </Table.Row>
+            </Table.Header>
 
-        <Table.Body>
-          {list.map((elem, index) => (
-            <Table.Row key={elem.id} className="">
-              <Table.Cell
-                onClick={() => onRowClick(elem.id)}
-                className="cursor-pointer"
-              >
-                <Text color="gray">{index + pageNumber * MAX_PER_PAGE}</Text>
-              </Table.Cell>
-              {/* <Table.Cell>{elem.id}</Table.Cell> */}
-              <Table.Cell width="290px">{elem.text}</Table.Cell>
-              <Table.Cell width="290px">
-                <Text
-                  size="3"
-                  dangerouslySetInnerHTML={{
-                    __html: elem.text_with_furigana ?? "",
-                  }}
-                />
-              </Table.Cell>
-              {/* <Table.Cell>{elem.translation}</Table.Cell> */}
-              <Table.Cell width="290px">{elem.en}</Table.Cell>
-              <Table.Cell width="290px">{elem.ru}</Table.Cell>
-              <Table.Cell>{elem.source}</Table.Cell>
-              <Table.Cell>{elem.level}</Table.Cell>
-              {/* <Table.Cell>{elem.unknown_kanji_number}</Table.Cell> */}
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table.Root>
+            <Table.Body>
+              {membersByPos.map((m) => (
+                <Table.Row key={m.id} className="">
+                  <Table.Cell>{m.id}</Table.Cell>
+                  <Table.Cell>{m.basic_form}</Table.Cell>
+                  <Table.Cell>
+                    {isEditingMeaning && editingId === m.id ? (
+                      <TextField.Root
+                        ref={editInputRef}
+                        placeholder="new value..."
+                        value={editingValue}
+                        onChange={onEditValueChange}
+                        onKeyDown={onInputKeydown}
+                      ></TextField.Root>
+                    ) : (
+                      m.en
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>{m.pos}</Table.Cell>
+                  <Table.Cell>
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger>
+                        <Button variant="soft">
+                          Options
+                          <DropdownMenu.TriggerIcon />
+                        </Button>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Content>
+                        <DropdownMenu.Item>Find on jisho</DropdownMenu.Item>
+                        <DropdownMenu.Item
+                          onClick={(e) => onEditMeaningClick(e, m.id)}
+                        >
+                          Edit meaning
+                        </DropdownMenu.Item>
+                        <DropdownMenu.Separator />
+                        <DropdownMenu.Item>Find sentences</DropdownMenu.Item>
+                        <DropdownMenu.Separator />
+                        <DropdownMenu.Item>Set invalid</DropdownMenu.Item>
+                        <DropdownMenu.Item>Set hidden</DropdownMenu.Item>
+                      </DropdownMenu.Content>
+                    </DropdownMenu.Root>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+        )}
+      </Flex>
     </Box>
   );
 };

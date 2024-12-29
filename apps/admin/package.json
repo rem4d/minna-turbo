@@ -13,7 +13,6 @@
     "@trpc/client": "^11.0.0-rc.666",
     "@trpc/react-query": "^11.0.0-rc.648",
     "@types/node": "^22.10.2",
-    "dotenv": "^16.4.7",
     "edge-tts-client": "^1.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -22,7 +21,6 @@
     "vite-plugin-node-polyfills": "^0.22.0"
   },
   "devDependencies": {
-    "@types/dotenv": "^6.1.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
