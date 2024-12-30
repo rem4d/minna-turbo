@@ -76,7 +76,20 @@ export const memberRouter = router({
       if (error) {
         throw new Error("Not found.");
       }
-      return data;
+
+      const { count: total, error: totalError } = await ctx.db
+        .from("sentence_members")
+        .select("*", { count: "exact" })
+        .eq("pos", pos)
+        .eq("is_hidden", false)
+        .eq("is_invalid", false)
+        .order("created_at", { ascending: true });
+
+      if (totalError) {
+        throw new Error("Not found.");
+      }
+
+      return { members: data, total: total };
     }),
   sentenceMembers: publicProcedure
     .input(z.object({ text: z.string() }))
