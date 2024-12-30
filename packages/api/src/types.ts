@@ -1,8 +1,9 @@
-import { Tables } from "./db/database.types";
+import { Tables, Database as SDatabase } from "./db/database.types";
 
 export type Sentence = Tables<"sentences">;
 export type Kanji = Tables<"kanji">;
 export type SentenceMember = Tables<"sentence_members">;
+export type Database = SDatabase;
 
 export interface MojiToken {
   word_id: number;

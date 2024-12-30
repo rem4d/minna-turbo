@@ -6,7 +6,7 @@ import { z } from "zod";
 const openai = new OpenAI();
 
 export const openAiRouter = router({
-  check: publicProcedure.input(z.string()).query(async ({ input }) => {
+  check: publicProcedure.input(z.string()).mutation(async ({ input }) => {
     const t = input;
     const content = `check grammar and translate ${t}`;
     const completion = await openai.chat.completions.create({

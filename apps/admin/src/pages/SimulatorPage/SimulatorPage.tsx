@@ -21,7 +21,9 @@ export const SimulatorPage = () => {
   const [showFurigana, setShowFurigana] = useState(false);
 
   const { data: list, isLoading: loadingSentence } =
-    api.sentence.getRandomized.useQuery();
+    api.sentence.getRandomized.useQuery({
+      level: 80,
+    });
 
   const navigate = useNavigate();
 

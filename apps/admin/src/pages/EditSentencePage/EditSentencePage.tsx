@@ -12,7 +12,6 @@ import {
   DataList,
   Code,
 } from "@radix-ui/themes";
-import useOpenAi from "../../useOpenAi";
 import { SentenceMemberOutput } from "../../types";
 import { useParams } from "react-router-dom";
 import { initTTS } from "../../utils/tts";
@@ -26,6 +25,8 @@ export const EditSentencePage: FC = () => {
   const [translation, setTranslation] = useState("");
   const [en, setEn] = useState("");
   const [ru, setRu] = useState("");
+  const [openAiResponse, setOpenAiResponse] = useState("");
+  const [openAiTranslation, setOpenAiTranslation] = useState("");
   // const [sentence, setSentence] = useState<Sentence | null>(null);
 
   const { id } = useParams();
@@ -35,6 +36,21 @@ export const EditSentencePage: FC = () => {
   });
 
   const updateMutation = api.sentence.update.useMutation();
+  const { mutate: checkGrammar, isPending: openAiLoading } =
+    api.openAi.check.useMutation({
+      onSuccess(data) {
+        setOpenAiResponse(data);
+
+        const m = data.match(/ranslat[^"]*"([^"\\]*)/);
+
+        if (m && m.length > 0) {
+          const last = m[m.length - 1];
+          if (last) {
+            setOpenAiTranslation(last.replace(/"/g, ""));
+          }
+        }
+      },
+    });
 
   const { data: members } = api.member.sentenceMembers.useQuery(
     { text: sentence?.text ?? "" },
@@ -42,6 +58,7 @@ export const EditSentencePage: FC = () => {
       enabled: !!sentence?.text,
     },
   );
+
   useEffect(() => {
     if (sentence) {
       setInput(sentence.text);
@@ -52,14 +69,6 @@ export const EditSentencePage: FC = () => {
       setRu(sentence.ru ?? "");
     }
   }, [sentence]);
-
-  const {
-    onSubmitGrammarCheck,
-    openAiLoading,
-    openAiResponse,
-    correct,
-    translation: openAiTranslation,
-  } = useOpenAi();
 
   const onPlayAudio = async () => {
     await initTTS(input);
@@ -233,7 +242,7 @@ export const EditSentencePage: FC = () => {
             </Flex>
             <div>
               <Flex direction="column" align="start" gap="4">
-                <Button onClick={() => onSubmitGrammarCheck(input)}>
+                <Button onClick={() => checkGrammar(input)}>
                   Check via OpenAI
                 </Button>
                 {openAiResponse && (
@@ -242,12 +251,12 @@ export const EditSentencePage: FC = () => {
                   </Heading>
                 )}
                 {openAiLoading ? <Text>Loading...</Text> : null}
-                {!correct && !openAiLoading && openAiResponse ? (
-                  <Badge color="red">Incorrect</Badge>
-                ) : null}
-                {correct && !openAiLoading ? (
-                  <Badge color="green">Correct</Badge>
-                ) : null}
+                {/* {!correct && !openAiLoading && openAiResponse ? ( */}
+                {/*   <Badge color="red">Incorrect</Badge> */}
+                {/* ) : null} */}
+                {/* {correct && !openAiLoading ? ( */}
+                {/*   <Badge color="green">Correct</Badge> */}
+                {/* ) : null} */}
                 {openAiResponse && (
                   <TextArea
                     className="w-full"

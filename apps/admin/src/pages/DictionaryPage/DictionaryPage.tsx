@@ -234,6 +234,7 @@ export const DictionaryPage: FC = () => {
                     <Table.ColumnHeaderCell>id</Table.ColumnHeaderCell>
                     <Table.ColumnHeaderCell>basic form</Table.ColumnHeaderCell>
                     <Table.ColumnHeaderCell>meaning</Table.ColumnHeaderCell>
+                    <Table.ColumnHeaderCell>pos_detail</Table.ColumnHeaderCell>
                     <Table.ColumnHeaderCell></Table.ColumnHeaderCell>
                   </Table.Row>
                 </Table.Header>
@@ -264,6 +265,11 @@ export const DictionaryPage: FC = () => {
                         ) : (
                           m.en
                         )}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Text size="1" color="gray">
+                          {m.pos_detail_1}
+                        </Text>
                       </Table.Cell>
                       <Table.Cell>
                         <DropdownMenu.Root>
