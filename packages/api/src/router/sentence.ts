@@ -21,7 +21,8 @@ export const sentenceRouter = router({
       const { data, error } = await ctx.db
         .from("sentences")
         .select()
-        .like("text", `%${filterText}%`);
+        .like("text", `%${filterText}%`)
+        .limit(100);
       if (error) {
         throw new Error("No sentences found.");
       }

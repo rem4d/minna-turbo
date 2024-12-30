@@ -2,8 +2,10 @@ import { api } from "@/utils/api";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  ExternalLinkIcon,
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
+import { useDebounce } from "@uidotdev/usehooks";
 import {
   Box,
   DropdownMenu,
@@ -17,17 +19,30 @@ import {
 } from "@radix-ui/themes";
 import { twMerge } from "tailwind-merge";
 import { useCallback, useEffect, useRef, useState, type FC } from "react";
+import { openUrl } from "@/utils";
 
 export const DictionaryPage: FC = () => {
   const [isEditingMeaning, setIsEditingMeaning] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingValue, setEditingValue] = useState("");
-  const [filterText, setFilterText] = useState("");
+  const [sentencesByText, setSentencesByText] = useState("");
+  const [membersByText, setMembersByText] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [currentMemberId, setCurrentMemberId] = useState<number | null>(null);
   const [selectedPos, setSelectedPos] = useState<string>("verb");
+  const debouncedMembersByText = useDebounce(membersByText, 300);
 
   const MAX_PER_PAGE = 10;
+  const partsOfSpeech = [
+    "verb",
+    "noun",
+    "particle",
+    "adverb",
+    "conjunction",
+    "auxiliary",
+    "conj",
+    "adjective",
+  ];
 
   const editInputRef = useRef<HTMLInputElement>(null);
 
@@ -36,6 +51,7 @@ export const DictionaryPage: FC = () => {
     pos: selectedPos,
     limit: MAX_PER_PAGE,
     page: pageNumber,
+    basic_form: debouncedMembersByText,
   });
 
   const { data: total } = api.member.membesByPosTotal.useQuery({
@@ -62,11 +78,11 @@ export const DictionaryPage: FC = () => {
   const { data: correspondingSentences } =
     api.sentence.findContainingText.useQuery(
       {
-        text: filterText,
+        text: sentencesByText,
         pos: selectedPos,
       },
       {
-        enabled: !!filterText && filterText.length > 0,
+        enabled: !!sentencesByText && sentencesByText.length > 0,
       },
     );
 
@@ -131,7 +147,7 @@ export const DictionaryPage: FC = () => {
       const found = membersByPos?.find((m) => m.id === id);
       if (found) {
         setCurrentMemberId(id);
-        setFilterText(found.basic_form);
+        setSentencesByText(found.basic_form);
       } else {
         console.error("No corresponding member found.");
       }
@@ -154,6 +170,7 @@ export const DictionaryPage: FC = () => {
   );
 
   const onPosChange = (v: string) => {
+    setSentencesByText("");
     setPageNumber(1);
     setSelectedPos(v);
   };
@@ -163,28 +180,19 @@ export const DictionaryPage: FC = () => {
       <Grid columns="40% 65%" gap="4">
         <Box className="col-span-full">
           <SegmentedControl.Root defaultValue="inbox">
-            <SegmentedControl.Item
-              value="verb"
-              onClick={() => onPosChange("verb")}
-            >
-              verb
-            </SegmentedControl.Item>
-            <SegmentedControl.Item
-              value="noun"
-              onClick={() => onPosChange("noun")}
-            >
-              noun
-            </SegmentedControl.Item>
-            <SegmentedControl.Item
-              value="adjective"
-              onClick={() => onPosChange("adjective")}
-            >
-              adjective
-            </SegmentedControl.Item>
+            {partsOfSpeech.map((pos) => (
+              <SegmentedControl.Item
+                key={pos}
+                value={pos}
+                onClick={() => onPosChange(pos)}
+              >
+                {pos}
+              </SegmentedControl.Item>
+            ))}
           </SegmentedControl.Root>
         </Box>
         <section className="">
-          <Flex direction="column" className="sticky top-0">
+          <Flex direction="column" gap="4" className="sticky top-0">
             <Flex justify="between">
               <Flex gap="2">
                 <IconButton
@@ -199,6 +207,19 @@ export const DictionaryPage: FC = () => {
                 >
                   <ArrowRightIcon width="18" height="18" />
                 </IconButton>
+
+                <Flex align="center" gap="2">
+                  <TextField.Root
+                    value={membersByText}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setMembersByText(e.target.value)
+                    }
+                  >
+                    <TextField.Slot>
+                      <MagnifyingGlassIcon height="16" width="16" />
+                    </TextField.Slot>
+                  </TextField.Root>
+                </Flex>
               </Flex>
               <Flex>
                 <Text size="1" color="gray">
@@ -213,7 +234,6 @@ export const DictionaryPage: FC = () => {
                     <Table.ColumnHeaderCell>id</Table.ColumnHeaderCell>
                     <Table.ColumnHeaderCell>basic form</Table.ColumnHeaderCell>
                     <Table.ColumnHeaderCell>meaning</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell>pos</Table.ColumnHeaderCell>
                     <Table.ColumnHeaderCell></Table.ColumnHeaderCell>
                   </Table.Row>
                 </Table.Header>
@@ -245,7 +265,6 @@ export const DictionaryPage: FC = () => {
                           m.en
                         )}
                       </Table.Cell>
-                      <Table.Cell>{m.pos}</Table.Cell>
                       <Table.Cell>
                         <DropdownMenu.Root>
                           <DropdownMenu.Trigger>
@@ -287,25 +306,17 @@ export const DictionaryPage: FC = () => {
           </Flex>
         </section>
         <Flex direction="column" gap="4">
-          <Flex align="center" gapX="2">
-            <TextField.Root
-              disabled
-              value={filterText}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFilterText(e.target.value)
-              }
-            >
-              <TextField.Slot>
-                <MagnifyingGlassIcon height="16" width="16" />
-              </TextField.Slot>
-            </TextField.Root>
-          </Flex>
-          <Text size="2">
-            Sentences found:{" "}
-            {correspondingSentences && (
-              <Text size="2">{correspondingSentences.length}</Text>
-            )}{" "}
-          </Text>
+          {correspondingSentences && (
+            <Flex direction="column" gap="1">
+              <Text size="4">{sentencesByText}</Text>
+              <Text size="1">
+                {correspondingSentences && (
+                  <Text size="2">{correspondingSentences.length}</Text>
+                )}{" "}
+                sentences found.
+              </Text>
+            </Flex>
+          )}
           {correspondingSentences &&
             correspondingSentences.map((s, index) => (
               <Box key={s.id}>
@@ -314,21 +325,32 @@ export const DictionaryPage: FC = () => {
                     {index + 1}.
                   </Text>
                   <Flex direction="column" gap="2">
-                    <Text size="2" className="text-white/60">
-                      {s.id}
-                    </Text>
-                    <Text
-                      size="2"
-                      className="text-white/60"
-                      dangerouslySetInnerHTML={{
-                        __html: s.text_with_furigana ?? "",
-                      }}
-                    />
+                    <Flex gap="2" align="center">
+                      <span className="relative">
+                        <Text
+                          size="2"
+                          className="text-white/60"
+                          dangerouslySetInnerHTML={{
+                            __html: s.text_with_furigana ?? "",
+                          }}
+                        />
+                        <div
+                          className="cursor-pointer absolute -right-4 top-2"
+                          onClick={() => openUrl(`/edit/${s.id}`)}
+                        >
+                          <ExternalLinkIcon
+                            style={{ color: "gray" }}
+                            width="15"
+                            height="15"
+                          />
+                        </div>
+                      </span>
+                    </Flex>
                     <Text className="text-white/90" size="2">
                       {s.ru}
                     </Text>
                     <Text className="text-white/20" size="2">
-                      {s.en}
+                      {s.en ?? s.translation}
                     </Text>
                   </Flex>
                 </Flex>

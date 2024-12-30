@@ -10,7 +10,7 @@ export async function initTTS(text: string) {
     const settings = {
       voiceName: "ja-JP-NanamiNeural",
       customVoice: "",
-      speed: 0.9,
+      speed: 1.0,
     };
 
     const tts = new EdgeTTSClient();

@@ -1,14 +1,8 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 import { tokenize } from "../util/tokenizer/tokenize";
-import {
-  SentenceMember,
-  SentenceMemberInput,
-  SentenceMemberOutput,
-} from "../types";
+import { SentenceMemberOutput } from "../types";
 import { createRubySentence, createRubyToken } from "../util/analyze";
-import { sleep } from "../util/sleep";
-import { DeepLDictionary } from "../util/parse/puppetDict";
 
 export const memberRouter = router({
   setInvalid: publicProcedure
@@ -76,19 +70,32 @@ export const memberRouter = router({
       return total;
     }),
   membesByPos: publicProcedure
-    .input(z.object({ pos: z.string(), limit: z.number(), page: z.number() }))
+    .input(
+      z.object({
+        pos: z.string(),
+        basic_form: z.string().optional(),
+        limit: z.number(),
+        page: z.number(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       const pos = input.pos;
       const limit = input.limit;
       const page = input.page;
-      const { data, error } = await ctx.db
+      const db = ctx.db
         .from("sentence_members")
         .select()
         .eq("pos", pos)
         .eq("is_hidden", false)
-        .eq("is_invalid", false)
-        .order("created_at", { ascending: true })
-        .range((page - 1) * limit, page * limit);
+        .eq("is_invalid", false);
+
+      if (input.basic_form) {
+        db.eq("basic_form", input.basic_form);
+      } else {
+        db.range((page - 1) * limit, page * limit);
+      }
+
+      const { data, error } = await db.order("created_at", { ascending: true });
 
       if (error) {
         throw new Error("Not found.");
