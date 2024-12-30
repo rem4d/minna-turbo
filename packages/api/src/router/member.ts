@@ -58,6 +58,23 @@ export const memberRouter = router({
       }
       return data;
     }),
+  membesByPosTotal: publicProcedure
+    .input(z.object({ pos: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { count: total, error: totalError } = await ctx.db
+        .from("sentence_members")
+        .select("*", { count: "exact" })
+        .eq("pos", input.pos)
+        .eq("is_hidden", false)
+        .eq("is_invalid", false)
+        .order("created_at", { ascending: true });
+
+      if (totalError) {
+        throw new Error("Not found.");
+      }
+
+      return total;
+    }),
   membesByPos: publicProcedure
     .input(z.object({ pos: z.string(), limit: z.number(), page: z.number() }))
     .query(async ({ ctx, input }) => {
@@ -77,19 +94,7 @@ export const memberRouter = router({
         throw new Error("Not found.");
       }
 
-      const { count: total, error: totalError } = await ctx.db
-        .from("sentence_members")
-        .select("*", { count: "exact" })
-        .eq("pos", pos)
-        .eq("is_hidden", false)
-        .eq("is_invalid", false)
-        .order("created_at", { ascending: true });
-
-      if (totalError) {
-        throw new Error("Not found.");
-      }
-
-      return { members: data, total: total };
+      return data;
     }),
   sentenceMembers: publicProcedure
     .input(z.object({ text: z.string() }))
@@ -174,115 +179,6 @@ export const memberRouter = router({
         members: outputMembers,
       };
     }),
-  batchMembers: publicProcedure.query(async ({ ctx }) => {
-    const data = await ctx.db
-      .from("sentences")
-      .select()
-      .eq("source", "source2")
-      .gt("level", 0);
-
-    const existingMembersMap: Map<string, SentenceMember> = new Map();
-
-    const { data: got } = await ctx.db.from("sentence_members").select();
-
-    if (got) {
-      got.forEach((d) => {
-        existingMembersMap.set(
-          mapKeyFn({
-            basic_form: d.basic_form,
-            pos: d.pos,
-            pos_detail_1: d.pos_detail_1,
-          }),
-          d,
-        );
-      });
-    }
-
-    // console.log("Existing: ", existingMembersMap.size);
-    const map_new = new Map<string, SentenceMemberInput>();
-
-    if (data.data) {
-      console.log(`Data length ${data.data?.length}`);
-
-      let cnt = 1;
-      let checkingIndex = 0;
-      // console.log(existingMembersMap);
-
-      for (const sentence of data.data) {
-        checkingIndex++;
-
-        const tokens = await tokenize(sentence.text);
-
-        for (const t of tokens) {
-          if (typesToIgnore.includes(t.pos)) {
-            continue;
-          }
-          const T_KEY = mapKeyFn(t);
-
-          if (existingMembersMap.get(T_KEY)) {
-          } else {
-            const newMemberInput: SentenceMemberInput = {
-              basic_form: t.basic_form,
-              pos: t.pos,
-              original_sentence: sentence.text,
-              pos_detail_1: t.pos_detail_1,
-              en: null,
-              is_invalid: false,
-              is_hidden: false,
-              other: [],
-            };
-
-            console.log(
-              `Checking ${t.basic_form} from ${t.original} (${t.pos},${t.pos_detail_1}) (${checkingIndex}/${data.data.length}):`,
-            );
-            const result = await DeepLDictionary(t.basic_form);
-
-            if (result.en && result.en.length > 0) {
-              console.log(result.en);
-
-              newMemberInput.en = result.en[0] ?? "";
-              newMemberInput.other = result.en;
-              map_new.set(T_KEY, newMemberInput);
-            } else {
-              console.log(
-                `Could not parse results for: ${t.basic_form} (${t.pos})`,
-              );
-              newMemberInput.is_invalid = true;
-            }
-
-            await sleep(10);
-            const { error } = await ctx.db
-              .from("sentence_members")
-              .insert(newMemberInput);
-
-            if (error) {
-              console.log(
-                `Error when insert ${newMemberInput.basic_form} (${newMemberInput.pos},${newMemberInput.pos_detail_1})`,
-              );
-            } else {
-              console.log(
-                `Inserted at ${cnt}: ${newMemberInput.basic_form} (${newMemberInput.pos},${newMemberInput.pos_detail_1})`,
-              );
-            }
-
-            cnt++;
-            existingMembersMap.set(T_KEY, {
-              ...newMemberInput,
-              created_at: "",
-              is_hidden: false,
-              is_invalid: false,
-              id: 0,
-              m_type: "",
-              other: [],
-              ru: null,
-            });
-          }
-        }
-      }
-      console.log(map_new);
-    }
-    return true;
-  }),
 });
 
 const typesToIgnore = [
@@ -302,11 +198,3 @@ const theseSoundLikeJapaneseNamesButTheyAreNot = [
   "本屋",
   "課長",
 ];
-
-const mapKeyFn = (
-  t: Record<string, any> & {
-    basic_form: string;
-    pos: string;
-    pos_detail_1: string;
-  },
-) => `${t.basic_form}_${t.pos}_${t.pos_detail_1}`;

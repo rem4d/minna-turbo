@@ -153,55 +153,6 @@ export const sentenceRouter = router({
     }
     return { sentences, additional };
   }),
-  analyzeRawForSource: publicProcedure.query(async ({ ctx }) => {
-    const source = "source2";
-    const data = await ctx.db
-      .from("sentences")
-      .select("*")
-      .eq("source", source);
-    const newSentences: Sentence[] = [];
-
-    const MAX = 1000000000;
-
-    if (data.data) {
-      let cnt = 0;
-      console.log(
-        `Found ${data.data.length} sentences for source "${source}".`,
-      );
-
-      const allKanjiMap = new Map<string, Kanji>();
-      const { data: kanjis } = await ctx.db.from("kanji").select();
-      if (kanjis) {
-        kanjis.forEach((d) => {
-          allKanjiMap.set(d.kanji, d);
-        });
-      }
-      for (const s of data.data) {
-        if (cnt > MAX) break;
-        console.log(`Processing ${s.id}`);
-        const result = await analyze(s, allKanjiMap);
-        newSentences.push({
-          updated_at: "",
-          id: s.id,
-          text: s.text,
-          en: s.en,
-          ru: s.ru,
-          created_at: s.created_at,
-          source: s.source,
-          translation: s.translation,
-          // new fields
-          text_with_furigana: result.textWithHiragana,
-          ruby: result.ruby,
-          level: result.newLevel,
-          unknown_kanji_number: result.unknownKanjiNumber,
-        });
-        cnt++;
-      }
-
-      await ctx.db.from("sentences").upsert(newSentences, { onConflict: "id" });
-      console.log("Done.");
-    }
-  }),
   update: publicProcedure
     .input(
       z.object({

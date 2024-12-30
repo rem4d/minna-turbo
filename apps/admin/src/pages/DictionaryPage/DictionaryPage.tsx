@@ -6,7 +6,6 @@ import {
 } from "@radix-ui/react-icons";
 import {
   Box,
-  Button,
   DropdownMenu,
   Flex,
   Grid,
@@ -38,8 +37,11 @@ export const DictionaryPage: FC = () => {
     limit: MAX_PER_PAGE,
     page: pageNumber,
   });
-  const membersByPos = membersByPosData?.members;
-  const total = membersByPosData?.total;
+
+  const { data: total } = api.member.membesByPosTotal.useQuery({
+    pos: selectedPos,
+  });
+  const membersByPos = membersByPosData;
 
   const updateMeaningMutation = api.member.updateMeaning.useMutation({
     onSuccess() {
@@ -158,29 +160,31 @@ export const DictionaryPage: FC = () => {
 
   return (
     <Box>
-      <Flex align="start" direction="column" gap="4">
-        <SegmentedControl.Root defaultValue="inbox">
-          <SegmentedControl.Item
-            value="verb"
-            onClick={() => onPosChange("verb")}
-          >
-            verb
-          </SegmentedControl.Item>
-          <SegmentedControl.Item
-            value="noun"
-            onClick={() => onPosChange("noun")}
-          >
-            noun
-          </SegmentedControl.Item>
-          <SegmentedControl.Item
-            value="adjective"
-            onClick={() => onPosChange("adjective")}
-          >
-            adjective
-          </SegmentedControl.Item>
-        </SegmentedControl.Root>
-        <Grid columns="repeat(2,580px)" gapX="6">
-          <Flex direction="column">
+      <Grid columns="40% 65%" gap="4">
+        <Box className="col-span-full">
+          <SegmentedControl.Root defaultValue="inbox">
+            <SegmentedControl.Item
+              value="verb"
+              onClick={() => onPosChange("verb")}
+            >
+              verb
+            </SegmentedControl.Item>
+            <SegmentedControl.Item
+              value="noun"
+              onClick={() => onPosChange("noun")}
+            >
+              noun
+            </SegmentedControl.Item>
+            <SegmentedControl.Item
+              value="adjective"
+              onClick={() => onPosChange("adjective")}
+            >
+              adjective
+            </SegmentedControl.Item>
+          </SegmentedControl.Root>
+        </Box>
+        <section className="">
+          <Flex direction="column" className="sticky top-0">
             <Flex justify="between">
               <Flex gap="2">
                 <IconButton
@@ -222,7 +226,9 @@ export const DictionaryPage: FC = () => {
                         m.id === currentMemberId && "bg-gray-800",
                       )}
                     >
-                      <Table.Cell>{m.id}</Table.Cell>
+                      <Table.Cell>
+                        <Text color="gray">{m.id}</Text>
+                      </Table.Cell>
                       <Table.Cell className="whitespace-nowrap">
                         {m.basic_form}
                       </Table.Cell>
@@ -243,10 +249,9 @@ export const DictionaryPage: FC = () => {
                       <Table.Cell>
                         <DropdownMenu.Root>
                           <DropdownMenu.Trigger>
-                            <Button variant="soft">
-                              Options
+                            <IconButton size="1" variant="soft">
                               <DropdownMenu.TriggerIcon />
-                            </Button>
+                            </IconButton>
                           </DropdownMenu.Trigger>
                           <DropdownMenu.Content>
                             <DropdownMenu.Item
@@ -280,57 +285,57 @@ export const DictionaryPage: FC = () => {
               </Table.Root>
             )}
           </Flex>
-          <Flex direction="column" gap="4">
-            <Flex align="center" gapX="2">
-              <TextField.Root
-                disabled
-                value={filterText}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFilterText(e.target.value)
-                }
-              >
-                <TextField.Slot>
-                  <MagnifyingGlassIcon height="16" width="16" />
-                </TextField.Slot>
-              </TextField.Root>
-            </Flex>
-            <Text size="2">
-              Sentences found:{" "}
-              {correspondingSentences && (
-                <Text size="2">{correspondingSentences.length}</Text>
-              )}{" "}
-            </Text>
-            {correspondingSentences &&
-              correspondingSentences.map((s, index) => (
-                <Box key={s.id}>
-                  <Flex align="start" gap="2">
-                    <Text size="2" color="gray">
-                      {index + 1}.
-                    </Text>
-                    <Flex direction="column" gap="2">
-                      <Text size="2" className="text-white/60">
-                        {s.id}
-                      </Text>
-                      <Text
-                        size="2"
-                        className="text-white/60"
-                        dangerouslySetInnerHTML={{
-                          __html: s.text_with_furigana ?? "",
-                        }}
-                      />
-                      <Text className="text-white/90" size="2">
-                        {s.ru}
-                      </Text>
-                      <Text className="text-white/20" size="2">
-                        {s.en}
-                      </Text>
-                    </Flex>
-                  </Flex>
-                </Box>
-              ))}
+        </section>
+        <Flex direction="column" gap="4">
+          <Flex align="center" gapX="2">
+            <TextField.Root
+              disabled
+              value={filterText}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFilterText(e.target.value)
+              }
+            >
+              <TextField.Slot>
+                <MagnifyingGlassIcon height="16" width="16" />
+              </TextField.Slot>
+            </TextField.Root>
           </Flex>
-        </Grid>
-      </Flex>
+          <Text size="2">
+            Sentences found:{" "}
+            {correspondingSentences && (
+              <Text size="2">{correspondingSentences.length}</Text>
+            )}{" "}
+          </Text>
+          {correspondingSentences &&
+            correspondingSentences.map((s, index) => (
+              <Box key={s.id}>
+                <Flex align="start" gap="2">
+                  <Text size="2" color="gray">
+                    {index + 1}.
+                  </Text>
+                  <Flex direction="column" gap="2">
+                    <Text size="2" className="text-white/60">
+                      {s.id}
+                    </Text>
+                    <Text
+                      size="2"
+                      className="text-white/60"
+                      dangerouslySetInnerHTML={{
+                        __html: s.text_with_furigana ?? "",
+                      }}
+                    />
+                    <Text className="text-white/90" size="2">
+                      {s.ru}
+                    </Text>
+                    <Text className="text-white/20" size="2">
+                      {s.en}
+                    </Text>
+                  </Flex>
+                </Flex>
+              </Box>
+            ))}
+        </Flex>
+      </Grid>
     </Box>
   );
 };
