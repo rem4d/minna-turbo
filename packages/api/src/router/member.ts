@@ -122,7 +122,8 @@ export const memberRouter = router({
 
         // ignore japanese names
         if (
-          japaneseNameMatches?.[0] === token.basic_form &&
+          (japaneseNameMatches?.[0] === token.basic_form ||
+            japaneseNamesWithoutSan.includes(token.basic_form)) &&
           !theseSoundLikeJapaneseNamesButTheyAreNot.includes(token.basic_form)
         ) {
           continue;
@@ -205,3 +206,5 @@ const theseSoundLikeJapaneseNamesButTheyAreNot = [
   "本屋",
   "課長",
 ];
+
+const japaneseNamesWithoutSan = ["上田"];
