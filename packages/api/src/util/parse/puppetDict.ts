@@ -1,5 +1,6 @@
 /*
 import puppeteer, { Browser } from "puppeteer";
+import { sleep } from "../sleep";
 
 let browser: Browser | undefined;
 
@@ -16,11 +17,9 @@ const getBrowser = async () => {
   }
   return browser;
 };
-*/
 
 export const DeepLDictionary = async (searchText: string) => {
-  return { en: [searchText] };
-  /*
+  // return { en: [searchText] };
   const browser = await getBrowser();
 
   // "In this kind of place, socks are taken offand left. (i.e., the action is unfinished)",
@@ -51,11 +50,10 @@ export const DeepLDictionary = async (searchText: string) => {
       (els) => [...els].map((e) => (e as HTMLHeadingElement).innerText),
     );
 
-    // await sleep(1);
+    await sleep(1);
 
     // console.log(data);
     await page.close();
-    // await browser.close();
     return { en: res };
   } catch (err) {
     console.log(err);
@@ -63,5 +61,11 @@ export const DeepLDictionary = async (searchText: string) => {
       en: [],
     };
   }
-  */
+};
+*/
+
+export const DeepLDictionary = async (searchText: string) => {
+  return {
+    en: [],
+  };
 };

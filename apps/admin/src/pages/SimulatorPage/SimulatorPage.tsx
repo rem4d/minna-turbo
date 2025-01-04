@@ -24,10 +24,9 @@ export const SimulatorPage = () => {
     api.sentence.getRandomized.useQuery({
       level: 80,
     });
+  const sentence = list?.[activeIndex];
 
   const navigate = useNavigate();
-
-  const sentence = list?.[activeIndex];
 
   const { data: members, isLoading: loadingMembers } =
     api.member.sentenceMembers.useQuery(
@@ -38,8 +37,11 @@ export const SimulatorPage = () => {
     );
 
   const onPlayAudio = async () => {
-    if (list && list[activeIndex]) {
+    if (list && list[activeIndex] && list[activeIndex].text) {
+      // await initVoicevox(list[activeIndex].text);
       await initTTS(list[activeIndex].text);
+    } else {
+      console.log("No element!");
     }
   };
 

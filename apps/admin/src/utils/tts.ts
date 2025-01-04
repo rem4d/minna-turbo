@@ -24,16 +24,13 @@ export async function initTTS(text: string) {
     prosodyOptions.rate = settings.speed;
 
     return new Promise((resolve, reject) => {
-      console.log("Promise.");
       const mediaSource = new MediaSource();
-      console.log("MediaSource instance created!");
       let sourceBuffer: SourceBuffer;
       const chunks: Uint8Array[] = [];
       let isFirstChunk = true;
 
       if (!audioElement) {
         audioElement = new Audio();
-        console.log(audioElement);
 
         audioElement.src = URL.createObjectURL(mediaSource);
 
@@ -55,7 +52,6 @@ export async function initTTS(text: string) {
 
       const appendNextChunk = () => {
         if (chunks.length > 0 && !sourceBuffer.updating) {
-          console.log("appendNextChunk: has chunks");
           try {
             const chunk = chunks.shift();
             if (chunk) {
@@ -77,19 +73,15 @@ export async function initTTS(text: string) {
       };
 
       mediaSource.addEventListener("sourceopen", () => {
-        console.log("sourceopen!");
         try {
-          console.log("creating sourceBuffer instance...");
           sourceBuffer = mediaSource.addSourceBuffer(
             'audio/webm; codecs="opus"',
           );
-          console.log("sourceBuffer instance created!");
           sourceBuffer.addEventListener("updateend", appendNextChunk);
 
           const stream = tts.toStream(text, prosodyOptions);
 
           stream.on("data", (data) => {
-            console.log("got data from stream");
             if (data instanceof Uint8Array && data.length > 0) {
               chunks.push(data);
               appendNextChunk();

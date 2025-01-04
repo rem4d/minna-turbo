@@ -35,3 +35,4 @@ dist/
 # turbo
 .turbo
 apps/server/src/util/parse
+wav

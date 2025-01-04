@@ -63,7 +63,7 @@ export const batchRouter = router({
       console.log("Done.");
     }
   }),
-  batchTranslations: publicProcedure.mutation(async ({ ctx }) => {
+  batchMemberTranslations: publicProcedure.query(async ({ ctx }) => {
     const data = await ctx.db
       .from("sentences")
       .select()

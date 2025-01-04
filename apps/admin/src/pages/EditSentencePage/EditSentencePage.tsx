@@ -21,7 +21,6 @@ export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
   const [rubyHtml, setRubyHtml] = useState("");
   const [textWithFuriganaHtml, setTextWithFuriganaHtml] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
   const [translation, setTranslation] = useState("");
   const [en, setEn] = useState("");
   const [ru, setRu] = useState("");
@@ -36,6 +35,9 @@ export const EditSentencePage: FC = () => {
   });
 
   const updateMutation = api.sentence.update.useMutation();
+  const { mutate: deleteMutation, isPending: isDeleting } =
+    api.sentence.delete.useMutation();
+
   const { mutate: checkGrammar, isPending: openAiLoading } =
     api.openAi.check.useMutation({
       onSuccess(data) {
@@ -102,26 +104,9 @@ export const EditSentencePage: FC = () => {
   };
 
   const handleDeleteData = () => {
-    const makeReq = async () => {
-      setIsSaving(true);
-      const response = await fetch("/api/sentence/delete", {
-        method: "POST",
-        body: JSON.stringify({
-          id,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const d = await response.json();
-      if (d.data) {
-        console.log("Success");
-      }
-
-      setIsSaving(false);
-    };
-
-    makeReq();
+    if (sentence) {
+      deleteMutation(sentence.id);
+    }
   };
 
   return (
@@ -206,7 +191,7 @@ export const EditSentencePage: FC = () => {
                 <Button onClick={onPlayAudio}>Play audio</Button>
                 <Button onClick={onTrim}>Trim</Button>
                 <Button color="red" onClick={handleDeleteData}>
-                  {isSaving ? "Deleting..." : "Delete"}
+                  {isDeleting ? "Deleting..." : "Delete"}
                 </Button>
               </Flex>
               <Flex direction="column" gap="4">
@@ -361,12 +346,12 @@ export const EditSentencePage: FC = () => {
           </Box>
           <div>
             <Button
-              disabled={isSaving}
+              disabled={false}
               color="lime"
               size="3"
               onClick={handleUpdateData}
             >
-              {isSaving ? "Updating..." : "Update"}
+              {false ? "Updating..." : "Update"}
             </Button>
           </div>
           <Box className="mt-[600px]" />

@@ -87,10 +87,11 @@ export const sentenceRouter = router({
         redis: ctx.redis,
       });
 
+      // return sentences.slice(0, 20);
       const shuffledS = shuffle(sentences).slice(0, 20);
       const shuffledA = shuffle(additional).slice(0, 2);
       const shuffled = shuffle(shuffledS.concat(shuffledA));
-      return shuffled;
+      return shuffled as Sentence[];
     }),
   getStatementsForLevel: publicProcedure
     .input(
@@ -108,6 +109,13 @@ export const sentenceRouter = router({
       });
       return { sentences, additional };
     }),
+  delete: publicProcedure.input(z.number()).mutation(async ({ ctx, input }) => {
+    const { error } = await ctx.db.from("sentences").delete().eq("id", input);
+    if (error) {
+      throw new Error(error.message);
+    }
+    return true;
+  }),
   update: publicProcedure
     .input(
       z.object({
