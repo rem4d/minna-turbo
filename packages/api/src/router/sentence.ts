@@ -6,7 +6,7 @@ import { analyze } from "../util/analyze";
 import { shuffle } from "../util/shuffle";
 import { tokenize } from "../util/tokenizer/tokenize";
 import { SupabaseClient } from "@supabase/supabase-js";
-// import type { RedisClientType } from "../trpc";
+import type { RedisClientType } from "../trpc";
 
 export const sentenceRouter = router({
   findContainingText: publicProcedure
@@ -84,7 +84,7 @@ export const sentenceRouter = router({
         shift: 60,
         numberOfUnknownKanji: 1,
         db: ctx.db,
-        // redis: ctx.redis,
+        redis: ctx.redis,
       })) as { sentences: Sentence[]; additional: Sentence[] };
 
       // return sentences.slice(0, 20);
@@ -105,7 +105,7 @@ export const sentenceRouter = router({
         shift: 60,
         numberOfUnknownKanji: 2,
         db: ctx.db,
-        // redis: ctx.redis,
+        redis: ctx.redis,
       });
       return { sentences, additional };
     }),
@@ -164,22 +164,21 @@ const getStatementsForLevel = async ({
   shift,
   numberOfUnknownKanji,
   db,
-  // redis,
+  redis,
 }: {
   level: number;
   shift: number;
   numberOfUnknownKanji: number;
   db: SupabaseClient<Database>;
-  // redis: RedisClientType;
+  redis: RedisClientType;
 }) => {
-  /*
   const cached = await redis.get(`${level}-${shift}`);
 
   if (cached) {
     console.log(`Return cached value`);
     return JSON.parse(cached);
   }
-  */
+
   const { data: sentences } = await db
     .from("sentences")
     .select("*")
@@ -235,14 +234,12 @@ const getStatementsForLevel = async ({
     } else {
       console.log(`No sentences found for : ${kanjiString} `);
     }
-    /*
     console.log(`Write cache for key: "${level}-${shift}"`);
     redis.setEx(
       `${level}-${shift}`,
       60 * 60,
       JSON.stringify({ sentences, additional }),
     );
-    */
   }
   return { sentences, additional };
 };
