@@ -1,0 +1,33 @@
+{
+  "name": "@rem4d/db",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "default": "./src/client.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.10",
+    "dotenv": "^16.4.7",
+    "redis": "^4.7.0"
+  },
+  "devDependencies": {
+    "@rem4d/eslint-config": "workspace:*",
+    "@rem4d/typescript-config": "workspace:*"
+  }
+}

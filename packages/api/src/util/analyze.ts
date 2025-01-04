@@ -1,4 +1,5 @@
-import { Kanji, KanjiMapped, Sentence } from "../types";
+import { Kanji, Sentence } from "@rem4d/db";
+import { KanjiMapped } from "../types";
 import { tokenize } from "./tokenizer/tokenize";
 
 export const analyze = async (
@@ -29,12 +30,12 @@ export const analyze = async (
 
   // console.log(`Checking sentence: ${sen.text}`);
   const tokens = await tokenize(tmpText ?? sen.text);
-  for (let token of tokens) {
+  for (const token of tokens) {
     // console.log(`Checking token: `, token.original);
     let needReplace = false;
 
     // check kanjis in token
-    for (let k of token.original) {
+    for (const k of token.original) {
       const reg = /[一-龠]+/;
 
       if (reg.test(k)) {

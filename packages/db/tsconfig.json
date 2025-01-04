@@ -1,0 +1,5 @@
+{
+	"extends": "@rem4d/typescript-config/tsconfig.package.json",
+	"include": ["src"],
+	"exclude": ["node_modules"]
+}

@@ -1,3 +1,4 @@
+/*
 import * as redis from "redis";
 
 const client = redis.createClient();
@@ -9,3 +10,5 @@ const init = async () => {
 
 init();
 export default client;
+*/
+export default function redisClient() {}

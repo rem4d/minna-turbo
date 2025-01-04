@@ -95,13 +95,23 @@ export const memberRouter = router({
         db.range((page - 1) * limit, page * limit);
       }
 
-      const { data, error } = await db.order("created_at", { ascending: true });
-
-      if (error) {
-        throw new Error("Not found.");
+      try {
+        console.log(1);
+        const { data, error } = await db.order("created_at", {
+          ascending: true,
+        });
+        console.log(2);
+        if (error) {
+          throw new Error("Not found.");
+        }
+        console.log(3);
+        return data;
+      } catch (error) {
+        console.log(4);
+        console.log("ERROR::________-");
+        console.log(error);
       }
-
-      return data;
+      return [];
     }),
   sentenceMembers: publicProcedure
     .input(z.object({ text: z.string() }))

@@ -1,8 +1,5 @@
-import { Tables, Database as SDatabase } from "./db/database.types";
+import { Database as SDatabase, SentenceMember } from "@rem4d/db";
 
-export type Sentence = Tables<"sentences">;
-export type Kanji = Tables<"kanji">;
-export type SentenceMember = Tables<"sentence_members">;
 export type Database = SDatabase;
 
 export interface MojiToken {
@@ -34,10 +31,16 @@ export type KanjiMapped = {
   en?: string;
 };
 
-export type SentenceMemberInput = Omit<
-  SentenceMember,
-  "created_at" | "id" | "m_type" | "ru"
->;
+export type SentenceMemberInput = {
+  basic_form: string;
+  pos: string;
+  original_sentence: string;
+  pos_detail_1: string;
+  en: string | null;
+  is_invalid: boolean;
+  is_hidden: boolean;
+  other: string[];
+};
 
 export type SentenceMemberOutput = {
   basic_form: string;

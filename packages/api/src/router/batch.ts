@@ -1,5 +1,6 @@
+import { Kanji, Sentence, SentenceMember } from "@rem4d/db";
 import { publicProcedure, router } from "../trpc";
-import { Kanji, Sentence, SentenceMember, SentenceMemberInput } from "../types";
+import { SentenceMemberInput } from "../types";
 import { analyze } from "../util/analyze";
 import { DeepLDictionary } from "../util/parse/puppetDict";
 import { sleep } from "../util/sleep";
