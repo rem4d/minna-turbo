@@ -21,6 +21,7 @@ export const sentenceRouter = router({
         input.pos === "verb"
           ? input.text.substring(0, input.text.length - 1)
           : input.text;
+
       const { data, error } = await ctx.db
         .from("sentences")
         .select()
@@ -82,9 +83,10 @@ export const sentenceRouter = router({
       }),
     )
     .query(async ({ ctx, input }) => {
+      const shift = 60;
       const { sentences, additional } = (await getStatementsForLevel({
         level: input.level,
-        shift: 60,
+        shift,
         numberOfUnknownKanji: 1,
         db: ctx.db,
         redis: ctx.redis,
@@ -187,10 +189,12 @@ const getStatementsForLevel = async ({
     .select("*")
     .lte("level", level)
     // TODO: REMOVE LATER
-    .eq("source", "source1")
+    // .eq("source", "source1")
     .lte("unknown_kanji_number", numberOfUnknownKanji)
     .gte("level", clamp(level - shift, 0, level))
     .order("level", { ascending: false });
+
+  console.log(`Found: ${sentences?.length} native sentences.`);
 
   const userKanjiMap = new Map<string, Kanji>();
   const { data: userKanjis } = await db
@@ -219,7 +223,7 @@ const getStatementsForLevel = async ({
       })
       .select();
 
-    console.log(`Found: ${foundA?.length} sentences.`);
+    console.log(`Found: ${foundA?.length} additional sentences.`);
 
     // add furigana to any unknown_by_user kanji in the sentence
     if (foundA) {

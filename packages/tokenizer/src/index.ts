@@ -2,7 +2,6 @@ import kuromoji from "@sglkc/kuromoji";
 import { isKana, isKanji, isKatakana, toHiragana } from "wanakana";
 import filterList from "./filter.json" with { type: "json" };
 import type { Tokenizer, KanjiMapped } from "./types.js";
-// import path from "node:path";
 
 class Deferred {
   promise: Promise<Tokenizer>;
@@ -25,18 +24,15 @@ type FilterRule = {
 const deferred = new Deferred();
 let isLoading = false;
 
-// type Ret = ReturnType<typeof kuromoji.IpadicFormatter>
-
 const getTokenizer = async () => {
   if (isLoading) {
     return await deferred.promise;
   }
   isLoading = true;
-  const dicPath = ""; // path.resolve(path.dirname(__filename), "../");
-  console.log(import.meta.url);
+  const dicUrl = new URL("../dict", import.meta.url);
 
   const builder = kuromoji.builder({
-    // dicPath: path.resolve(path.dirname(__filename), "../", "dict"),
+    dicPath: dicUrl.pathname,
   });
   builder.build((err, tokenizer) => {
     if (err) {
@@ -269,3 +265,5 @@ const fillMap = ({ json, tokens, text }: FillMapProps) => {
 
   return map;
 };
+
+tokenize("a");

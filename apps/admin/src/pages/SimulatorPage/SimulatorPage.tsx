@@ -22,7 +22,7 @@ export const SimulatorPage = () => {
 
   const { data: list, isLoading: loadingSentence } =
     api.sentence.getRandomized.useQuery({
-      level: 80,
+      level: 90,
     });
   const sentence = list?.[activeIndex];
 

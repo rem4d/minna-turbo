@@ -28,9 +28,10 @@
       "outDir": "${configDir}/dist",
 
       /** this package specific */
-      "allowImportingTsExtensions": true,
       "module": "nodenext",
       "moduleResolution": "nodenext"
+      // "module": "Preserve",
+      // "moduleResolution": "Bundler"
     },
     "exclude": [
         "node_modules",

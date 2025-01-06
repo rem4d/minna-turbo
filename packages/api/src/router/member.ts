@@ -97,19 +97,14 @@ export const memberRouter = router({
       }
 
       try {
-        console.log(1);
         const { data, error } = await db.order("created_at", {
           ascending: true,
         });
-        console.log(2);
         if (error) {
           throw new Error("Not found.");
         }
-        console.log(3);
         return data;
       } catch (error) {
-        console.log(4);
-        console.log("ERROR::________-");
         console.log(error);
       }
       return [];

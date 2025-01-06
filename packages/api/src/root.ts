@@ -1,4 +1,3 @@
-import { batchRouter } from "./router/batch";
 import { memberRouter } from "./router/member";
 import { sentenceRouter } from "./router/sentence";
 import { openAiRouter } from "./router/openAi";
@@ -8,7 +7,6 @@ import { ttsRouter } from "./router/tts";
 export const appRouter = router({
   sentence: sentenceRouter,
   member: memberRouter,
-  batch: batchRouter,
   openAi: openAiRouter,
   tts: ttsRouter,
 });
