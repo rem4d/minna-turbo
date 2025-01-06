@@ -4,8 +4,8 @@ import { clamp } from "../util/math";
 import { Database, Kanji, Sentence } from "@rem4d/db";
 import { analyze } from "../util/analyze";
 import { shuffle } from "../util/shuffle";
-import { tokenize } from "../util/tokenizer/tokenize";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { tokenize } from "@rem4d/tokenizer";
+import type { SupabaseClient } from "@rem4d/db";
 import type { RedisClientType } from "../trpc";
 
 export const sentenceRouter = router({
@@ -62,10 +62,13 @@ export const sentenceRouter = router({
       const { data, error } = await ctx.db
         .from("sentences")
         .select()
-        .eq("source", "source2")
+        .eq("source", "source1")
         .gt("level", 0)
         .lt("level", 500)
-        .not("updated_at", "is", null)
+        .not("ru", "is", null)
+        .not("en", "is", null)
+        .order("updated_at", { ascending: false })
+        // .not("updated_at", "is", null)
         .range(input.page, input.page + input.maxPerPage);
       if (error) {
         throw new Error(error.message);
@@ -184,7 +187,7 @@ const getStatementsForLevel = async ({
     .select("*")
     .lte("level", level)
     // TODO: REMOVE LATER
-    .eq("source", "source2")
+    .eq("source", "source1")
     .lte("unknown_kanji_number", numberOfUnknownKanji)
     .gte("level", clamp(level - shift, 0, level))
     .order("level", { ascending: false });

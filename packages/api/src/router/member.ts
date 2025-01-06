@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
-import { tokenize } from "../util/tokenizer/tokenize";
 import { SentenceMemberOutput } from "../types";
+import { tokenize } from "@rem4d/tokenizer";
 import { createRubySentence, createRubyToken } from "../util/analyze";
 
 export const memberRouter = router({
@@ -87,7 +87,8 @@ export const memberRouter = router({
         .select()
         .eq("pos", pos)
         .eq("is_hidden", false)
-        .eq("is_invalid", false);
+        .eq("is_invalid", false)
+        .order("created_at", { ascending: false });
 
       if (input.basic_form) {
         db.eq("basic_form", input.basic_form);

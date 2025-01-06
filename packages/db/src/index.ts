@@ -5,3 +5,4 @@ type Kanji = Tables<"kanji">;
 type SentenceMember = Tables<"sentence_members">;
 
 export type { Tables, Database, Sentence, Kanji, SentenceMember };
+export * from "@supabase/supabase-js";

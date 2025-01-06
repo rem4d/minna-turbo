@@ -149,6 +149,10 @@ export const EditSentencePage: FC = () => {
                   <DataList.Value>{sentence.level}</DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
+                  <DataList.Label minWidth="88px">Source</DataList.Label>
+                  <DataList.Value>{sentence.source}</DataList.Value>
+                </DataList.Item>
+                <DataList.Item>
                   <DataList.Label minWidth="88px">
                     Unknown kanjis
                   </DataList.Label>

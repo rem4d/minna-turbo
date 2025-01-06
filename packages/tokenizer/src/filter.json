@@ -1,0 +1,29 @@
+[
+  { "kanji": "一人", "reading": ["ヒトリ"] },
+  { "kanji": "二人", "reading": ["フタリ"] },
+
+  { "kanji": "二三日", "reading": ["二サンにち"] },
+  { "kanji": "一日", "reading": ["イチニチ", "ツイタチ"] },
+  { "kanji": "二日", "reading": ["フツカ"] },
+  { "kanji": "三日", "reading": ["ミッカ"] },
+  { "kanji": "四日", "reading": ["ヨッカ"] },
+  { "kanji": "五日", "reading": ["イツカ"] },
+  { "kanji": "六日", "reading": ["ムイカ"] },
+  { "kanji": "七日", "reading": ["ナノカ"] },
+  { "kanji": "八日", "reading": ["ヨウカ"] },
+  { "kanji": "九日", "reading": ["ココノカ"] },
+  { "kanji": "十日", "reading": ["トオカ"] },
+  { "kanji": "二十日", "reading": ["ハツカ"] },
+  { "kanji": "二十歳", "reading": ["ハタチ"] },
+  { "kanji": "誕生日", "reading": ["タンジョウビ"] },
+
+  { "kanji": "行って", "reading": ["イッテ"], "pos": "verb" },
+  { "kanji": "新聞社", "reading": ["シンブンシャ"] },
+  { "kanji": "日本", "reading": ["ニホン"] },
+
+  { "kanji": "八本", "reading": ["ハッポン"] },
+  { "kanji": "日本人", "reading": ["ニホンジン"] },
+  { "kanji": "それに", "reading": ["ソレニ"] },
+
+  { "kanji": "万", "reading": ["マン"] }
+]

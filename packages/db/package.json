@@ -25,6 +25,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.47.10",
     "dotenv": "^16.4.7",
+    "envalid": "^8.0.0",
     "redis": "^4.7.0"
   },
   "devDependencies": {

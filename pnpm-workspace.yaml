@@ -10,3 +10,4 @@ catalog:
   "@trpc/react-query": ^11.0.0-rc.648
   "eslint": ^9.15.0
   "typescript": ^5.6.2
+  "tsx": "^4.19.2"

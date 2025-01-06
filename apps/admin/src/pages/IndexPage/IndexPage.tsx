@@ -7,7 +7,7 @@ export const IndexPage: FC = () => {
   const MAX_PER_PAGE = 200;
 
   const { data: list, isLoading } = api.sentence.list.useQuery({
-    maxPerPage: 10,
+    maxPerPage: MAX_PER_PAGE,
     page: 1,
   });
 

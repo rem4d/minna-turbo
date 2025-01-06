@@ -1,10 +1,10 @@
-import { Kanji, Sentence, SentenceMember } from "@rem4d/db";
+import type { Kanji, Sentence, SentenceMember } from "@rem4d/db";
+import { tokenize } from "@rem4d/tokenizer";
 import { publicProcedure, router } from "../trpc";
 import { SentenceMemberInput } from "../types";
 import { analyze } from "../util/analyze";
 import { DeepLDictionary } from "../util/parse/puppetDict";
 import { sleep } from "../util/sleep";
-import { tokenize } from "../util/tokenizer/tokenize";
 
 /*
 http://localhost:1222/trpc/api/batch.batchSentences?batch=1

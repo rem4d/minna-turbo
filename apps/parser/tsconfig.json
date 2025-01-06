@@ -1,0 +1,12 @@
+{
+	"extends": "@rem4d/typescript-config/tsconfig.base.json",
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"paths": {
+			"@/*": ["./src/*"]
+		}
+	}
+}
+
+

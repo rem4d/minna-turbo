@@ -1,6 +1,6 @@
 import { Kanji, Sentence } from "@rem4d/db";
-import { KanjiMapped } from "../types";
-import { tokenize } from "./tokenizer/tokenize";
+import { tokenize } from "@rem4d/tokenizer";
+import type { KanjiMapped } from "../types";
 
 export const analyze = async (
   sen: Sentence,

@@ -1,0 +1,30 @@
+{
+  "name": "@rem4d/tokenizer",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@sglkc/kuromoji": "^1.1.0",
+    "wanakana": "^5.3.1"
+  },
+  "devDependencies": {
+    "@rem4d/eslint-config": "workspace:*",
+    "@rem4d/typescript-config": "workspace:*",
+    "@types/node": "^22.10.2"
+  }
+}
