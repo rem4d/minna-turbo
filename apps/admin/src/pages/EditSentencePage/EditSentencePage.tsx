@@ -1,4 +1,5 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import type { FC } from "react";
 import { openUrl } from "../../utils";
 import {
   Flex,
@@ -12,7 +13,7 @@ import {
   DataList,
   Code,
 } from "@radix-ui/themes";
-import { SentenceMemberOutput } from "../../types";
+import type { SentenceMemberOutput } from "../../types";
 import { useParams } from "react-router-dom";
 import { initTTS } from "../../utils/tts";
 import { api } from "@/utils/api";
@@ -43,7 +44,7 @@ export const EditSentencePage: FC = () => {
       onSuccess(data) {
         setOpenAiResponse(data);
 
-        const m = data.match(/ranslat[^"]*"([^"\\]*)/);
+        const m = /ranslat[^"]*"([^"\\]*)/.exec(data);
 
         if (m && m.length > 0) {
           const last = m[m.length - 1];
@@ -281,27 +282,26 @@ export const EditSentencePage: FC = () => {
               {/*     <Heading size="4">Members</Heading> */}
               {/*   </Flex> */}
               {/* </div> */}
-              {members?.members &&
-                members.members.map((m) => (
-                  <Flex key={m.basic_form} direction="column">
-                    <Text
-                      size="6"
-                      onClick={() => onMemberClick(m)}
-                      className="cursor-pointer whitespace-nowrap"
-                      dangerouslySetInnerHTML={{
-                        __html: m.html,
-                      }}
-                    />
-                    <Text className="select-none" size="2">
-                      {m.meaning}
-                    </Text>
-                    <Box>
-                      <Badge color="sky" size="1">
-                        {m.pos}
-                      </Badge>
-                    </Box>
-                  </Flex>
-                ))}
+              {members?.members.map((m) => (
+                <Flex key={m.basic_form} direction="column">
+                  <Text
+                    size="6"
+                    onClick={() => onMemberClick(m)}
+                    className="cursor-pointer whitespace-nowrap"
+                    dangerouslySetInnerHTML={{
+                      __html: m.html,
+                    }}
+                  />
+                  <Text className="select-none" size="2">
+                    {m.meaning}
+                  </Text>
+                  <Box>
+                    <Badge color="sky" size="1">
+                      {m.pos}
+                    </Badge>
+                  </Box>
+                </Flex>
+              ))}
             </Grid>
             <Flex gap="4" direction="column">
               <Button onClick={onGetReadingsClick}>Get readings</Button>
@@ -355,7 +355,7 @@ export const EditSentencePage: FC = () => {
               size="3"
               onClick={handleUpdateData}
             >
-              {false ? "Updating..." : "Update"}
+              Update
             </Button>
           </div>
           <Box className="mt-[600px]" />

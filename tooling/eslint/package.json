@@ -1,16 +1,20 @@
 {
   "name": "@rem4d/eslint-config",
   "version": "0.3.0",
-  "devDependencies": {
-    "@eslint/js": "^9.15.0",
-    "eslint": "catalog:",
-    "eslint-config-turbo": "^2.3.3",
+  "dependencies": {
+    "@eslint/compat": "^1.2.3",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.14",
-    "globals": "^15.12.0",
-    "typescript": "catalog:",
+    "eslint-plugin-turbo": "^2.3.1",
     "typescript-eslint": "^8.15.0"
+  },
+  "devDependencies": {
+    "@rem4d/typescript-config": "workspace:*",
+    "@types/eslint__js": "8.42.3",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   },
   "exports": {
     "./base": "./base.js",

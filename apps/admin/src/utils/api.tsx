@@ -38,7 +38,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
         httpBatchLink({
           // transformer: superjson,
           url: "http://localhost:1222/trpc/api",
-          async headers() {
+          headers() {
             const headers = new Map<string, string>();
             headers.set("x-trpc-source", "admin");
 

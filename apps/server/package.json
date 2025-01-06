@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "dependencies": {
     "@rem4d/api": "workspace:*",
-    "@rem4d/typescript-config": "workspace:*",
     "@rem4d/tokenizer": "workspace:*",
+    "@rem4d/typescript-config": "workspace:*",
     "@sglkc/kuromoji": "^1.1.0",
     "@trpc/client": "^11.0.0-rc.666",
     "@trpc/server": "^11.0.0-rc.666",

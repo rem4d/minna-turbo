@@ -1,4 +1,5 @@
-import { Sentence, StatisticsItem } from "../../types";
+import type { Sentence } from "@rem4d/db";
+import type { StatisticsItem } from "@/types";
 import {
   Box,
   Text,
@@ -10,12 +11,15 @@ import {
   Grid,
 } from "@radix-ui/themes";
 import { useCallback, useEffect, useState } from "react";
-type GenStatementResponseData = {
+
+/*
+interface GenStatementResponseData {
   data: {
     sentences: Sentence[];
     additional: Sentence[];
   };
-};
+}
+*/
 export const StatisticPage = () => {
   // const [loading, setLoading] = useState(false);
   const [loadingStatementsForLevel, setLoadingStatementsForLevel] =
@@ -26,6 +30,7 @@ export const StatisticPage = () => {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
 
   useEffect(() => {
+    /*
     console.log(1);
     const makeReq = async () => {
       // setLoading(true);
@@ -40,9 +45,11 @@ export const StatisticPage = () => {
     };
 
     makeReq();
+    */
   }, []);
 
-  const onLevelClick = useCallback((n: number) => {
+  const onLevelClick = useCallback((_n: number) => {
+    /*
     const makeReq = async () => {
       setLoadingStatementsForLevel(true);
       setSentencesLvl([]);
@@ -63,6 +70,7 @@ export const StatisticPage = () => {
     };
 
     makeReq();
+    */
   }, []);
 
   return (

@@ -11,6 +11,10 @@
     },
     "clean": {
       "cache": false
+    },
+    "lint": {
+      "dependsOn": ["^build"],
+      "outputs": [".cache/.eslintcache"]
     }
   },
   "globalEnv": [

@@ -1,6 +1,6 @@
-import { Tables } from "./database.types";
+import type { Sentence } from "@rem4d/db";
 
-export type KanjiMapped = {
+export interface KanjiMapped {
   word_id: number;
   original: string;
   reading: string;
@@ -11,47 +11,45 @@ export type KanjiMapped = {
   is_kanji: boolean;
   is_kana: boolean;
   en?: string;
-};
+}
 
-export type Sentence = Tables<"sentences">;
-
-export type StatisticsItem = {
+export interface StatisticsItem {
   kanji: string;
   lvl: number;
   cnt: number;
-};
+}
 
-export type SentenceCreateParams = {
+export interface SentenceCreateParams {
   text: string;
   ruby: string;
   translation: string;
   source: string;
-};
+}
 
-export type SentenceUpdateParams = {
+export interface SentenceUpdateParams {
   text: string;
   translation: string;
   ruby: string;
   textWithFurigana: string;
   en: string | null;
   ru: string | null;
-};
+}
 
-export type FindAllParams = {
+export interface FindAllParams {
   page: number;
   maxPerPage?: number;
-};
+}
 
-export type GetSentencesForLevelReponse = {
+export interface GetSentencesForLevelReponse {
   sentences: Sentence[];
   additional: Sentence[];
-};
+}
 
-export type SentenceMemberOutput = {
+export interface SentenceMemberOutput {
   html: string;
   pos: string;
   pos_detail_1: string;
   basic_form: string;
   meaning?: string;
   id?: number;
-};
+}

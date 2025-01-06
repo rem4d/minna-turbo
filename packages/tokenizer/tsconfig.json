@@ -28,10 +28,10 @@
       "outDir": "${configDir}/dist",
 
       /** this package specific */
-      "module": "nodenext",
-      "moduleResolution": "nodenext"
-      // "module": "Preserve",
-      // "moduleResolution": "Bundler"
+      // "module": "nodenext",
+      // "moduleResolution": "nodenext"
+      "module": "Preserve",
+      "moduleResolution": "Bundler"
     },
     "exclude": [
         "node_modules",

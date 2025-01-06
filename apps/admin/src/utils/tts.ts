@@ -107,8 +107,8 @@ export async function initTTS(text: string) {
           //   reject(err);
           // });
         } catch (error) {
-          console.log();
-          reject(error);
+          console.log(error);
+          reject(new Error("Unexpected error."));
         }
       });
     });

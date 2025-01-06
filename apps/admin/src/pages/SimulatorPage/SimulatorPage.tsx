@@ -1,4 +1,4 @@
-import { SentenceMemberOutput } from "../../types";
+import type { SentenceMemberOutput } from "../../types";
 import {
   Box,
   Text,
@@ -36,10 +36,10 @@ export const SimulatorPage = () => {
       },
     );
 
-  const onPlayAudio = async () => {
-    if (list && list[activeIndex] && list[activeIndex].text) {
+  const onPlayAudio = () => {
+    if (list?.[activeIndex]?.text) {
       // await initVoicevox(list[activeIndex].text);
-      await initTTS(list[activeIndex].text);
+      void initTTS(list[activeIndex].text);
     } else {
       console.log("No element!");
     }
@@ -51,6 +51,12 @@ export const SimulatorPage = () => {
 
   const onShowFurigana = () => {
     setShowFurigana(!showFurigana);
+  };
+
+  const handleEditClick = () => {
+    if (sentence) {
+      void navigate("/edit/" + sentence.id);
+    }
   };
 
   return (
@@ -80,10 +86,7 @@ export const SimulatorPage = () => {
             </Flex>
             <Flex gap="2">
               <Button onClick={onPlayAudio}>Play audio</Button>
-              <Button
-                color="yellow"
-                onClick={() => navigate("/edit/" + sentence.id)}
-              >
+              <Button color="yellow" onClick={handleEditClick}>
                 Edit
               </Button>
               <Button color="gold" onClick={onShowFurigana}>
@@ -108,8 +111,7 @@ export const SimulatorPage = () => {
             {loadingMembers && <span>Loading members...</span>}
             <Grid columns="4" className="font-klee text-xl" gap="4">
               {!loadingMembers &&
-                members?.members &&
-                members.members.map((m) => (
+                members?.members.map((m) => (
                   <Flex key={m.basic_form} direction="column">
                     <Text
                       size="6"
