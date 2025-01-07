@@ -9,17 +9,21 @@ export const openAiRouter = router({
   check: publicProcedure.input(z.string()).mutation(async ({ input }) => {
     const t = input;
     const content = `check grammar and translate ${t}`;
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "user",
-          content,
-        },
-      ],
-    });
-    const choice = completion.choices[0];
-    return choice?.message?.content ?? "";
+    try {
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "user",
+            content,
+          },
+        ],
+      });
+      const choice = completion.choices[0];
+      return choice?.message.content ?? "";
+    } catch (err) {
+      throw new Error(JSON.stringify(err));
+    }
   }),
   batch: publicProcedure.query(async () => {
     /*

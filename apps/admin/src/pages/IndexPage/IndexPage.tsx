@@ -8,7 +8,7 @@ export const IndexPage: FC = () => {
 
   const { data: list, isLoading } = api.sentence.list.useQuery({
     maxPerPage: MAX_PER_PAGE,
-    page: 1,
+    page: pageNumber,
   });
 
   const onRowClick = (id: number) => {
@@ -26,9 +26,7 @@ export const IndexPage: FC = () => {
   return (
     <Box>
       <Flex gap="4">
-        {list && (
-          <Text color="gray">Total {list.length > 0 ? list.length : ""}</Text>
-        )}
+        {list && <Text color="gray"></Text>}
         {list && (
           <Flex gap="4">
             <Button disabled={pageNumber === 0} onClick={onNavClick("prev")}>
@@ -69,7 +67,9 @@ export const IndexPage: FC = () => {
                 onClick={() => onRowClick(elem.id)}
                 className="cursor-pointer"
               >
-                <Text color="gray">{index + pageNumber * MAX_PER_PAGE}</Text>
+                <Text color="gray">
+                  {index + 1 + pageNumber * MAX_PER_PAGE}
+                </Text>
               </Table.Cell>
               {/* <Table.Cell>{elem.id}</Table.Cell> */}
               <Table.Cell width="290px">{elem.text}</Table.Cell>

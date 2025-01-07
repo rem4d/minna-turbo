@@ -62,19 +62,19 @@ export const sentenceRouter = router({
     return data;
   }),
   list: publicProcedure
-    .input(z.object({ maxPerPage: z.number().gt(0), page: z.number().gt(0) }))
+    .input(z.object({ maxPerPage: z.number().gt(0), page: z.number() }))
     .query(async ({ ctx, input }) => {
       const { data, error } = await ctx.db
         .from("sentences")
         .select()
-        .eq("source", "source1")
+        .eq("source", "source4")
         .gt("level", 0)
-        .lt("level", 500)
-        .not("ru", "is", null)
-        .not("en", "is", null)
+        // .lt("level", 500)
         .order("updated_at", { ascending: false })
-        // .not("updated_at", "is", null)
-        .range(input.page, input.page + input.maxPerPage);
+        .range(
+          input.page * input.maxPerPage,
+          (input.page + 1) * input.maxPerPage,
+        );
       if (error) {
         throw new Error(error.message);
       }
@@ -88,18 +88,43 @@ export const sentenceRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const shift = 60;
-      const { sentences, additional } = (await getStatementsForLevel({
-        level: input.level,
+      const level = input.level;
+      const { sentences, additional } = await getStatementsForLevel({
+        level,
         shift,
         numberOfUnknownKanji: 1,
         db: ctx.db,
         redis: ctx.redis,
-      })) as { sentences: Sentence[]; additional: Sentence[] };
+      });
 
-      // return sentences.slice(0, 20);
-      const shuffledS = shuffle(sentences).slice(0, 20);
-      const shuffledA = shuffle(additional).slice(0, 2);
+      let known: number[] = [];
+
+      const knownKey = await ctx.redis.get(`known.${level}-${shift}`);
+
+      if (knownKey) {
+        known = JSON.parse(knownKey);
+      }
+
+      const sentencesFiltered = sentences.filter((s) => !known.includes(s.id));
+      const additionalFiltered = additional.filter(
+        (s) => !known.includes(s.id),
+      );
+
+      console.log(
+        `Sentences: ${sentencesFiltered.length}, additional: ${additionalFiltered.length}`,
+      );
+
+      const shuffledS = shuffle(sentencesFiltered).slice(0, 20);
+      const shuffledA = shuffle(additionalFiltered).slice(0, 2);
       const shuffled = shuffle(shuffledS.concat(shuffledA));
+      const newKnown = known.concat(shuffled.map((s) => s.id));
+
+      void ctx.redis.setEx(
+        `known.${level}-${shift}`,
+        60 * 60,
+        JSON.stringify(newKnown),
+      );
+
       return shuffled;
     }),
   getStatementsForLevel: publicProcedure
@@ -191,7 +216,7 @@ const getStatementsForLevel = async ({
     };
   }
 
-  const { data: sentences } = await db
+  const { data: sentences, error } = await db
     .from("sentences")
     .select("*")
     .lte("level", level)
@@ -201,7 +226,11 @@ const getStatementsForLevel = async ({
     .gte("level", clamp(level - shift, 0, level))
     .order("level", { ascending: false });
 
-  console.log(`Found: ${sentences?.length} native sentences.`);
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  console.log(`Found: ${sentences.length} native sentences.`);
 
   const userKanjiMap = new Map<string, Kanji>();
   const { data: userKanjis } = await db
@@ -252,7 +281,7 @@ const getStatementsForLevel = async ({
     console.log(`Write cache for key: "${level}-${shift}"`);
     void redis.setEx(
       `${level}-${shift}`,
-      60 * 60,
+      60 * 60, // expire in seconds
       JSON.stringify({ sentences, additional }),
     );
   }

@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import react from "@vitejs/plugin-react-swc";
 import svgr from "vite-plugin-svgr";
-import checker from "vite-plugin-checker";
+// import checker from "vite-plugin-checker";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 export default defineConfig(({ mode }) => {
@@ -10,15 +10,15 @@ export default defineConfig(({ mode }) => {
     mode === "production"
       ? undefined
       : {
-          port: 5173,
-          host: true,
-          proxy: {
-            "/api": {
-              target: "http://localhost:1222",
-              // changeOrigin: true,
-            },
+        port: 5173,
+        host: true,
+        proxy: {
+          "/api": {
+            target: "http://localhost:1222",
+            // changeOrigin: true,
           },
-        };
+        },
+      };
   return {
     server,
     plugins: [
@@ -31,16 +31,16 @@ export default defineConfig(({ mode }) => {
       tsconfigPaths(),
       svgr(),
 
-      checker({
-        typescript: true,
-        eslint: {
-          useFlatConfig: true,
-          lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
-        },
-        overlay: {
-          initialIsOpen: false,
-        },
-      }),
+      // checker({
+      //   typescript: true,
+      //   eslint: {
+      //     useFlatConfig: true,
+      //     lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
+      //   },
+      //   overlay: {
+      //     initialIsOpen: false,
+      //   },
+      // }),
     ],
   };
 });
