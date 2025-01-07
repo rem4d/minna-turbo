@@ -80,6 +80,32 @@ export const sentenceRouter = router({
       }
       return data;
     }),
+  markAsSeen: publicProcedure
+    .input(
+      z.object({
+        ids: z.array(z.number()),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = 2234;
+      let known: number[] = [];
+
+      const knownKey = await ctx.redis.get(`known.${userId}`);
+
+      if (knownKey) {
+        known = JSON.parse(knownKey) as number[];
+      }
+
+      const newKnown = known.concat(input.ids);
+
+      void ctx.redis.setEx(
+        `known.${userId}`,
+        60 * 60,
+        JSON.stringify(newKnown),
+      );
+
+      return true;
+    }),
   getRandomized: publicProcedure
     .input(
       z.object({
@@ -89,6 +115,7 @@ export const sentenceRouter = router({
     .query(async ({ ctx, input }) => {
       const shift = 60;
       const level = input.level;
+      const userId = 2234;
       const { sentences, additional } = await getStatementsForLevel({
         level,
         shift,
@@ -99,10 +126,10 @@ export const sentenceRouter = router({
 
       let known: number[] = [];
 
-      const knownKey = await ctx.redis.get(`known.${level}-${shift}`);
+      const knownKey = await ctx.redis.get(`known.${userId}`);
 
       if (knownKey) {
-        known = JSON.parse(knownKey);
+        known = JSON.parse(knownKey) as number[];
       }
 
       const sentencesFiltered = sentences.filter((s) => !known.includes(s.id));
@@ -117,13 +144,13 @@ export const sentenceRouter = router({
       const shuffledS = shuffle(sentencesFiltered).slice(0, 20);
       const shuffledA = shuffle(additionalFiltered).slice(0, 2);
       const shuffled = shuffle(shuffledS.concat(shuffledA));
-      const newKnown = known.concat(shuffled.map((s) => s.id));
+      // const newKnown = known.concat(shuffled.map((s) => s.id));
 
-      void ctx.redis.setEx(
-        `known.${level}-${shift}`,
-        60 * 60,
-        JSON.stringify(newKnown),
-      );
+      // void ctx.redis.setEx(
+      //   `known.${level}-${shift}`,
+      //   60 * 60,
+      //   JSON.stringify(newKnown),
+      // );
 
       return shuffled;
     }),
@@ -218,10 +245,9 @@ const getStatementsForLevel = async ({
 
   const { data: sentences, error } = await db
     .from("sentences")
-    .select("*")
+    .select()
     .lte("level", level)
-    // TODO: REMOVE LATER
-    // .eq("source", "source1")
+    .eq("source", "source4")
     .lte("unknown_kanji_number", numberOfUnknownKanji)
     .gte("level", clamp(level - shift, 0, level))
     .order("level", { ascending: false });

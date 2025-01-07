@@ -12,7 +12,7 @@ import {
   Switch,
   Spinner,
 } from "@radix-ui/themes";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { initTTS } from "@/utils/tts";
 import { openUrl } from "@/utils";
 import { useNavigate } from "react-router-dom";
@@ -22,12 +22,28 @@ export const SimulatorPage = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [showFurigana, setShowFurigana] = useState(false);
   const [lang, setLang] = useState<"en" | "ru">("en");
+  const [seenIds, setSeenIds] = useState<number[]>([]);
+  // const pageLeave = usePageLeave()
 
   const { data: list, isLoading: loadingSentence } =
     api.sentence.getRandomized.useQuery({
-      level: 90,
+      level: 96,
     });
   const sentence = list?.[activeIndex];
+  const markAsSeenMutation = api.sentence.markAsSeen.useMutation();
+
+  useEffect(() => {
+    if (sentence && !seenIds.includes(sentence.id)) {
+      setSeenIds((ids) => ids.concat(sentence.id));
+    }
+
+    return () => {
+      console.log(1);
+      // if (seenIds.length > 0) {
+      //   void markAsSeenMutation.mutate({ ids: seenIds });
+      // }
+    };
+  }, []);
 
   const navigate = useNavigate();
 
@@ -66,6 +82,14 @@ export const SimulatorPage = () => {
     setLang(lang === "en" ? "ru" : "en");
   };
 
+  const handlePrevClick = () => {
+    setActiveIndex(activeIndex - 1);
+  };
+
+  const handleNextClick = () => {
+    setActiveIndex(activeIndex + 1);
+  };
+
   return (
     <Box>
       <Heading>SimulatorPage</Heading>
@@ -78,15 +102,12 @@ export const SimulatorPage = () => {
         <Grid columns="2">
           <Flex direction="column" align="start" gapY="4">
             <Flex gap="2" mb="4">
-              <Button
-                disabled={activeIndex === 0}
-                onClick={() => setActiveIndex(activeIndex - 1)}
-              >
+              <Button disabled={activeIndex === 0} onClick={handlePrevClick}>
                 Prev
               </Button>
               <Button
                 disabled={activeIndex === list.length - 1}
-                onClick={() => setActiveIndex(activeIndex + 1)}
+                onClick={handleNextClick}
               >
                 Next
               </Button>

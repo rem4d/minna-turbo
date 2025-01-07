@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import type { FC } from "react";
+import type { Id } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { openUrl } from "../../utils";
 import {
   Flex,
@@ -27,6 +29,7 @@ export const EditSentencePage: FC = () => {
   const [ru, setRu] = useState("");
   const [openAiResponse, setOpenAiResponse] = useState("");
   const [openAiTranslation, setOpenAiTranslation] = useState("");
+  const toastId = useRef<Id | null>(null);
   // const [sentence, setSentence] = useState<Sentence | null>(null);
 
   const { id } = useParams();
@@ -35,7 +38,17 @@ export const EditSentencePage: FC = () => {
     enabled: !!id,
   });
 
-  const updateMutation = api.sentence.update.useMutation();
+  const updateMutation = api.sentence.update.useMutation({
+    onSuccess() {
+      if (toastId.current) {
+        toast.update(toastId.current, {
+          type: "success",
+          autoClose: 3000,
+          render: "Successfully updated.",
+        });
+      }
+    },
+  });
   const { mutate: deleteMutation, isPending: isDeleting } =
     api.sentence.delete.useMutation();
 
@@ -91,6 +104,7 @@ export const EditSentencePage: FC = () => {
     if (typeof id !== "string") {
       return;
     }
+    toastId.current = toast("Example.");
     updateMutation.mutate({
       id: id,
       input: {
@@ -350,7 +364,7 @@ export const EditSentencePage: FC = () => {
           </Box>
           <div>
             <Button
-              disabled={false}
+              disabled={updateMutation.isPending}
               color="lime"
               size="3"
               onClick={handleUpdateData}
@@ -361,6 +375,7 @@ export const EditSentencePage: FC = () => {
           <Box className="mt-[600px]" />
         </Box>
       )}
+      <ToastContainer />
     </Box>
   );
 };
