@@ -10,6 +10,7 @@
   "devDependencies": {
     "@rem4d/eslint-config": "workspace:*",
     "@rem4d/typescript-config": "workspace:*",
+    "@rem4d/db": "workspace:*",
     "@types/node": "^22.10.2"
   },
   "exports": {

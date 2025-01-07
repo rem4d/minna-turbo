@@ -29,6 +29,7 @@ export const SimulatorPage = () => {
     api.sentence.getRandomized.useQuery({
       level: 96,
     });
+
   const sentence = list?.[activeIndex];
   const markAsSeenMutation = api.sentence.markAsSeen.useMutation();
 

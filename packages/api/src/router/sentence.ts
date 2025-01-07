@@ -2,9 +2,8 @@ import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 import { clamp } from "../util/math";
 import type { Database, Kanji, Sentence } from "@rem4d/db";
-import { analyze } from "../util/analyze";
 import { shuffle } from "../util/shuffle";
-import { tokenize } from "@rem4d/tokenizer";
+import { tokenize, analyze } from "@rem4d/tokenizer";
 import type { SupabaseClient } from "@rem4d/db";
 import type { RedisClientType } from "../trpc";
 import { dedup } from "../util/dedup";
@@ -68,10 +67,10 @@ export const sentenceRouter = router({
       const { data, error } = await ctx.db
         .from("sentences")
         .select()
-        .eq("source", "source4")
-        .gt("level", 0)
+        .eq("source", "challenge")
+        // .gt("level", 0)
         // .lt("level", 500)
-        .order("updated_at", { ascending: false })
+        // .order("updated_at", { ascending: false })
         .range(
           input.page * input.maxPerPage,
           (input.page + 1) * input.maxPerPage,

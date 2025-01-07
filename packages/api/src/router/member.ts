@@ -1,8 +1,11 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 import type { SentenceMemberOutput } from "../types";
-import { tokenize } from "@rem4d/tokenizer";
-import { createRubySentence, createRubyToken } from "../util/analyze";
+import {
+  tokenize,
+  createRubySentence,
+  createRubyToken,
+} from "@rem4d/tokenizer";
 
 export const memberRouter = router({
   setInvalid: publicProcedure
@@ -205,7 +208,7 @@ export const memberRouter = router({
           pos_detail_1: tmpToken.pos_detail_1,
           html: createRubyToken(tmpToken),
           meaning: member?.en ?? "",
-          ru: member?.ru ?? '',
+          ru: member?.ru ?? "",
           id: member?.id,
         });
       }
