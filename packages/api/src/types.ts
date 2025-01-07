@@ -1,4 +1,5 @@
-import { Database as SDatabase, SentenceMember } from "@rem4d/db";
+import type { Database as SDatabase } from "@rem4d/db";
+import { SentenceMember } from "@rem4d/db";
 
 export type Database = SDatabase;
 
@@ -18,7 +19,7 @@ export interface MojiToken {
   pronunciation: string;
 }
 
-export type KanjiMapped = {
+export interface KanjiMapped {
   original: string;
   reading: string;
   start: number;
@@ -29,9 +30,9 @@ export type KanjiMapped = {
   is_kanji: boolean;
   is_kana: boolean;
   en?: string;
-};
+}
 
-export type SentenceMemberInput = {
+export interface SentenceMemberInput {
   basic_form: string;
   pos: string;
   original_sentence: string;
@@ -40,13 +41,14 @@ export type SentenceMemberInput = {
   is_invalid: boolean;
   is_hidden: boolean;
   other: string[];
-};
+}
 
-export type SentenceMemberOutput = {
+export interface SentenceMemberOutput {
   basic_form: string;
   pos: string;
   pos_detail_1: string;
   html: string;
   meaning: string;
+  ru?: string
   id?: number;
-};
+}

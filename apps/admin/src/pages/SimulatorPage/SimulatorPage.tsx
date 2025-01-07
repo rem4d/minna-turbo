@@ -9,6 +9,8 @@ import {
   Badge,
   DataList,
   Code,
+  Switch,
+  Spinner,
 } from "@radix-ui/themes";
 import { useCallback, useState } from "react";
 import { initTTS } from "@/utils/tts";
@@ -19,6 +21,7 @@ import { api } from "@/utils/api";
 export const SimulatorPage = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [showFurigana, setShowFurigana] = useState(false);
+  const [lang, setLang] = useState<"en" | "ru">("en");
 
   const { data: list, isLoading: loadingSentence } =
     api.sentence.getRandomized.useQuery({
@@ -59,6 +62,10 @@ export const SimulatorPage = () => {
     }
   };
 
+  const handleSwitchChange = () => {
+    setLang(lang === "en" ? "ru" : "en");
+  };
+
   return (
     <Box>
       <Heading>SimulatorPage</Heading>
@@ -93,22 +100,29 @@ export const SimulatorPage = () => {
                 {showFurigana ? "Hide furigana" : "Show furigana"}
               </Button>
             </Flex>
-            {showFurigana ? (
-              <Text
-                size="6"
-                dangerouslySetInnerHTML={{
-                  __html: list[activeIndex].ruby ?? "",
-                }}
-              />
-            ) : (
-              <Text
-                size="6"
-                dangerouslySetInnerHTML={{
-                  __html: list[activeIndex].text_with_furigana ?? "",
-                }}
-              />
-            )}
-            {loadingMembers && <span>Loading members...</span>}
+            <Box className="mt-2">
+              <span className="font-klee">
+                {showFurigana ? (
+                  <Text
+                    className="relative top-0"
+                    size="6"
+                    dangerouslySetInnerHTML={{
+                      __html: list[activeIndex].ruby ?? "",
+                    }}
+                  />
+                ) : (
+                  <Text
+                    className="relative top-2"
+                    size="6"
+                    dangerouslySetInnerHTML={{
+                      __html: list[activeIndex].text_with_furigana ?? "",
+                    }}
+                  />
+                )}
+              </span>
+            </Box>
+            <div className="w-full mt-8" />
+            {loadingMembers && <Spinner />}
             <Grid columns="4" className="font-klee text-xl" gap="4">
               {!loadingMembers &&
                 members?.members.map((m) => (
@@ -121,8 +135,8 @@ export const SimulatorPage = () => {
                         __html: m.html,
                       }}
                     />
-                    <Text className="select-none" size="2">
-                      {m.meaning}
+                    <Text className="font-inter" size="2">
+                      {lang === "en" ? m.meaning : m.ru ? m.ru : m.meaning}
                     </Text>
                     <Box mt="2">
                       <Badge color="sky" size="1">
@@ -137,8 +151,9 @@ export const SimulatorPage = () => {
                   </Flex>
                 ))}
             </Grid>
-            <Text>ru: {sentence.ru}</Text>
-            <Text>en: {sentence.translation}</Text>
+            {lang === "ru" && <Text>ru: {sentence.ru}</Text>}
+            {lang === "en" && <Text>en: {sentence.en}</Text>}
+            <Text>tr: {sentence.translation}</Text>
           </Flex>
           <Flex direction="column" gap="6">
             <DataList.Root>
@@ -171,6 +186,11 @@ export const SimulatorPage = () => {
                 <DataList.Value>{sentence.source}</DataList.Value>
               </DataList.Item>
             </DataList.Root>
+            <Text size="3">{lang}</Text>
+            <Switch
+              checked={lang === "en"}
+              onCheckedChange={handleSwitchChange}
+            />
           </Flex>
         </Grid>
       ) : null}

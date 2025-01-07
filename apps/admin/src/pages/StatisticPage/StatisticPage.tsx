@@ -1,3 +1,4 @@
+/* eslint-disable */
 import type { Sentence } from "@rem4d/db";
 import type { StatisticsItem } from "@/types";
 import {

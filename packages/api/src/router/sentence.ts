@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 import { clamp } from "../util/math";
-import { Database, Kanji, Sentence } from "@rem4d/db";
+import type { Database, Kanji, Sentence } from "@rem4d/db";
 import { analyze } from "../util/analyze";
 import { shuffle } from "../util/shuffle";
 import { tokenize } from "@rem4d/tokenizer";
@@ -14,9 +14,10 @@ export const sentenceRouter = router({
       z.object({
         text: z.string(),
         pos: z.string(),
+        pos_detail: z.string(),
       }),
     )
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const filterText =
         input.pos === "verb"
           ? input.text.substring(0, input.text.length - 1)
@@ -38,7 +39,10 @@ export const sentenceRouter = router({
         const tokens = _tokens.filter((t) => t.pos === input.pos);
 
         for (const t of tokens) {
-          if (input.text === t.basic_form) {
+          if (
+            input.text === t.basic_form &&
+            input.pos_detail === t.pos_detail_1
+          ) {
             result.push(sentence);
           }
         }
@@ -96,7 +100,7 @@ export const sentenceRouter = router({
       const shuffledS = shuffle(sentences).slice(0, 20);
       const shuffledA = shuffle(additional).slice(0, 2);
       const shuffled = shuffle(shuffledS.concat(shuffledA));
-      return shuffled as Sentence[];
+      return shuffled;
     }),
   getStatementsForLevel: publicProcedure
     .input(
@@ -181,7 +185,10 @@ const getStatementsForLevel = async ({
 
   if (cached) {
     console.log(`Return cached value`);
-    return JSON.parse(cached);
+    return JSON.parse(cached) as {
+      additional: Sentence[];
+      sentences: Sentence[];
+    };
   }
 
   const { data: sentences } = await db
@@ -241,8 +248,9 @@ const getStatementsForLevel = async ({
     } else {
       console.log(`No sentences found for : ${kanjiString} `);
     }
+
     console.log(`Write cache for key: "${level}-${shift}"`);
-    redis.setEx(
+    void redis.setEx(
       `${level}-${shift}`,
       60 * 60,
       JSON.stringify({ sentences, additional }),

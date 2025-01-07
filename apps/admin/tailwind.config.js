@@ -6,6 +6,7 @@ export default {
     fontFamily: {
       epkyoka: ["Epkyoka"],
       klee: ["Klee"],
+      inter: ["Inter"],
     },
   },
   plugins: [],

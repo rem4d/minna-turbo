@@ -1,0 +1,26 @@
+{
+  "name": "batcher2",
+  "description": "",
+  "version": "1.0.0",
+  "author": "",
+  "dependencies": {
+    "@rem4d/db": "workspace:*",
+    "@rem4d/tokenizer": "workspace:*",
+    "pino": "^9.5.0",
+    "puppeteer": "^23.11.1"
+  },
+  "devDependencies": {
+    "@rem4d/eslint-config": "workspace:*",
+    "@rem4d/typescript-config": "workspace:*",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "batch": "tsx watch --clear-screen=false src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

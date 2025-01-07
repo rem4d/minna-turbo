@@ -54,7 +54,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api
       '@rem4d/db':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/db
       '@rem4d/typescript-config':
         specifier: workspace:*
@@ -139,7 +139,35 @@ importers:
   apps/batcher:
     dependencies:
       '@rem4d/db':
-        specifier: workspace:^
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@rem4d/tokenizer':
+        specifier: workspace:*
+        version: link:../../packages/tokenizer
+      pino:
+        specifier: ^9.5.0
+        version: 9.6.0
+      puppeteer:
+        specifier: ^23.11.1
+        version: 23.11.1(typescript@5.7.2)
+    devDependencies:
+      '@rem4d/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
+      '@rem4d/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
+      tsx:
+        specifier: 'catalog:'
+        version: 4.19.2
+      typescript:
+        specifier: 'catalog:'
+        version: 5.7.2
+
+  apps/batcher2:
+    dependencies:
+      '@rem4d/db':
+        specifier: workspace:*
         version: link:../../packages/db
       '@rem4d/tokenizer':
         specifier: workspace:*

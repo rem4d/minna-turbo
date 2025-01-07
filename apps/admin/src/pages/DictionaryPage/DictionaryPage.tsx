@@ -17,6 +17,7 @@ import {
   SegmentedControl,
   Table,
   TextField,
+  Spinner,
 } from "@radix-ui/themes";
 import { twMerge } from "tailwind-merge";
 import { useCallback, useEffect, useRef, useState, type FC } from "react";
@@ -24,6 +25,7 @@ import { openUrl } from "@/utils";
 
 export const DictionaryPage: FC = () => {
   const [isEditingMeaning, setIsEditingMeaning] = useState(false);
+  const [isEditingRu, setIsEditingRu] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingValue, setEditingValue] = useState("");
   const [sentencesByText, setSentencesByText] = useState("");
@@ -46,56 +48,59 @@ export const DictionaryPage: FC = () => {
   ];
 
   const editInputRef = useRef<HTMLInputElement>(null);
+  const editInputRuRef = useRef<HTMLInputElement>(null);
 
   const utils = api.useUtils();
-  const { data: membersByPosData } = api.member.membesByPos.useQuery({
-    pos: selectedPos,
-    limit: MAX_PER_PAGE,
-    page: pageNumber,
-    basic_form: debouncedMembersByText,
-  });
+  const { data: membersByPosData, isLoading: memberByPosLoading } =
+    api.member.membesByPos.useQuery({
+      pos: selectedPos,
+      limit: MAX_PER_PAGE,
+      page: pageNumber,
+      basic_form: debouncedMembersByText,
+    });
 
   const { data: total } = api.member.membesByPosTotal.useQuery({
     pos: selectedPos,
   });
+
   const membersByPos = membersByPosData;
 
   const updateMeaningMutation = api.member.updateMeaning.useMutation({
     onSuccess() {
-      utils.member.membesByPos.invalidate();
+      void utils.member.membesByPos.invalidate();
+    },
+  });
+  const updateRuMutation = api.member.updateRu.useMutation({
+    onSuccess() {
+      void utils.member.membesByPos.invalidate();
     },
   });
   const setHiddenMutation = api.member.setHidden.useMutation({
     onSuccess() {
-      utils.member.membesByPos.invalidate();
+      void utils.member.membesByPos.invalidate();
     },
   });
   const setInvalidMutation = api.member.setInvalid.useMutation({
     onSuccess() {
-      utils.member.membesByPos.invalidate();
+      void utils.member.membesByPos.invalidate();
     },
   });
 
-  const { data: correspondingSentences } =
-    api.sentence.findContainingText.useQuery(
-      {
-        text: sentencesByText,
-        pos: selectedPos,
-      },
-      {
-        enabled: !!sentencesByText && sentencesByText.length > 0,
-      },
-    );
+  const findSenMutation = api.sentence.findContainingText.useMutation();
+  const correspondingSentences = findSenMutation.data ?? [];
 
   const handleDocumentClick = useCallback((e: MouseEvent) => {
     if (e.target) {
-      const eq = (e.target as HTMLInputElement).isEqualNode(
+      const isInputEn = (e.target as HTMLInputElement).isEqualNode(
         editInputRef.current,
       );
-      if (!eq) {
+      const isInputRu = (e.target as HTMLInputElement).isEqualNode(
+        editInputRuRef.current,
+      );
+      if (!isInputEn && !isInputRu) {
         setIsEditingMeaning(false);
+        setIsEditingRu(false);
       }
-      console.log(eq);
     }
   }, []);
 
@@ -113,6 +118,21 @@ export const DictionaryPage: FC = () => {
     [],
   );
 
+  const onEditRuClick = useCallback(
+    (e: React.MouseEvent<HTMLElement>, id: number) => {
+      e.stopPropagation();
+      setEditingId(id);
+      setIsEditingRu(true);
+      const found = membersByPos?.find((m) => m.id === id);
+      if (found) {
+        setEditingValue(found.ru ?? "");
+      } else {
+        console.log("unexpected error");
+      }
+    },
+    [membersByPos],
+  );
+
   const onEditMeaningClick = useCallback(
     (e: React.MouseEvent<HTMLElement>, id: number) => {
       e.stopPropagation();
@@ -121,6 +141,8 @@ export const DictionaryPage: FC = () => {
       const found = membersByPos?.find((m) => m.id === id);
       if (found) {
         setEditingValue(found.en ?? "");
+      } else {
+        console.log("unexpected error");
       }
     },
     [membersByPos],
@@ -143,17 +165,47 @@ export const DictionaryPage: FC = () => {
     [editingId, editingValue, updateMeaningMutation],
   );
 
+  const onInputRuKeydown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.code === "Enter") {
+        setEditingId(null);
+        setEditingValue("");
+        setIsEditingMeaning(false);
+        if (editingId) {
+          updateRuMutation.mutate({
+            id: editingId,
+            ru: editingValue.trim(),
+          });
+        }
+      }
+    },
+    [editingId, editingValue, updateRuMutation],
+  );
   const onFindSentencesClick = useCallback(
     (id: number) => {
       const found = membersByPos?.find((m) => m.id === id);
       if (found) {
         setCurrentMemberId(id);
         setSentencesByText(found.basic_form);
+
+        void findSenMutation.mutate(
+          {
+            text: found.basic_form,
+            pos: found.pos,
+            pos_detail: found.pos_detail_1,
+          },
+          // {
+          //   enabled:
+          //     !!sentencesByText &&
+          //     sentencesByText.length > 0 &&
+          //     Boolean(selectedPosDetail),
+          // },
+        );
       } else {
         console.error("No corresponding member found.");
       }
     },
-    [membersByPos],
+    [membersByPos, findSenMutation],
   );
 
   const onSetInvalidClick = useCallback(
@@ -178,7 +230,7 @@ export const DictionaryPage: FC = () => {
 
   return (
     <Box>
-      <Grid columns="40% 65%" gap="4">
+      <Grid columns="45% auto" gap="4">
         <Box className="col-span-full">
           <SegmentedControl.Root defaultValue="inbox">
             {partsOfSpeech.map((pos) => (
@@ -228,13 +280,19 @@ export const DictionaryPage: FC = () => {
                 </Text>
               </Flex>
             </Flex>
+            {memberByPosLoading && <Spinner />}
             {membersByPos && membersByPos.length > 0 && (
               <Table.Root size="2" variant="ghost">
                 <Table.Header>
                   <Table.Row>
-                    <Table.ColumnHeaderCell>id</Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell>basic form</Table.ColumnHeaderCell>
+                    {/* <Table.ColumnHeaderCell>id</Table.ColumnHeaderCell> */}
+                    <Table.ColumnHeaderCell className="whitespace-nowrap">
+                      basic form
+                    </Table.ColumnHeaderCell>
                     <Table.ColumnHeaderCell>meaning</Table.ColumnHeaderCell>
+                    <Table.ColumnHeaderCell className="hidden">
+                      ru
+                    </Table.ColumnHeaderCell>
                     <Table.ColumnHeaderCell>pos_detail</Table.ColumnHeaderCell>
                     <Table.ColumnHeaderCell></Table.ColumnHeaderCell>
                   </Table.Row>
@@ -248,9 +306,9 @@ export const DictionaryPage: FC = () => {
                         m.id === currentMemberId && "bg-gray-800",
                       )}
                     >
-                      <Table.Cell>
-                        <Text color="gray">{m.id}</Text>
-                      </Table.Cell>
+                      {/* <Table.Cell> */}
+                      {/*   <Text color="gray">{m.id}</Text> */}
+                      {/* </Table.Cell> */}
                       <Table.Cell className="whitespace-nowrap">
                         {m.basic_form}
                       </Table.Cell>
@@ -265,6 +323,19 @@ export const DictionaryPage: FC = () => {
                           ></TextField.Root>
                         ) : (
                           m.en
+                        )}
+                      </Table.Cell>
+                      <Table.Cell className="hidden">
+                        {isEditingRu && editingId === m.id ? (
+                          <TextField.Root
+                            ref={editInputRuRef}
+                            placeholder="new value..."
+                            value={editingValue}
+                            onChange={onEditValueChange}
+                            onKeyDown={onInputRuKeydown}
+                          ></TextField.Root>
+                        ) : (
+                          m.ru
                         )}
                       </Table.Cell>
                       <Table.Cell>
@@ -293,6 +364,11 @@ export const DictionaryPage: FC = () => {
                               Edit meaning
                             </DropdownMenu.Item>
                             <DropdownMenu.Item
+                              onClick={(e) => onEditRuClick(e, m.id)}
+                            >
+                              Edit ru
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item
                               onClick={() => onSetInvalidClick(m.id)}
                             >
                               Set invalid
@@ -313,56 +389,53 @@ export const DictionaryPage: FC = () => {
           </Flex>
         </section>
         <Flex direction="column" gap="4">
-          {correspondingSentences && (
+          {correspondingSentences.length > 0 && (
             <Flex direction="column" gap="1">
               <Text size="4">{sentencesByText}</Text>
               <Text size="1">
-                {correspondingSentences && (
-                  <Text size="2">{correspondingSentences.length}</Text>
-                )}{" "}
-                sentences found.
+                <Text size="2">{correspondingSentences.length}</Text> sentences
+                found.
               </Text>
             </Flex>
           )}
-          {correspondingSentences &&
-            correspondingSentences.map((s, index) => (
-              <Box key={s.id}>
-                <Flex align="start" gap="2">
-                  <Text size="2" color="gray">
-                    {index + 1}.
-                  </Text>
-                  <Flex direction="column" gap="2">
-                    <Flex gap="2" align="center">
-                      <span className="relative">
-                        <Text
-                          size="2"
-                          className="text-white/60"
-                          dangerouslySetInnerHTML={{
-                            __html: s.text_with_furigana ?? "",
-                          }}
+          {correspondingSentences.map((s, index) => (
+            <Box key={s.id}>
+              <Flex align="start" gap="2">
+                <Text size="2" color="gray">
+                  {index + 1}.
+                </Text>
+                <Flex direction="column" gap="2">
+                  <Flex gap="2" align="center">
+                    <span className="relative">
+                      <Text
+                        size="2"
+                        className="text-white/60"
+                        dangerouslySetInnerHTML={{
+                          __html: s.text_with_furigana ?? "",
+                        }}
+                      />
+                      <div
+                        className="cursor-pointer absolute -right-4 top-2"
+                        onClick={() => openUrl(`/edit/${s.id}`)}
+                      >
+                        <ExternalLinkIcon
+                          style={{ color: "gray" }}
+                          width="15"
+                          height="15"
                         />
-                        <div
-                          className="cursor-pointer absolute -right-4 top-2"
-                          onClick={() => openUrl(`/edit/${s.id}`)}
-                        >
-                          <ExternalLinkIcon
-                            style={{ color: "gray" }}
-                            width="15"
-                            height="15"
-                          />
-                        </div>
-                      </span>
-                    </Flex>
-                    <Text className="text-white/90" size="2">
-                      {s.ru}
-                    </Text>
-                    <Text className="text-white/20" size="2">
-                      {s.en ?? s.translation}
-                    </Text>
+                      </div>
+                    </span>
                   </Flex>
+                  <Text className="text-white/90" size="2">
+                    {s.ru}
+                  </Text>
+                  <Text className="text-white/20" size="2">
+                    {s.en ? s.en : (s.translation ?? "")}
+                  </Text>
                 </Flex>
-              </Box>
-            ))}
+              </Flex>
+            </Box>
+          ))}
         </Flex>
       </Grid>
     </Box>

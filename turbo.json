@@ -9,6 +9,10 @@
       "persistent": true,
       "cache": false
     },
+    "batch": {
+      "persistent": true,
+      "cache": false
+    },
     "clean": {
       "cache": false
     },

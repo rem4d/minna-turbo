@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
-import { SentenceMemberOutput } from "../types";
+import type { SentenceMemberOutput } from "../types";
 import { tokenize } from "@rem4d/tokenizer";
 import { createRubySentence, createRubyToken } from "../util/analyze";
 
@@ -52,6 +52,27 @@ export const memberRouter = router({
       }
       return data;
     }),
+  updateRu: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        ru: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { data, error } = await ctx.db
+        .from("sentence_members")
+        .update({
+          ru: input.ru,
+        })
+        .eq("id", input.id)
+        .select()
+        .single();
+      if (error) {
+        throw new Error("Error when update.");
+      }
+      return data;
+    }),
   membesByPosTotal: publicProcedure
     .input(z.object({ pos: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -88,7 +109,7 @@ export const memberRouter = router({
         .eq("pos", pos)
         .eq("is_hidden", false)
         .eq("is_invalid", false)
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: true });
 
       if (input.basic_form) {
         db.eq("basic_form", input.basic_form);
@@ -118,7 +139,7 @@ export const memberRouter = router({
       const outputMembers: SentenceMemberOutput[] = [];
 
       const japaneseNameRegex = /[一-龠]{2}(?=さん)/;
-      const japaneseNameMatches = text.match(japaneseNameRegex);
+      const japaneseNameMatches = japaneseNameRegex.exec(text);
 
       for (const token of tokens) {
         // ignore specific types of speech
@@ -184,6 +205,7 @@ export const memberRouter = router({
           pos_detail_1: tmpToken.pos_detail_1,
           html: createRubyToken(tmpToken),
           meaning: member?.en ?? "",
+          ru: member?.ru ?? '',
           id: member?.id,
         });
       }
