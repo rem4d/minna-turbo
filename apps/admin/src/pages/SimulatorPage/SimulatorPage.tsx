@@ -12,18 +12,18 @@ import {
   Switch,
   Spinner,
 } from "@radix-ui/themes";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { initTTS } from "@/utils/tts";
 import { openUrl } from "@/utils";
 import { useNavigate } from "react-router-dom";
 import { api } from "@/utils/api";
+import useUnmount from "@/hooks/useUnmount";
 
 export const SimulatorPage = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [showFurigana, setShowFurigana] = useState(false);
   const [lang, setLang] = useState<"en" | "ru">("en");
   const [seenIds, setSeenIds] = useState<number[]>([]);
-  // const pageLeave = usePageLeave()
 
   const { data: list, isLoading: loadingSentence } =
     api.sentence.getRandomized.useQuery({
@@ -32,18 +32,17 @@ export const SimulatorPage = () => {
   const sentence = list?.[activeIndex];
   const markAsSeenMutation = api.sentence.markAsSeen.useMutation();
 
+  useUnmount(() => {
+    if (seenIds.length > 0) {
+      markAsSeenMutation.mutate({ ids: seenIds });
+    }
+  });
+
   useEffect(() => {
     if (sentence && !seenIds.includes(sentence.id)) {
       setSeenIds((ids) => ids.concat(sentence.id));
     }
-
-    return () => {
-      console.log(1);
-      // if (seenIds.length > 0) {
-      //   void markAsSeenMutation.mutate({ ids: seenIds });
-      // }
-    };
-  }, []);
+  }, [sentence, seenIds]);
 
   const navigate = useNavigate();
 

@@ -7,6 +7,7 @@ import { shuffle } from "../util/shuffle";
 import { tokenize } from "@rem4d/tokenizer";
 import type { SupabaseClient } from "@rem4d/db";
 import type { RedisClientType } from "../trpc";
+import { dedup } from "../util/dedup";
 
 export const sentenceRouter = router({
   findContainingText: publicProcedure
@@ -96,11 +97,11 @@ export const sentenceRouter = router({
         known = JSON.parse(knownKey) as number[];
       }
 
-      const newKnown = known.concat(input.ids);
+      const newKnown = dedup(known.concat(input.ids));
 
       void ctx.redis.setEx(
         `known.${userId}`,
-        60 * 60,
+        24 * 60 * 60,
         JSON.stringify(newKnown),
       );
 
@@ -307,7 +308,7 @@ const getStatementsForLevel = async ({
     console.log(`Write cache for key: "${level}-${shift}"`);
     void redis.setEx(
       `${level}-${shift}`,
-      60 * 60, // expire in seconds
+      24 * 60 * 60, // expire in seconds
       JSON.stringify({ sentences, additional }),
     );
   }

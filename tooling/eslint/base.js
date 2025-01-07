@@ -80,6 +80,7 @@ export default tseslint.config(
       "no-empty-function": "off",
       "@typescript-eslint/no-empty-function": "off",
       "@typescript-eslint/no-floating-promises": "warn",
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
   {
