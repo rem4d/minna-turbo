@@ -7,7 +7,7 @@ export const createRubyToken = ({ reading, original }: KanjiMapped): string => {
 
   // TODO:
   // test for middle:
-  // 引き出し
+  // 引き出し -> ひきだし
   // 申し上げる -> もうしあげる
 
   let html_beg = "";

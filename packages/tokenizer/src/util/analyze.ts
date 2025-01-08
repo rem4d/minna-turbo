@@ -1,9 +1,9 @@
-import type { Kanji, Sentence } from "@rem4d/db";
+import type { Kanji } from "@rem4d/db";
 import { tokenize } from "./tokenize";
 import { createRubySentence, createRubyToken } from "./createRuby";
 
 export const analyze = async (
-  sen: Sentence,
+  text: string,
   knownKanjiMap: Map<string, Kanji>,
 ) => {
   let textWithHiraganaOutputHtml = "";
@@ -12,24 +12,24 @@ export const analyze = async (
 
   let tmpText: string | undefined = undefined;
 
-  if (!sen.text) {
+  if (!text) {
     throw new Error(
-      `Invalid sentence (no .text property): ${JSON.stringify(sen, null, 2)} `,
+      `Invalid sentence (no .text property): ${JSON.stringify(text, null, 2)} `,
     );
   }
 
   // replace "floor" kanji to かい
-  if (/(?<=[一二三四五六七八く十])階/.test(sen.text)) {
-    tmpText = sen.text.replace(/階/g, "かい");
+  if (/(?<=[一二三四五六七八く十])階/.test(text)) {
+    tmpText = text.replace(/階/g, "かい");
   }
 
   // replace "ともだち" kanji
-  if (/(?<=子)供/.test(sen.text)) {
-    tmpText = sen.text.replace(/供/g, "ども");
+  if (/(?<=子)供/.test(text)) {
+    tmpText = text.replace(/供/g, "ども");
   }
 
-  // console.log(`Checking sentence: ${sen.text}`);
-  const tokens = await tokenize(tmpText ?? sen.text);
+  // console.log(`Checking sentence: ${text}`);
+  const tokens = await tokenize(tmpText ?? text);
   for (const token of tokens) {
     // console.log(`Checking token: `, token.original);
     let needReplace = false;
@@ -81,7 +81,6 @@ export const analyze = async (
   // console.log(`Level: ${level}`);
 
   return {
-    sentenceId: sen.id,
     newLevel: level,
     textWithHiragana: textWithHiraganaOutputHtml,
     ruby: createRubySentence(tokens),

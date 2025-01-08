@@ -1,5 +1,4 @@
 import type { Database as SDatabase } from "@rem4d/db";
-import { SentenceMember } from "@rem4d/db";
 
 export type Database = SDatabase;
 
@@ -49,6 +48,6 @@ export interface SentenceMemberOutput {
   pos_detail_1: string;
   html: string;
   meaning: string;
-  ru?: string
+  ru?: string;
   id?: number;
 }

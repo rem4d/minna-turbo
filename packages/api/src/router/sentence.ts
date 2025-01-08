@@ -177,6 +177,56 @@ export const sentenceRouter = router({
     }
     return true;
   }),
+  analyze: publicProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const allKanjiMap = new Map<string, Kanji>();
+      const { data: kanjis, error } = await ctx.db.from("kanji").select();
+      if (error) {
+        throw new Error(error.message);
+      }
+      if (kanjis) {
+        kanjis.forEach((d) => {
+          allKanjiMap.set(d.kanji, d);
+        });
+      }
+      const result = await analyze(input, allKanjiMap);
+      const params = {
+        // new fields
+        text_with_furigana: result.textWithHiragana,
+        ruby: result.ruby,
+        level: result.newLevel,
+        unknown_kanji_number: result.unknownKanjiNumber,
+      };
+      return params;
+    }),
+  create: publicProcedure
+    .input(
+      z.object({
+        input: z.object({
+          text: z.string(),
+          ruby: z.string(),
+          level: z.number(),
+          text_with_furigana: z.string(),
+          unknown_kanji_number: z.number(),
+          en: z.string(),
+          ru: z.string(),
+          translation: z.string(),
+          source: z.string(),
+        }),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const createInput = input.input;
+
+      const { error } = await ctx.db.from("sentences").insert(createInput);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return true;
+    }),
   update: publicProcedure
     .input(
       z.object({
@@ -247,7 +297,6 @@ const getStatementsForLevel = async ({
     .from("sentences")
     .select()
     .lte("level", level)
-    .eq("source", "source4")
     .lte("unknown_kanji_number", numberOfUnknownKanji)
     .gte("level", clamp(level - shift, 0, level))
     .order("level", { ascending: false });
@@ -290,7 +339,7 @@ const getStatementsForLevel = async ({
     // add furigana to any unknown_by_user kanji in the sentence
     if (foundA) {
       for (const addit of foundA) {
-        const result = await analyze(addit, userKanjiMap);
+        const result = await analyze(addit.text, userKanjiMap);
         additional.push({
           ...addit,
           //new fields

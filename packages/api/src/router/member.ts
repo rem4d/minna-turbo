@@ -138,6 +138,7 @@ export const memberRouter = router({
     .query(async ({ input, ctx }) => {
       const text = input.text;
       const tokens = await tokenize(text);
+      // console.log(tokens);
 
       const outputMembers: SentenceMemberOutput[] = [];
 
@@ -169,8 +170,6 @@ export const memberRouter = router({
 
         const tmpToken = { ...token, original: token.basic_form };
 
-        // console.log(tmpToken);
-
         // no need to push duplicates
         if (
           outputMembers.find(
@@ -188,11 +187,15 @@ export const memberRouter = router({
             continue;
           }
 
-          // tmpToken.en = member.en;
           let readings: { reading: string }[] = [];
-          if (member.pos_detail_1 === "suffix") {
+          if (
+            member.pos_detail_1 === "suffix" ||
+            member.pos_detail_1 === "replaced"
+          ) {
+            // preserve token reading
             readings = [{ reading: tmpToken.reading }];
           } else {
+            // fetch new reading
             readings = await tokenize(tmpToken.original);
           }
 

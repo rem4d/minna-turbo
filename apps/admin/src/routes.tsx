@@ -17,7 +17,7 @@ export const router = createBrowserRouter([
         element: <IndexPage />,
       },
       {
-        path: "/new",
+        path: "/create",
         element: <NewSentencePage />,
       },
       {

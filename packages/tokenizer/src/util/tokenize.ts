@@ -29,7 +29,7 @@ const getTokenizer = async () => {
     return await deferred.promise;
   }
   isLoading = true;
-  const dicUrl = new URL("../dict", import.meta.url);
+  const dicUrl = new URL("../../dict", import.meta.url);
 
   const builder = kuromoji.builder({
     dicPath: dicUrl.pathname,
@@ -73,15 +73,16 @@ export const tokenize = async (text: string) => {
   const mojiTokens = [..._mojiTokens];
 
   issuesMap.forEach((wordFilterRule, wordToReplace) => {
-    // console.log("Checking issue: ", wordToReplace);
+    // console.log("Checking issue: ", wordFilterRule, wordToReplace);
     const arr = Array.from(wordToReplace);
     let arrIndex = 0;
     let tokenIndexesToRemove: number[] = [];
 
     for (let i = 0; i < mojiTokens.length; i++) {
-      if (mojiTokens[i]?.word_type === "REPLACED") {
-        continue;
-      }
+      // TODO: why is this here??
+      // if (mojiTokens[i]?.word_type === "REPLACED") {
+      //   continue;
+      // }
       const mArr = Array.from(mojiTokens[i]?.surface_form ?? "");
 
       for (let j = 0; j < mArr.length; j++) {
@@ -151,6 +152,7 @@ export const tokenize = async (text: string) => {
       is_kana: isKana(token.surface_form),
     };
   });
+  // console.log(tokens);
 
   return tokens;
 };

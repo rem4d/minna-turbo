@@ -8,7 +8,7 @@ const openai = new OpenAI();
 export const openAiRouter = router({
   check: publicProcedure.input(z.string()).mutation(async ({ input }) => {
     const t = input;
-    const content = `check grammar and translate ${t}`;
+    const content = `check grammar and translate to english and russian ${t}`;
     try {
       const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",

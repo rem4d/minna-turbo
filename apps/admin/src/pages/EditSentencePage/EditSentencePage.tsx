@@ -313,6 +313,11 @@ export const EditSentencePage: FC = () => {
                     <Badge color="sky" size="1">
                       {m.pos}
                     </Badge>
+                    {m.pos_detail_1 === "suffix" && (
+                      <Badge color="red" size="1">
+                        suffix
+                      </Badge>
+                    )}
                   </Box>
                 </Flex>
               ))}
