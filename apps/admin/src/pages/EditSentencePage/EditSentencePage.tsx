@@ -19,6 +19,7 @@ import type { SentenceMemberOutput } from "../../types";
 import { useParams } from "react-router-dom";
 import { initTTS } from "../../utils/tts";
 import { api } from "@/utils/api";
+import Speakers from "@/components/Speakers";
 
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
@@ -30,7 +31,7 @@ export const EditSentencePage: FC = () => {
   const [openAiResponse, setOpenAiResponse] = useState("");
   const [openAiTranslation, setOpenAiTranslation] = useState("");
   const toastId = useRef<Id | null>(null);
-  // const [sentence, setSentence] = useState<Sentence | null>(null);
+  const [speaker, setSpeaker] = useState(0);
 
   const { id } = useParams();
 
@@ -123,6 +124,9 @@ export const EditSentencePage: FC = () => {
       deleteMutation(sentence.id);
     }
   };
+  const onVoicevoxClick = async () => {
+    //
+  };
 
   return (
     <Box>
@@ -141,6 +145,7 @@ export const EditSentencePage: FC = () => {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Paste some text..."
               />
+              <Speakers input={input} />
 
               <DataList.Root>
                 <DataList.Item align="center">

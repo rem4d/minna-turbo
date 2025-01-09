@@ -31,24 +31,40 @@ export const analyze = async (
   // console.log(`Checking sentence: ${text}`);
   const tokens = await tokenize(tmpText ?? text);
   for (const token of tokens) {
-    // console.log(`Checking token: `, token.original);
+    let unknownInToken = "";
+    let knownInToken = "";
     let needReplace = false;
+    let totalAmount = 0;
 
     // check kanjis in token
     for (const k of token.original) {
       const reg = /[一-龠]+/;
 
       if (reg.test(k)) {
+        totalAmount++;
         // console.log(`Found kanji in token: ${k}`);
         if (!knownKanjiMap.get(k)) {
           // console.log(`This kanji is unknown!`);
-          unknownKanjis += k;
+          unknownInToken += k;
           needReplace = true;
         } else {
-          knownKanjis += k;
+          knownInToken += k;
         }
       }
     }
+
+    // solid check
+    if (
+      unknownInToken.length > 0 &&
+      totalAmount === unknownInToken.length + knownInToken.length
+    ) {
+      unknownInToken += knownInToken;
+      knownInToken = "";
+    }
+
+    unknownKanjis += unknownInToken;
+    knownKanjis += knownInToken;
+
     // if need replace, replace
     if (needReplace) {
       textWithHiraganaOutputHtml += createRubyToken(token);
@@ -56,9 +72,6 @@ export const analyze = async (
       textWithHiraganaOutputHtml += token.original;
     }
   }
-  // console.log(`Unknown kanjis: (${unknownKanjis.length}) `, unknownKanjis);
-  // console.log(`Final sentence: ${outputHtml}`);
-  //set level_processed
 
   const positions =
     knownKanjis.length > 0

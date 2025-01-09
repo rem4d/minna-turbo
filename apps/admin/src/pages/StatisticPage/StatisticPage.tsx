@@ -1,6 +1,4 @@
-/* eslint-disable */
 import type { Sentence } from "@rem4d/db";
-import type { StatisticsItem } from "@/types";
 import {
   Box,
   Text,
@@ -10,8 +8,10 @@ import {
   ScrollArea,
   Badge,
   Grid,
+  Spinner,
 } from "@radix-ui/themes";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { api } from "@/utils/api";
 
 /*
 interface GenStatementResponseData {
@@ -25,61 +25,46 @@ export const StatisticPage = () => {
   // const [loading, setLoading] = useState(false);
   const [loadingStatementsForLevel, setLoadingStatementsForLevel] =
     useState(false);
-  const [list, setList] = useState<StatisticsItem[]>([]);
+  // const [list, setList] = useState<StatisticsItem[]>([]);
   const [sentencesLvl, setSentencesLvl] = useState<Sentence[]>([]);
   const [additionalLvl, setAdditionalLvl] = useState<Sentence[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
 
-  useEffect(() => {
-    /*
-    console.log(1);
-    const makeReq = async () => {
-      // setLoading(true);
-      const response = await fetch("/api/sentence/statistics");
-      const data: { data: StatisticsItem[] } = await response.json();
-      if (!data.data) {
-        console.error(data);
-        return;
-      }
-      setList(data.data);
-      // setLoading(false);
-    };
+  const { data: list, isLoading } = api.stat.getStat.useQuery();
 
-    makeReq();
-    */
-  }, []);
+  const getSenForLevel = api.sentence.getSentencesForLevel.useMutation();
 
   const onLevelClick = useCallback((_n: number) => {
-    /*
-    const makeReq = async () => {
-      setLoadingStatementsForLevel(true);
-      setSentencesLvl([]);
-      setAdditionalLvl([]);
-      const response = await fetch("/api/sentence/get-statements", {
-        method: "POST",
-        body: JSON.stringify({ level: n }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const { data }: GenStatementResponseData = await response.json();
-      console.log(data.sentences);
-      setSentencesLvl(data.sentences);
-      setAdditionalLvl(data.additional);
-      setSelectedLevel(n);
-      setLoadingStatementsForLevel(false);
-    };
-
-    makeReq();
-    */
+    setSelectedLevel(_n);
+    getSenForLevel.mutate({ level: _n });
   }, []);
 
+  const mapSourceColor = useCallback((source: string | null) => {
+    if (!source) {
+      return "ruby";
+    }
+    switch (source) {
+      case "source1":
+        return "green";
+      case "source2":
+        return "yellow";
+      case "challenge":
+        return "blue";
+      case "source3":
+        return "red";
+      case "source4":
+        return "orange";
+      default:
+        return "ruby";
+    }
+  }, []);
   return (
     <Box>
       <Heading mb="8">Statistics</Heading>
+      {isLoading && <Spinner />}
       <ScrollArea scrollbars="vertical" style={{ height: 400, width: "100%" }}>
         <Grid columns="10" gap="4">
-          {list.map((l) => (
+          {list?.map((l) => (
             <Box key={l.kanji + l.lvl + "r"}>
               <Card>
                 <Flex mb="2" gap="2" align="center">
@@ -100,15 +85,15 @@ export const StatisticPage = () => {
           ))}
         </Grid>
       </ScrollArea>
-      {loadingStatementsForLevel && <div>Loading...</div>}
-      {selectedLevel && (
+      {getSenForLevel.isPending && <div>Loading...</div>}
+      {getSenForLevel.data && (
         <Box>
           <Heading my="8">Gen statements for level {selectedLevel}</Heading>
           <Flex>
             <Card mt="6">
-              <Text>{sentencesLvl.length}</Text>
+              <Text>{getSenForLevel.data.sentences.length}</Text>
               <Flex direction="column" className="no-scroll overflow-x-scroll">
-                {sentencesLvl.map((s) => (
+                {getSenForLevel.data.sentences.map((s) => (
                   <div key={`CLICKED-${selectedLevel}s-${s.text}`}>
                     <Flex align="center">
                       <Text
@@ -119,15 +104,19 @@ export const StatisticPage = () => {
                         }}
                       />
                       <Badge color={"gray"}>{s.level}</Badge>
+                      {/* <Badge color={"gray"}>id {s.id}</Badge> */}
+                      <Badge color={mapSourceColor(s.source)}>
+                        {s.source?.substring(0, 2)}
+                      </Badge>
                     </Flex>
                   </div>
                 ))}
               </Flex>
             </Card>
             <Card mt="6">
-              <Text>{additionalLvl.length}</Text>
+              <Text>{getSenForLevel.data.additional.length}</Text>
               <Flex direction="column" className="no-scroll overflow-x-scroll">
-                {additionalLvl.map((s) => (
+                {getSenForLevel.data.additional.map((s) => (
                   <div key={`${s.id}s-r`}>
                     <Flex align="center">
                       <Text
@@ -138,6 +127,9 @@ export const StatisticPage = () => {
                         }}
                       />
                       <Badge color={"cyan"}>{s.level}</Badge>
+                      <Badge color={mapSourceColor(s.source)}>
+                        {s.source?.substring(0, 2)}
+                      </Badge>
                     </Flex>
                   </div>
                 ))}
@@ -149,4 +141,5 @@ export const StatisticPage = () => {
     </Box>
   );
 };
+
 export default StatisticPage;

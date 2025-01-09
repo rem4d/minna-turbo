@@ -154,17 +154,19 @@ export const sentenceRouter = router({
 
       return shuffled;
     }),
-  getStatementsForLevel: publicProcedure
+  getSentencesForLevel: publicProcedure
     .input(
       z.object({
         level: z.number(),
       }),
     )
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const shift = 60;
+      const numberOfUnknownKanji = 2;
       const { sentences, additional } = await getStatementsForLevel({
         level: input.level,
-        shift: 60,
-        numberOfUnknownKanji: 2,
+        shift,
+        numberOfUnknownKanji,
         db: ctx.db,
         redis: ctx.redis,
       });
@@ -333,6 +335,7 @@ const getStatementsForLevel = async ({
         lvl_input: level,
       })
       .select();
+    // .order('level', { ascending: false})
 
     console.log(`Found: ${foundA?.length} additional sentences.`);
 
@@ -340,6 +343,9 @@ const getStatementsForLevel = async ({
     if (foundA) {
       for (const addit of foundA) {
         const result = await analyze(addit.text, userKanjiMap);
+        if (result.newLevel > 500) {
+          continue;
+        }
         additional.push({
           ...addit,
           //new fields

@@ -1,0 +1,158 @@
+[
+  {
+    "name": "Aoyama Ryusei",
+    "jp": "",
+    "id": 13,
+    "voices": [
+      {
+        "id": 81,
+        "jp": "熱血",
+        "en": "passionate"
+      },
+      {
+        "id": 82,
+        "jp": "不機嫌 ",
+        "en": "bad_mood"
+      },
+      {
+        "id": 83,
+        "jp": "喜び",
+        "en": "pleasure"
+      },
+      {
+        "id": 84,
+        "jp": "しっとり",
+        "en": "quiet"
+      },
+      {
+        "id": 85,
+        "jp": "かなしみみ",
+        "en": "sad"
+      },
+      {
+        "id": 86,
+        "jp": "嘱き",
+        "en": "whisper"
+      }
+    ]
+  },
+  {
+    "name": "Namine Ritsu",
+    "jp": "",
+    "id": 9,
+    "voices": []
+  },
+  {
+    "name": "Goki",
+    "jp": "後鬼",
+    "id": 27,
+    "voices": [
+      {
+        "id": 87,
+        "jp": "人間(怒り) ver",
+        "en": "anger"
+      },
+      {
+        "id": 88,
+        "jp": "鬼 ver",
+        "en": "demon"
+      }
+    ]
+  },
+  {
+    "name": "No.7",
+    "jp": "No.7",
+    "id": 29,
+    "voices": [
+      {
+        "id": 30,
+        "jp": "アナウンス",
+        "en": "announce"
+      },
+      {
+        "id": 31,
+        "jp": "読み聞かせ ",
+        "en": "storytelling"
+      }
+    ]
+  },
+  {
+    "name": "Takehiro Kurono",
+    "jp": "玄野武赤",
+    "id": 11,
+    "voices": [
+      {
+        "id": 39,
+        "jp": "喜び",
+        "en": "joy"
+      },
+      {
+        "id": 40,
+        "jp": "ツンギレ",
+        "en": "angry"
+      },
+      {
+        "id": 41,
+        "jp": "悲しみ ",
+        "en": "sorrow"
+      }
+    ]
+  },
+  {
+    "name": "White curl",
+    "jp": "White curl",
+    "id": 23,
+    "voices": [
+      {
+        "id": 24,
+        "jp": "楽しい",
+        "en": "joy"
+      },
+      {
+        "id": 25,
+        "jp": "かなしい",
+        "en": "sad"
+      },
+      {
+        "id": 26,
+        "jp": "びえーん",
+        "en": "emotional"
+      }
+    ]
+  },
+  {
+    "name": "Kenzaki Mesuo",
+    "jp": "剣崎雌雄",
+    "id": 21,
+    "voices": []
+  },
+  {
+    "name": "Shikoku Metan",
+    "jp": "四国めたん",
+    "id": 2,
+    "voices": [
+      {
+        "id": 37,
+        "jp": "ヒソヒソ",
+        "en": "quiet"
+      }
+    ]
+  },
+  {
+    "name": "狂使アル",
+    "jp": "Kyoshi Aru",
+    "id": 55,
+    "voices": [
+      {
+        "id": 56,
+        "jp": "おちつきり",
+        "en": "calm"
+      },
+      {
+        "id": 57,
+        "jp": "うきうき",
+        "en": "cheerfull"
+      }
+    ]
+  }
+]

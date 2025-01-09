@@ -11,6 +11,7 @@ import {
   Code,
   Switch,
   Spinner,
+  Link,
 } from "@radix-ui/themes";
 import { useCallback, useEffect, useState } from "react";
 import { initTTS } from "@/utils/tts";
@@ -114,12 +115,12 @@ export const SimulatorPage = () => {
             </Flex>
             <Flex gap="2">
               <Button onClick={onPlayAudio}>Play audio</Button>
-              <Button color="yellow" onClick={handleEditClick}>
-                Edit
-              </Button>
               <Button color="gold" onClick={onShowFurigana}>
                 {showFurigana ? "Hide furigana" : "Show furigana"}
               </Button>
+              <Link href={`/edit/${sentence.id}`} color="yellow">
+                Edit
+              </Link>
             </Flex>
             <Box className="mt-2">
               <span className="font-klee">

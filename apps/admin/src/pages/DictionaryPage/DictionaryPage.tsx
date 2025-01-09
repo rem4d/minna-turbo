@@ -33,7 +33,7 @@ export const DictionaryPage: FC = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [currentMemberId, setCurrentMemberId] = useState<number | null>(null);
   const [selectedPos, setSelectedPos] = useState<string>("verb");
-  const debouncedMembersByText = useDebounce(membersByText, 300);
+  const debouncedMembersByText = useDebounce(membersByText, 500);
 
   const MAX_PER_PAGE = 10;
   const partsOfSpeech = [
