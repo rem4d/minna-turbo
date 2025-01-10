@@ -139,6 +139,8 @@ export type Database = {
           translation: string | null
           unknown_kanji_number: number | null
           updated_at: string | null
+          vox_file_path: string | null
+          vox_speaker_id: number | null
         }
         Insert: {
           created_at?: string
@@ -153,6 +155,8 @@ export type Database = {
           translation?: string | null
           unknown_kanji_number?: number | null
           updated_at?: string | null
+          vox_file_path?: string | null
+          vox_speaker_id?: number | null
         }
         Update: {
           created_at?: string
@@ -167,6 +171,8 @@ export type Database = {
           translation?: string | null
           unknown_kanji_number?: number | null
           updated_at?: string | null
+          vox_file_path?: string | null
+          vox_speaker_id?: number | null
         }
         Relationships: []
       }
@@ -254,6 +260,8 @@ export type Database = {
               translation: string | null
               unknown_kanji_number: number | null
               updated_at: string | null
+              vox_file_path: string | null
+              vox_speaker_id: number | null
             }[]
           }
         | {
@@ -274,6 +282,8 @@ export type Database = {
               translation: string | null
               unknown_kanji_number: number | null
               updated_at: string | null
+              vox_file_path: string | null
+              vox_speaker_id: number | null
             }[]
           }
         | {
@@ -293,6 +303,8 @@ export type Database = {
               translation: string | null
               unknown_kanji_number: number | null
               updated_at: string | null
+              vox_file_path: string | null
+              vox_speaker_id: number | null
             }[]
           }
         | {
@@ -313,6 +325,8 @@ export type Database = {
               translation: string | null
               unknown_kanji_number: number | null
               updated_at: string | null
+              vox_file_path: string | null
+              vox_speaker_id: number | null
             }[]
           }
       additional_sentences_p: {
@@ -333,6 +347,8 @@ export type Database = {
           translation: string | null
           unknown_kanji_number: number | null
           updated_at: string | null
+          vox_file_path: string | null
+          vox_speaker_id: number | null
         }[]
       }
       stat_kanji_list: {

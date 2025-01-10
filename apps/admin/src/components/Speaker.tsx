@@ -1,9 +1,10 @@
 import { Badge, Spinner } from "@radix-ui/themes";
+import { Character } from "./Character";
 
 interface Props {
   id: number;
   isPending: boolean;
-  name: string;
+  name?: string;
   onClick?(id: number): void;
 }
 
@@ -14,16 +15,11 @@ export const Speaker = ({ id, name, isPending, onClick }: Props) => {
       <div className="relative size-[60px]">
         <div
           onClick={() => (onClick ? onClick(id) : {})}
-          className="size-[60px] rounded-[6px] border border-sky-500"
+          className="size-[60px] cursor-pointer rounded-[6px] border border-sky-500"
         >
-          <div
-            className="cursor-pointer size-full bg-no-repeat bg-center bg-contain"
-            style={{
-              backgroundImage: `url("/characters/${id}.png")`,
-            }}
-          ></div>
+          <Character id={id} />
         </div>
-        {/* <Badge className="absolute top-0 left-0">{id}</Badge> */}
+        <Badge className="absolute top-0 left-0">{id}</Badge>
 
         {isPending && (
           <div className="size-full rounded-[6px] bg-black/70 absolute top-0 left-0">

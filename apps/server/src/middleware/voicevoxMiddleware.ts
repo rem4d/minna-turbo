@@ -1,19 +1,85 @@
 import { Request, Response, RequestHandler, NextFunction } from "express";
+import fs from "node:fs";
+import crypto from "crypto";
 import { Readable } from "stream";
-import logger from "../logger";
+import db from "@rem4d/db/client";
 
-export default async function voicevoxMiddleware(
-  req: Request,
-  res: Response,
-  // next: NextFunction,
-): Promise<any> {
+export const playSpeaker = async (req: Request, res: Response) => {
   const text = req.body.text as string;
   const speaker = req.body.speaker as number;
-  // const speed = 1.0;
   const speed = req.body.speed as number;
+
+  const response = await createBuffer({ text, speaker, speed });
+
+  if (response.ok && response.body) {
+    res.setHeader("Content-Type", "audio/wav");
+    Readable.fromWeb(response.body).pipe(res);
+  } else {
+    res.status(400).json({ msg: "Unexpected error!" });
+  }
+};
+
+export const createSpeakerFile = async (req: Request, res: Response) => {
+  const text = req.body.text as string;
+  const speaker = req.body.speaker as number;
+  const speed = req.body.speed as number;
+  const sentenceId = req.body.sentenceId as number;
+
+  const response = await createBuffer({ text, speaker, speed });
+
+  if (response.ok && response.body) {
+    const dir = new URL(`../../public/voices/${speaker}`, import.meta.url);
+    console.log(dir.pathname);
+
+    if (!fs.existsSync(dir.pathname)) {
+      console.log(`Creating voices directory for speaker ${speaker}...`);
+      fs.mkdirSync(dir.pathname);
+    }
+
+    const uuid = crypto.randomUUID();
+    console.log(uuid);
+
+    const blob = await response.blob();
+    const arrayBuffer = await blob.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    const ws = fs.createWriteStream(`${dir.pathname}/${uuid}.wav`);
+    ws.write(buffer);
+    ws.end();
+
+    ws.on("finish", async () => {
+      console.log("DONE writing file!");
+
+      const { error } = await db
+        .from("sentences")
+        .update({
+          vox_file_path: `/voices/${speaker}/${uuid}.wav`,
+          vox_speaker_id: speaker,
+        })
+        .eq("id", sentenceId);
+
+      if (error) {
+        res.status(400).json({ msg: "Unexpected error when write to db." });
+      } else {
+        res.status(200).json({ msg: "Ok." });
+      }
+    });
+  } else {
+    res.status(400).json({ msg: "Unexpected error!" });
+  }
+};
+
+const createBuffer = async ({
+  text,
+  speaker,
+  speed,
+}: {
+  text: string;
+  speaker: number;
+  speed: number;
+}) => {
   // const host = "http://159608.msk.web.highserver.ru";
   const host = "http://127.0.0.1:50021";
-  console.log("createAutio start! ", text, " ", speaker);
 
   const url = `${host}/audio_query?text=${text}&speaker=${speaker}`;
   const response = await fetch(url, {
@@ -26,23 +92,19 @@ export default async function voicevoxMiddleware(
     string,
     string
   >;
-  console.log("Got speechData response: ", response.status);
+  // console.log("Got speechData response: ", response.status);
 
-  res.setHeader("Content-Type", "audio/wav");
   const url2 = `${host}/synthesis?speaker=${speaker}`;
 
-  const r2 = await fetch(url2, {
+  return fetch(url2, {
     method: "POST",
-    body: JSON.stringify({ ...speechData, speedScale: speed }),
+    body: JSON.stringify({
+      ...speechData,
+      speedScale: speed,
+      volumeScale: 1.9,
+    }),
     headers: {
       "Content-type": "application/json",
     },
   });
-
-  if (r2.ok && r2.body) {
-    Readable.fromWeb(r2.body).pipe(res);
-  } else {
-    res.status(400).json({ msg: "Unexpected error!" });
-  }
-  // res.status(400).json({ msg: "Unexpected error has occurred." });
-}
+};

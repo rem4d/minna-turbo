@@ -200,6 +200,9 @@ importers:
       '@rem4d/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@rem4d/db':
+        specifier: workspace:^
+        version: link:../../packages/db
       '@rem4d/tokenizer':
         specifier: workspace:*
         version: link:../../packages/tokenizer

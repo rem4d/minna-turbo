@@ -67,10 +67,10 @@ export const sentenceRouter = router({
       const { data, error } = await ctx.db
         .from("sentences")
         .select()
-        .eq("source", "challenge")
-        // .gt("level", 0)
-        // .lt("level", 500)
-        // .order("updated_at", { ascending: false })
+        .eq("source", "source2")
+        .gt("level", 0)
+        .lt("level", 100)
+        .order("level", { ascending: true })
         .range(
           input.page * input.maxPerPage,
           (input.page + 1) * input.maxPerPage,

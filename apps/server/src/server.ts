@@ -6,7 +6,10 @@ import * as trpcExpress from "@trpc/server/adapters/express";
 import { appRouter, createTRPCContext } from "@rem4d/api";
 import logger from "./logger";
 import errorMiddleware from "./middleware/errorMiddleware";
-import voicevoxMiddleware from "./middleware/voicevoxMiddleware";
+import {
+  playSpeaker,
+  createSpeakerFile,
+} from "./middleware/voicevoxMiddleware";
 
 dotenv.config();
 
@@ -30,7 +33,8 @@ app.use(
 
 const ttsRouter: Router = express.Router();
 
-ttsRouter.post("/voicevox", voicevoxMiddleware);
+ttsRouter.post("/voicevox", playSpeaker);
+ttsRouter.post("/voicevox_submit", createSpeakerFile);
 
 app.use("/api", ttsRouter);
 

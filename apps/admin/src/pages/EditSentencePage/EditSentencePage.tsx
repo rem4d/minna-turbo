@@ -20,6 +20,7 @@ import { useParams } from "react-router-dom";
 import { initTTS } from "../../utils/tts";
 import { api } from "@/utils/api";
 import Speakers from "@/components/Speakers";
+import { Player } from "@/components/Player";
 
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
@@ -31,7 +32,6 @@ export const EditSentencePage: FC = () => {
   const [openAiResponse, setOpenAiResponse] = useState("");
   const [openAiTranslation, setOpenAiTranslation] = useState("");
   const toastId = useRef<Id | null>(null);
-  const [speaker, setSpeaker] = useState(0);
 
   const { id } = useParams();
 
@@ -99,8 +99,6 @@ export const EditSentencePage: FC = () => {
     openUrl(`https://jisho.org/search/${m.basic_form}`);
   }, []);
 
-  const onGetReadingsClick = () => {};
-
   const handleUpdateData = () => {
     if (typeof id !== "string") {
       return;
@@ -124,9 +122,6 @@ export const EditSentencePage: FC = () => {
       deleteMutation(sentence.id);
     }
   };
-  const onVoicevoxClick = async () => {
-    //
-  };
 
   return (
     <Box>
@@ -145,7 +140,7 @@ export const EditSentencePage: FC = () => {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Paste some text..."
               />
-              <Speakers input={input} />
+              <Speakers sentenceId={sentence.id} input={input} />
 
               <DataList.Root>
                 <DataList.Item align="center">
@@ -156,6 +151,17 @@ export const EditSentencePage: FC = () => {
                     </Badge>
                   </DataList.Value>
                 </DataList.Item>
+                {sentence.vox_speaker_id && (
+                  <DataList.Item>
+                    <DataList.Label minWidth="88px">Speaker</DataList.Label>
+                    <DataList.Value>
+                      <Player
+                        filePath={`http://localhost:1222/${sentence.vox_file_path}`}
+                        speakerId={sentence.vox_speaker_id}
+                      />
+                    </DataList.Value>
+                  </DataList.Item>
+                )}
                 <DataList.Item>
                   <DataList.Label minWidth="88px">ID</DataList.Label>
                   <DataList.Value>
@@ -327,51 +333,8 @@ export const EditSentencePage: FC = () => {
                 </Flex>
               ))}
             </Grid>
-            <Flex gap="4" direction="column">
-              <Button onClick={onGetReadingsClick}>Get readings</Button>
-            </Flex>
           </Grid>
 
-          <Box>
-            <Heading size="4">Members copy</Heading>
-            {/* <Grid columns="3" my="4" className="border border-gray-500"> */}
-            {/*   <Grid */}
-            {/*     columns="4" */}
-            {/*     gridColumn="span 2" */}
-            {/*     className="font-klee text-xl" */}
-            {/*     gap="4" */}
-            {/*   > */}
-            {/*     {membersCopy.map((m) => ( */}
-            {/*       <Flex key={`copy${m.original}`} align="center" gap="2"> */}
-            {/*         <Flex direction="column"> */}
-            {/*           <Text */}
-            {/*             size="6" */}
-            {/*             className="whitespace-nowrap" */}
-            {/*             dangerouslySetInnerHTML={{ */}
-            {/*               __html: createRubyOne(m, { form: "base" }), */}
-            {/*             }} */}
-            {/*           /> */}
-            {/*           <Text className="select-none" size="2"> */}
-            {/*             {m.en} */}
-            {/*           </Text> */}
-            {/*           <Box> */}
-            {/*             <Badge color="sky" size="1"> */}
-            {/*               {m.type} */}
-            {/*             </Badge> */}
-            {/*           </Box> */}
-            {/*         </Flex> */}
-            {/*         <IconButton */}
-            {/*           radius="full" */}
-            {/*           size="1" */}
-            {/*           onClick={() => removeMember(m)} */}
-            {/*         > */}
-            {/*           <Cross2Icon /> */}
-            {/*         </IconButton> */}
-            {/*       </Flex> */}
-            {/*     ))} */}
-            {/*   </Grid> */}
-            {/* </Grid> */}
-          </Box>
           <div>
             <Button
               disabled={updateMutation.isPending}

@@ -5,19 +5,20 @@ import {
   IconButton,
   Popover,
   Slider,
-  Text,
 } from "@radix-ui/themes";
 import { useRef, useState, type ReactElement } from "react";
 import { Speaker } from "./Speaker";
 import { useVoicevoxMutation } from "@/rq/useVoicevoxMutation";
 import speakers from "@/utils/voicevoxSpeakerMap.json";
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";
+import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
 
 interface Props {
   input: string;
+  sentenceId: number;
 }
 
-export default function Speakers({ input }: Props): ReactElement {
+export default function Speakers({ input, sentenceId }: Props): ReactElement {
   const voicevoxAudioRef = useRef<HTMLAudioElement>(null);
 
   const [blobSrc, setBlobSrc] = useState("");
@@ -26,6 +27,8 @@ export default function Speakers({ input }: Props): ReactElement {
   const [sliderVal, setSliderVal] = useState([50]);
 
   const speed = (50 + sliderVal[0]) / 100;
+
+  const submitVoiceMutation = useSubmitVoiceMutation();
 
   const onSpeakerClick = async (speakerId: number) => {
     setSpeakerId(speakerId);
@@ -45,26 +48,35 @@ export default function Speakers({ input }: Props): ReactElement {
     // }
   };
 
-  const onSliderChange = (arr: number[]) => {
-    setSliderVal(arr);
-    const val = arr[0];
-    if (val > 50) {
-      // setSliderVal((100 + val - 50) / 100);
-    } else {
-      // setSliderVal((100 - 50 + val) / 100);
-    }
-  };
-
   const onOpenChange = (isOpen: boolean) => {
     if (isOpen) {
       setSliderVal([50]);
     }
   };
+
+  const onSubmitClick = () => {
+    if (!speakerId) {
+      console.log("Has to assign speaker first.");
+      return;
+    }
+    submitVoiceMutation.mutate({
+      text: input,
+      speed,
+      sentenceId,
+      speaker: speakerId,
+    });
+  };
+
   return (
     <Flex direction="column">
       <Grid columns="6" gap="2" mb="4">
         {speakers.map((s) => (
-          <Flex direction="column" gap="2" className="relative">
+          <Flex
+            key={`speaker-${s.id}`}
+            direction="column"
+            gap="2"
+            className="relative"
+          >
             {typeof s.id === "number" && (
               <Speaker
                 id={s.id}
@@ -84,9 +96,9 @@ export default function Speakers({ input }: Props): ReactElement {
                   <Grid columns="5" gap="1" mb="2">
                     {s.voices.map((v) => (
                       <Speaker
+                        key={`s-${s.id}v-${v.id}`}
                         id={v.id}
                         name={v.en}
-                        key={`s-${v.id}`}
                         onClick={() => onSpeakerClick(v.id)}
                         isPending={
                           voicevoxMutation.isPending && speakerId === v.id
@@ -100,7 +112,7 @@ export default function Speakers({ input }: Props): ReactElement {
                     size="1"
                     variant="classic"
                     color="cyan"
-                    onValueChange={onSliderChange}
+                    onValueChange={(v) => setSliderVal(v)}
                   />
                 </Popover.Content>
               </Popover.Root>
@@ -110,7 +122,7 @@ export default function Speakers({ input }: Props): ReactElement {
       </Grid>
 
       <audio ref={voicevoxAudioRef} autoPlay src={blobSrc} className="hidden" />
-      <Button>Call voicevox</Button>
+      <Button onClick={onSubmitClick}>Submit voice</Button>
     </Flex>
   );
 }
