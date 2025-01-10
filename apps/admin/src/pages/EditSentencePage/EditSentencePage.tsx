@@ -21,6 +21,7 @@ import { initTTS } from "../../utils/tts";
 import { api } from "@/utils/api";
 import Speakers from "@/components/Speakers";
 import { Player } from "@/components/Player";
+import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
 
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
@@ -38,6 +39,17 @@ export const EditSentencePage: FC = () => {
   const { data: sentence } = api.sentence.getById.useQuery(Number(id), {
     enabled: !!id,
   });
+
+  const removeSpeakerMutation = useRemoveSpeakerMutation();
+  const { data: analyzeData, mutate: analyze } =
+    api.sentence.analyze.useMutation();
+
+  useEffect(() => {
+    if (analyzeData) {
+      setTextWithFuriganaHtml(analyzeData.text_with_furigana);
+      setRubyHtml(analyzeData.ruby);
+    }
+  }, [analyzeData]);
 
   const updateMutation = api.sentence.update.useMutation({
     onSuccess() {
@@ -103,7 +115,7 @@ export const EditSentencePage: FC = () => {
     if (typeof id !== "string") {
       return;
     }
-    toastId.current = toast("Example.");
+    toastId.current = toast("Sending...");
     updateMutation.mutate({
       id: id,
       input: {
@@ -123,6 +135,15 @@ export const EditSentencePage: FC = () => {
     }
   };
 
+  const onAnalyze = () => {
+    void analyze(input);
+  };
+
+  const onRemoveSpeaker = () => {
+    if (sentence) {
+      void removeSpeakerMutation.mutate({ sentenceId: sentence.id });
+    }
+  };
   return (
     <Box>
       <Flex align="center" mr="5">
@@ -140,9 +161,18 @@ export const EditSentencePage: FC = () => {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Paste some text..."
               />
+
+              <Button
+                className="self-start"
+                onClick={onAnalyze}
+                disabled={input.length === 0}
+                mb="4"
+              >
+                Analyze
+              </Button>
               <Speakers sentenceId={sentence.id} input={input} />
 
-              <DataList.Root>
+              <DataList.Root mt="4">
                 <DataList.Item align="center">
                   <DataList.Label minWidth="88px">Status</DataList.Label>
                   <DataList.Value>
@@ -151,17 +181,6 @@ export const EditSentencePage: FC = () => {
                     </Badge>
                   </DataList.Value>
                 </DataList.Item>
-                {sentence.vox_speaker_id && (
-                  <DataList.Item>
-                    <DataList.Label minWidth="88px">Speaker</DataList.Label>
-                    <DataList.Value>
-                      <Player
-                        filePath={`http://localhost:1222/${sentence.vox_file_path}`}
-                        speakerId={sentence.vox_speaker_id}
-                      />
-                    </DataList.Value>
-                  </DataList.Item>
-                )}
                 <DataList.Item>
                   <DataList.Label minWidth="88px">ID</DataList.Label>
                   <DataList.Value>
@@ -174,6 +193,27 @@ export const EditSentencePage: FC = () => {
                   <DataList.Label minWidth="88px">Level</DataList.Label>
                   <DataList.Value>{sentence.level}</DataList.Value>
                 </DataList.Item>
+                {sentence.vox_speaker_id && sentence.vox_file_path && (
+                  <DataList.Item>
+                    <DataList.Label minWidth="88px">Speaker</DataList.Label>
+                    <DataList.Value>
+                      <Flex gap="2" align="center">
+                        <div>{sentence.vox_speaker_id}</div>
+                        <Player
+                          filePath={sentence.vox_file_path}
+                          speakerId={sentence.vox_speaker_id}
+                        />
+                        <Button
+                          color="red"
+                          variant="soft"
+                          onClick={onRemoveSpeaker}
+                        >
+                          Remove
+                        </Button>
+                      </Flex>
+                    </DataList.Value>
+                  </DataList.Item>
+                )}
                 <DataList.Item>
                   <DataList.Label minWidth="88px">Source</DataList.Label>
                   <DataList.Value>{sentence.source}</DataList.Value>

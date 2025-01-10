@@ -12,19 +12,30 @@ import {
   Switch,
   Spinner,
   Link,
+  IconButton,
+  Card,
 } from "@radix-ui/themes";
 import { useCallback, useEffect, useState } from "react";
 import { initTTS } from "@/utils/tts";
 import { openUrl } from "@/utils";
-import { useNavigate } from "react-router-dom";
 import { api } from "@/utils/api";
 import useUnmount from "@/hooks/useUnmount";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  ThickArrowLeftIcon,
+  ThickArrowRightIcon,
+} from "@radix-ui/react-icons";
+import { Player } from "@/components/Player";
+import { CompositePlayer } from "@/components/CompositePlayer";
+import { Character } from "@/components/Character";
 
 export const SimulatorPage = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [showFurigana, setShowFurigana] = useState(false);
   const [lang, setLang] = useState<"en" | "ru">("en");
   const [seenIds, setSeenIds] = useState<number[]>([]);
+  const [membersSpoilerOpen, setMembersSpoilerOpen] = useState(false);
+  const [translationSpoilerOpen, setTranslationSpoilerOpen] = useState(false);
 
   const { data: list, isLoading: loadingSentence } =
     api.sentence.getRandomized.useQuery({
@@ -46,13 +57,11 @@ export const SimulatorPage = () => {
     }
   }, [sentence, seenIds]);
 
-  const navigate = useNavigate();
-
   const { data: members, isLoading: loadingMembers } =
     api.member.sentenceMembers.useQuery(
       { text: sentence?.text ?? "" },
       {
-        enabled: !!sentence?.text,
+        enabled: !!sentence?.text && membersSpoilerOpen,
       },
     );
 
@@ -69,16 +78,6 @@ export const SimulatorPage = () => {
     openUrl(`https://jisho.org/search/${m.basic_form}`);
   }, []);
 
-  const onShowFurigana = () => {
-    setShowFurigana(!showFurigana);
-  };
-
-  const handleEditClick = () => {
-    if (sentence) {
-      void navigate("/edit/" + sentence.id);
-    }
-  };
-
   const handleSwitchChange = () => {
     setLang(lang === "en" ? "ru" : "en");
   };
@@ -91,91 +90,117 @@ export const SimulatorPage = () => {
     setActiveIndex(activeIndex + 1);
   };
 
+  const onMembersSpoilerClick = () => {
+    setMembersSpoilerOpen((s) => !s);
+  };
+
+  const onTranslationSpoilerClick = () => {
+    setTranslationSpoilerOpen((s) => !s);
+  };
+
   return (
     <Box>
       <Heading>SimulatorPage</Heading>
       <div>{loadingSentence ? "Loading..." : <>&nbsp;</>}</div>
-      {!loadingSentence &&
-      list &&
-      list.length > 0 &&
-      list[activeIndex] &&
-      sentence ? (
-        <Grid columns="2">
-          <Flex direction="column" align="start" gapY="4">
-            <Flex gap="2" mb="4">
-              <Button disabled={activeIndex === 0} onClick={handlePrevClick}>
-                Prev
-              </Button>
-              <Button
-                disabled={activeIndex === list.length - 1}
-                onClick={handleNextClick}
-              >
-                Next
-              </Button>
-            </Flex>
-            <Flex gap="2">
-              <Button onClick={onPlayAudio}>Play audio</Button>
-              <Button color="gold" onClick={onShowFurigana}>
-                {showFurigana ? "Hide furigana" : "Show furigana"}
+      {!loadingSentence && list && list.length > 0 && sentence ? (
+        <Grid columns="2" gapX="4">
+          <Flex direction="column" align="start">
+            <Flex mb="4" gap="2" align="center">
+              <Button variant="soft" onClick={onPlayAudio}>
+                Play audio
               </Button>
               <Link href={`/edit/${sentence.id}`} color="yellow">
                 Edit
               </Link>
             </Flex>
-            <Box className="mt-2">
-              <span className="font-klee">
-                {showFurigana ? (
-                  <Text
-                    className="relative top-0"
-                    size="6"
-                    dangerouslySetInnerHTML={{
-                      __html: list[activeIndex].ruby ?? "",
-                    }}
-                  />
-                ) : (
-                  <Text
-                    className="relative top-2"
-                    size="6"
-                    dangerouslySetInnerHTML={{
-                      __html: list[activeIndex].text_with_furigana ?? "",
-                    }}
-                  />
+            <Flex gap="2" mb="4">
+              <IconButton
+                variant="surface"
+                disabled={activeIndex === 0}
+                onClick={handlePrevClick}
+              >
+                <ThickArrowLeftIcon />
+              </IconButton>
+              <IconButton
+                variant="surface"
+                disabled={activeIndex === list.length - 1}
+                onClick={handleNextClick}
+              >
+                <ThickArrowRightIcon />
+              </IconButton>
+            </Flex>
+            <div className="w-[440px] text-black bg-wildSand p-4 rounded-[10px]">
+              <Flex direction="column" align="start" gapY="4">
+                <CompositePlayer sentence={sentence} />
+                <div className="w-full justify-center flex text-butterflyBush mt-2">
+                  <div
+                    className="flex space-x-2 items-center cursor-pointer"
+                    onClick={onMembersSpoilerClick}
+                  >
+                    <div className="text-sm select-none">Dictionary</div>
+                    {membersSpoilerOpen ? <ArrowUpIcon /> : <ArrowDownIcon />}
+                  </div>
+                </div>
+                {membersSpoilerOpen && (
+                  <div className="bg-white border border-gallery w-full p-2 shadow-md">
+                    {loadingMembers && <Spinner />}
+                    <Grid columns="4" className="font-klee text-xl" gap="4">
+                      {!loadingMembers &&
+                        members?.members.map((m) => (
+                          <Flex key={m.basic_form} direction="column">
+                            <Text
+                              size="6"
+                              onClick={() => onMemberClick(m)}
+                              className="cursor-pointer whitespace-nowrap"
+                              dangerouslySetInnerHTML={{
+                                __html: m.html,
+                              }}
+                            />
+                            <Text className="font-inter" size="2">
+                              {lang === "en"
+                                ? m.meaning
+                                : m.ru
+                                  ? m.ru
+                                  : m.meaning}
+                            </Text>
+                            <Box mt="2">
+                              <Badge color="sky" size="1">
+                                {m.pos}
+                              </Badge>
+                              {m.pos_detail_1 === "suffix" ? (
+                                <Badge color="red" size="1">
+                                  {m.pos_detail_1}
+                                </Badge>
+                              ) : null}
+                            </Box>
+                          </Flex>
+                        ))}
+                    </Grid>
+                  </div>
                 )}
-              </span>
-            </Box>
-            <div className="w-full mt-8" />
-            {loadingMembers && <Spinner />}
-            <Grid columns="4" className="font-klee text-xl" gap="4">
-              {!loadingMembers &&
-                members?.members.map((m) => (
-                  <Flex key={m.basic_form} direction="column">
-                    <Text
-                      size="6"
-                      onClick={() => onMemberClick(m)}
-                      className="cursor-pointer whitespace-nowrap"
-                      dangerouslySetInnerHTML={{
-                        __html: m.html,
-                      }}
-                    />
-                    <Text className="font-inter" size="2">
-                      {lang === "en" ? m.meaning : m.ru ? m.ru : m.meaning}
-                    </Text>
-                    <Box mt="2">
-                      <Badge color="sky" size="1">
-                        {m.pos}
-                      </Badge>
-                      {m.pos_detail_1 === "suffix" ? (
-                        <Badge color="red" size="1">
-                          {m.pos_detail_1}
-                        </Badge>
-                      ) : null}
-                    </Box>
-                  </Flex>
-                ))}
-            </Grid>
-            {lang === "ru" && <Text>ru: {sentence.ru}</Text>}
-            {lang === "en" && <Text>en: {sentence.en}</Text>}
-            <Text>tr: {sentence.translation}</Text>
+                <div className="w-full justify-center flex text-butterflyBush mt-2">
+                  <div
+                    className="flex space-x-2 items-center cursor-pointer"
+                    onClick={onTranslationSpoilerClick}
+                  >
+                    <div className="text-sm select-none">Translation</div>
+                    {translationSpoilerOpen ? (
+                      <ArrowUpIcon />
+                    ) : (
+                      <ArrowDownIcon />
+                    )}
+                  </div>
+                </div>
+
+                {translationSpoilerOpen && (
+                  <div className="bg-white border border-gallery w-full p-2 shadow-md">
+                    {lang === "ru" && <Text>{sentence.ru}</Text>}
+                    {lang === "en" && <Text>{sentence.en}</Text>}
+                    {/* <Text>tr: {sentence.translation}</Text> */}
+                  </div>
+                )}
+              </Flex>
+            </div>
           </Flex>
           <Flex direction="column" gap="6">
             <DataList.Root>

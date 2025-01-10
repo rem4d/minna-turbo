@@ -142,7 +142,8 @@ export const memberRouter = router({
 
       const outputMembers: SentenceMemberOutput[] = [];
 
-      const japaneseNameRegex = /[一-龠]{2}(?=さん)/;
+      // const japaneseNameRegex = /[一-龠]{2}(?=さん)/;
+      const japaneseNameRegex = /(?:[一-龠]{2}|[ァ-ヴ]{2,12})(?=さん)/;
       const japaneseNameMatches = japaneseNameRegex.exec(text);
 
       for (const token of tokens) {

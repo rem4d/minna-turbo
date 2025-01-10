@@ -9,6 +9,7 @@ import errorMiddleware from "./middleware/errorMiddleware";
 import {
   playSpeaker,
   createSpeakerFile,
+  removeSpeakerFile,
 } from "./middleware/voicevoxMiddleware";
 
 dotenv.config();
@@ -35,6 +36,7 @@ const ttsRouter: Router = express.Router();
 
 ttsRouter.post("/voicevox", playSpeaker);
 ttsRouter.post("/voicevox_submit", createSpeakerFile);
+ttsRouter.post("/voicevox_remove", removeSpeakerFile);
 
 app.use("/api", ttsRouter);
 

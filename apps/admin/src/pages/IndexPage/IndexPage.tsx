@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Table, Text } from "@radix-ui/themes";
 import { useState, type FC } from "react";
 import { api } from "../../utils/api";
+import { Player } from "@/components/Player";
 
 export const IndexPage: FC = () => {
   const [pageNumber, setPageNumber] = useState(0);
@@ -55,6 +56,7 @@ export const IndexPage: FC = () => {
             <Table.ColumnHeaderCell>en</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>ru</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>source</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>voice</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>level</Table.ColumnHeaderCell>
             {/* <Table.ColumnHeaderCell>unknown_kanji_n</Table.ColumnHeaderCell> */}
           </Table.Row>
@@ -85,6 +87,16 @@ export const IndexPage: FC = () => {
               <Table.Cell width="290px">{elem.en}</Table.Cell>
               <Table.Cell width="290px">{elem.ru}</Table.Cell>
               <Table.Cell>{elem.source}</Table.Cell>
+              <Table.Cell>
+                {elem.vox_speaker_id && elem.vox_file_path && (
+                  <Box px="2">
+                    <Player
+                      filePath={elem.vox_file_path}
+                      speakerId={elem.vox_speaker_id}
+                    />
+                  </Box>
+                )}
+              </Table.Cell>
               <Table.Cell>{elem.level}</Table.Cell>
               {/* <Table.Cell>{elem.unknown_kanji_number}</Table.Cell> */}
             </Table.Row>

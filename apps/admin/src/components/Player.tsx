@@ -4,8 +4,8 @@ import { useEffect, useRef, useState, type ReactElement } from "react";
 import { Character } from "./Character";
 
 export interface PlayerProps {
-  filePath: string;
   speakerId: number;
+  filePath: string;
 }
 
 export function Player({ filePath, speakerId }: PlayerProps): ReactElement {
@@ -13,7 +13,13 @@ export function Player({ filePath, speakerId }: PlayerProps): ReactElement {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
+    setIsPlaying(false);
+  }, [speakerId]);
+
+  const src = `${import.meta.env.VITE_BACKEND_URL}${filePath}`;
+  useEffect(() => {
     if (!audioRef.current) {
+      console.log("Error: no audioRef found.");
       return;
     }
     audioRef.current.addEventListener("ended", () => {
@@ -32,18 +38,22 @@ export function Player({ filePath, speakerId }: PlayerProps): ReactElement {
 
   return (
     <Flex align="center" gap="4">
-      <div className="size-[40px]">
+      <div className="size-[30px]">
         <Character id={speakerId} size="1" />
       </div>
-      <div className="cursor-pointer">
-        {isPlaying ? <PauseIcon /> : <PlayIcon onClick={onPlayClick} />}
+      <div className="">
+        {isPlaying ? (
+          <PauseIcon />
+        ) : (
+          <PlayIcon className="cursor-pointer" onClick={onPlayClick} />
+        )}
       </div>
       <audio
         className="hidden"
         ref={audioRef}
         controls
         preload="none"
-        src={filePath}
+        src={src}
       />
     </Flex>
   );

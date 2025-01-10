@@ -28,11 +28,6 @@
         "id": 85,
         "jp": "かなしみみ",
         "en": "sad"
-      },
-      {
-        "id": 86,
-        "jp": "嘱き",
-        "en": "whisper"
       }
     ]
   },
@@ -46,6 +41,7 @@
     "name": "Goki",
     "jp": "後鬼",
     "id": 27,
+    "speed": 1.1,
     "voices": [
       {
         "id": 87,
@@ -72,7 +68,8 @@
       {
         "id": 31,
         "jp": "読み聞かせ ",
-        "en": "storytelling"
+        "en": "storytelling",
+        "speed": 1.2
       }
     ]
   },
@@ -80,11 +77,13 @@
     "name": "Takehiro Kurono",
     "jp": "玄野武赤",
     "id": 11,
+    "speed": 0.8,
     "voices": [
       {
         "id": 39,
         "jp": "喜び",
-        "en": "joy"
+        "en": "joy",
+        "speed": 0.8
       },
       {
         "id": 40,
@@ -130,6 +129,7 @@
     "name": "Shikoku Metan",
     "jp": "四国めたん",
     "id": 2,
+    "speed": 0.85,
     "voices": [
       {
         "id": 37,
@@ -142,11 +142,13 @@
     "name": "狂使アル",
     "jp": "Kyoshi Aru",
     "id": 55,
+    "speed": 0.85,
     "voices": [
       {
         "id": 56,
         "jp": "おちつきり",
-        "en": "calm"
+        "en": "calm",
+        "speed": 0.85
       },
       {
         "id": 57,

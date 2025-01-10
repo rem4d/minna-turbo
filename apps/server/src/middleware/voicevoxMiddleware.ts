@@ -1,6 +1,5 @@
 import { Request, Response, RequestHandler, NextFunction } from "express";
 import fs from "node:fs";
-import crypto from "crypto";
 import { Readable } from "stream";
 import db from "@rem4d/db/client";
 
@@ -28,22 +27,12 @@ export const createSpeakerFile = async (req: Request, res: Response) => {
   const response = await createBuffer({ text, speaker, speed });
 
   if (response.ok && response.body) {
-    const dir = new URL(`../../public/voices/${speaker}`, import.meta.url);
-    console.log(dir.pathname);
-
-    if (!fs.existsSync(dir.pathname)) {
-      console.log(`Creating voices directory for speaker ${speaker}...`);
-      fs.mkdirSync(dir.pathname);
-    }
-
-    const uuid = crypto.randomUUID();
-    console.log(uuid);
-
+    const dir = new URL(`../../public/voices`, import.meta.url);
     const blob = await response.blob();
     const arrayBuffer = await blob.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const ws = fs.createWriteStream(`${dir.pathname}/${uuid}.wav`);
+    const ws = fs.createWriteStream(`${dir.pathname}/${sentenceId}.wav`);
     ws.write(buffer);
     ws.end();
 
@@ -53,7 +42,7 @@ export const createSpeakerFile = async (req: Request, res: Response) => {
       const { error } = await db
         .from("sentences")
         .update({
-          vox_file_path: `/voices/${speaker}/${uuid}.wav`,
+          vox_file_path: `/voices/${sentenceId}.wav`,
           vox_speaker_id: speaker,
         })
         .eq("id", sentenceId);
@@ -67,6 +56,33 @@ export const createSpeakerFile = async (req: Request, res: Response) => {
   } else {
     res.status(400).json({ msg: "Unexpected error!" });
   }
+};
+
+export const removeSpeakerFile = async (req: Request, res: Response) => {
+  const sentenceId = req.body.sentenceId as number;
+
+  const dir = new URL(`../../public/voices`, import.meta.url);
+
+  const path = `${dir.pathname}/${sentenceId}.wav`;
+
+  fs.unlink(path, async (err) => {
+    if (err) throw err;
+    console.log("Deleted file.");
+
+    const { error } = await db
+      .from("sentences")
+      .update({
+        vox_file_path: "default",
+        vox_speaker_id: null,
+      })
+      .eq("id", sentenceId);
+
+    if (error) {
+      res.status(400).json({ msg: "Unexpected error when write to db." });
+    } else {
+      res.status(200).json({ msg: "File deleted." });
+    }
+  });
 };
 
 const createBuffer = async ({

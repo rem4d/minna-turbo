@@ -71,3 +71,18 @@
 rt {
   user-select: none;
 }
+
+.SpeakBlock::before {
+  position: absolute;
+  z-index: 0;
+  top: -3px;
+  transform: translateX(-50%) rotate(45deg);
+  left: 0px;
+  display: inline-block;
+  background-color: white;
+  width: 16px;
+  height: 10px;
+}
+.SpeakBlock rt {
+  font-size: 11px;
+}

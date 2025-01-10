@@ -36,3 +36,4 @@ dist/
 .turbo
 apps/server/src/util/parse
 wav
+apps/server/public/**

@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
-import { clamp } from "../util/math";
 import type { Database, Kanji, Sentence } from "@rem4d/db";
 import { shuffle } from "../util/shuffle";
 import { tokenize, analyze } from "@rem4d/tokenizer";
@@ -69,7 +68,7 @@ export const sentenceRouter = router({
         .select()
         .eq("source", "source2")
         .gt("level", 0)
-        .lt("level", 100)
+        .lt("level", 50)
         .order("level", { ascending: true })
         .range(
           input.page * input.maxPerPage,
@@ -116,10 +115,11 @@ export const sentenceRouter = router({
       const shift = 60;
       const level = input.level;
       const userId = 2234;
+      const numberOfUnknownKanji = 2;
       const { sentences, additional } = await getStatementsForLevel({
         level,
         shift,
-        numberOfUnknownKanji: 1,
+        numberOfUnknownKanji,
         db: ctx.db,
         redis: ctx.redis,
       });
@@ -299,9 +299,12 @@ const getStatementsForLevel = async ({
     .from("sentences")
     .select()
     .lte("level", level)
-    .lte("unknown_kanji_number", numberOfUnknownKanji)
-    .gte("level", clamp(level - shift, 0, level))
-    .order("level", { ascending: false });
+    .eq("source", "source2")
+    .gt("level", 0)
+    .lt("level", 50)
+    .lte("unknown_kanji_number", numberOfUnknownKanji);
+  // .gte("level", clamp(level - shift, 0, level))
+  // .order("level", { ascending: false });
 
   if (error) {
     throw new Error(error.message);

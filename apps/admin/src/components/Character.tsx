@@ -1,7 +1,7 @@
 import { type ReactElement } from "react";
 
 interface CharacterProps {
-  id: number;
+  id: number | null;
   size?: "1" | "2";
 }
 
@@ -11,7 +11,7 @@ export function Character({ id, size = "2" }: CharacterProps): ReactElement {
       className="size-full bg-no-repeat bg-center bg-cover"
       style={{
         backgroundImage: `url("/characters/${id}.png")`,
-        backgroundSize: size === "1" ? "140%" : "100%",
+        backgroundSize: size === "1" ? "130%" : "100%",
       }}
     ></div>
   );
