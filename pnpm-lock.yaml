@@ -44,6 +44,9 @@ importers:
       '@andresaya/edge-tts':
         specifier: ^1.2.4
         version: 1.2.4(typescript@5.7.2)
+      '@radix-ui/react-dropdown-menu':
+        specifier: ^2.1.4
+        version: 2.1.4(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-icons':
         specifier: ^1.3.2
         version: 1.3.2(react@18.3.1)
@@ -201,7 +204,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api
       '@rem4d/db':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/db
       '@rem4d/tokenizer':
         specifier: workspace:*
@@ -212,9 +215,6 @@ importers:
       '@sglkc/kuromoji':
         specifier: ^1.1.0
         version: 1.1.0
-      '@trpc/client':
-        specifier: ^11.0.0-rc.666
-        version: 11.0.0-rc.682(@trpc/server@11.0.0-rc.682(typescript@5.7.2))(typescript@5.7.2)
       '@trpc/server':
         specifier: ^11.0.0-rc.666
         version: 11.0.0-rc.682(typescript@5.7.2)
