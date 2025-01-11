@@ -31,7 +31,7 @@ export interface KanjiMapped {
   en?: string;
 }
 
-export interface SentenceMemberInput {
+export interface MemberInput {
   basic_form: string;
   pos: string;
   original_sentence: string;
@@ -42,7 +42,7 @@ export interface SentenceMemberInput {
   other: string[];
 }
 
-export interface SentenceMemberOutput {
+export interface MemberOutput {
   basic_form: string;
   pos: string;
   pos_detail_1: string;

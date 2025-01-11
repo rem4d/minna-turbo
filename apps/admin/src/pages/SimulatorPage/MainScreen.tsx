@@ -1,5 +1,5 @@
 import type { Sentence } from "@rem4d/db";
-import type { SentenceMemberOutput } from "../../types";
+import type { MemberOutput } from "../../types";
 import { CompositePlayer } from "./CompositePlayer";
 import { openUrl } from "@/utils";
 import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
@@ -27,7 +27,7 @@ export default function MainScreen({ sentence, lang }: Props) {
       },
     );
 
-  const onMemberClick = useCallback((m: SentenceMemberOutput) => {
+  const onMemberClick = useCallback((m: MemberOutput) => {
     openUrl(`https://jisho.org/search/${m.basic_form}`);
   }, []);
 

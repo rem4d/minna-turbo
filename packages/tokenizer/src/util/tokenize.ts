@@ -47,6 +47,11 @@ const getTokenizer = async () => {
 export const tokenize = async (text: string) => {
   const tokenizer = await getTokenizer();
 
+  // console.log("memory usage:");
+  // console.log("______________________");
+  // for (const [key, value] of Object.entries(process.memoryUsage())) {
+  //   console.log(`Memory usage by ${key}, ${value / 1000000}MB `);
+  // }
   const _mojiTokens = tokenizer.tokenize(text);
   // console.log(_mojiTokens);
   // console.log(_mojiTokens.filter((t) => t.surface_form === "万"));
@@ -147,6 +152,7 @@ export const tokenize = async (text: string) => {
       end: token.word_position - 1 + token.surface_form.length,
       pos: mapPos(token.pos),
       pos_detail_1: mapPosDetails(token.pos_detail_1),
+      pos_detail_2: token.pos_detail_2,
       basic_form: mapBasicForm(token),
       is_kanji: isKanji(token.surface_form),
       is_kana: isKana(token.surface_form),

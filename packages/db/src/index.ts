@@ -2,7 +2,7 @@ import type { Database, Tables } from "./database.types.js";
 
 type Sentence = Tables<"sentences">;
 type Kanji = Tables<"kanji">;
-type SentenceMember = Tables<"sentence_members">;
+type Member = Tables<"members">;
 
-export type { Tables, Database, Sentence, Kanji, SentenceMember };
+export type { Tables, Database, Sentence, Kanji, Member };
 export * from "@supabase/supabase-js";

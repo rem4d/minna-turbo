@@ -16,7 +16,7 @@ import {
   Code,
   Spinner,
 } from "@radix-ui/themes";
-import type { SentenceMemberOutput } from "../../types";
+import type { MemberOutput } from "../../types";
 import { initTTS } from "../../utils/tts";
 import { api } from "@/utils/api";
 
@@ -77,7 +77,7 @@ export const NewSentencePage: FC = () => {
     setInput((i) => i.replace(new RegExp(" ", "g"), ""));
   };
 
-  const onMemberClick = useCallback((m: SentenceMemberOutput) => {
+  const onMemberClick = useCallback((m: MemberOutput) => {
     openUrl(`https://jisho.org/search/${m.basic_form}`);
   }, []);
 

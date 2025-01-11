@@ -45,7 +45,7 @@ export interface GetSentencesForLevelReponse {
   additional: Sentence[];
 }
 
-export interface SentenceMemberOutput {
+export interface MemberOutput {
   html: string;
   pos: string;
   pos_detail_1: string;

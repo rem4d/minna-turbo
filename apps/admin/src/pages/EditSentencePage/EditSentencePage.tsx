@@ -15,7 +15,7 @@ import {
   DataList,
   Code,
 } from "@radix-ui/themes";
-import type { SentenceMemberOutput } from "../../types";
+import type { MemberOutput } from "../../types";
 import { useParams } from "react-router-dom";
 import { initTTS } from "../../utils/tts";
 import { api } from "@/utils/api";
@@ -107,7 +107,7 @@ export const EditSentencePage: FC = () => {
     setInput((i) => i.replace(new RegExp(" ", "g"), ""));
   };
 
-  const onMemberClick = useCallback((m: SentenceMemberOutput) => {
+  const onMemberClick = useCallback((m: MemberOutput) => {
     openUrl(`https://jisho.org/search/${m.basic_form}`);
   }, []);
 

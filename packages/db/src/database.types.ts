@@ -77,7 +77,7 @@ export type Database = {
         }
         Relationships: []
       }
-      sentence_members: {
+      members: {
         Row: {
           basic_form: string
           created_at: string
@@ -134,6 +134,7 @@ export type Database = {
           ru: string | null
           ruby: string | null
           source: string | null
+          status: string
           text: string
           text_with_furigana: string | null
           translation: string | null
@@ -150,6 +151,7 @@ export type Database = {
           ru?: string | null
           ruby?: string | null
           source?: string | null
+          status?: string
           text?: string
           text_with_furigana?: string | null
           translation?: string | null
@@ -166,6 +168,7 @@ export type Database = {
           ru?: string | null
           ruby?: string | null
           source?: string | null
+          status?: string
           text?: string
           text_with_furigana?: string | null
           translation?: string | null
@@ -255,6 +258,7 @@ export type Database = {
               ru: string | null
               ruby: string | null
               source: string | null
+              status: string
               text: string
               text_with_furigana: string | null
               translation: string | null
@@ -277,6 +281,7 @@ export type Database = {
               ru: string | null
               ruby: string | null
               source: string | null
+              status: string
               text: string
               text_with_furigana: string | null
               translation: string | null
@@ -298,6 +303,7 @@ export type Database = {
               ru: string | null
               ruby: string | null
               source: string | null
+              status: string
               text: string
               text_with_furigana: string | null
               translation: string | null
@@ -320,6 +326,7 @@ export type Database = {
               ru: string | null
               ruby: string | null
               source: string | null
+              status: string
               text: string
               text_with_furigana: string | null
               translation: string | null
@@ -342,6 +349,7 @@ export type Database = {
           ru: string | null
           ruby: string | null
           source: string | null
+          status: string
           text: string
           text_with_furigana: string | null
           translation: string | null

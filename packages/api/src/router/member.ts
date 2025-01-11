@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
-import type { SentenceMemberOutput } from "../types";
+import type { MemberOutput } from "../types";
 import {
   tokenize,
   createRubySentence,
@@ -12,7 +12,7 @@ export const memberRouter = router({
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
       const { error } = await ctx.db
-        .from("sentence_members")
+        .from("members")
         .update({ is_invalid: true })
         .eq("id", input);
 
@@ -25,7 +25,7 @@ export const memberRouter = router({
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
       const { error } = await ctx.db
-        .from("sentence_members")
+        .from("members")
         .update({ is_hidden: true })
         .eq("id", input);
 
@@ -43,7 +43,7 @@ export const memberRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { data, error } = await ctx.db
-        .from("sentence_members")
+        .from("members")
         .update({
           en: input.meaning,
         })
@@ -64,7 +64,7 @@ export const memberRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { data, error } = await ctx.db
-        .from("sentence_members")
+        .from("members")
         .update({
           ru: input.ru,
         })
@@ -80,7 +80,7 @@ export const memberRouter = router({
     .input(z.object({ pos: z.string() }))
     .query(async ({ ctx, input }) => {
       const { count: total, error: totalError } = await ctx.db
-        .from("sentence_members")
+        .from("members")
         .select("*", { count: "exact" })
         .eq("pos", input.pos)
         .eq("is_hidden", false)
@@ -107,7 +107,7 @@ export const memberRouter = router({
       const limit = input.limit;
       const page = input.page;
       const db = ctx.db
-        .from("sentence_members")
+        .from("members")
         .select()
         .eq("pos", pos)
         .eq("is_hidden", false)
@@ -140,7 +140,7 @@ export const memberRouter = router({
       const tokens = await tokenize(text);
       // console.log(tokens);
 
-      const outputMembers: SentenceMemberOutput[] = [];
+      const outputMembers: MemberOutput[] = [];
 
       // const japaneseNameRegex = /[一-龠]{2}(?=さん)/;
       const japaneseNameRegex = /(?:[一-龠]{2}|[ァ-ヴ]{2,12})(?=さん)/;
@@ -162,7 +162,7 @@ export const memberRouter = router({
         }
 
         const { data: member } = await ctx.db
-          .from("sentence_members")
+          .from("members")
           .select()
           .eq("basic_form", token.basic_form)
           .eq("pos", token.pos)
