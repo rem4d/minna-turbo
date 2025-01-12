@@ -85,12 +85,11 @@ export type Database = {
           id: number
           is_hidden: boolean | null
           is_invalid: boolean | null
-          m_type: string | null
           original_sentence: string | null
-          other: string[] | null
           pos: string
           pos_detail_1: string
           ru: string | null
+          ruby: string | null
           updated_at: string | null
         }
         Insert: {
@@ -100,12 +99,11 @@ export type Database = {
           id?: number
           is_hidden?: boolean | null
           is_invalid?: boolean | null
-          m_type?: string | null
           original_sentence?: string | null
-          other?: string[] | null
           pos: string
           pos_detail_1?: string
           ru?: string | null
+          ruby?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -115,15 +113,44 @@ export type Database = {
           id?: number
           is_hidden?: boolean | null
           is_invalid?: boolean | null
-          m_type?: string | null
           original_sentence?: string | null
-          other?: string[] | null
           pos?: string
           pos_detail_1?: string
           ru?: string | null
+          ruby?: string | null
           updated_at?: string | null
         }
         Relationships: []
+      }
+      sentence_member: {
+        Row: {
+          member_id: number
+          sentence_id: number
+        }
+        Insert: {
+          member_id?: number
+          sentence_id?: number
+        }
+        Update: {
+          member_id?: number
+          sentence_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sentence_member_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sentence_member_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sentences: {
         Row: {

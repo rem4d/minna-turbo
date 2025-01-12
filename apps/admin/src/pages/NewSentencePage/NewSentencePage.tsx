@@ -35,12 +35,13 @@ export const NewSentencePage: FC = () => {
   const { data: analyzeData, mutate: analyze } =
     api.sentence.analyze.useMutation();
 
-  const { data: members } = api.member.sentenceMembers.useQuery(
-    { text: input },
-    {
-      enabled: !!input && !!analyzeData,
-    },
-  );
+  const members = [];
+  // const { data: members } = api.member.sentenceMembers.useQuery(
+  //   { text: input },
+  //   {
+  //     enabled: !!input && !!analyzeData,
+  //   },
+  // );
   const createMutation = api.sentence.create.useMutation({
     onSuccess() {
       if (toastId.current) {
@@ -260,7 +261,7 @@ export const NewSentencePage: FC = () => {
             {/*     <Heading size="4">Members</Heading> */}
             {/*   </Flex> */}
             {/* </div> */}
-            {members?.members.map((m) => (
+            {members.members.map((m) => (
               <Flex key={m.basic_form} direction="column">
                 <Text
                   size="6"

@@ -63,12 +63,15 @@ export const sentenceRouter = router({
   list: publicProcedure
     .input(z.object({ maxPerPage: z.number().gt(0), page: z.number() }))
     .query(async ({ ctx, input }) => {
+      const numberOfUnknownKanji = 3;
+
       const { data, error } = await ctx.db
         .from("sentences")
         .select()
         .eq("source", "source2")
-        .gt("level", 0)
-        .lt("level", 50)
+        .gt("level", 48)
+        .lt("level", 98)
+        .lt("unknown_kanji_number", numberOfUnknownKanji)
         .order("level", { ascending: true })
         .range(
           input.page * input.maxPerPage,
@@ -115,7 +118,7 @@ export const sentenceRouter = router({
       const shift = 60;
       const level = input.level;
       const userId = 2234;
-      const numberOfUnknownKanji = 2;
+      const numberOfUnknownKanji = 3;
       const { sentences, additional } = await getStatementsForLevel({
         level,
         shift,
@@ -300,8 +303,8 @@ const getStatementsForLevel = async ({
     .select()
     .lte("level", level)
     .eq("source", "source2")
-    .gt("level", 0)
-    .lt("level", 50)
+    .gt("level", 48)
+    .lt("level", 98)
     .lte("unknown_kanji_number", numberOfUnknownKanji);
   // .gte("level", clamp(level - shift, 0, level))
   // .order("level", { ascending: false });

@@ -40,6 +40,13 @@ export const EditSentencePage: FC = () => {
     enabled: !!id,
   });
 
+  const { data: members } = api.member.sentenceMembers.useQuery(
+    { id: sentence?.id ?? 0 },
+    {
+      enabled: !!sentence?.id,
+    },
+  );
+
   const removeSpeakerMutation = useRemoveSpeakerMutation();
   const { data: analyzeData, mutate: analyze } =
     api.sentence.analyze.useMutation();
@@ -80,13 +87,6 @@ export const EditSentencePage: FC = () => {
         }
       },
     });
-
-  const { data: members } = api.member.sentenceMembers.useQuery(
-    { text: sentence?.text ?? "" },
-    {
-      enabled: !!sentence?.text,
-    },
-  );
 
   useEffect(() => {
     if (sentence) {
@@ -347,18 +347,18 @@ export const EditSentencePage: FC = () => {
               {/*     <Heading size="4">Members</Heading> */}
               {/*   </Flex> */}
               {/* </div> */}
-              {members?.members.map((m) => (
+              {members?.map((m) => (
                 <Flex key={m.basic_form} direction="column">
                   <Text
                     size="6"
                     onClick={() => onMemberClick(m)}
                     className="cursor-pointer whitespace-nowrap"
                     dangerouslySetInnerHTML={{
-                      __html: m.html,
+                      __html: m.ruby ?? "",
                     }}
                   />
                   <Text className="select-none" size="2">
-                    {m.meaning}
+                    {m.en}
                   </Text>
                   <Box>
                     <Badge color="sky" size="1">

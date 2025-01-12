@@ -1,11 +1,5 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
-import type { MemberOutput } from "../types";
-import {
-  tokenize,
-  createRubySentence,
-  createRubyToken,
-} from "@rem4d/tokenizer";
 
 export const memberRouter = router({
   setInvalid: publicProcedure
@@ -134,112 +128,128 @@ export const memberRouter = router({
       return [];
     }),
   sentenceMembers: publicProcedure
-    .input(z.object({ text: z.string() }))
+    .input(z.object({ id: z.number() }))
     .query(async ({ input, ctx }) => {
-      const text = input.text;
-      const tokens = await tokenize(text);
-      // console.log(tokens);
+      console.log(`Sentence id = `, input.id);
+      const { data, error } = await ctx.db
+        .from("members")
+        .select("*, sentence_member!inner(*)")
+        .eq("sentence_member.sentence_id", Number(input.id));
 
-      const outputMembers: MemberOutput[] = [];
-
-      // const japaneseNameRegex = /[一-龠]{2}(?=さん)/;
-      const japaneseNameRegex = /(?:[一-龠]{2}|[ァ-ヴ]{2,12})(?=さん)/;
-      const japaneseNameMatches = japaneseNameRegex.exec(text);
-
-      for (const token of tokens) {
-        // ignore specific types of speech
-        if (typesToIgnore.includes(token.pos)) {
-          continue;
-        }
-
-        // ignore japanese names
-        if (
-          (japaneseNameMatches?.[0] === token.basic_form ||
-            japaneseNamesWithoutSan.includes(token.basic_form)) &&
-          !theseSoundLikeJapaneseNamesButTheyAreNot.includes(token.basic_form)
-        ) {
-          continue;
-        }
-
-        const { data: member } = await ctx.db
-          .from("members")
-          .select()
-          .eq("basic_form", token.basic_form)
-          .eq("pos", token.pos)
-          .eq("pos_detail_1", token.pos_detail_1)
-          .single();
-
-        const tmpToken = { ...token, original: token.basic_form };
-
-        // no need to push duplicates
-        if (
-          outputMembers.find(
-            (o) =>
-              o.basic_form === token.basic_form &&
-              o.pos === token.pos &&
-              o.pos_detail_1 === token.pos_detail_1,
-          )
-        ) {
-          continue;
-        }
-
-        if (member) {
-          if (member.is_invalid || member.is_hidden) {
-            continue;
-          }
-
-          let readings: { reading: string }[] = [];
-          if (
-            member.pos_detail_1 === "suffix" ||
-            member.pos_detail_1 === "replaced"
-          ) {
-            // preserve token reading
-            readings = [{ reading: tmpToken.reading }];
-          } else {
-            // fetch new reading
-            readings = await tokenize(tmpToken.original);
-          }
-
-          tmpToken.reading = readings.reduce(
-            (acc, curr) => acc.concat(curr.reading),
-            "",
-          );
-        }
-
-        outputMembers.push({
-          basic_form: tmpToken.basic_form,
-          pos: tmpToken.pos,
-          pos_detail_1: tmpToken.pos_detail_1,
-          html: createRubyToken(tmpToken),
-          meaning: member?.en ?? "",
-          ru: member?.ru ?? "",
-          id: member?.id,
-        });
+      if (error) {
+        console.log(error);
+        throw new Error("Unexpected error.");
       }
 
-      return {
-        html: createRubySentence(tokens),
-        members: outputMembers,
-      };
+      return data;
     }),
+  // sentenceMembers_old: publicProcedure
+  //   .input(z.object({ text: z.string() }))
+  //   .query(async ({ input, ctx }) => {
+  //     const text = input.text;
+  //     const tokens = await tokenize(text);
+  //     // console.log(tokens);
+  //
+  //     const outputMembers: MemberOutput[] = [];
+  //
+  //     // const japaneseNameRegex = /[一-龠]{2}(?=さん)/;
+  //     const japaneseNameRegex = /(?:[一-龠]{2}|[ァ-ヴ]{2,12})(?=さん)/;
+  //     const japaneseNameMatches = japaneseNameRegex.exec(text);
+  //
+  //     for (const token of tokens) {
+  //       // ignore specific types of speech
+  //       if (typesToIgnore.includes(token.pos)) {
+  //         continue;
+  //       }
+  //
+  //       // ignore japanese names
+  //       if (
+  //         (japaneseNameMatches?.[0] === token.basic_form ||
+  //           japaneseNamesWithoutSan.includes(token.basic_form)) &&
+  //         !theseSoundLikeJapaneseNamesButTheyAreNot.includes(token.basic_form)
+  //       ) {
+  //         continue;
+  //       }
+  //
+  //       const { data: member } = await ctx.db
+  //         .from("members")
+  //         .select()
+  //         .eq("basic_form", token.basic_form)
+  //         .eq("pos", token.pos)
+  //         .eq("pos_detail_1", token.pos_detail_1)
+  //         .single();
+  //
+  //       const tmpToken = { ...token, original: token.basic_form };
+  //
+  //       // no need to push duplicates
+  //       if (
+  //         outputMembers.find(
+  //           (o) =>
+  //             o.basic_form === token.basic_form &&
+  //             o.pos === token.pos &&
+  //             o.pos_detail_1 === token.pos_detail_1,
+  //         )
+  //       ) {
+  //         continue;
+  //       }
+  //
+  //       if (member) {
+  //         if (member.is_invalid || member.is_hidden) {
+  //           continue;
+  //         }
+  //
+  //         let readings: { reading: string }[] = [];
+  //         if (
+  //           member.pos_detail_1 === "suffix" ||
+  //           member.pos_detail_1 === "replaced"
+  //         ) {
+  //           // preserve token reading
+  //           readings = [{ reading: tmpToken.reading }];
+  //         } else {
+  //           // fetch new reading
+  //           readings = await tokenize(tmpToken.original);
+  //         }
+  //
+  //         tmpToken.reading = readings.reduce(
+  //           (acc, curr) => acc.concat(curr.reading),
+  //           "",
+  //         );
+  //       }
+  //
+  //       outputMembers.push({
+  //         basic_form: tmpToken.basic_form,
+  //         pos: tmpToken.pos,
+  //         pos_detail_1: tmpToken.pos_detail_1,
+  //         html: createRubyToken(tmpToken),
+  //         meaning: member?.en ?? "",
+  //         ru: member?.ru ?? "",
+  //         id: member?.id,
+  //       });
+  //     }
+  //
+  //     return {
+  //       html: createRubySentence(tokens),
+  //       members: outputMembers,
+  //     };
+  //   }),
 });
-
-const typesToIgnore = [
-  "assistant",
-  "symbol",
-  "prefix",
-  "interjection",
-  "フィラー",
-];
-
-const theseSoundLikeJapaneseNamesButTheyAreNot = [
-  "係長",
-  "女将",
-  "課長",
-  "医者",
-  "歯医者",
-  "本屋",
-  "課長",
-];
-
-const japaneseNamesWithoutSan = ["上田"];
+//
+// const typesToIgnore = [
+//   "assistant",
+//   "symbol",
+//   "prefix",
+//   "interjection",
+//   "フィラー",
+// ];
+//
+// const theseSoundLikeJapaneseNamesButTheyAreNot = [
+//   "係長",
+//   "女将",
+//   "課長",
+//   "医者",
+//   "歯医者",
+//   "本屋",
+//   "課長",
+// ];
+//
+// const japaneseNamesWithoutSan = ["上田"];

@@ -1,3 +1,4 @@
+import { isKana } from "wanakana";
 import type { KanjiMapped } from "./types";
 
 export const createRubyToken = ({ reading, original }: KanjiMapped): string => {
@@ -5,10 +6,15 @@ export const createRubyToken = ({ reading, original }: KanjiMapped): string => {
     return original;
   }
 
+  if (isKana(reading) && isKana(original)) {
+    return original;
+  }
+
   // TODO:
   // test for middle:
   // 引き出し -> ひきだし
   // 申し上げる -> もうしあげる
+  // 引っ越し -> ひっこし
 
   let html_beg = "";
   let html_end = "";

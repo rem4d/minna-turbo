@@ -17,15 +17,15 @@ interface Props {
 export default function MainScreen({ sentence, lang }: Props) {
   const [membersSpoilerOpen, setMembersSpoilerOpen] = useState(false);
   const [translationSpoilerOpen, setTranslationSpoilerOpen] = useState(false);
-  const [showFurigana, setShowFurigana] = useState(false);
 
   const { data: members, isLoading: loadingMembers } =
     api.member.sentenceMembers.useQuery(
-      { text: sentence.text },
+      { id: sentence.id },
       {
         enabled: !!sentence.text && membersSpoilerOpen,
       },
     );
+  console.log(members);
 
   const onMemberClick = useCallback((m: MemberOutput) => {
     openUrl(`https://jisho.org/search/${m.basic_form}`);
@@ -39,9 +39,6 @@ export default function MainScreen({ sentence, lang }: Props) {
     setTranslationSpoilerOpen((s) => !s);
   };
 
-  const onShowFurigana = () => {
-    setShowFurigana(!showFurigana);
-  };
   return (
     <div className="w-[440px] text-black bg-wildSand p-4 rounded-[10px]">
       <div className="flex relative flex-col gap-4 items-start">
@@ -51,35 +48,34 @@ export default function MainScreen({ sentence, lang }: Props) {
             className="flex space-x-2 items-center cursor-pointer"
             onClick={onMembersSpoilerClick}
           >
-            <div className="text-sm select-none">Dictionary</div>
+            <div className="text-sm select-none">Vocabulary</div>
             {membersSpoilerOpen ? <ArrowUpIcon /> : <ArrowDownIcon />}
           </div>
         </div>
         {membersSpoilerOpen && (
           <div className="bg-white border border-gallery w-full p-2 shadow-md">
             {loadingMembers && <div>Loading...</div>}
-            <div className="grid grid-cols-3 font-klee text-md gap-4">
-              {!loadingMembers &&
-                members?.members.map((m) => (
-                  <div className="flex flex-col" key={m.basic_form}>
-                    <div
-                      onClick={() => onMemberClick(m)}
-                      className="cursor-pointer whitespace-nowrap"
-                      dangerouslySetInnerHTML={{
-                        __html: m.html,
-                      }}
-                    />
-                    <div className="font-inter text-sm">
-                      {lang === "en" ? m.meaning : m.ru ? m.ru : m.meaning}
-                    </div>
-                    <div className="mt-2">
-                      <span className="text-sky-500">{m.pos}</span>
-                      {m.pos_detail_1 === "suffix" ? (
-                        <span className="text-red-800">{m.pos_detail_1}</span>
-                      ) : null}
-                    </div>
+            <div className="grid grid-cols-3 font-klee text-[18px] gap-4">
+              {members?.map((m) => (
+                <div className="flex flex-col" key={m.basic_form}>
+                  <div
+                    onClick={() => onMemberClick(m)}
+                    className="cursor-pointer whitespace-nowrap"
+                    dangerouslySetInnerHTML={{
+                      __html: m.ruby,
+                    }}
+                  />
+                  <div className="font-inter text-sm">
+                    {lang === "en" ? m.en : m.ru ? m.ru : m.en}
                   </div>
-                ))}
+                  <div className="mt-2">
+                    <span className="text-sky-500">{m.pos}</span>
+                    {m.pos_detail_1 === "suffix" ? (
+                      <span className="text-red-800">{m.pos_detail_1}</span>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
