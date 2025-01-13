@@ -141,7 +141,14 @@ export const memberRouter = router({
         throw new Error("Unexpected error.");
       }
 
-      return data;
+      const sorted = data.sort((a, b) =>
+        Number(a.sentence_member[0]?.position) >
+        Number(b.sentence_member[0]?.position)
+          ? 1
+          : -1,
+      );
+
+      return sorted;
     }),
   // sentenceMembers_old: publicProcedure
   //   .input(z.object({ text: z.string() }))

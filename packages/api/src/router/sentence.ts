@@ -68,7 +68,7 @@ export const sentenceRouter = router({
       const { data, error } = await ctx.db
         .from("sentences")
         .select()
-        .eq("source", "source2")
+        .eq("source", "source1")
         .gt("level", 48)
         .lt("level", 98)
         .lt("unknown_kanji_number", numberOfUnknownKanji)
@@ -302,7 +302,7 @@ const getStatementsForLevel = async ({
     .from("sentences")
     .select()
     .lte("level", level)
-    .eq("source", "source2")
+    .eq("source", "source1")
     .gt("level", 48)
     .lt("level", 98)
     .lte("unknown_kanji_number", numberOfUnknownKanji);

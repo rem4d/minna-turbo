@@ -125,14 +125,17 @@ export type Database = {
       sentence_member: {
         Row: {
           member_id: number
+          position: number
           sentence_id: number
         }
         Insert: {
           member_id?: number
+          position?: number
           sentence_id?: number
         }
         Update: {
           member_id?: number
+          position?: number
           sentence_id?: number
         }
         Relationships: [

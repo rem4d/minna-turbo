@@ -30,6 +30,7 @@ export const analyze = async (
 
   // console.log(`Checking sentence: ${text}`);
   const tokens = await tokenize(tmpText ?? text);
+  // console.log(tokens);
   for (const token of tokens) {
     let unknownInToken = "";
     let knownInToken = "";

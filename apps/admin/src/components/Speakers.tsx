@@ -9,7 +9,7 @@ import {
   Slider,
   Text,
 } from "@radix-ui/themes";
-import { useState, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import { Speaker } from "./Speaker";
 import { useVoicevoxMutation } from "@/rq/useVoicevoxMutation";
 import speakers from "@/utils/voicevoxSpeakerMap.json";
@@ -28,17 +28,33 @@ export default function Speakers({ input, sentenceId }: Props): ReactElement {
   const [sliderVal, setSliderVal] = useState([50]);
   const [open, setOpen] = useState(false);
 
-  const speed = (50 + sliderVal[0]) / 100;
+  const speakersFlat = speakers.reduce(
+    (acc, { voices, speed, jp, id }) =>
+      acc.concat(voices).concat({ jp, id, speed }),
+    [],
+  ) as { jp: string | undefined; id: number; speed: number | undefined }[];
 
   const submitVoiceMutation = useSubmitVoiceMutation();
+
+  const speed = (50 + sliderVal[0]) / 100;
 
   const onSpeakerClick = async (speakerId: number) => {
     setSpeakerId(speakerId);
 
+    const found = speakersFlat.find((s) => s.id === speakerId);
+    let newVal = 50;
+
+    if (found?.speed) {
+      newVal = found.speed * 100 - 50;
+    }
+
+    setSliderVal([newVal]);
+    const speed_ = (50 + newVal) / 100;
+
     const blob = await voicevoxMutation.mutateAsync({
       speaker: speakerId,
       text: input,
-      speed,
+      speed: speed_,
     });
 
     const objectURL = URL.createObjectURL(blob);
@@ -48,7 +64,7 @@ export default function Speakers({ input, sentenceId }: Props): ReactElement {
 
   const onOpenChange = (isOpen: boolean) => {
     if (isOpen) {
-      setSliderVal([50]);
+      // setSliderVal([50]);
     }
   };
 
@@ -64,6 +80,7 @@ export default function Speakers({ input, sentenceId }: Props): ReactElement {
       speaker: speakerId,
     });
   };
+  console.log(speed);
 
   return (
     <Box>
