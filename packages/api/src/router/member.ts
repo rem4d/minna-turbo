@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
+import { findSentencesMembers } from "./util/findSentenceMembers";
 
 export const memberRouter = router({
   setInvalid: publicProcedure
@@ -130,7 +131,6 @@ export const memberRouter = router({
   sentenceMembers: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input, ctx }) => {
-      console.log(`Sentence id = `, input.id);
       const { data, error } = await ctx.db
         .from("members")
         .select("*, sentence_member!inner(*)")
@@ -150,6 +150,39 @@ export const memberRouter = router({
 
       return sorted;
     }),
+  reassignMembers: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const sentenceId = input.id;
+
+      const { data, error } = await ctx.db
+        .from("sentences")
+        .select()
+        .eq("id", sentenceId);
+
+      if (error) {
+        throw new Error("Not found.");
+      }
+
+      await ctx.db
+        .from("sentence_member")
+        .delete()
+        .eq("sentence_id", sentenceId);
+
+      const insertBulk = await findSentencesMembers(data);
+      // console.log(insertBulk);
+
+      const { error: error2 } = await ctx.db
+        .from("sentence_member")
+        .upsert(insertBulk);
+
+      if (error2) {
+        throw new Error("Unexpected error while calc bulk.");
+      }
+
+      return true;
+    }),
+
   // sentenceMembers_old: publicProcedure
   //   .input(z.object({ text: z.string() }))
   //   .query(async ({ input, ctx }) => {

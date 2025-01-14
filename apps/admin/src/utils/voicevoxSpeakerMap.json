@@ -88,12 +88,14 @@
       {
         "id": 40,
         "jp": "ツンギレ",
-        "en": "angry"
+        "en": "angry",
+        "speed": 0.8
       },
       {
         "id": 41,
         "jp": "悲しみ ",
-        "en": "sorrow"
+        "en": "sorrow",
+        "speed": 0.95
       }
     ]
   },
@@ -188,7 +190,7 @@
     "name": "Manbetsu Hanamaru",
     "jp": "満別花丸",
     "id": 73,
-    "speed": 0.9,
+    "speed": 0.8,
     "voices": []
   },
   {

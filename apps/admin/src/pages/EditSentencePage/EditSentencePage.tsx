@@ -47,6 +47,8 @@ export const EditSentencePage: FC = () => {
     },
   );
 
+  const reassignMembersMutation = api.member.reassignMembers.useMutation();
+
   const removeSpeakerMutation = useRemoveSpeakerMutation();
   const { data: analyzeData, mutate: analyze } =
     api.sentence.analyze.useMutation();
@@ -142,6 +144,11 @@ export const EditSentencePage: FC = () => {
   const onRemoveSpeaker = () => {
     if (sentence) {
       void removeSpeakerMutation.mutate({ sentenceId: sentence.id });
+    }
+  };
+  const handleReassignMembers = () => {
+    if (sentence) {
+      reassignMembersMutation.mutate({ id: sentence.id });
     }
   };
   return (
@@ -376,6 +383,14 @@ export const EditSentencePage: FC = () => {
           </Grid>
 
           <div>
+            <Button
+              disabled={reassignMembersMutation.isPending}
+              color="cyan"
+              size="3"
+              onClick={handleReassignMembers}
+            >
+              Reassign members
+            </Button>
             <Button
               disabled={updateMutation.isPending}
               color="lime"
