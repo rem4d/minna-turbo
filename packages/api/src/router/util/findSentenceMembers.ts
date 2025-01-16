@@ -27,8 +27,8 @@ export const findSentencesMembers = async (sentences: Sentence[]) => {
   }[];
 
   const japaneseNameRegexGlobal =
-    /([\u4E00-\u9FAF]{1,2}|[ァ-ヴ]{2,12})(?=さん)/g;
-  const japaneseNameRegex = /([\u4E00-\u9FAF]{1,2}|[ァ-ヴ]{2,12})(?=さん)/;
+    /([\u4E00-\u9FAFお]{1,2}|[ァ-ヴ]{2,12})(?=さん)/g;
+  const japaneseNameRegex = /([\u4E00-\u9FAFお]{1,2}|[ァ-ヴ]{2,12})(?=さん)/;
 
   for (const sentence of sentences) {
     const tokens = await tokenize(sentence.text);
@@ -114,19 +114,20 @@ const typesToIgnore = [
 
 const theseSoundLikeJapaneseNamesButTheyAreNot = [
   "皆", // all
-  "弟", // sister
-  "係長",
+  "弟", // younger brother
+  "妹", // younger sister
+  "係長", // chief
   "女将",
   "課長",
   "医者",
   "本屋", // principal
   "課長", // chief
-  "お兄", // brother
+  "お兄", // older brother
   "お父", // father
   "お客", // guest
   "お子", // child
   "お母", // mother
-  "お娘", // sister
+  "お娘", // daughter
   "女優", // actress
   "花屋", // flower shop
   "歯医者", // dentist

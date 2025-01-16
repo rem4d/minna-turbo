@@ -7,7 +7,8 @@
       {
         "id": 81,
         "jp": "熱血",
-        "en": "passionate"
+        "en": "passionate",
+        "speed": 0.9
       },
       {
         "id": 82,
@@ -17,7 +18,8 @@
       {
         "id": 83,
         "jp": "喜び",
-        "en": "pleasure"
+        "en": "pleasure",
+        "speed": 0.9
       },
       {
         "id": 84,
@@ -125,6 +127,7 @@
     "name": "Kenzaki Mesuo",
     "jp": "剣崎雌雄",
     "id": 21,
+    "speed": 0.9,
     "voices": []
   },
   {
@@ -155,7 +158,8 @@
       {
         "id": 57,
         "jp": "うきうき",
-        "en": "cheerfull"
+        "en": "cheerfull",
+        "speed": 0.9
       }
     ]
   },

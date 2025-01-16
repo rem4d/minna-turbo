@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { FC } from "react";
-import type { Id } from "react-toastify";
-import { ToastContainer, toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { openUrl } from "../../utils";
 import {
   Flex,
@@ -14,14 +13,16 @@ import {
   Badge,
   DataList,
   Code,
+  Spinner,
 } from "@radix-ui/themes";
 import type { MemberOutput } from "../../types";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { initTTS } from "../../utils/tts";
 import { api } from "@/utils/api";
 import Speakers from "@/components/Speakers";
 import { Player } from "@/components/Player";
 import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
+import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
 
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
@@ -32,9 +33,9 @@ export const EditSentencePage: FC = () => {
   const [ru, setRu] = useState("");
   const [openAiResponse, setOpenAiResponse] = useState("");
   const [openAiTranslation, setOpenAiTranslation] = useState("");
-  const toastId = useRef<Id | null>(null);
 
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const { data: sentence } = api.sentence.getById.useQuery(Number(id), {
     enabled: !!id,
@@ -46,12 +47,36 @@ export const EditSentencePage: FC = () => {
       enabled: !!sentence?.id,
     },
   );
+  const utils = api.useUtils();
 
-  const reassignMembersMutation = api.member.reassignMembers.useMutation();
+  const submitVoiceMutation = useSubmitVoiceMutation({
+    onSuccess() {
+      toast.success("Successfully assigned speaker.");
+      void utils.sentence.getById.invalidate();
+    },
+  });
 
-  const removeSpeakerMutation = useRemoveSpeakerMutation();
+  const reassignMembersMutation = api.member.reassignMembers.useMutation({
+    onSuccess() {
+      toast.success("Successfully reassigned.");
+      void utils.member.sentenceMembers.invalidate();
+    },
+  });
+
+  const removeSpeakerMutation = useRemoveSpeakerMutation({
+    onSuccess() {
+      toast.success("Successfully removed speaker.");
+      void utils.sentence.getById.invalidate();
+    },
+  });
+
   const { data: analyzeData, mutate: analyze } =
-    api.sentence.analyze.useMutation();
+    api.sentence.analyze.useMutation({
+      onSuccess() {
+        toast.success("Got response.");
+        void utils.sentence.getById.invalidate();
+      },
+    });
 
   useEffect(() => {
     if (analyzeData) {
@@ -62,17 +87,20 @@ export const EditSentencePage: FC = () => {
 
   const updateMutation = api.sentence.update.useMutation({
     onSuccess() {
-      if (toastId.current) {
-        toast.update(toastId.current, {
-          type: "success",
-          autoClose: 3000,
-          render: "Successfully updated.",
-        });
-      }
+      toast.success("Successfully updated.");
+      void utils.sentence.getById.invalidate();
+    },
+    onError() {
+      toast.error("Unexpected error during update.");
     },
   });
+
   const { mutate: deleteMutation, isPending: isDeleting } =
-    api.sentence.delete.useMutation();
+    api.sentence.delete.useMutation({
+      onSuccess() {
+        void navigate("/");
+      },
+    });
 
   const { mutate: checkGrammar, isPending: openAiLoading } =
     api.openAi.check.useMutation({
@@ -117,7 +145,7 @@ export const EditSentencePage: FC = () => {
     if (typeof id !== "string") {
       return;
     }
-    toastId.current = toast("Sending...");
+
     updateMutation.mutate({
       id: id,
       input: {
@@ -151,6 +179,23 @@ export const EditSentencePage: FC = () => {
       reassignMembersMutation.mutate({ id: sentence.id });
     }
   };
+
+  const onSubmitSpeaker = ({
+    speaker,
+    speed,
+  }: {
+    speaker: number;
+    speed: number;
+  }) => {
+    if (sentence?.id) {
+      submitVoiceMutation.mutate({
+        text: input,
+        speed,
+        sentenceId: sentence.id,
+        speaker,
+      });
+    }
+  };
   return (
     <Box>
       <Flex align="center" mr="5">
@@ -177,7 +222,11 @@ export const EditSentencePage: FC = () => {
               >
                 Analyze
               </Button>
-              <Speakers sentenceId={sentence.id} input={input} />
+              <Speakers
+                input={input}
+                onSubmit={onSubmitSpeaker}
+                isPending={submitVoiceMutation.isPending}
+              />
 
               <DataList.Root mt="4">
                 <DataList.Item align="center">
@@ -200,27 +249,32 @@ export const EditSentencePage: FC = () => {
                   <DataList.Label minWidth="88px">Level</DataList.Label>
                   <DataList.Value>{sentence.level}</DataList.Value>
                 </DataList.Item>
-                {sentence.vox_speaker_id && sentence.vox_file_path && (
-                  <DataList.Item>
-                    <DataList.Label minWidth="88px">Speaker</DataList.Label>
-                    <DataList.Value>
-                      <Flex gap="2" align="center">
-                        <div>{sentence.vox_speaker_id}</div>
-                        <Player
-                          filePath={sentence.vox_file_path}
-                          speakerId={sentence.vox_speaker_id}
-                        />
-                        <Button
-                          color="red"
-                          variant="soft"
-                          onClick={onRemoveSpeaker}
-                        >
-                          Remove
-                        </Button>
-                      </Flex>
-                    </DataList.Value>
-                  </DataList.Item>
-                )}
+                <DataList.Item>
+                  <DataList.Label minWidth="88px">Speaker</DataList.Label>
+                  <DataList.Value>
+                    {submitVoiceMutation.isPending && <Spinner />}
+                    {!submitVoiceMutation.isPending ? (
+                      sentence.vox_speaker_id && sentence.vox_file_path ? (
+                        <Flex gap="2" align="center">
+                          <div>{sentence.vox_speaker_id}</div>
+                          <Player
+                            filePath={sentence.vox_file_path}
+                            speakerId={sentence.vox_speaker_id}
+                          />
+                          <Button
+                            color="red"
+                            variant="soft"
+                            onClick={onRemoveSpeaker}
+                          >
+                            Remove
+                          </Button>
+                        </Flex>
+                      ) : (
+                        <>N/A</>
+                      )
+                    ) : null}
+                  </DataList.Value>
+                </DataList.Item>
                 <DataList.Item>
                   <DataList.Label minWidth="88px">Source</DataList.Label>
                   <DataList.Value>{sentence.source}</DataList.Value>
@@ -403,7 +457,6 @@ export const EditSentencePage: FC = () => {
           <Box className="mt-[600px]" />
         </Box>
       )}
-      <ToastContainer />
     </Box>
   );
 };

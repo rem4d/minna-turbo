@@ -14,16 +14,20 @@ import { Speaker } from "./Speaker";
 import { useVoicevoxMutation } from "@/rq/useVoicevoxMutation";
 import speakers from "@/utils/voicevoxSpeakerMap.json";
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";
-import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
 
 interface Props {
   input: string;
-  sentenceId: number;
+  isPending: boolean;
+  onSubmit: (opts: { speed: number; speaker: number }) => void;
 }
 
-export default function Speakers({ input, sentenceId }: Props): ReactElement {
+export default function Speakers({
+  input,
+  onSubmit,
+  isPending,
+}: Props): ReactElement {
   const [blobSrc, setBlobSrc] = useState("");
-  const [speakerId, setSpeakerId] = useState(0);
+  const [speakerId, setSpeakerId] = useState<number | null>(null);
   const voicevoxMutation = useVoicevoxMutation();
   const [sliderVal, setSliderVal] = useState([50]);
   const [open, setOpen] = useState(false);
@@ -34,9 +38,14 @@ export default function Speakers({ input, sentenceId }: Props): ReactElement {
     [],
   ) as { jp: string | undefined; id: number; speed: number | undefined }[];
 
-  const submitVoiceMutation = useSubmitVoiceMutation();
-
   const speed = (50 + sliderVal[0]) / 100;
+
+  useEffect(() => {
+    if (!open) {
+      setBlobSrc("");
+      setSpeakerId(null);
+    }
+  }, [open]);
 
   const onSpeakerClick = async (speakerId: number) => {
     setSpeakerId(speakerId);
@@ -62,25 +71,17 @@ export default function Speakers({ input, sentenceId }: Props): ReactElement {
     setBlobSrc(objectURL);
   };
 
-  const onOpenChange = (isOpen: boolean) => {
-    if (isOpen) {
-      // setSliderVal([50]);
-    }
-  };
-
   const onSubmitClick = () => {
     if (!speakerId) {
       console.log("Has to assign speaker first.");
       return;
     }
-    submitVoiceMutation.mutate({
-      text: input,
+    setOpen(false);
+    onSubmit({
       speed,
-      sentenceId,
       speaker: speakerId,
     });
   };
-  console.log(speed);
 
   return (
     <Box>
@@ -109,7 +110,7 @@ export default function Speakers({ input, sentenceId }: Props): ReactElement {
                   )}
                   <p className="text-[12px] leading-4 font-inter">{s.name}</p>
                   {s.voices.length > 0 && (
-                    <Popover.Root onOpenChange={onOpenChange}>
+                    <Popover.Root>
                       <Popover.Trigger className="absolute right-6 top-0">
                         <IconButton size="1">
                           <MixerHorizontalIcon />
@@ -145,10 +146,7 @@ export default function Speakers({ input, sentenceId }: Props): ReactElement {
               ))}
             </Grid>
             <audio autoPlay src={blobSrc} className="hidden" />
-            <Button
-              disabled={submitVoiceMutation.isPending || speakerId === 0}
-              onClick={onSubmitClick}
-            >
+            <Button disabled={isPending || !speakerId} onClick={onSubmitClick}>
               Submit voice
             </Button>
           </Flex>

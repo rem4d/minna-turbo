@@ -1,7 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 
-export const useSubmitVoiceMutation = () => {
+interface Props {
+  onSuccess?: () => void;
+}
+
+export const useSubmitVoiceMutation = ({ onSuccess }: Props) => {
   return useMutation({
+    onSuccess() {
+      onSuccess?.();
+    },
     mutationFn: async ({
       speaker,
       text,

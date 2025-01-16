@@ -1,6 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 
-export const useRemoveSpeakerMutation = () => {
+interface Props {
+  onSuccess?: () => void;
+}
+
+export const useRemoveSpeakerMutation = ({ onSuccess }: Props) => {
   return useMutation({
     mutationFn: async ({ sentenceId }: { sentenceId: number }) => {
       return fetch("/api/voicevox_remove", {
@@ -10,6 +14,9 @@ export const useRemoveSpeakerMutation = () => {
           "Content-type": "application/json",
         },
       });
+    },
+    onSuccess() {
+      onSuccess?.();
     },
   });
 };
