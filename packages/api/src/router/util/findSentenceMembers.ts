@@ -2,6 +2,10 @@ import type { Member, Sentence } from "@rem4d/db";
 import db from "@rem4d/db/client";
 import { tokenize } from "@rem4d/tokenizer";
 
+const log = (...args: string[]) => {
+  console.log(args);
+};
+
 export const findSentencesMembers = async (sentences: Sentence[]) => {
   const existingMembersMap = new Map<string, Member>();
 
@@ -42,6 +46,11 @@ export const findSentencesMembers = async (sentences: Sentence[]) => {
 
     for (const token of tokens) {
       if (typesToIgnore.includes(token.pos)) {
+        log(
+          `Found ignored type "${token.pos}" `,
+          token.basic_form,
+          `. Ignore.`,
+        );
         continue;
       }
       let isJpName = false;
@@ -54,7 +63,7 @@ export const findSentencesMembers = async (sentences: Sentence[]) => {
           if (token.basic_form === name) {
             // ignore names but keep exceptions
             if (!theseSoundLikeJapaneseNamesButTheyAreNot.includes(name)) {
-              console.log(`Found san-name: `, name, `. Ignore.`);
+              log(`Found san-name: `, name, `. Ignore.`);
               isJpName = true;
               continue;
             }
@@ -71,6 +80,7 @@ export const findSentencesMembers = async (sentences: Sentence[]) => {
 
       if (member) {
         if (member.is_invalid || member.is_hidden) {
+          log(`Found invalid/hidden member: `, member.basic_form, `. Ignore.`);
           continue;
         }
 
@@ -103,13 +113,7 @@ type MapKeyFnType = <
 const mapKeyFn: MapKeyFnType = (t) =>
   `${t.basic_form}_${t.pos}_${t.pos_detail_1}`;
 
-const typesToIgnore = [
-  "assistant",
-  "symbol",
-  "prefix",
-  "interjection",
-  "フィラー",
-];
+const typesToIgnore = ["assistant", "symbol", "interjection", "フィラー"];
 // const japaneseNamesWithoutSan = ["上田"];
 
 const theseSoundLikeJapaneseNamesButTheyAreNot = [

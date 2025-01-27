@@ -85,6 +85,7 @@ export type Database = {
           id: number
           is_hidden: boolean | null
           is_invalid: boolean | null
+          level: number | null
           original_sentence: string | null
           pos: string
           pos_detail_1: string
@@ -99,6 +100,7 @@ export type Database = {
           id?: number
           is_hidden?: boolean | null
           is_invalid?: boolean | null
+          level?: number | null
           original_sentence?: string | null
           pos: string
           pos_detail_1?: string
@@ -113,6 +115,7 @@ export type Database = {
           id?: number
           is_hidden?: boolean | null
           is_invalid?: boolean | null
+          level?: number | null
           original_sentence?: string | null
           pos?: string
           pos_detail_1?: string
