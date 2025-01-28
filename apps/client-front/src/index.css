@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: Epkyoka;
+  font-optical-sizing: auto;
+  src: url("./assets/fonts/epkyouka2.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Klee";
+  font-optical-sizing: auto;
+  src: url("./assets/fonts/klee.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-optical-sizing: auto;
+  src: url("./assets/fonts/Inter/Inter-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-optical-sizing: auto;
+  src: url("./assets/fonts/Inter/Inter-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-optical-sizing: auto;
+  src: url("./assets/fonts/Inter/Inter-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-optical-sizing: auto;
+  src: url("./assets/fonts/Inter-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.no-scroll::-webkit-scrollbar {
+  display: none; /* Убрать скроллбар в Chrome, Safari и Opera */
+}
+
+::-webkit-scrollbar {
+  background: transparent;
+  width: 8px;
+  height: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--tg-theme-subtitle-text-color, white);
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+}
