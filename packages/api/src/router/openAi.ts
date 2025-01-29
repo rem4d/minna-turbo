@@ -3,26 +3,34 @@ import OpenAI from "openai";
 import { publicProcedure, router } from "../trpc";
 import { z } from "zod";
 
-const openai = new OpenAI();
+let openai = null;
+
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI();
+}
 
 export const openAiRouter = router({
   check: publicProcedure.input(z.string()).mutation(async ({ input }) => {
     const t = input;
     const content = `check grammar and translate to english and russian ${t}`;
-    try {
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "user",
-            content,
-          },
-        ],
-      });
-      const choice = completion.choices[0];
-      return choice?.message.content ?? "";
-    } catch (err) {
-      throw new Error(JSON.stringify(err));
+    if (openai) {
+      try {
+        const completion = await openai.chat.completions.create({
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "user",
+              content,
+            },
+          ],
+        });
+        const choice = completion.choices[0];
+        return choice?.message.content ?? "";
+      } catch (err) {
+        throw new Error(JSON.stringify(err));
+      }
+    } else {
+      throw new Error("No OPENAI initialized.");
     }
   }),
   batch: publicProcedure.query(async () => {

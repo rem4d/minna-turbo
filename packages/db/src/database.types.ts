@@ -277,7 +277,34 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      suggested_vocabularies: {
+        Row: {
+          basic_form: string | null
+          cnt: number | null
+          en: string | null
+          level: number | null
+          member_id: number | null
+          pos: string | null
+          ruby: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sentence_member_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      suggested_vocabularies_list: {
+        Row: {
+          cnt: number | null
+          level_from: number | null
+          level_to: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       additional_sentences:

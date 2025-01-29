@@ -1,0 +1,9 @@
+{
+  "extends": "@rem4d/typescript-config/tsconfig.base.json",
+  "compilerOptions": {
+		"strict": true,
+		"skipLibCheck": true
+  }
+}
+
+

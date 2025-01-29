@@ -1,11 +1,11 @@
 import { List, ListItem } from "@/components/List";
 import { type FC } from "react";
 import KanjiIcon from "@/assets/icons/kanji.svg?react";
+import { api } from "@/utils/api";
 
 export const LibraryPage: FC = () => {
-  const levels = Array(48)
-    .fill(null)
-    .map((_, i) => i + 1);
+  const { data: list } = api.member.suggestedVocabulariesList.useQuery();
+
   return (
     <div className="h-screen overflow-x-hidden overflow-y-auto">
       <div className="flex flex-col space-y-8 px-4 mb-[100px] mt-[20px]">
@@ -17,13 +17,13 @@ export const LibraryPage: FC = () => {
           />
         </List>
         <List title="Рекомендованные словари">
-          {levels.map((level, index) => (
+          {list?.map((data, i) => (
             <ListItem
-              key={`level-${level}`}
-              title={`Уровень ${level}`}
-              sub="57 слов"
-              to={`/library/dict/${level}`}
-              showBorder={index < levels.length - 1}
+              key={`level-${data.level_from}`}
+              title={`Уровень ${i + 1}`}
+              sub={`${data.cnt} слов`}
+              to={`/library/dict/${i + 1}`}
+              showBorder={i < list.length - 1}
             />
           ))}
         </List>
