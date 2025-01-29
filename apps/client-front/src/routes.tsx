@@ -26,11 +26,11 @@ export const router = createBrowserRouter([
         element: <SettingsPage />,
       },
       {
-        path: "/all-kanji",
+        path: "/library/all-kanji",
         element: <AllKanjiPage />,
       },
       {
-        path: "/dict/:level",
+        path: "/library/dict/:level",
         element: <DictionaryPage />,
       },
       {

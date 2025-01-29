@@ -12,7 +12,7 @@ interface ListProps {
 export const List: FC<ListProps> = ({ title, children }) => {
   return (
     <div className="flex flex-col">
-      <div className="text-jumbo/60 uppercase mb-2 text-[13px] leading-none">
+      <div className="text-jumbo ml-4 uppercase mb-3 text-[13px] leading-none">
         {title}
       </div>
       <div className="bg-white rounded-[10px]">{children ?? null}</div>

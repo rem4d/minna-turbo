@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import react from "@vitejs/plugin-react-swc";
+import mkcert from "vite-plugin-mkcert";
 import svgr from "vite-plugin-svgr";
 // import checker from "vite-plugin-checker";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
@@ -29,6 +30,10 @@ export default defineConfig(({ mode }) => {
       // Allows using the compilerOptions.paths property in tsconfig.json.
       // https://www.npmjs.com/package/vite-tsconfig-paths
       tsconfigPaths(),
+
+      // Create a custom SSL certificate valid for the local machine.
+      // https://www.npmjs.com/package/vite-plugin-mkcert
+      mkcert(),
       svgr(),
 
       // checker({

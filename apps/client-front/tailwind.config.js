@@ -21,6 +21,7 @@ export default {
         white: "#fff",
         frenchGray: "#C5C5C7",
         silver: "#c5c5c5",
+        denim: "#1673D9",
       },
     },
     fontFamily: {

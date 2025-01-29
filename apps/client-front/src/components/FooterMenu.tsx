@@ -10,7 +10,7 @@ export function FooterMenu(): ReactElement {
     <div
       className={twJoin(
         "h-[87px] w-full absolute z-[40] bottom-0",
-        "border-t border-mercury bg-wildSand/90 backdrop-blur-lg",
+        "border-t border-mercury bg-wildSand/85 backdrop-blur-[20px]",
         "flex animate-jump items-center justify-between divide-x overflow-hidden",
         "animate-once ",
       )}
@@ -41,7 +41,7 @@ interface ItemProps {
 }
 
 const Item: FC<ItemProps> = ({ to, title, icon }) => {
-  const libraryMatch = useMatch(to);
+  const libraryMatch = useMatch(`${to}/*`);
   const navLinkCn = `
 flex w-1/3 relative h-full cursor-pointer flex-col items-center pt-3
 text-[11px] font-unbounded font-normal text-grayChateau
