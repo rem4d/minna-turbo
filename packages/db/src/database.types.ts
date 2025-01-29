@@ -89,6 +89,7 @@ export type Database = {
           original_sentence: string | null
           pos: string
           pos_detail_1: string
+          reading: string | null
           ru: string | null
           ruby: string | null
           updated_at: string | null
@@ -104,6 +105,7 @@ export type Database = {
           original_sentence?: string | null
           pos: string
           pos_detail_1?: string
+          reading?: string | null
           ru?: string | null
           ruby?: string | null
           updated_at?: string | null
@@ -119,6 +121,7 @@ export type Database = {
           original_sentence?: string | null
           pos?: string
           pos_detail_1?: string
+          reading?: string | null
           ru?: string | null
           ruby?: string | null
           updated_at?: string | null
@@ -285,6 +288,7 @@ export type Database = {
           level: number | null
           member_id: number | null
           pos: string | null
+          reading: string | null
           ruby: string | null
         }
         Relationships: [
