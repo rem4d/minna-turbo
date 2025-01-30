@@ -6,6 +6,7 @@ import { ToastBar, Toaster } from "react-hot-toast";
 import "@radix-ui/themes/styles.css";
 
 import "./index.css";
+
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 
 function App() {

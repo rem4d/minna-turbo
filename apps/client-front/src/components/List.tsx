@@ -1,7 +1,6 @@
-import type { FC, ReactNode } from "react";
-import type { ReactElement } from "react";
-import { useNavigate } from "react-router-dom";
+import type { FC, ReactElement, ReactNode } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
+import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 interface ListProps {
@@ -12,10 +11,10 @@ interface ListProps {
 export const List: FC<ListProps> = ({ title, children }) => {
   return (
     <div className="flex flex-col">
-      <div className="text-jumbo ml-4 uppercase mb-3 text-[13px] leading-none">
+      <div className="text-jumbo mb-3 ml-4 text-[13px] uppercase leading-none">
         {title}
       </div>
-      <div className="bg-white rounded-[10px]">{children ?? null}</div>
+      <div className="rounded-[10px] bg-white">{children ?? null}</div>
     </div>
   );
 };
@@ -41,12 +40,12 @@ export const ListItem: FC<ListItemProps> = ({
   };
   return (
     <div
-      className="h-[60px] pl-[16px] flex items-center w-full cursor-pointer"
+      className="flex h-[60px] w-full cursor-pointer items-center pl-[16px]"
       onClick={handleClick}
     >
       <div
         className={twMerge(
-          "py-[9px] items-center px-0 justify-between border-silver/60 flex flex-grow",
+          "border-silver/60 flex flex-grow items-center justify-between px-0 py-[9px]",
           showBorder && "border-b",
         )}
       >
@@ -59,8 +58,8 @@ export const ListItem: FC<ListItemProps> = ({
             )}
           </div>
         </div>
-        <div className="relative size-[24px] mr-[10px]">
-          <ArrowIcon className="absolute -rotate-90 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 fill-current text-frenchGray" />
+        <div className="relative mr-[10px] size-[24px]">
+          <ArrowIcon className="text-frenchGray absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90 fill-current" />
         </div>
       </div>
     </div>

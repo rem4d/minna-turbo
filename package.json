@@ -12,6 +12,7 @@
     "clean": "git clean -xdfe .env",
     "dev": "vite",
     "lint": "eslint .",
+    "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
     "preview": "vite preview"
   },
   "type": "module",
