@@ -1,0 +1,45 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+      /** Base options */
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "target": "ES2022",
+      "lib": ["ES2022", "DOM", "DOM.Iterable"],
+      "allowJs": true,
+      "resolveJsonModule": true,
+      "moduleDetection": "force",
+      "isolatedModules": true,
+
+      /** Keep TSC performant in monorepos */
+      "incremental": true,
+      "disableSourceOfProjectReferenceRedirect": true,
+      "tsBuildInfoFile": "${configDir}/.cache/tsbuildinfo.json",
+
+      /** Strictness */
+      "strict": true,
+      "noUncheckedIndexedAccess": true,
+      "checkJs": true,
+
+      /** internal package common */
+      "declaration": true,
+      "emitDeclarationOnly": true,
+      "noEmit": false,
+      "outDir": "${configDir}/dist",
+
+      /** this package specific */
+      // "module": "nodenext",
+      // "moduleResolution": "nodenext"
+      "module": "Preserve",
+      "moduleResolution": "Bundler"
+    },
+    "exclude": [
+        "node_modules",
+        "build",
+        "dist"
+    ],
+    "include": [
+        "src"
+    ]
+}
+

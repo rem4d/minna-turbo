@@ -74,7 +74,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--tg-theme-subtitle-text-color, white);
+  background: rgba(0,0,0,0.1);
   border-radius: 12px;
   border: none;
   cursor: pointer;

@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import type { FC } from "react";
-import type { Id } from "react-toastify";
-import { ToastContainer, toast } from "react-toastify";
 import { openUrl } from "../../utils";
 import {
   Flex,
@@ -29,7 +27,6 @@ export const NewSentencePage: FC = () => {
   const [ru, setRu] = useState("");
   const [openAiResponse, setOpenAiResponse] = useState("");
   const [openAiTranslation, setOpenAiTranslation] = useState("");
-  const toastId = useRef<Id | null>(null);
   // const [sentence, setSentence] = useState<Sentence | null>(null);
 
   const { data: analyzeData, mutate: analyze } =
@@ -42,17 +39,7 @@ export const NewSentencePage: FC = () => {
   //     enabled: !!input && !!analyzeData,
   //   },
   // );
-  const createMutation = api.sentence.create.useMutation({
-    onSuccess() {
-      if (toastId.current) {
-        toast.update(toastId.current, {
-          type: "success",
-          autoClose: 3000,
-          render: "Successfully created.",
-        });
-      }
-    },
-  });
+  const createMutation = api.sentence.create.useMutation({});
 
   const { mutate: checkGrammar, isPending: openAiLoading } =
     api.openAi.check.useMutation({
@@ -87,7 +74,6 @@ export const NewSentencePage: FC = () => {
   };
 
   const handleCreateSubmit = () => {
-    toastId.current = toast("Submitted.");
     if (analyzeData) {
       createMutation.mutate({
         input: {
@@ -296,7 +282,6 @@ export const NewSentencePage: FC = () => {
         </div>
         <Box className="mt-[600px]" />
       </Box>
-      <ToastContainer />
     </Box>
   );
 };

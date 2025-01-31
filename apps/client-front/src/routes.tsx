@@ -1,16 +1,27 @@
 import { createBrowserRouter } from "react-router-dom";
+
 import { Base } from "./components/Base";
-import { IndexPage } from "./pages/IndexPage";
-import { LibraryPage } from "./pages/LibraryPage";
-import { SettingsPage } from "./pages/SettingsPage";
 import { AllKanjiPage } from "./pages/AllKanjiPage";
 import { DictionaryPage } from "./pages/DictionaryPage";
 import { FlashcardsPage } from "./pages/FlashcardsPage";
+import { IndexPage } from "./pages/IndexPage";
+import { LibraryPage } from "./pages/LibraryPage";
 import { SentencesPage } from "./pages/SentencesPage";
+import { SettingsPage } from "./pages/SettingsPage";
+
+export const paths = {
+  home: "/",
+  library: "/library",
+  allKanji: "/library/all-kanji",
+  settings: "/settings",
+  dict: "/library/dict/:level",
+  sentences: "/sentences",
+  flashcards: "/flashcards",
+};
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: paths.home,
     element: <Base />,
     children: [
       {
@@ -18,27 +29,27 @@ export const router = createBrowserRouter([
         element: <IndexPage />,
       },
       {
-        path: "/library",
+        path: paths.library,
         element: <LibraryPage />,
       },
       {
-        path: "/settings",
+        path: paths.settings,
         element: <SettingsPage />,
       },
       {
-        path: "/library/all-kanji",
+        path: paths.allKanji,
         element: <AllKanjiPage />,
       },
       {
-        path: "/library/dict/:level",
+        path: paths.dict,
         element: <DictionaryPage />,
       },
       {
-        path: "/sentences",
+        path: paths.sentences,
         element: <SentencesPage />,
       },
       {
-        path: "/flashcards",
+        path: paths.flashcards,
         element: <FlashcardsPage />,
       },
     ],

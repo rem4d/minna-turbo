@@ -1,0 +1,27 @@
+{
+  "name": "@rem4d/utils",
+  "description": "",
+  "version": "1.0.0",
+  "author": "",
+  "dependencies": {},
+  "devDependencies": {
+    "@rem4d/eslint-config": "workspace:*",
+    "@rem4d/typescript-config": "workspace:*",
+    "@types/node": "^22.10.2"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/tts.d.ts",
+      "default": "./src/tts.ts"
+    }
+  },
+  "keywords": [],
+  "license": "ISC",
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module"
+}

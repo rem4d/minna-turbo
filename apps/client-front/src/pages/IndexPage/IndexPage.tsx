@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 export const IndexPage: FC = () => {
   return (
-    <div className="flex justify-center flex-col space-y-6 items-center p-[33px] mt-[120px]">
+    <div className="mt-[120px] flex flex-col items-center justify-center space-y-6 p-[33px]">
       <Card
         title="Фразы"
         desc="Читайте и слушайте реальные фразы на японском, состоящие только из изученных вами кандзи"
@@ -36,19 +36,19 @@ const Card: FC<CardProps> = ({ title, desc, to, color }) => {
   return (
     <div
       className={twMerge(
-        "w-full h-[167px] rounded-xl p-4 flex flex-col space-y-4 border border-heatheredGray/40",
+        "border-heatheredGray/40 relative flex h-[167px] w-full flex-col space-y-4 rounded-xl border p-4",
         color === "cyan" ? "bg-polar" : "bg-halfDutchWhite",
       )}
     >
       <div className="flex flex-col space-y-2">
-        <div className="text-black text-2xl font-semibold">{title}</div>
+        <div className="text-2xl font-semibold text-black">{title}</div>
         <div className="text-boulder text-sm">{desc}</div>
       </div>
       <button
         className={twMerge(
-          "w-[130px] text-black text-base rounded-full font-semibold py-2 self-end",
-          color === "yellow" && "text-black bg-supernova",
-          color === "cyan" && "text-white bg-scooter",
+          "absolute bottom-4 w-[130px] self-end rounded-full py-2 text-base font-semibold text-black",
+          color === "yellow" && "bg-supernova text-black",
+          color === "cyan" && "bg-scooter text-white",
         )}
         onClick={handleButtonClick}
       >
