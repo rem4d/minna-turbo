@@ -35,7 +35,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
         }),
         httpBatchLink({
           // transformer: superjson,
-          url: "/api",
+          url: import.meta.env.VITE_API_SERVER,
           headers() {
             const headers = new Map<string, string>();
             headers.set("x-trpc-source", "client");

@@ -5,17 +5,19 @@ import { createRoot } from "react-dom/client";
 
 import App from "./App";
 
-import "./index.css";
-// Mock the environment in case, we are outside Telegram.
 import "./mockEnv.ts";
+import "./index.css";
 
 const root = document.getElementById("root");
 
 try {
-  const lp = retrieveLaunchParams();
+  const lp = retrieveLaunchParams() as { platform: string; startParam: string };
   console.log(lp);
   // Configure all application dependencies.
-  init(lp.startParam === "debug" || import.meta.env.DEV);
+  init({
+    debug: lp.startParam === "debug" || import.meta.env.DEV,
+    platform: lp.platform,
+  });
 
   if (root) {
     createRoot(root).render(
@@ -26,6 +28,7 @@ try {
   }
 } catch (err) {
   if (root) {
+    console.log(err);
     createRoot(root).render(
       <div>
         "You are using too old Telegram client to run this application"

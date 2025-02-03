@@ -3,7 +3,7 @@ import OpenAI from "openai";
 import { publicProcedure, router } from "../trpc";
 import { z } from "zod";
 
-let openai = null;
+let openai: null | OpenAI = null;
 
 if (process.env.OPENAI_API_KEY) {
   openai = new OpenAI();
