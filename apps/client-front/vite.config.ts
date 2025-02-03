@@ -1,10 +1,10 @@
-import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 import react from "@vitejs/plugin-react-swc";
+import { defineConfig } from "vite";
 import mkcert from "vite-plugin-mkcert";
-import svgr from "vite-plugin-svgr";
 // import checker from "vite-plugin-checker";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
+import svgr from "vite-plugin-svgr";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(({ mode }) => {
   const server =
@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
           host: true,
           proxy: {
             "/api": {
-              target: "http://localhost:1223",
+              target: "http://localhost:1223/trpc",
               // changeOrigin: true,
             },
           },

@@ -1,23 +1,26 @@
 import { type FC } from "react";
+import { Page } from "@/components/Page";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 export const IndexPage: FC = () => {
   return (
-    <div className="mt-[120px] flex flex-col items-center justify-center space-y-6 p-[33px]">
-      <Card
-        title="Фразы"
-        desc="Читайте и слушайте реальные фразы на японском, состоящие только из изученных вами кандзи"
-        to="/sentences"
-        color="yellow"
-      />
-      <Card
-        title="Карточки"
-        desc="Создавайте колоды карт из кандзи"
-        to="/flashcards"
-        color="cyan"
-      />
-    </div>
+    <Page back={false}>
+      <div className="mt-[120px] flex flex-col items-center justify-center space-y-6 p-[33px]">
+        <Card
+          title="Фразы"
+          desc="Читайте и слушайте реальные фразы на японском, состоящие только из изученных вами кандзи"
+          to="/sentences"
+          color="yellow"
+        />
+        <Card
+          title="Карточки"
+          desc="Создавайте колоды карт из кандзи"
+          to="/flashcards"
+          color="cyan"
+        />
+      </div>
+    </Page>
   );
 };
 

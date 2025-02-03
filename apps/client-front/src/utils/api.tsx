@@ -1,10 +1,9 @@
+import type { AppRouter } from "@rem4d/api";
 import { useState } from "react";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { httpBatchLink, loggerLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
-
-import type { AppRouter } from "@rem4d/api";
 
 /**
  * A set of typesafe hooks for consuming your API.
@@ -36,7 +35,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
         }),
         httpBatchLink({
           // transformer: superjson,
-          url: "http://localhost:1223/trpc/api",
+          url: "/api",
           headers() {
             const headers = new Map<string, string>();
             headers.set("x-trpc-source", "client");

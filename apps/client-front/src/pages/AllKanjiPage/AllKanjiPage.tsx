@@ -1,7 +1,12 @@
 import { type FC } from "react";
+import { Page } from "@/components/Page";
 
 export const AllKanjiPage: FC = () => {
-  return <div>All kanji</div>;
+  return (
+    <Page back>
+      <div>All kanji</div>;
+    </Page>
+  );
 };
 
 export default AllKanjiPage;

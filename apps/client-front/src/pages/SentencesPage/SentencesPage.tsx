@@ -5,6 +5,7 @@ import EyeClosedIcon from "@/assets/icons/eye-closed.svg?react";
 import EyeOpenIcon from "@/assets/icons/eye-open.svg?react";
 import SoundPauseIcon from "@/assets/icons/pause.svg?react";
 import SoundIcon from "@/assets/icons/sound.svg?react";
+import { Page } from "@/components/Page";
 import { TopSettings } from "@/components/TopSettings";
 import { api } from "@/utils/api";
 import { initTTS } from "@rem4d/utils";
@@ -70,61 +71,63 @@ export const SentencesPage: FC = () => {
 
   const src = `${import.meta.env.VITE_BACKEND_URL}${sentence?.vox_file_path}`;
   return (
-    <div className="relative h-full">
-      <audio
-        className="hidden"
-        ref={audioRef}
-        controls
-        preload="none"
-        src={src}
-      />
-      <div className="p-2">
-        <TopSettings
-          middleText={
-            <span className="text-rollingStone text-xs leading-6">
-              Ваш уровень: 12
-            </span>
-          }
+    <Page back>
+      <div className="relative h-full">
+        <audio
+          className="hidden"
+          ref={audioRef}
+          controls
+          preload="none"
+          src={src}
         />
-        {/* nav buttons */}
-        <div className="mb-4 mt-4 flex justify-between px-14">
-          <div
-            className="relative size-[30px] cursor-pointer"
-            onClick={handlePrevClick}
-          >
-            <ArrowIcon className="text-azureRadiance absolute size-[20px] rotate-90 fill-current" />
-          </div>
-          <div className="flex items-center space-x-6">
-            <div className="size-[24px] cursor-pointer" onClick={onPlayClick}>
-              {isPlaying ? (
-                <SoundPauseIcon className="size-[24px] fill-current text-blue-500" />
-              ) : (
-                <SoundIcon className="size-[24px]" />
-              )}
+        <div className="p-2">
+          <TopSettings
+            middleText={
+              <span className="text-rollingStone text-xs leading-6">
+                Ваш уровень: 12
+              </span>
+            }
+          />
+          {/* nav buttons */}
+          <div className="mb-4 mt-4 flex justify-between px-14">
+            <div
+              className="relative size-[30px] cursor-pointer"
+              onClick={handlePrevClick}
+            >
+              <ArrowIcon className="text-azureRadiance absolute size-[20px] rotate-90 fill-current" />
             </div>
+            <div className="flex items-center space-x-6">
+              <div className="size-[24px] cursor-pointer" onClick={onPlayClick}>
+                {isPlaying ? (
+                  <SoundPauseIcon className="size-[24px] fill-current text-blue-500" />
+                ) : (
+                  <SoundIcon className="size-[24px]" />
+                )}
+              </div>
 
-            <ShowFuriganaComponent
-              showFurigana={showFurigana}
-              onClick={() => setShowFurigana((s) => !s)}
-            />
-          </div>
-          <div
-            className="relative size-[30px] cursor-pointer"
-            onClick={handleNextClick}
-          >
-            <ArrowIcon className="text-azureRadiance absolute size-[20px] -rotate-90 fill-current" />
-          </div>
-        </div>
-        {!sentence ? null : (
-          <div className="mt-[0px] px-4">
-            <SentenceText sentence={sentence} showFurigana={showFurigana} />
-            <div className="absolute bottom-0 left-0 w-full px-2">
-              <Accordion sentence={sentence} />
+              <ShowFuriganaComponent
+                showFurigana={showFurigana}
+                onClick={() => setShowFurigana((s) => !s)}
+              />
+            </div>
+            <div
+              className="relative size-[30px] cursor-pointer"
+              onClick={handleNextClick}
+            >
+              <ArrowIcon className="text-azureRadiance absolute size-[20px] -rotate-90 fill-current" />
             </div>
           </div>
-        )}
+          {!sentence ? null : (
+            <div className="mt-[0px] px-4">
+              <SentenceText sentence={sentence} showFurigana={showFurigana} />
+              <div className="absolute bottom-0 left-0 w-full px-2">
+                <Accordion sentence={sentence} />
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </Page>
   );
 };
 

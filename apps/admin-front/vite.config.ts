@@ -10,15 +10,15 @@ export default defineConfig(({ mode }) => {
     mode === "production"
       ? undefined
       : {
-        port: 5173,
-        host: true,
-        proxy: {
-          "/api": {
-            target: "http://localhost:1222",
-            // changeOrigin: true,
+          port: 5173,
+          host: true,
+          proxy: {
+            "/api": {
+              target: "http://localhost:1222",
+              // changeOrigin: true,
+            },
           },
-        },
-      };
+        };
   return {
     server,
     plugins: [
