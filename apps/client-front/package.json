@@ -43,6 +43,7 @@
   "private": true,
   "scripts": {
     "build": "tsc -b && vite build",
+    "deploy": "./deploy.sh",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "vite --clearScreen false",
     "format": "prettier --check . --ignore-path ../../.gitignore",

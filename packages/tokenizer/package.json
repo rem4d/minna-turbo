@@ -31,7 +31,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "dict"
   ],
   "keywords": [],
   "license": "ISC",

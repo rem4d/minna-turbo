@@ -3,12 +3,14 @@
   "globalDependencies": [".env"],
   "tasks": {
     "build": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "dependsOn": ["^build"],
       "outputs": [".cache/tsbuildinfo.json", "dist/**"]
     },
     "dev": {
-      "persistent": true,
-      "cache": false
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
     },
     "batch": {
       "persistent": true,
@@ -27,6 +29,10 @@
     },
     "check-types": {
       "dependsOn": ["^build", "^check-types"]
+    },
+    "deploy": {
+      "dependsOn": ["^build"],
+      "cache": false
     }
   },
   "globalEnv": [

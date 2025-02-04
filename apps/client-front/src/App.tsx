@@ -25,10 +25,7 @@ function App() {
     }
     viewport.expand();
 
-    const d = viewport.safeAreaInsets();
     const fcIsAvail = requestFullscreen.isAvailable();
-
-    console.log(d);
 
     if (fcIsAvail) {
       if (lp.platform?.includes("desktop")) {

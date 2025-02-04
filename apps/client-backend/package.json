@@ -30,6 +30,7 @@
     "start": "node dist/index.js",
     "dev": "tsup --watch --onSuccess \"node dist/index.js\"",
     "build": "tsup",
+    "deploy": "./deploy.sh",
     "check-types": "tsc --noEmit",
     "clean": "git clean -xdfe .env"
   }
