@@ -1,13 +1,14 @@
 {
 	"extends": "@rem4d/typescript-config/tsconfig.package.json",
-	"include": ["src"],
-	"exclude": ["node_modules"],
+	"exclude": ["node_modules", "dist"],
   "compilerOptions": {
     // "baseUrl": ".",
     // "paths": {
     //   "@/*": ["./src/*"]
     // },
 		// "jsx": "react-jsx",
+		"noEmit": false,
+		"outDir": "${configDir}/dist",
 		"lib": ["es2023", "DOM"]
   },
 }

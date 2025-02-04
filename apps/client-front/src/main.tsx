@@ -11,12 +11,16 @@ import "./index.css";
 const root = document.getElementById("root");
 
 try {
-  const lp = retrieveLaunchParams() as { platform: string; startParam: string };
+  const lp = retrieveLaunchParams() as {
+    platform: string;
+    startParam: string;
+    fullscreen: boolean;
+  };
   console.log(lp);
+
   // Configure all application dependencies.
   init({
     debug: lp.startParam === "debug" || import.meta.env.DEV,
-    platform: lp.platform,
   });
 
   if (root) {

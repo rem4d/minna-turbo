@@ -2,12 +2,9 @@
 import {
   $debug,
   backButton,
-  exitFullscreen,
   initData,
   init as initSDK,
   miniApp,
-  requestFullscreen,
-  swipeBehavior,
   themeParams,
   viewport,
 } from "@telegram-apps/sdk-react";
@@ -15,13 +12,7 @@ import {
 /**
  * Initializes the application and configures its dependencies.
  */
-export function init({
-  debug,
-  platform,
-}: {
-  debug: boolean;
-  platform: string;
-}): void {
+export function init({ debug }: { debug: boolean }): void {
   // Set @telegram-apps/sdk-react debug mode.
   $debug.set(debug);
 
@@ -53,19 +44,6 @@ export function init({
     .then(() => {
       viewport.bindCssVars();
     });
-
-  if (requestFullscreen.isAvailable()) {
-    if (platform && platform.includes("desktop")) {
-      exitFullscreen();
-    } else {
-      requestFullscreen();
-    }
-  }
-
-  if (swipeBehavior.isSupported()) {
-    swipeBehavior.mount();
-    swipeBehavior.disableVertical();
-  }
 
   miniApp.bindCssVars();
   themeParams.bindCssVars();

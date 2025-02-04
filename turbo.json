@@ -24,6 +24,9 @@
     "lint": {
       "dependsOn": ["^build"],
       "outputs": [".cache/.eslintcache"]
+    },
+    "check-types": {
+      "dependsOn": ["^build", "^check-types"]
     }
   },
   "globalEnv": [

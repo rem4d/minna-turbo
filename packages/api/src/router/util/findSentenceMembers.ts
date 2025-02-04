@@ -1,5 +1,5 @@
 import type { Member, Sentence } from "@rem4d/db";
-import db from "@rem4d/db/client";
+import { client as db } from "@rem4d/db";
 import { tokenize } from "@rem4d/tokenizer";
 
 const log = (...args: string[]) => {

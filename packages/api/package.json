@@ -14,20 +14,35 @@
   },
   "devDependencies": {
     "@rem4d/eslint-config": "workspace:*",
-    "@rem4d/typescript-config": "workspace:*"
+    "@rem4d/typescript-config": "workspace:*",
+    "bunchee": "catalog:",
+    "typescript": "catalog:"
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
+      "import": {
+        "types": "./dist/es/index.d.ts",
+        "default": "./dist/es/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.cts",
+        "default": "./dist/cjs/index.cjs"
+      }
     }
   },
+  "files": [
+    "dist"
+  ],
   "license": "ISC",
+  "main": "./dist/es/index.js",
+  "module": "./dist/es/index.js",
   "private": true,
   "scripts": {
-    "build": "tsc",
+    "build": "bunchee",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc"
+    "check-types": "tsc --noEmit",
+    "dev": "bunchee --watch"
   },
-  "type": "module"
+  "type": "module",
+  "types": "./dist/es/index.d.ts"
 }

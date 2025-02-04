@@ -7,8 +7,8 @@ import { finished } from "node:stream/promises";
 import { fileURLToPath } from "url";
 import { sleep } from "../util/sleep";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 const speaker = 88;
 const speed = 1.0;

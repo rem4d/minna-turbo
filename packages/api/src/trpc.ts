@@ -2,10 +2,10 @@ import { initTRPC } from "@trpc/server";
 // import * as trpcExpress from "@trpc/server/adapters/express";
 // import superjson from "superjson";
 import { ZodError } from "zod";
-import db from "@rem4d/db/client";
-import redisClient from "./redisClient";
-
-export type RedisClientType = typeof redisClient;
+import { client as db } from "@rem4d/db";
+// import redisClient from "./redisClient";
+//
+// export type RedisClientType = typeof redisClient;
 
 /**
  * 1. CONTEXT
@@ -23,8 +23,8 @@ export const createTRPCContext = async () =>
   // options: trpcExpress.CreateExpressContextOptions,
   {
     return {
-      db,
-      redis: redisClient,
+      db /*,
+      redis: redisClient, */,
     };
   };
 
