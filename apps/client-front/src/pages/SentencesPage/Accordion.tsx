@@ -102,7 +102,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
               {members?.map((m) => (
                 <React.Fragment key={m.members.basic_form}>
                   <div
-                    className="font-klee cursor-pointer whitespace-nowrap"
+                    className="font-yuGothic cursor-pointer whitespace-nowrap"
                     dangerouslySetInnerHTML={{
                       __html: m.members.ruby ?? "",
                     }}

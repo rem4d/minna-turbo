@@ -9,8 +9,8 @@ export const LibraryPage: FC = () => {
 
   return (
     <Page back={false}>
-      <div className="h-screen overflow-y-auto overflow-x-hidden">
-        <div className="mb-[100px] mt-[20px] flex flex-col space-y-8 px-4">
+      <div className="mt-(--tg-content-safe-area-inset-top) h-[calc(100%-100px)] overflow-y-auto overflow-x-hidden">
+        <div className="flex flex-col space-y-8 px-4">
           <List title="Кандзи">
             <ListItem
               title="Смотреть все"

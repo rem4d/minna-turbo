@@ -3,28 +3,10 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "Klee";
-  font-optical-sizing: auto;
-  src: url("/fonts/klee.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "Inter";
   font-optical-sizing: auto;
   src: url("/fonts/Inter/Inter-Light.ttf") format("truetype");
   font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  font-optical-sizing: auto;
-  src: url("/fonts/Inter-Regular.ttf") format("truetype");
-  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
@@ -50,8 +32,26 @@
 @font-face {
   font-family: "Inter";
   font-optical-sizing: auto;
-  src: url("/fonts/Inter-SemiBold.ttf") format("truetype");
+  src: url("/fonts/Inter/Inter-SemiBold.ttf") format("truetype");
   font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "YuGothic";
+  font-optical-sizing: auto;
+  src: url("/fonts/YuGothic/YuGothic-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "YuGothic";
+  font-optical-sizing: auto;
+  src: url("/fonts/YuGothic/YuGothic-Medium.woff2") format("woff2");
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
@@ -79,4 +79,8 @@
   border-radius: 12px;
   border: none;
   cursor: pointer;
+}
+
+rt {
+  font-size: 0.6em;
 }

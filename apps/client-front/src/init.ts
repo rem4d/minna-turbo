@@ -5,6 +5,7 @@ import {
   initData,
   init as initSDK,
   miniApp,
+  settingsButton,
   themeParams,
   viewport,
 } from "@telegram-apps/sdk-react";
@@ -26,12 +27,17 @@ export function init({ debug }: { debug: boolean }): void {
   // 	.catch(console.error);
 
   // Check if all required components are supported.
-  if (!backButton.isSupported() || !miniApp.isSupported()) {
+  if (
+    !backButton.isSupported() ||
+    !miniApp.isSupported() ||
+    !settingsButton.isSupported()
+  ) {
     throw new Error("ERR_NOT_SUPPORTED");
   }
 
   // Mount all components used in the project.
   backButton.mount();
+  settingsButton.mount();
   miniApp.mount();
   themeParams.mount();
   initData.restore();

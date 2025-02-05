@@ -10,6 +10,7 @@ export interface Props {
 
 export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
   const hasCharacter = !!sentence.vox_speaker_id;
+
   const onlyOneHasFurigana =
     sentence.ruby?.includes("<rt>") &&
     !sentence.text_with_furigana?.includes("<rt>");
@@ -39,7 +40,7 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
               >
                 <div
                   className={twMerge(
-                    "font-klee relative rounded-[20px] border border-black/20 bg-white px-4 py-4 text-[18px] font-semibold text-black",
+                    "font-yuGothic relative rounded-[20px] border border-black/20 bg-white px-4 py-4 text-xl font-medium leading-5 text-black",
                     hasCharacter && "ml-4 rounded-tl-[0px]",
                   )}
                 >
@@ -49,7 +50,7 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
                       !hasCharacter && "justify-center",
                     )}
                   >
-                    <div className="flex flex-col items-center justify-center gap-2">
+                    <div className="flex select-none flex-col items-center justify-center gap-2">
                       {showFurigana ? (
                         <div
                           className=""

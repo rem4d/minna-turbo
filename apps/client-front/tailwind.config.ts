@@ -34,6 +34,7 @@ export default {
         epkyoka: ["Epkyoka"],
         klee: ["Klee"],
         inter: ["Inter"],
+        yuGothic: ["yuGothic"],
       },
       keyframes: {
         "accordion-down": {

@@ -1,14 +1,16 @@
 import type { FC } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import EyeClosedIcon from "@/assets/icons/eye-closed.svg?react";
 import EyeOpenIcon from "@/assets/icons/eye-open.svg?react";
+import InfoIcon from "@/assets/icons/info.svg?react";
 import SoundPauseIcon from "@/assets/icons/pause.svg?react";
 import SoundIcon from "@/assets/icons/sound.svg?react";
 import { Page } from "@/components/Page";
-import { TopSettings } from "@/components/TopSettings";
 import { api } from "@/utils/api";
 import { initTTS } from "@rem4d/utils";
+import { useLaunchParams, viewport } from "@telegram-apps/sdk-react";
+import { twMerge } from "tailwind-merge";
 
 import Accordion from "./Accordion";
 import { SentenceText } from "./SentenceText";
@@ -18,6 +20,15 @@ export const SentencesPage: FC = () => {
   const [showFurigana, setShowFurigana] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [safeAreas, setSafeAreas] = useState<{ top: number }>({ top: 0 });
+  const [safeContentAreas, setSafeContentAreas] = useState<{ top: number }>({
+    top: 0,
+  });
+
+  const lp = useLaunchParams();
+  const isMobile = !lp.platform.includes("desktop");
+  const insetTopContent = safeAreas.top + safeContentAreas.top;
+  // const isMobile = true;
 
   const { data: list, isLoading: loadingSentence } =
     api.sentence.getRandomized.useQuery({
@@ -29,11 +40,19 @@ export const SentencesPage: FC = () => {
 
   useEffect(() => {
     setShowFurigana(false);
+    setIsPlaying(false);
   }, [sentence?.id]);
 
-  useEffect(() => {
-    setIsPlaying(false);
-  }, [sentence?.text]);
+  useLayoutEffect(() => {
+    const sa = viewport.safeAreaInsets() as { top: number };
+    const sca = viewport.contentSafeAreaInsets() as { top: number };
+
+    console.log("sa", sa);
+    console.log("sca", sca);
+
+    setSafeAreas(sa);
+    setSafeContentAreas(sca);
+  }, []);
 
   useEffect(() => {
     if (!audioRef.current) {
@@ -70,26 +89,23 @@ export const SentencesPage: FC = () => {
   };
 
   const src = `${import.meta.env.VITE_BACKEND_URL}${sentence?.vox_file_path}`;
+
+  const handleInfoClick = () => {};
+
   return (
     <Page back>
       <div className="relative h-full">
-        <audio
-          className="hidden"
-          ref={audioRef}
-          controls
-          preload="none"
-          src={src}
-        />
-        <div className="p-2">
-          <TopSettings
-            middleText={
-              <span className="text-rollingStone text-xs leading-6">
-                Ваш уровень: 12
-              </span>
-            }
-          />
+        <div
+          className={"text-scorpion mb-3 flex justify-center text-sm"}
+          style={{
+            paddingTop: isMobile ? safeAreas.top + 16 : 0,
+          }}
+        >
+          Ваш уровень: 12
+        </div>
+        <div className="mt-8">
           {/* nav buttons */}
-          <div className="mb-4 mt-4 flex justify-between px-14">
+          <div className="mb-4 flex justify-between px-4">
             <div
               className="relative size-[30px] cursor-pointer"
               onClick={handlePrevClick}
@@ -109,6 +125,13 @@ export const SentencesPage: FC = () => {
                 showFurigana={showFurigana}
                 onClick={() => setShowFurigana((s) => !s)}
               />
+
+              <div
+                className="relative size-[20px] cursor-pointer"
+                onClick={handleInfoClick}
+              >
+                <InfoIcon className="size-[20px]" />
+              </div>
             </div>
             <div
               className="relative size-[30px] cursor-pointer"
@@ -127,6 +150,14 @@ export const SentencesPage: FC = () => {
           )}
         </div>
       </div>
+
+      <audio
+        className="hidden"
+        ref={audioRef}
+        controls
+        preload="none"
+        src={src}
+      />
     </Page>
   );
 };
