@@ -45,7 +45,7 @@ export const ListItem: FC<ListItemProps> = ({
     >
       <div
         className={twMerge(
-          "border-silver/60 flex flex-grow items-center justify-between px-0 py-[9px]",
+          "border-silver/60 flex grow items-center justify-between px-0 py-[9px]",
           showBorder && "border-b",
         )}
       >

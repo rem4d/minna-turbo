@@ -41,13 +41,13 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
   return (
     <Accordion.Root
       type="multiple"
-      className="bg-mineShaft rounded-[24px]"
+      className="bg-mine-shaft rounded-[24px]"
       onValueChange={onValueChange}
       value={val}
     >
       <Accordion.Item
         value="1"
-        className="bg-mineShaft mt-[1px] overflow-hidden rounded-[24px] px-4 py-3 text-white/90"
+        className="bg-mine-shaft mt-[1px] overflow-hidden rounded-[24px] px-4 py-3 text-white/90"
       >
         <Accordion.Header>
           <Accordion.Trigger className="my-2 flex w-full items-center justify-between">
@@ -98,11 +98,11 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
         >
           <div className="max-h-[40vh] w-full overflow-y-scroll p-2">
             {loadingMembers && <div>Loading...</div>}
-            <div className="grid grid-cols-[fit-content(50px),auto] items-center gap-x-3 gap-y-2 text-[18px]">
+            <div className="grid grid-cols-[fit-content(50px)_auto] items-center gap-x-3 gap-y-2 text-[18px]">
               {members?.map((m) => (
                 <React.Fragment key={m.members.basic_form}>
                   <div
-                    className="font-yuGothic cursor-pointer whitespace-nowrap"
+                    className="font-yu-gothic cursor-pointer whitespace-nowrap"
                     dangerouslySetInnerHTML={{
                       __html: m.members.ruby ?? "",
                     }}

@@ -40,7 +40,7 @@ const Card: FC<CardProps> = ({ title, desc, to, color }) => {
     <div
       className={twMerge(
         "border-heatheredGray/40 relative flex h-[167px] w-full flex-col space-y-4 rounded-xl border p-4",
-        color === "cyan" ? "bg-polar" : "bg-halfDutchWhite",
+        color === "cyan" ? "bg-polar" : "bg-half-dutch-white",
       )}
     >
       <div className="flex flex-col space-y-2">

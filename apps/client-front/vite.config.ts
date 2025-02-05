@@ -1,3 +1,4 @@
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
 import mkcert from "vite-plugin-mkcert";
@@ -35,6 +36,7 @@ export default defineConfig(({ mode }) => {
       // https://www.npmjs.com/package/vite-plugin-mkcert
       mkcert(),
       svgr(),
+      tailwindcss(),
 
       // checker({
       //   typescript: true,

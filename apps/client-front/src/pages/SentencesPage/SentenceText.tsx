@@ -27,20 +27,20 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
             )}
             <div
               className={twMerge(
-                "relative flex flex-grow flex-col",
-                hasCharacter && "left-[2px] top-[19px]",
+                "relative flex grow flex-col",
+                hasCharacter && "top-[19px] left-[2px]",
               )}
             >
               <div
                 className={twMerge(
                   "relative w-full overflow-hidden",
-                  hasCharacter && "-left-[5px] top-[5px]",
+                  hasCharacter && "top-[5px] -left-[5px]",
                   !hasCharacter && "mt-[24px]",
                 )}
               >
                 <div
                   className={twMerge(
-                    "font-yuGothic relative rounded-[20px] border border-black/20 bg-white px-4 py-4 text-xl font-medium leading-5 text-black",
+                    "font-yu-gothic relative rounded-[20px] border border-black/20 bg-white px-4 py-4 text-xl leading-5 font-medium text-black",
                     hasCharacter && "ml-4 rounded-tl-[0px]",
                   )}
                 >
@@ -50,7 +50,7 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
                       !hasCharacter && "justify-center",
                     )}
                   >
-                    <div className="flex select-none flex-col items-center justify-center gap-2">
+                    <div className="flex flex-col items-center justify-center gap-2 select-none">
                       {showFurigana ? (
                         <div
                           className=""

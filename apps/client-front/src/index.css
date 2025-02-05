@@ -1,6 +1,72 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --color-butterfly-bush: #8f74b9;
+  --color-light-gray: #f3f3f3;
+  --color-wild-sand: #f5f5f5;
+  --color-pacific-blue: #0098c2;
+  --color-mercury: #e5e5e5;
+  --color-gray-chateau: #9ca2aa;
+  --color-polar: #e0f3f7;
+  --color-scooter: #2fb0c6;
+  --color-half-dutch-white: #fef7da;
+  --color-supernova: #ffcc00;
+  --color-black: #3e3d37;
+  --color-boulder: #7a7a7a;
+  --color-heathered-gray: #b6ac94;
+  --color-jumbo: #858588;
+  --color-white: #fff;
+  --color-french-gray: #c5c5c7;
+  --color-silver: #c5c5c5;
+  --color-denim: #1673d9;
+  --color-scorpion: #595959;
+  --color-rolling-stone: #72777a;
+  --color-azure-radiance: #007aff;
+  --color-mine-shaft: #323232;
+
+  --font-epkyoka: Epkyoka;
+  --font-klee: Klee;
+  --font-inter: Inter;
+  --font-yu-gothic: yuGothic;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 @font-face {
   font-family: "Inter";

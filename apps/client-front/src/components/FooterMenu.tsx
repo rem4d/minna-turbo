@@ -28,8 +28,8 @@ export function FooterMenu(): ReactElement {
   return (
     <div
       className={twJoin(
-        "absolute bottom-0 z-[40] h-[87px] w-full",
-        "border-mercury bg-wildSand/85 border-t backdrop-blur-[20px]",
+        "absolute bottom-0 z-40 h-[87px] w-full",
+        "border-mercury bg-wild-sand/85 border-t backdrop-blur-[20px]",
         "animate-jump flex items-center justify-between divide-x overflow-hidden",
         "animate-once",
       )}
@@ -66,12 +66,12 @@ interface ItemProps {
 const Item: FC<ItemProps> = ({ to, title, icon, active }) => {
   const navLinkCn = `
 flex w-1/3 relative h-full cursor-pointer flex-col items-center pt-3
-text-[11px] font-unbounded font-normal text-grayChateau
+text-[11px] font-unbounded font-normal text-gray-chateau
 `;
   return (
     <NavLink
       to={to}
-      className={twMerge(navLinkCn, active && "text-pacificBlue")}
+      className={twMerge(navLinkCn, active && "text-pacific-blue")}
     >
       {icon}
       <span className="mt-1">{title}</span>

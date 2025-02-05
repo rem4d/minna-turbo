@@ -21,7 +21,7 @@ export function Base() {
   // }, [lp]);
 
   return (
-    <div className="bg-lightGray relative mx-auto h-screen min-h-[568px] min-w-[320px] max-w-[450px] overflow-hidden">
+    <div className="bg-light-gray relative mx-auto h-screen min-h-[568px] max-w-[450px] min-w-[320px] overflow-hidden">
       <Outlet />
       <FooterMenu />
     </div>
