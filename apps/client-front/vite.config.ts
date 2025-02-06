@@ -15,8 +15,16 @@ export default defineConfig(({ mode }) => {
           port: 5174,
           host: true,
           proxy: {
-            "/api": {
-              target: "http://localhost:1223/trpc",
+            "/trpc/api": {
+              target: "http://localhost:1223/",
+              // changeOrigin: true,
+            },
+            "/tts": {
+              target: "http://localhost:1223",
+              // changeOrigin: true,
+            },
+            "/m": {
+              target: "http://localhost:1223",
               // changeOrigin: true,
             },
           },

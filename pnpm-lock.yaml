@@ -269,6 +269,9 @@ importers:
       express:
         specifier: ^4.21.2
         version: 4.21.2
+      node-edge-tts:
+        specifier: ^1.2.7
+        version: 1.2.7
       pino:
         specifier: ^9.5.0
         version: 9.6.0
@@ -4361,6 +4364,10 @@ packages:
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+
+  node-edge-tts@1.2.7:
+    resolution: {integrity: sha512-0WEfX1dVFR4102i7j4cM3o+JKsYr8QpgH6UoHI8gf0aD0NL0djK9H/EacJ/LcpljvS6HEX60E2OmZ1LtC7Os3A==}
+    hasBin: true
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -9553,6 +9560,16 @@ snapshots:
       tslib: 2.8.1
 
   node-domexception@1.0.0: {}
+
+  node-edge-tts@1.2.7:
+    dependencies:
+      https-proxy-agent: 7.0.6
+      ws: 8.18.0
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
 
   node-fetch@2.7.0:
     dependencies:

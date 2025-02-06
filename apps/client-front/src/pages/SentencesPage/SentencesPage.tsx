@@ -7,10 +7,11 @@ import InfoIcon from "@/assets/icons/info.svg?react";
 import SoundPauseIcon from "@/assets/icons/pause.svg?react";
 import SoundIcon from "@/assets/icons/sound.svg?react";
 import { Page } from "@/components/Page";
+import Spinner from "@/components/Spinner";
+import { useTtsMutation } from "@/rq/useTtsMutation";
 import { api } from "@/utils/api";
-import { initTTS } from "@rem4d/utils";
+import hapticFeedback from "@/utils/hapticFeedback";
 import { useLaunchParams, viewport } from "@telegram-apps/sdk-react";
-import { twMerge } from "tailwind-merge";
 
 import Accordion from "./Accordion";
 import { SentenceText } from "./SentenceText";
@@ -21,14 +22,10 @@ export const SentencesPage: FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [safeAreas, setSafeAreas] = useState<{ top: number }>({ top: 0 });
-  const [safeContentAreas, setSafeContentAreas] = useState<{ top: number }>({
-    top: 0,
-  });
+  const [blobSrc, setBlobSrc] = useState("");
 
   const lp = useLaunchParams();
   const isMobile = !lp.platform.includes("desktop");
-  const insetTopContent = safeAreas.top + safeContentAreas.top;
-  // const isMobile = true;
 
   const { data: list, isLoading: loadingSentence } =
     api.sentence.getRandomized.useQuery({
@@ -38,20 +35,28 @@ export const SentencesPage: FC = () => {
   const sentence = list?.[activeIndex];
   const hasCharacter = !!sentence?.vox_speaker_id;
 
+  const { mutateAsync: ttsMutate, isPending: ttsLoading } = useTtsMutation({
+    onSuccess() {},
+  });
+
   useEffect(() => {
     setShowFurigana(false);
     setIsPlaying(false);
+    setBlobSrc("");
   }, [sentence?.id]);
+
+  useEffect(() => {
+    if (blobSrc) {
+      if (audioRef.current) {
+        void audioRef.current.play();
+        setIsPlaying(true);
+      }
+    }
+  }, [blobSrc]);
 
   useLayoutEffect(() => {
     const sa = viewport.safeAreaInsets() as { top: number };
-    const sca = viewport.contentSafeAreaInsets() as { top: number };
-
-    console.log("sa", sa);
-    console.log("sca", sca);
-
     setSafeAreas(sa);
-    setSafeContentAreas(sca);
   }, []);
 
   useEffect(() => {
@@ -64,31 +69,38 @@ export const SentencesPage: FC = () => {
     });
   }, []);
 
-  const onPlayClick = () => {
+  const onPlayClick = async () => {
     if (!sentence) {
       return;
     }
-    if (!hasCharacter) {
-      void initTTS(sentence.text);
-      return;
-    }
+    hapticFeedback("light");
 
-    if (!audioRef.current) {
-      return;
-    }
-    void audioRef.current.play();
+    if (!blobSrc) {
+      const blob = await ttsMutate({ text: sentence.text });
+      const objectURL = URL.createObjectURL(blob);
 
-    setIsPlaying(true);
+      setBlobSrc(objectURL);
+    } else {
+      if (audioRef.current) {
+        try {
+          void audioRef.current.play();
+          setIsPlaying(true);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
   };
+
   const handlePrevClick = () => {
+    hapticFeedback("light");
     setActiveIndex(activeIndex - 1);
   };
 
   const handleNextClick = () => {
+    hapticFeedback("light");
     setActiveIndex(activeIndex + 1);
   };
-
-  const src = `${import.meta.env.VITE_BACKEND_URL}${sentence?.vox_file_path}`;
 
   const handleInfoClick = () => {};
 
@@ -110,15 +122,18 @@ export const SentencesPage: FC = () => {
               className="relative size-[30px] cursor-pointer"
               onClick={handlePrevClick}
             >
-              <ArrowIcon className="text-azureRadiance absolute size-[20px] rotate-90 fill-current" />
+              <ArrowIcon className="text-azure-radiance absolute size-[20px] rotate-90 fill-current" />
             </div>
             <div className="flex items-center space-x-6">
               <div className="size-[24px] cursor-pointer" onClick={onPlayClick}>
-                {isPlaying ? (
-                  <SoundPauseIcon className="size-[24px] fill-current text-blue-500" />
-                ) : (
-                  <SoundIcon className="size-[24px]" />
-                )}
+                {ttsLoading && <Spinner />}
+                {!ttsLoading ? (
+                  isPlaying ? (
+                    <SoundPauseIcon className="size-[24px] fill-current text-blue-500" />
+                  ) : (
+                    <SoundIcon className="size-[24px]" />
+                  )
+                ) : null}
               </div>
 
               <ShowFuriganaComponent
@@ -137,7 +152,7 @@ export const SentencesPage: FC = () => {
               className="relative size-[30px] cursor-pointer"
               onClick={handleNextClick}
             >
-              <ArrowIcon className="text-azureRadiance absolute size-[20px] -rotate-90 fill-current" />
+              <ArrowIcon className="text-azure-radiance absolute size-[20px] -rotate-90 fill-current" />
             </div>
           </div>
           {!sentence ? null : (
@@ -156,7 +171,7 @@ export const SentencesPage: FC = () => {
         ref={audioRef}
         controls
         preload="none"
-        src={src}
+        src={blobSrc}
       />
     </Page>
   );

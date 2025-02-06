@@ -26,7 +26,7 @@ export const useSubmitVoiceMutation = ({ onSuccess }: Props) => {
         headers: {
           "Content-type": "application/json",
         },
-      });
+      }).then((res) => res.blob());
     },
   });
 };

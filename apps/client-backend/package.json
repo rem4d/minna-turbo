@@ -4,13 +4,14 @@
   "dependencies": {
     "@rem4d/api": "workspace:*",
     "@rem4d/db": "workspace:*",
-    "@rem4d/typescript-config": "workspace:*",
     "@rem4d/tokenizer": "workspace:*",
+    "@rem4d/typescript-config": "workspace:*",
     "@trpc/server": "^11.0.0-rc.666",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "envalid": "^8.0.0",
     "express": "^4.21.2",
+    "node-edge-tts": "^1.2.7",
     "pino": "^9.5.0",
     "pino-http": "^10.3.0"
   },

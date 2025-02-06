@@ -40,7 +40,7 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
               >
                 <div
                   className={twMerge(
-                    "font-yu-gothic relative rounded-[20px] border border-black/20 bg-white px-4 py-4 text-xl leading-5 font-medium text-black",
+                    "font-yu-gothic relative min-h-[67px] rounded-[20px] border border-black/20 bg-white px-4 py-4 text-xl leading-6 font-medium text-black",
                     hasCharacter && "ml-4 rounded-tl-[0px]",
                   )}
                 >
@@ -50,7 +50,7 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
                       !hasCharacter && "justify-center",
                     )}
                   >
-                    <div className="flex flex-col items-center justify-center gap-2 select-none">
+                    <div className="flex flex-col items-center justify-center gap-2">
                       {showFurigana ? (
                         <div
                           className=""
@@ -60,7 +60,7 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
                         />
                       ) : (
                         <div
-                          className={onlyOneHasFurigana ? "mt-[6px]" : ""}
+                          className={onlyOneHasFurigana ? "mt-[13px]" : ""}
                           dangerouslySetInnerHTML={{
                             __html: sentence.text_with_furigana ?? "",
                           }}
