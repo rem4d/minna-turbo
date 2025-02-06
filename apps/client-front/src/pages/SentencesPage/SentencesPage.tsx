@@ -1,9 +1,10 @@
+import type { Sentence } from "@rem4d/db";
 import type { FC } from "react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import EyeClosedIcon from "@/assets/icons/eye-closed.svg?react";
 import EyeOpenIcon from "@/assets/icons/eye-open.svg?react";
-import InfoIcon from "@/assets/icons/info.svg?react";
+// import InfoIcon from "@/assets/icons/info.svg?react";
 import SoundPauseIcon from "@/assets/icons/pause.svg?react";
 import SoundIcon from "@/assets/icons/sound.svg?react";
 import Dropdown from "@/components/Dropdown/Dropdown";
@@ -13,6 +14,8 @@ import { useTtsMutation } from "@/rq/useTtsMutation";
 import { api } from "@/utils/api";
 import hapticFeedback from "@/utils/hapticFeedback";
 import { useLaunchParams, viewport } from "@telegram-apps/sdk-react";
+import { twMerge } from "tailwind-merge";
+import { useLocalStorage } from "usehooks-ts";
 
 import Accordion from "./Accordion";
 import { SentenceText } from "./SentenceText";
@@ -25,6 +28,11 @@ export const SentencesPage: FC = () => {
   const [safeAreas, setSafeAreas] = useState<{ top: number }>({ top: 0 });
   const [blobSrc, setBlobSrc] = useState("");
 
+  const [favorites, setFavorites] = useLocalStorage<Sentence[]>(
+    "kic:favorites",
+    [],
+  );
+
   const lp = useLaunchParams();
   const isMobile = !lp.platform.includes("desktop");
 
@@ -34,7 +42,7 @@ export const SentencesPage: FC = () => {
     });
 
   const sentence = list?.[activeIndex];
-  const hasCharacter = !!sentence?.vox_speaker_id;
+  // const hasCharacter = !!sentence?.vox_speaker_id;
 
   const { mutateAsync: ttsMutate, isPending: ttsLoading } = useTtsMutation({
     onSuccess() {},
@@ -103,16 +111,17 @@ export const SentencesPage: FC = () => {
     setActiveIndex(activeIndex + 1);
   };
 
-  const handleInfoClick = () => {};
   const onSettingsOpen = () => {
-    console.log(1);
     hapticFeedback("light");
   };
+
   const dropdownItems = [
     {
       title: "Добавить в избранное",
       onClick() {
-        console.log("f");
+        if (sentence) {
+          setFavorites(favorites.concat(sentence));
+        }
       },
     },
     {
@@ -144,7 +153,10 @@ export const SentencesPage: FC = () => {
           {/* nav buttons */}
           <div className="mb-4 flex justify-between px-4">
             <div
-              className="relative size-[30px] cursor-pointer"
+              className={twMerge(
+                "relative size-[30px] cursor-pointer",
+                activeIndex === 0 && "pointer-events-none opacity-50",
+              )}
               onClick={handlePrevClick}
             >
               <ArrowIcon className="text-azure-radiance absolute size-[20px] rotate-90 fill-current" />

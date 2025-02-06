@@ -62,6 +62,7 @@ export default function Dropdown({ items, onOpen }: Props) {
                     closeMenu={closeMenu}
                     key={`${item.title}-${index}`}
                     className={index === items.length - 1 ? "border-none" : ""}
+                    onSelect={item.onClick}
                   >
                     {item.title}
                   </Item>
@@ -101,7 +102,7 @@ function Item({
         });
         await sleep(0.075);
 
-        await closeMenu();
+        closeMenu();
         onSelect();
       }}
       className={twMerge(itemClassName, className)}

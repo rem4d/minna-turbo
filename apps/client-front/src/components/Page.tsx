@@ -1,18 +1,17 @@
 /* eslint-disable */
 import type { PropsWithChildren } from "react";
 import { useEffect } from "react";
-import { backButton, settingsButton } from "@telegram-apps/sdk-react";
+import { backButton } from "@telegram-apps/sdk-react";
 import { useNavigate } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
 
 export function Page({
   children,
-  back = true,
+  back = false,
+  footer = false,
 }: PropsWithChildren<{
-  /**
-   * True if it is allowed to go back from this page.
-   */
   back?: boolean;
-  settings?: boolean;
+  footer?: boolean;
 }>) {
   const navigate = useNavigate();
 
@@ -26,5 +25,14 @@ export function Page({
     backButton.hide();
   }, [back]);
 
-  return <>{children}</>;
+  return (
+    <div
+      className={twMerge(
+        "mt-(--tg-viewport-content-safe-area-inset-top) h-screen overflow-x-hidden overflow-y-auto",
+        footer && "h-[calc(100%-100px)]",
+      )}
+    >
+      {children}
+    </div>
+  );
 }

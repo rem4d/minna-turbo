@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 
 export const IndexPage: FC = () => {
   return (
-    <Page back={false}>
+    <Page footer>
       <div className="flex flex-col items-center justify-center space-y-6 p-[33px]">
         <Card
           title="Фразы"

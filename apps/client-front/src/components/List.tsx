@@ -1,5 +1,6 @@
 import type { FC, ReactElement, ReactNode } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
+import RemoveIcon from "@/assets/icons/remove.svg?react";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
@@ -11,7 +12,7 @@ interface ListProps {
 export const List: FC<ListProps> = ({ title, children }) => {
   return (
     <div className="flex flex-col">
-      <div className="text-jumbo mb-3 ml-4 text-[13px] uppercase leading-none">
+      <div className="text-jumbo mb-3 ml-4 text-[13px] leading-none uppercase">
         {title}
       </div>
       <div className="rounded-[10px] bg-white">{children ?? null}</div>
@@ -23,8 +24,10 @@ interface ListItemProps {
   title: string;
   sub?: string;
   icon?: ReactElement;
-  to: string;
+  iconRight?: "arrow" | "remove";
+  to?: string;
   showBorder?: boolean;
+  onRightIconClick?: () => void;
 }
 
 export const ListItem: FC<ListItemProps> = ({
@@ -33,11 +36,17 @@ export const ListItem: FC<ListItemProps> = ({
   icon,
   to,
   showBorder,
+  onRightIconClick,
+  iconRight = "arrow",
 }) => {
   const navigate = useNavigate();
+
   const handleClick = () => {
-    void navigate(to);
+    if (to) {
+      void navigate(to);
+    }
   };
+
   return (
     <div
       className="flex h-[60px] w-full cursor-pointer items-center pl-[16px]"
@@ -58,8 +67,16 @@ export const ListItem: FC<ListItemProps> = ({
             )}
           </div>
         </div>
-        <div className="relative mr-[10px] size-[24px]">
-          <ArrowIcon className="text-frenchGray absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90 fill-current" />
+        <div
+          className="relative mr-[10px] size-[24px]"
+          onClick={() => onRightIconClick?.()}
+        >
+          {iconRight === "arrow" && (
+            <ArrowIcon className="text-french-gray absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90 fill-current" />
+          )}
+          {iconRight === "remove" && (
+            <RemoveIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+          )}
         </div>
       </div>
     </div>
