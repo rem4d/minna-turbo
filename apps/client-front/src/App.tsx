@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import {
   miniApp,
   requestFullscreen,
-  settingsButton,
   swipeBehavior,
   useLaunchParams,
   viewport,
@@ -32,8 +31,6 @@ function App() {
     if (fcIsAvail && !lp.platform.includes("desktop")) {
       requestFullscreen();
     }
-
-    settingsButton.show();
   }, [lp.platform]);
 
   return (

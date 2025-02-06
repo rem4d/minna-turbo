@@ -6,7 +6,6 @@ import EyeClosedIcon from "@/assets/icons/eye-closed.svg?react";
 import EyeOpenIcon from "@/assets/icons/eye-open.svg?react";
 import SoundPauseIcon from "@/assets/icons/pause.svg?react";
 import SoundIcon from "@/assets/icons/sound.svg?react";
-import Drawer from "@/components/Drawer";
 import Dropdown from "@/components/Dropdown";
 import { Page } from "@/components/Page";
 import Spinner from "@/components/Spinner";
@@ -18,6 +17,7 @@ import { twMerge } from "tailwind-merge";
 import { useLocalStorage } from "usehooks-ts";
 
 import Accordion from "./Accordion";
+import DrawerSettings from "./DrawerSettings";
 import { SentenceText } from "./SentenceText";
 
 export const SentencesPage: FC = () => {
@@ -83,7 +83,9 @@ export const SentencesPage: FC = () => {
     if (!sentence) {
       return;
     }
-    hapticFeedback("light");
+    if (!isPlaying) {
+      hapticFeedback("light");
+    }
 
     if (!blobSrc) {
       const blob = await ttsMutate({ text: sentence.text });
@@ -141,7 +143,7 @@ export const SentencesPage: FC = () => {
 
   return (
     <Page back>
-      <div className="relative h-full">
+      <div className="relative h-full" id="page">
         <div
           className={"text-scorpion mb-3 flex justify-center text-sm"}
           style={{
@@ -212,13 +214,10 @@ export const SentencesPage: FC = () => {
         preload="none"
         src={blobSrc}
       />
-      <Drawer open={settingsModalOpen} onOpenChange={setSettingsModalOpen}>
-        <div className="bg-cornflowerBlue relative flex size-full flex-col space-y-2">
-          <div className="relative bottom-0 self-center">
-            <div className="h-full max-w-[300px]">body</div>
-          </div>
-        </div>
-      </Drawer>
+      <DrawerSettings
+        open={settingsModalOpen}
+        onOpenChange={setSettingsModalOpen}
+      />
     </Page>
   );
 };
