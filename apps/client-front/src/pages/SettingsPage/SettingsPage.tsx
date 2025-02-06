@@ -14,7 +14,6 @@ export const SettingsPage: FC = () => {
 
   const remove = useCallback(
     (id: number) => {
-      console.log(id);
       const index = favorites.findIndex((e) => e.id === id);
       if (index !== -1) {
         setFavorites(favorites.toSpliced(index, 1));

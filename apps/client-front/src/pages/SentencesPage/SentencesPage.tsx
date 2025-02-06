@@ -4,10 +4,10 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import EyeClosedIcon from "@/assets/icons/eye-closed.svg?react";
 import EyeOpenIcon from "@/assets/icons/eye-open.svg?react";
-// import InfoIcon from "@/assets/icons/info.svg?react";
 import SoundPauseIcon from "@/assets/icons/pause.svg?react";
 import SoundIcon from "@/assets/icons/sound.svg?react";
-import Dropdown from "@/components/Dropdown/Dropdown";
+import Drawer from "@/components/Drawer";
+import Dropdown from "@/components/Dropdown";
 import { Page } from "@/components/Page";
 import Spinner from "@/components/Spinner";
 import { useTtsMutation } from "@/rq/useTtsMutation";
@@ -27,6 +27,7 @@ export const SentencesPage: FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [safeAreas, setSafeAreas] = useState<{ top: number }>({ top: 0 });
   const [blobSrc, setBlobSrc] = useState("");
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
 
   const [favorites, setFavorites] = useLocalStorage<Sentence[]>(
     "kic:favorites",
@@ -127,7 +128,7 @@ export const SentencesPage: FC = () => {
     {
       title: "Настройки",
       onClick() {
-        console.log("h");
+        setSettingsModalOpen(true);
       },
     },
     {
@@ -211,6 +212,13 @@ export const SentencesPage: FC = () => {
         preload="none"
         src={blobSrc}
       />
+      <Drawer open={settingsModalOpen} onOpenChange={setSettingsModalOpen}>
+        <div className="bg-cornflowerBlue relative flex size-full flex-col space-y-2">
+          <div className="relative bottom-0 self-center">
+            <div className="h-full max-w-[300px]">body</div>
+          </div>
+        </div>
+      </Drawer>
     </Page>
   );
 };
