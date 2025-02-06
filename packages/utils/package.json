@@ -7,18 +7,34 @@
   "devDependencies": {
     "@rem4d/eslint-config": "workspace:*",
     "@rem4d/typescript-config": "workspace:*",
-    "@types/node": "^22.10.2"
+    "@types/node": "^22.10.2",
+    "bunchee": "catalog:",
+    "typescript": "catalog:"
   },
+  "main": "./dist/es/index.js",
+  "module": "./dist/es/index.js",
+  "types": "./dist/es/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/tts.d.ts",
-      "default": "./src/tts.ts"
+      "import": {
+        "types": "./dist/es/index.d.ts",
+        "default": "./dist/es/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.cts",
+        "default": "./dist/cjs/index.cjs"
+      }
     }
   },
+  "files": [
+    "dist"
+  ],
   "keywords": [],
   "license": "ISC",
   "scripts": {
-    "build": "tsc",
+    "build": "bunchee",
+    "dev": "bunchee --watch",
+    "lint": "eslint src/",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"

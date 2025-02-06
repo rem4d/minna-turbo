@@ -6,6 +6,7 @@ import EyeOpenIcon from "@/assets/icons/eye-open.svg?react";
 import InfoIcon from "@/assets/icons/info.svg?react";
 import SoundPauseIcon from "@/assets/icons/pause.svg?react";
 import SoundIcon from "@/assets/icons/sound.svg?react";
+import Dropdown from "@/components/Dropdown/Dropdown";
 import { Page } from "@/components/Page";
 import Spinner from "@/components/Spinner";
 import { useTtsMutation } from "@/rq/useTtsMutation";
@@ -103,6 +104,26 @@ export const SentencesPage: FC = () => {
   };
 
   const handleInfoClick = () => {};
+  const dropdownItems = [
+    {
+      title: "Добавить в избранное",
+      onClick() {
+        console.log("f");
+      },
+    },
+    {
+      title: "Настройки",
+      onClick() {
+        console.log("h");
+      },
+    },
+    {
+      title: "Помощь",
+      onClick() {
+        console.log("h");
+      },
+    },
+  ];
 
   return (
     <Page back>
@@ -141,12 +162,13 @@ export const SentencesPage: FC = () => {
                 onClick={() => setShowFurigana((s) => !s)}
               />
 
-              <div
-                className="relative size-[20px] cursor-pointer"
-                onClick={handleInfoClick}
-              >
-                <InfoIcon className="size-[20px]" />
-              </div>
+              <Dropdown items={dropdownItems} />
+              {/* <div */}
+              {/*   className="relative size-[20px] cursor-pointer" */}
+              {/*   onClick={handleInfoClick} */}
+              {/* > */}
+              {/*   <InfoIcon className="size-[20px]" /> */}
+              {/* </div> */}
             </div>
             <div
               className="relative size-[30px] cursor-pointer"

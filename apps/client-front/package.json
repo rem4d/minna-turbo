@@ -4,6 +4,7 @@
   "dependencies": {
     "@andresaya/edge-tts": "^1.2.4",
     "@radix-ui/react-accordion": "^1.2.2",
+    "@radix-ui/react-dropdown-menu": "^2.1.4",
     "@rem4d/api": "workspace:*",
     "@rem4d/db": "workspace:*",
     "@rem4d/typescript-config": "workspace:*",
