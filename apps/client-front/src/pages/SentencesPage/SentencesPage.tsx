@@ -104,6 +104,10 @@ export const SentencesPage: FC = () => {
   };
 
   const handleInfoClick = () => {};
+  const onSettingsOpen = () => {
+    console.log(1);
+    hapticFeedback("light");
+  };
   const dropdownItems = [
     {
       title: "Добавить в избранное",
@@ -162,7 +166,7 @@ export const SentencesPage: FC = () => {
                 onClick={() => setShowFurigana((s) => !s)}
               />
 
-              <Dropdown items={dropdownItems} />
+              <Dropdown items={dropdownItems} onOpen={onSettingsOpen} />
               {/* <div */}
               {/*   className="relative size-[20px] cursor-pointer" */}
               {/*   onClick={handleInfoClick} */}

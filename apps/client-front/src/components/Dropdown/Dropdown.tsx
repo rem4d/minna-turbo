@@ -14,9 +14,10 @@ interface Item {
 
 interface Props {
   items: Item[];
+  onOpen?: () => void;
 }
 
-export default function Dropdown({ items }: Props) {
+export default function Dropdown({ items, onOpen }: Props) {
   const [open, setOpen] = useState(false);
 
   const controls = useAnimation();
@@ -26,8 +27,15 @@ export default function Dropdown({ items }: Props) {
     setOpen(false);
   }
 
+  const onOpenChange = (o: boolean) => {
+    if (o) {
+      onOpen?.();
+    }
+    setOpen(o);
+  };
+
   return (
-    <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+    <DropdownMenu.Root open={open} onOpenChange={onOpenChange}>
       <DropdownMenu.Trigger className="z-10 inline-flex size-[24px] cursor-pointer items-center justify-center whitespace-nowrap select-none focus-visible:outline-none">
         <DropdownDotsIcon className="stroke-rolling-stone" />
       </DropdownMenu.Trigger>

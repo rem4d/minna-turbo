@@ -132,16 +132,16 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
                       <div className="absolute h-full w-full">
                         <Skeleton
                           inline
-                          containerClassName="flex flex-col space-y-2"
-                          height="30px"
+                          containerClassName="flex flex-col space-y-4"
+                          height="25px"
                           count={members.length}
                         />
                       </div>
                     ) : (
                       <Skeleton
                         inline
-                        containerClassName="flex flex-col space-y-2"
-                        height="30px"
+                        containerClassName="flex flex-col space-y-4"
+                        height="25px"
                         count={3}
                       />
                     )
