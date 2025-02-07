@@ -34,6 +34,8 @@
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
+  --page-offset-bottom: var(--tg-viewport-content-safe-area-inset-bottom, 10px);
+
   @keyframes accordion-down {
     from {
       height: 0;

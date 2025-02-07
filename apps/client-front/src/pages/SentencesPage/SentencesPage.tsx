@@ -83,7 +83,8 @@ export const SentencesPage: FC = () => {
     if (!sentence) {
       return;
     }
-    if (!isPlaying) {
+
+    if (!isPlaying && !ttsLoading) {
       hapticFeedback("light");
     }
 
@@ -142,12 +143,12 @@ export const SentencesPage: FC = () => {
   ];
 
   return (
-    <Page back>
-      <div className="relative h-full" id="page">
+    <Page back sa="notch">
+      <div className="relative h-full overflow-hidden" id="page">
         <div
           className={"text-scorpion mb-3 flex justify-center text-sm"}
           style={{
-            paddingTop: isMobile ? safeAreas.top + 16 : 0,
+            paddingTop: isMobile ? 16 : 0,
           }}
         >
           Ваш уровень: 12
@@ -197,7 +198,7 @@ export const SentencesPage: FC = () => {
             </div>
           </div>
           {!sentence ? null : (
-            <div className="mt-[0px] px-4">
+            <div className="px-4">
               <SentenceText sentence={sentence} showFurigana={showFurigana} />
               <div className="absolute bottom-0 left-0 w-full px-2">
                 <Accordion sentence={sentence} />
