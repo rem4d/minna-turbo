@@ -1,6 +1,6 @@
 import type { Sentence } from "@rem4d/db";
 import type { FC } from "react";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import EyeClosedIcon from "@/assets/icons/eye-closed.svg?react";
 import EyeOpenIcon from "@/assets/icons/eye-open.svg?react";
@@ -9,10 +9,11 @@ import SoundIcon from "@/assets/icons/sound.svg?react";
 import Dropdown from "@/components/Dropdown";
 import { Page } from "@/components/Page";
 import Spinner from "@/components/Spinner";
+import Toast from "@/components/Toast";
 import { useTtsMutation } from "@/rq/useTtsMutation";
 import { api } from "@/utils/api";
 import hapticFeedback from "@/utils/hapticFeedback";
-import { useLaunchParams, viewport } from "@telegram-apps/sdk-react";
+import { useLaunchParams } from "@telegram-apps/sdk-react";
 import { twMerge } from "tailwind-merge";
 import { useLocalStorage } from "usehooks-ts";
 
@@ -25,9 +26,9 @@ export const SentencesPage: FC = () => {
   const [showFurigana, setShowFurigana] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [safeAreas, setSafeAreas] = useState<{ top: number }>({ top: 0 });
   const [blobSrc, setBlobSrc] = useState("");
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
 
   const [favorites, setFavorites] = useLocalStorage<Sentence[]>(
     "kic:favorites",
@@ -63,11 +64,6 @@ export const SentencesPage: FC = () => {
       }
     }
   }, [blobSrc]);
-
-  useLayoutEffect(() => {
-    const sa = viewport.safeAreaInsets() as { top: number };
-    setSafeAreas(sa);
-  }, []);
 
   useEffect(() => {
     if (!audioRef.current) {
@@ -124,7 +120,9 @@ export const SentencesPage: FC = () => {
       title: "Добавить в избранное",
       onClick() {
         if (sentence) {
-          setFavorites(favorites.concat(sentence));
+          setToastOpen(true);
+
+          // setFavorites(favorites.concat(sentence));
         }
       },
     },
@@ -183,12 +181,6 @@ export const SentencesPage: FC = () => {
               />
 
               <Dropdown items={dropdownItems} onOpen={onSettingsOpen} />
-              {/* <div */}
-              {/*   className="relative size-[20px] cursor-pointer" */}
-              {/*   onClick={handleInfoClick} */}
-              {/* > */}
-              {/*   <InfoIcon className="size-[20px]" /> */}
-              {/* </div> */}
             </div>
             <div
               className="relative size-[30px] cursor-pointer"
@@ -215,6 +207,9 @@ export const SentencesPage: FC = () => {
         preload="none"
         src={blobSrc}
       />
+      <Toast open={toastOpen} onOpenChange={setToastOpen}>
+        Фраза добавлена в избранное
+      </Toast>
       <DrawerSettings
         open={settingsModalOpen}
         onOpenChange={setSettingsModalOpen}

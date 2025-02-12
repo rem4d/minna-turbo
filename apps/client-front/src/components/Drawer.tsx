@@ -1,14 +1,24 @@
+import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { Drawer } from "vaul";
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  back?: boolean;
+  onBackClick?: () => void;
   children: React.ReactNode;
+  title?: string | null;
 }
 
-export default function _Drawer({ open, onOpenChange, children }: Props) {
+export default function _Drawer({
+  open,
+  onOpenChange,
+  onBackClick,
+  children,
+  title = null,
+  back = false,
+}: Props) {
   const element = document.getElementById("page");
-  console.log(element);
   return (
     <Drawer.Root
       open={open}
@@ -17,15 +27,29 @@ export default function _Drawer({ open, onOpenChange, children }: Props) {
     >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40" />
-        <Drawer.Content className="fixed right-0 bottom-0 left-0 flex h-fit flex-col rounded-t-[8px] outline-none">
-          <Drawer.Title></Drawer.Title>
-          <Drawer.Description></Drawer.Description>
-          <div className="bg-super-silver flex-1 rounded-t-[8px] py-4">
+        <Drawer.Content className="fixed right-0 bottom-0 left-0 mt-24 flex h-fit flex-col rounded-t-[10px] outline-none">
+          <div className="bg-super-silver flex-1 rounded-t-[10px] p-4 pt-2">
             <div
               aria-hidden
-              className="bg-gray-chateau mx-auto mb-8 h-1.5 w-12 flex-shrink-0 rounded-full"
+              className="bg-gray-chateau mx-auto mb-4 h-1.5 w-12 flex-shrink-0 rounded-full"
             />
-            {children}
+            <div className="mb-4 grid w-full grid-cols-[50px_auto] items-center">
+              {back && (
+                <div
+                  className="relative top-0 left-0 ml-4 size-[24px]"
+                  onClick={() => onBackClick?.()}
+                >
+                  <ArrowIcon className="text-rolling-stone absolute top-1/2 size-[20px] -translate-y-1/2 rotate-90 fill-current" />
+                </div>
+              )}
+
+              <Drawer.Title className="justify-self-center font-medium text-gray-900">
+                {title}
+              </Drawer.Title>
+            </div>
+            <div className="mx-auto max-h-[80vh] max-w-md overflow-y-scroll">
+              {children}
+            </div>
           </div>
         </Drawer.Content>
       </Drawer.Portal>

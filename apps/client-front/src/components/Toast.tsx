@@ -1,20 +1,32 @@
 import type { FC, PropsWithChildren } from "react";
+import * as Toast from "@radix-ui/react-toast";
 
-export const Toast: FC<PropsWithChildren> = ({ children }) => {
+interface Props {
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+}
+
+const ToastComp: FC<PropsWithChildren<Props>> = ({
+  children,
+  open,
+  onOpenChange,
+}) => {
   return (
-    <div className="animate-fade-up animate-duration-300 animate-once absolute bottom-[135px] z-60 flex w-full justify-center">
-      <div className="relative flex h-[60px] w-[320px] items-center overflow-hidden rounded-[16px] border border-black/30 py-[12px] shadow-2xl">
-        <div className="absolute z-[0] size-full bg-[#272F39]/80" />
-        <div className="absolute z-[0] size-full backdrop-blur-[20px]" />
-        <div className="relative z-10 px-[21px] text-sm leading-5 text-white">
-          <div className="flex items-center space-x-[16px]">
-            {/* <CheckIcon className="size-[28px]" /> */}
-            <span>{children}</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <>
+      <Toast.Root
+        className="ToastRoot flex flex-col items-center rounded-2xl border bg-white p-4 shadow-xl"
+        open={open}
+        onOpenChange={onOpenChange}
+        duration={1000 * 2}
+      >
+        {/* <Toast.Title className="mb-2">Scheduled: Catch up</Toast.Title> */}
+        <Toast.Description asChild className="text-center text-black">
+          <p>{children}</p>
+        </Toast.Description>
+      </Toast.Root>
+      <Toast.Viewport className="ToastViewport fixed bottom-8 left-1/2 z-50 flex w-[320px] max-w-[90vw] -translate-x-1/2 flex-col outline-none" />
+    </>
   );
 };
 
-export default Toast;
+export default ToastComp;

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import * as Toast from "@radix-ui/react-toast";
 import {
   miniApp,
   requestFullscreen,
@@ -35,7 +36,9 @@ function App() {
 
   return (
     <TRPCProvider>
-      <RouterProvider router={router} />
+      <Toast.Provider swipeDirection="down">
+        <RouterProvider router={router} />
+      </Toast.Provider>
     </TRPCProvider>
   );
 }

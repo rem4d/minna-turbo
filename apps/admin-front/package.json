@@ -18,7 +18,7 @@
     "edge-tts-client": "^1.0.2",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-hot-toast": "^2.5.1",
+    "react-hot-toast": "catalog:",
     "react-router-dom": "^7.0.2",
     "tailwindcss": "catalog:",
     "vite-plugin-node-polyfills": "^0.22.0"

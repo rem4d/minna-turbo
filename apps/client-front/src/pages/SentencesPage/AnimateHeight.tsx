@@ -5,11 +5,13 @@ import * as m from "motion/react-client";
 interface AnimateChangeInHeightProps {
   children: React.ReactNode;
   className?: string;
+  duration?: number;
 }
 
 export const AnimateHeight: React.FC<AnimateChangeInHeightProps> = ({
   children,
   className,
+  duration = 0.1,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [height, setHeight] = useState<number | "auto">("auto");
@@ -36,7 +38,7 @@ export const AnimateHeight: React.FC<AnimateChangeInHeightProps> = ({
       className={classNames(className, "overflow-hidden")}
       style={{ height }}
       animate={{ height }}
-      transition={{ duration: 0.1 }}
+      transition={{ duration }}
     >
       <div ref={containerRef}>{children}</div>
     </m.div>

@@ -36,7 +36,7 @@ export default function Dropdown({ items, onOpen }: Props) {
 
   return (
     <DropdownMenu.Root open={open} onOpenChange={onOpenChange}>
-      <DropdownMenu.Trigger className="z-10 inline-flex size-[24px] cursor-pointer items-center justify-center whitespace-nowrap select-none focus-visible:outline-none">
+      <DropdownMenu.Trigger className="z-0 inline-flex size-[24px] cursor-pointer items-center justify-center whitespace-nowrap select-none focus-visible:outline-none">
         <DropdownDotsIcon className="stroke-rolling-stone" />
       </DropdownMenu.Trigger>
 
