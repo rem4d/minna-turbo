@@ -1,0 +1,53 @@
+networks:
+  stage:
+    external: true
+    name: stage
+
+services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx_container
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt/live/kanjiflow.ru-0001/fullchain.pem:/etc/ssl/cert.pem
+      - /etc/letsencrypt/live/kanjiflow.ru-0001/privkey.pem:/etc/ssl/key.pem
+      # - ./nginx-certs/nginx-selfsigned.crt:/etc/ssl/cert.pem
+      # - ./nginx-certs/nginx-selfsigned.key:/etc/ssl/key.pem
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - stage
+
+  frontend:
+    build:
+      context: "./"
+      target: front
+    image: "rem4d/client-front:v1.0"
+    container_name: frontend_container
+    ports:
+      - "9000:3000"
+    environment:
+      - VITE_API_SERVER=https://stage.kanjiflow.ru/api
+    stdin_open: true
+    tty: true
+    networks:
+      - stage
+
+  backend:
+    build:
+      context: "./"
+      target: back
+    image: "rem4d/client-backend:v1.0"
+    container_name: backend_container
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - NODE_ENV=production
+    networks:
+      - stage

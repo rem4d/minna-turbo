@@ -38,3 +38,4 @@ apps/server/src/util/parse
 *.wav
 apps/server/public/**
 @deploy
+out
