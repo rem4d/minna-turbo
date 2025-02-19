@@ -63,8 +63,7 @@ WORKDIR /app
 COPY --from=builder --chown=nodejs:nodejs /app .
 WORKDIR /app/apps/${PROJECT}
 
-RUN mkdir public
-RUN mkdir public/m
+RUN mkdir -p public/m
 
 ARG PORT=8000
 ENV PORT=${PORT}
