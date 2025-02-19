@@ -10,5 +10,4 @@ jobs:
       - name: build image
         run: docker build -t rem4d/client-backend:latest --build-arg PROJECT=client-backend . --target backend
       - name: push image to docker hub
-        run: docker login -u rem4d -p ${{ secrets.DOCKER_HUB_TOKEN }}
-          docker push rem4d/client-backend:latest
+        run: docker login -u rem4d -p ${{ secrets.DOCKER_HUB_TOKEN }} | docker push rem4d/client-backend:latest
