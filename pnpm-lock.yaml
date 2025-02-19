@@ -372,6 +372,9 @@ importers:
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
+      classnames:
+        specifier: ^2.5.1
+        version: 2.5.1
       edge-tts-client:
         specifier: ^1.0.2
         version: 1.0.2

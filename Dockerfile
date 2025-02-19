@@ -1,4 +1,5 @@
 ARG NODE_VERSION=22.12.0
+ARG NGINX_VERSION=1.27.4
 
 # 1. Alpine image
 FROM node:${NODE_VERSION}-alpine AS alpine
@@ -50,8 +51,8 @@ RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm prune --prod --no-optio
 RUN rm -rf ./apps/${PROJECT}/src
 
 
-# 4. Final image
-FROM alpine AS runner
+# 4.1. Final image for backend
+FROM alpine AS backend
 ARG PROJECT
 
 RUN addgroup --system --gid 1001 nodejs
@@ -68,4 +69,19 @@ ENV NODE_ENV=production
 EXPOSE ${PORT}
 
 CMD node dist/index.js
-# CMD ["pnpm", "start"]
+
+# 4.2. Final image for frontend
+FROM nginx:${NGINX_VERSION}-alpine AS frontend
+ARG PROJECT
+
+WORKDIR /usr/share/nginx/
+
+RUN rm -rf html
+RUN mkdir html
+
+WORKDIR /
+
+COPY --from=builder /app/apps/${PROJECT}/dist /usr/share/nginx/html
+COPY --from=builder /app/apps/${PROJECT}/nginx.conf /etc/nginx/conf.d/default.conf
+
+CMD ["nginx", "-g", "daemon off;"]

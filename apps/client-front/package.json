@@ -18,6 +18,7 @@
     "@trpc/react-query": "catalog:",
     "@types/node": "^22.10.2",
     "class-variance-authority": "^0.7.1",
+    "classnames": "^2.5.1",
     "edge-tts-client": "^1.0.2",
     "i": "^0.3.7",
     "motion": "^12.3.1",
