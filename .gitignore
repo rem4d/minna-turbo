@@ -39,3 +39,4 @@ apps/server/src/util/parse
 apps/server/public/**
 @deploy
 out
+*.secret

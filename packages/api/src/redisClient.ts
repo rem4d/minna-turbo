@@ -1,4 +1,3 @@
-export default () => {}; /*
 import * as redis from "redis";
 
 const client = redis.createClient();
@@ -8,6 +7,5 @@ const init = async () => {
   client.on("error", (err) => console.log("Redis Client Error", err));
 };
 
-init();
+void init();
 export default client;
-*/

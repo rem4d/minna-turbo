@@ -4,8 +4,8 @@ import type { Database, Kanji, Sentence } from "@rem4d/db";
 import { shuffle } from "../util/shuffle";
 import { tokenize, analyze } from "@rem4d/tokenizer";
 import type { SupabaseClient } from "@rem4d/db";
-// import type { RedisClientType } from "../trpc";
-// import { dedup } from "../util/dedup";
+import type { RedisClientType } from "../trpc";
+import { dedup } from "../util/dedup";
 
 export const sentenceRouter = router({
   findContainingText: publicProcedure
@@ -88,8 +88,7 @@ export const sentenceRouter = router({
         ids: z.array(z.number()),
       }),
     )
-    .mutation(() => {
-      /*
+    .mutation(async ({ ctx, input }) => {
       const userId = 2234;
       let known: number[] = [];
 
@@ -106,7 +105,6 @@ export const sentenceRouter = router({
         24 * 60 * 60,
         JSON.stringify(newKnown),
       );
-    */
 
       return true;
     }),
@@ -126,16 +124,16 @@ export const sentenceRouter = router({
         shift,
         numberOfUnknownKanji,
         db: ctx.db,
-        // redis: ctx.redis,
+        redis: ctx.redis,
       });
 
       const known: number[] = [];
 
-      // const knownKey = await ctx.redis.get(`known.${userId}`);
+      const knownKey = await ctx.redis.get(`known.${userId}`);
 
-      // if (knownKey) {
-      //   known = JSON.parse(knownKey) as number[];
-      // }
+      if (knownKey) {
+        known = JSON.parse(knownKey) as number[];
+      }
 
       const sentencesFiltered = sentences.filter((s) => !known.includes(s.id));
       const additionalFiltered = additional.filter(
@@ -149,13 +147,13 @@ export const sentenceRouter = router({
       const shuffledS = shuffle(sentencesFiltered).slice(0, 20);
       const shuffledA = shuffle(additionalFiltered).slice(0, 2);
       const shuffled = shuffle(shuffledS.concat(shuffledA));
-      // const newKnown = known.concat(shuffled.map((s) => s.id));
+      const newKnown = known.concat(shuffled.map((s) => s.id));
 
-      // void ctx.redis.setEx(
-      //   `known.${level}-${shift}`,
-      //   60 * 60,
-      //   JSON.stringify(newKnown),
-      // );
+      void ctx.redis.setEx(
+        `known.${level}-${shift}`,
+        60 * 60,
+        JSON.stringify(newKnown),
+      );
 
       return shuffled;
     }),
@@ -282,15 +280,14 @@ const getStatementsForLevel = async ({
   shift,
   numberOfUnknownKanji,
   db,
-  // redis,
+  redis,
 }: {
   level: number;
   shift: number;
   numberOfUnknownKanji: number;
   db: SupabaseClient<Database>;
-  // redis: RedisClientType;
+  redis: RedisClientType;
 }) => {
-  /*
   const cached = await redis.get(`${level}-${shift}`);
 
   if (cached) {
@@ -300,7 +297,6 @@ const getStatementsForLevel = async ({
       sentences: Sentence[];
     };
   }
-  */
 
   const { data: sentences, error } = await db
     .from("sentences")
@@ -369,14 +365,12 @@ const getStatementsForLevel = async ({
       console.log(`No sentences found for : ${kanjiString} `);
     }
 
-    /*
     console.log(`Write cache for key: "${level}-${shift}"`);
     void redis.setEx(
       `${level}-${shift}`,
       24 * 60 * 60, // expire in seconds
       JSON.stringify({ sentences, additional }),
     );
-    */
   }
   return { sentences, additional };
 };
