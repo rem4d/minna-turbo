@@ -63,10 +63,14 @@ WORKDIR /app
 COPY --from=builder --chown=nodejs:nodejs /app .
 WORKDIR /app/apps/${PROJECT}
 
+RUN mkdir public
+RUN mkdir public/m
+
 ARG PORT=8000
 ENV PORT=${PORT}
 ENV NODE_ENV=production
 EXPOSE ${PORT}
+
 
 CMD node dist/index.js
 
