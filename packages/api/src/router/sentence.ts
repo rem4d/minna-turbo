@@ -127,7 +127,7 @@ export const sentenceRouter = router({
         redis: ctx.redis,
       });
 
-      const known: number[] = [];
+      let known: number[] = [];
 
       const knownKey = await ctx.redis.get(`known.${userId}`);
 
@@ -171,7 +171,7 @@ export const sentenceRouter = router({
         shift,
         numberOfUnknownKanji,
         db: ctx.db,
-        // redis: ctx.redis,
+        redis: ctx.redis,
       });
       return { sentences, additional };
     }),

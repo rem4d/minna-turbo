@@ -1,14 +1,15 @@
 {
 	"extends": "@rem4d/typescript-config/tsconfig.package.json",
-	"exclude": ["node_modules", "dist"],
+	"exclude": ["node_modules"],
   "compilerOptions": {
+    // CANT USE WITH PATH!
+    // https://turbo.build/repo/docs/core-concepts/internal-packages#just-in-time-packages
     // "baseUrl": ".",
     // "paths": {
     //   "@/*": ["./src/*"]
     // },
 		// "jsx": "react-jsx",
 		"noEmit": false,
-		"outDir": "${configDir}/dist",
 		"lib": ["es2023", "DOM"]
   },
 }
