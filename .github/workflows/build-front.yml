@@ -1,5 +1,10 @@
 name: Build front
-on: [workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - apps/client-front/src/**
 
 jobs:
   publish_front:
