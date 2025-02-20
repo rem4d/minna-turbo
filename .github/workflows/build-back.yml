@@ -1,5 +1,14 @@
 name: Build back
-on: [workflow_dispatch]
+# on: [workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - apps/client-backend/**
+      - packages/api/**
+      - packages/db/**
+      - packages/tokenizer/**
 
 jobs:
   publish_back:

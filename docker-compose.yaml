@@ -28,6 +28,8 @@ services:
       args:
         PROJECT: client-backend
     image: "rem4d/client-backend:stage"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     container_name: backend
     depends_on:
       - redis_db
