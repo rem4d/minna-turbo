@@ -1,11 +1,18 @@
 services:
+  watchtower:
+    image: containrrr/watchtower
+    command: --label-enable --interval 30
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   frontend:
     build:
       context: "./"
       target: frontend
       args:
         PROJECT: client-front
-    image: "rem4d/client-front:1.0"
+    image: "rem4d/client-front:stage"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     container_name: frontend
     ports:
       - 3000:3000
@@ -20,7 +27,7 @@ services:
       target: backend
       args:
         PROJECT: client-backend
-    image: "rem4d/client-backend:1.0"
+    image: "rem4d/client-backend:stage"
     container_name: backend
     depends_on:
       - redis_db
