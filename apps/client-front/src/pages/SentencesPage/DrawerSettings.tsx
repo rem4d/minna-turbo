@@ -29,7 +29,6 @@ export default function DrawerSettings({ open, onOpenChange }: Props) {
       onOpenChange(false);
     }
   };
-
   return (
     <Drawer
       open={open}
