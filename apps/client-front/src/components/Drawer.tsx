@@ -40,7 +40,7 @@ export default function _Drawer({
                 </div>
               )}
 
-              <Drawer.Title className="absolute top-6 justify-self-center text-sm font-medium text-black">
+              <Drawer.Title className="absolute top-6 left-1/2 -translate-x-1/2 justify-self-center text-sm font-medium whitespace-nowrap text-black">
                 {title}
               </Drawer.Title>
             </div>
