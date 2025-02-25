@@ -5,7 +5,6 @@ import { api } from "@/utils/api";
 
 export const AllKanjiPage: FC = () => {
   const { data } = api.kanji.all.useQuery();
-  console.log(data);
 
   return (
     <Page back sa="content">

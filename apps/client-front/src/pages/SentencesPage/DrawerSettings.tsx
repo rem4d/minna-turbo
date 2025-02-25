@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import Button from "@/components/Button";
 import Drawer from "@/components/Drawer";
 import { List, ListItem } from "@/components/List";
+import { api } from "@/utils/api";
+import hapticFeedback from "@/utils/hapticFeedback";
+import { twMerge } from "tailwind-merge";
 
 import { AnimateHeight } from "./AnimateHeight";
 
@@ -12,6 +15,13 @@ interface Props {
 
 export default function DrawerSettings({ open, onOpenChange }: Props) {
   const [view, setView] = useState<"idle" | "choose">("idle");
+  const [selectedId, setSelectedId] = useState<null | number>(null);
+  const { data: kanjis } = api.kanji.all.useQuery();
+
+  const onKSelect = (id: number) => {
+    setSelectedId(id);
+    hapticFeedback("light");
+  };
 
   return (
     <Drawer
@@ -22,9 +32,9 @@ export default function DrawerSettings({ open, onOpenChange }: Props) {
       back={view === "choose"}
     >
       <AnimateHeight duration={0.4}>
-        <div className="bg-super-silver relative flex flex-col px-2">
+        <div className="bg-super-silver relative flex flex-col">
           {view === "idle" && (
-            <>
+            <div className="px-4 pb-6">
               <div className="mb-[30vh] w-full">
                 <List title="Последний выученный кандзи">
                   <ListItem
@@ -42,59 +52,46 @@ export default function DrawerSettings({ open, onOpenChange }: Props) {
                 </List>
               </div>
               <Button className="w-full">Сохранить</Button>
-            </>
+            </div>
           )}
           {view === "choose" && (
-            <>
-              <p className="text-gray-600">
-                Nobody tells this to people who are beginners, I wish someone
-                told me. All of us who do creative work, we get into it because
-                we have good taste.
-              </p>
-              <p className="text-gray-600">
-                But there is this gap. For the first couple years you make
-                stuff, it’s just not that good. It’s trying to be good, it has
-                potential, but it’s not. But your taste, the thing that got you
-                into the game, is still killer. And your taste is why your work
-                disappoints you. A lot of people never get past this phase, they
-                quit.{" "}
-              </p>
-              <p className="text-gray-600">
-                But there is this gap. For the first couple years you make
-                stuff, it’s just not that good. It’s trying to be good, it has
-                potential, but it’s not. But your taste, the thing that got you
-                into the game, is still killer. And your taste is why your work
-                disappoints you. A lot of people never get past this phase, they
-                quit.{" "}
-              </p>
-              <p className="text-gray-600">
-                But there is this gap. For the first couple years you make
-                stuff, it’s just not that good. It’s trying to be good, it has
-                potential, but it’s not. But your taste, the thing that got you
-                into the game, is still killer. And your taste is why your work
-                disappoints you. A lot of people never get past this phase, they
-                quit.{" "}
-              </p>
-              <p className="text-gray-600">
-                Most people I know who do interesting, creative work went
-                through years of this. We know our work doesn’t have this
-                special thing that we want it to have. We all go through this.
-                And if you are just starting out or you are still in this phase,
-                you gotta know its normal and the most important thing you can
-                do is do a lot of work
-              </p>
-              <p className="text-gray-600">
-                Put yourself on a deadline so that every week you will finish
-                one story. It is only by going through a volume of work that you
-                will close that gap, and your work will be as good as your
-                ambitions. And I took longer to figure out how to do this than
-                anyone I’ve ever met. It’s gonna take awhile. It’s normal to
-                take awhile. You’ve just gotta fight your way through.
-              </p>
-            </>
+            <div className="auto-rows-1fr grid grid-cols-9 pb-2">
+              {kanjis?.map((k) => (
+                <KCard
+                  key={k.id}
+                  id={k.id}
+                  onClick={onKSelect}
+                  kanji={k.kanji}
+                  selected={k.id === selectedId}
+                />
+              ))}
+            </div>
           )}
         </div>
       </AnimateHeight>
     </Drawer>
   );
 }
+
+interface KCardProps {
+  id: number;
+  kanji: string;
+  selected: boolean;
+  onClick: (id: number) => void;
+}
+
+const KCard: FC<KCardProps> = ({ id, kanji, selected, onClick }) => {
+  return (
+    <div
+      onClick={() => onClick(id)}
+      className={twMerge(
+        "relative flex aspect-square h-full w-full flex-col justify-center text-black",
+        selected && "bg-outer-space rounded-md text-white",
+      )}
+    >
+      <div className="font-hiragino text-center text-[28px] font-bold">
+        {kanji}
+      </div>
+    </div>
+  );
+};

@@ -26,9 +26,9 @@ export default function _Drawer({
       container={element}
     >
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 bg-black/40" />
-        <Drawer.Content className="fixed right-0 bottom-0 left-0 mt-24 flex h-fit flex-col rounded-t-[10px] outline-none">
-          <div className="bg-super-silver flex-1 rounded-t-[10px] p-4 pt-2">
+        <Drawer.Overlay className="absolute inset-0 bg-black/40" />
+        <Drawer.Content className="absolute right-0 bottom-0 left-0 mt-24 flex h-fit flex-col rounded-t-[10px] outline-none">
+          <div className="bg-super-silver flex-1 rounded-t-[10px] pt-2 pt-4">
             <div
               aria-hidden
               className="bg-gray-chateau mx-auto mb-4 h-1.5 w-12 flex-shrink-0 rounded-full"
@@ -47,7 +47,7 @@ export default function _Drawer({
                 {title}
               </Drawer.Title>
             </div>
-            <div className="mx-auto max-h-[80vh] max-w-md overflow-y-scroll">
+            <div className="no-scroll mx-auto max-h-[88vh] max-w-md overflow-y-scroll">
               {children}
             </div>
           </div>
