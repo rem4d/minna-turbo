@@ -4,9 +4,9 @@ import Drawer from "@/components/Drawer";
 import { List, ListItem } from "@/components/List";
 import { api } from "@/utils/api";
 import hapticFeedback from "@/utils/hapticFeedback";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-client";
 import { twMerge } from "tailwind-merge";
-
-import { AnimateHeight } from "./AnimateHeight";
 
 interface Props {
   open: boolean;
@@ -23,19 +23,34 @@ export default function DrawerSettings({ open, onOpenChange }: Props) {
     hapticFeedback("light");
   };
 
+  const onSubmit = () => {
+    const found = kanjis?.find((k) => k.id === selectedId);
+    if (found) {
+      onOpenChange(false);
+    }
+  };
+
   return (
     <Drawer
       open={open}
       onOpenChange={onOpenChange}
       onBackClick={() => setView("idle")}
-      title={view === "choose" ? "Выберите последний изученный кандзи" : null}
+      title={view === "choose" ? "Выберите последний изученный кандзи" : ""}
       back={view === "choose"}
     >
-      <AnimateHeight duration={0.4}>
-        <div className="bg-super-silver relative flex flex-col">
+      <m.div
+        className="bg-super-silver relative flex flex-col"
+        initial="idle"
+        animate={view === "choose" ? "choose" : "idle"}
+        variants={parentVariant}
+      >
+        <AnimatePresence mode="wait">
           {view === "idle" && (
-            <div className="px-4 pb-6">
-              <div className="mb-[30vh] w-full">
+            <m.div
+              key="c1"
+              className="max-h-50vh flex h-full flex-col justify-between px-4 pb-6"
+            >
+              <div className="mb-4 w-full">
                 <List title="Последний выученный кандзи">
                   <ListItem
                     icon={<div className="text-[36px]">水</div>}
@@ -51,11 +66,16 @@ export default function DrawerSettings({ open, onOpenChange }: Props) {
                   />
                 </List>
               </div>
-              <Button className="w-full">Сохранить</Button>
-            </div>
+              <Button className="w-full" onClick={onSubmit}>
+                Сохранить
+              </Button>
+            </m.div>
           )}
           {view === "choose" && (
-            <div className="auto-rows-1fr grid grid-cols-9 pb-2">
+            <m.div
+              key="c2"
+              className="auto-rows-1fr mt-0 grid grid-cols-9 pb-2"
+            >
               {kanjis?.map((k) => (
                 <KCard
                   key={k.id}
@@ -65,10 +85,10 @@ export default function DrawerSettings({ open, onOpenChange }: Props) {
                   selected={k.id === selectedId}
                 />
               ))}
-            </div>
+            </m.div>
           )}
-        </div>
-      </AnimateHeight>
+        </AnimatePresence>
+      </m.div>
     </Drawer>
   );
 }
@@ -82,7 +102,9 @@ interface KCardProps {
 
 const KCard: FC<KCardProps> = ({ id, kanji, selected, onClick }) => {
   return (
-    <div
+    <m.div
+      initial={{ scale: 1 }}
+      whileTap={{ scale: 1.1 }}
       onClick={() => onClick(id)}
       className={twMerge(
         "relative flex aspect-square h-full w-full flex-col justify-center text-black",
@@ -92,6 +114,22 @@ const KCard: FC<KCardProps> = ({ id, kanji, selected, onClick }) => {
       <div className="font-hiragino text-center text-[28px] font-bold">
         {kanji}
       </div>
-    </div>
+    </m.div>
   );
+};
+
+const duration = 0.4;
+const parentVariant = {
+  idle: {
+    height: "50vh",
+    transition: {
+      duration,
+    },
+  },
+  choose: {
+    height: "100vh",
+    transition: {
+      duration,
+    },
+  },
 };

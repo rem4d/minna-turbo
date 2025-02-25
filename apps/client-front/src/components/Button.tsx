@@ -22,15 +22,20 @@ interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   className?: string;
+  onClick?: () => void;
 }
 
 export const Button: FC<PropsWithChildren<ButtonProps>> = ({
   children,
   variant,
   className,
+  onClick,
 }) => {
   return (
-    <button className={twMerge(buttonVariants({ variant, className }))}>
+    <button
+      className={twMerge(buttonVariants({ variant, className }))}
+      onClick={onClick}
+    >
       {children}
     </button>
   );
