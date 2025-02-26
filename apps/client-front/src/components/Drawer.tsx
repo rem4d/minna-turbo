@@ -7,6 +7,7 @@ interface Props {
   back?: boolean;
   onBackClick?: () => void;
   children: React.ReactNode;
+  noContainer?: boolean;
   title?: string | null;
 }
 
@@ -17,13 +18,15 @@ export default function _Drawer({
   children,
   title = null,
   back = false,
+  noContainer = false,
 }: Props) {
   const element = document.getElementById("page");
+  const props = noContainer ? {} : { container: element };
   return (
     <Drawer.Root
       open={open}
       onOpenChange={() => onOpenChange(!open)}
-      container={element}
+      {...props}
     >
       <Drawer.Portal>
         <Drawer.Overlay className="absolute inset-0 bg-black/40" />

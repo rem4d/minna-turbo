@@ -42,7 +42,7 @@ export const AllKanjiPage: FC = () => {
           ))}
         </div>
       </div>
-      <Drawer open={open} onOpenChange={setOpen}>
+      <Drawer open={open} onOpenChange={setOpen} noContainer>
         <div className="min-h-[50vh] bg-white px-4 py-4 pb-(--page-offset-bottom)">
           {selectedK && (
             <div className="mb-4 flex space-x-4">
