@@ -45,13 +45,13 @@ export const AllKanjiPage: FC = () => {
       <Drawer open={open} onOpenChange={setOpen}>
         <div className="min-h-[50vh] bg-white px-4 py-4 pb-(--page-offset-bottom)">
           {selectedK && (
-            <div className="flex space-x-4">
+            <div className="mb-4 flex space-x-4">
               <div className="flex aspect-square h-[96px] justify-center rounded-lg border border-black/10 bg-white drop-shadow-[3px_3px_0px_rgba(41,41,41,0.1)]">
                 <div className="font-digi text-[60px] text-[#000]">
                   {selectedK.kanji}
                 </div>
               </div>
-              <div className="mb-4 flex flex-col items-start space-y-2">
+              <div className="flex flex-col items-start space-y-2">
                 <span className="text-lg leading-6 font-bold">
                   {selectedK.means}
                 </span>
