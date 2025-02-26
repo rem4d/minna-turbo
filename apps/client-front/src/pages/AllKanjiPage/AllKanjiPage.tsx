@@ -7,7 +7,7 @@ export const AllKanjiPage: FC = () => {
   const { data } = api.kanji.all.useQuery();
 
   return (
-    <Page back sa="content">
+    <Page back>
       <div className="flex flex-col space-y-8 px-4">
         <SectionHeader>Все кандзи</SectionHeader>
         <div className="grid grid-cols-4 gap-3">

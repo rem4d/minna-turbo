@@ -75,10 +75,10 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     >
       <Accordion.Item
         value="1"
-        className="bg-mine-shaft mt-[1px] overflow-hidden rounded-[24px] px-4 py-3 text-white/90"
+        className="bg-mine-shaft mt-[1px] overflow-hidden rounded-tl-[24px] rounded-tr-[24px] text-white/90"
       >
         <Accordion.Header>
-          <Accordion.Trigger className="my-2 flex w-full items-center justify-between">
+          <Accordion.Trigger className="my-2 flex w-full items-center justify-between px-4 py-3">
             <span className="font-medium">Перевод</span>
             <ArrowIcon
               className={twMerge(
@@ -90,11 +90,12 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
           </Accordion.Trigger>
         </Accordion.Header>
         <Accordion.Content
-          className={
+          className={twMerge(
+            "px-4 pb-2",
             val.includes("1")
               ? "animate-accordion-down"
-              : "animate-accordion-up"
-          }
+              : "animate-accordion-up",
+          )}
         >
           <AnimateHeight>
             <div>
@@ -106,13 +107,13 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
 
       <Accordion.Item
         className={twMerge(
-          "rounded-tl-[24px] rounded-tr-[24px] bg-white px-4 py-3",
+          "rounded-tl-[24px] rounded-tr-[24px] bg-white",
           "pb-[calc(var(--page-offset-bottom)+20px)]",
         )}
         value="2"
       >
         <Accordion.Header>
-          <Accordion.Trigger className="my-2 flex w-full items-center justify-between">
+          <Accordion.Trigger className="my-2 flex w-full items-center justify-between px-4 py-3">
             <span className="font-medium">Словарь</span>
             <ArrowIcon
               className={twMerge(
@@ -124,14 +125,15 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
           </Accordion.Trigger>
         </Accordion.Header>
         <Accordion.Content
-          className={
+          className={twMerge(
+            "px-4",
             val.includes("2")
               ? "animate-accordion-down"
-              : "animate-accordion-up"
-          }
+              : "animate-accordion-up",
+          )}
         >
           <AnimateHeight>
-            <div className="max-h-[40vh] w-full overflow-y-scroll p-2">
+            <div className="max-h-[40vh] w-full overflow-y-scroll py-2">
               <div className="relative">
                 {loadingMembers ? (
                   members && members.length > 0 ? (
