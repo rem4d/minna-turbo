@@ -172,10 +172,10 @@ export const SentencesPage: FC = () => {
   };
 
   const disableRightNav =
-    (list && (activeIndex === list.length - 1 || list.length === 0)) || !list;
+    (list && (activeIndex === list.length - 1 || list.length === 0)) ?? !list;
 
   return (
-    <Page back sa="notch">
+    <Page back>
       <div className="relative h-full overflow-hidden" id="page">
         <div
           className="text-scorpion absolute top-2 left-1/2 mb-3 flex h-4 -translate-x-1/2 justify-center text-sm"
@@ -185,7 +185,7 @@ export const SentencesPage: FC = () => {
         >
           {user ? <>Ваш уровень: {user.level}</> : <></>}
         </div>
-        <div className="mt-12">
+        <div className={isMobile ? "mt-16" : "mt-10"}>
           {/* nav buttons */}
           <div className="mb-4 flex justify-between px-4">
             <div

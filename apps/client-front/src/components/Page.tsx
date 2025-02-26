@@ -8,14 +8,12 @@ import { twMerge } from "tailwind-merge";
 interface PageProps {
   back?: boolean;
   footer?: boolean;
-  sa?: "content" | "notch";
 }
 
 export function Page({
   children,
   back = false,
   footer = false,
-  sa = "content",
 }: PropsWithChildren<PageProps>) {
   const navigate = useNavigate();
 
@@ -29,13 +27,13 @@ export function Page({
     backButton.hide();
   }, [back]);
 
+  // sa === "content" && "pt-(--tg-viewport-content-safe-area-inset-top)",
   return (
     <div
       className={twMerge(
         "h-full overflow-x-hidden overflow-y-auto",
+        "pt-(--tg-viewport-safe-area-inset-top)",
         footer && "h-[calc(100%-100px)]",
-        sa === "content" && "pt-(--tg-viewport-content-safe-area-inset-top)",
-        sa === "notch" && "pt-(--tg-viewport-safe-area-inset-top)",
       )}
     >
       {children}
