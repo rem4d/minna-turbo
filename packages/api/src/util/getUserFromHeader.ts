@@ -36,8 +36,6 @@ export function getUserFromHeader(authHeader?: string) {
   }
 
   try {
-    console.log("___________VALIDATE:");
-    console.log(BOT_TOKEN);
     validate(initData, BOT_TOKEN);
     const user = {
       id: tgUser.id,
