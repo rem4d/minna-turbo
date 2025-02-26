@@ -30,6 +30,7 @@ export function Page({
   // sa === "content" && "pt-(--tg-viewport-content-safe-area-inset-top)",
   return (
     <div
+      id="page"
       className={twMerge(
         "h-full overflow-x-hidden overflow-y-auto",
         "pt-(--tg-viewport-safe-area-inset-top)",

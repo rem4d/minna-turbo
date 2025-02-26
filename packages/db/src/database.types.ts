@@ -426,6 +426,17 @@ export type Database = {
           vox_speaker_id: number | null
         }[]
       }
+      kanji_examples: {
+        Args: {
+          kanji_input: string
+        }
+        Returns: {
+          cnt: number
+          basic_form: string
+          means: string
+          reading: string
+        }[]
+      }
       stat_kanji_list: {
         Args: {
           shift_input: number

@@ -42,6 +42,7 @@ const Card: FC<CardProps> = ({ title, desc, to, color }) => {
         "border-heatheredGray/40 relative flex h-[167px] w-full flex-col space-y-4 rounded-xl border p-4 pt-(--page-offset-top-full)",
         color === "cyan" ? "bg-polar" : "bg-half-dutch-white",
       )}
+      onClick={handleButtonClick}
     >
       <div className="flex flex-col space-y-2">
         <div className="text-2xl font-semibold text-black">{title}</div>
@@ -53,7 +54,6 @@ const Card: FC<CardProps> = ({ title, desc, to, color }) => {
           color === "yellow" && "bg-supernova text-black",
           color === "cyan" && "bg-scooter text-white",
         )}
-        onClick={handleButtonClick}
       >
         Начать
       </button>

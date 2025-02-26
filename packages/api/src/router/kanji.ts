@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 
 export const kanjiRouter = router({
@@ -13,4 +14,21 @@ export const kanjiRouter = router({
 
     return data;
   }),
+  examples: publicProcedure
+    .input(
+      z.object({
+        k: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { data, error } = await ctx.db
+        .rpc("kanji_examples", {
+          kanji_input: input.k,
+        })
+        .limit(8);
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data;
+    }),
 });

@@ -177,7 +177,7 @@ export const SentencesPage: FC = () => {
 
   return (
     <Page back>
-      <div className="relative h-full overflow-hidden" id="page">
+      <div className="relative h-full overflow-hidden">
         <div
           className="text-scorpion absolute top-2 left-1/2 mb-3 flex h-4 -translate-x-1/2 justify-center text-sm"
           style={{
