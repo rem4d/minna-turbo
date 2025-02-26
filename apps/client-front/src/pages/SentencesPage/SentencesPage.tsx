@@ -169,6 +169,7 @@ export const SentencesPage: FC = () => {
 
   const onChangeLevel = (newLevel: number) => {
     void updateLevelMuatation.mutate(newLevel);
+    hapticFeedback("medium");
   };
 
   const disableRightNav =
