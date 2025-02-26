@@ -16,7 +16,6 @@ try {
     startParam: string;
     fullscreen: boolean;
   };
-  console.log(lp);
 
   // Configure all application dependencies.
   init({
@@ -32,7 +31,6 @@ try {
   }
 } catch (err) {
   if (root) {
-    console.log(err);
     createRoot(root).render(
       <div>
         "You are using too old Telegram client to run this application"

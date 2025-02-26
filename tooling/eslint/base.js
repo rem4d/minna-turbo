@@ -56,8 +56,12 @@ export default tseslint.config(
     rules: {
       // ...turboPlugin.configs.recommended.rules,
       "@typescript-eslint/no-unused-vars": [
-        "error",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrors: "none",
+        },
       ],
       "@typescript-eslint/consistent-type-imports": [
         "warn",

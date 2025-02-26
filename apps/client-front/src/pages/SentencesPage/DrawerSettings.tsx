@@ -1,4 +1,5 @@
-import { FC, useState } from "react";
+import type { FC } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import Drawer from "@/components/Drawer";
 import { List, ListItem } from "@/components/List";
@@ -11,21 +12,33 @@ import { twMerge } from "tailwind-merge";
 interface Props {
   open: boolean;
   onOpenChange: (o: boolean) => void;
+  onChangeLevel: (id: number) => void;
+  level: number;
 }
 
-export default function DrawerSettings({ open, onOpenChange }: Props) {
+export default function DrawerSettings({
+  open,
+  onOpenChange,
+  onChangeLevel,
+  level,
+}: Props) {
   const [view, setView] = useState<"idle" | "choose">("idle");
-  const [selectedId, setSelectedId] = useState<null | number>(null);
+  const [selectedLevel, setSelectedLevel] = useState<number>(level);
+
   const { data: kanjis } = api.kanji.all.useQuery();
+  const currentK = kanjis?.find((k) => k.position === selectedLevel);
 
   const onKSelect = (id: number) => {
-    setSelectedId(id);
-    hapticFeedback("light");
+    const found = kanjis?.find((k) => k.id === id);
+    if (found) {
+      setSelectedLevel(found.position);
+      hapticFeedback("light");
+    }
   };
 
   const onSubmit = () => {
-    const found = kanjis?.find((k) => k.id === selectedId);
-    if (found) {
+    if (selectedLevel) {
+      onChangeLevel(selectedLevel);
       onOpenChange(false);
     }
   };
@@ -52,7 +65,11 @@ export default function DrawerSettings({ open, onOpenChange }: Props) {
               <div className="mb-4 w-full">
                 <List title="Последний выученный кандзи">
                   <ListItem
-                    icon={<div className="text-[36px]">水</div>}
+                    icon={
+                      currentK && (
+                        <div className="text-[36px]">{currentK.kanji}</div>
+                      )
+                    }
                     iconRight={
                       <button
                         className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent"
@@ -61,7 +78,7 @@ export default function DrawerSettings({ open, onOpenChange }: Props) {
                         Изменить
                       </button>
                     }
-                    sub="98 уровень"
+                    sub={`${currentK?.position} уровень`}
                   />
                 </List>
               </div>
@@ -81,7 +98,7 @@ export default function DrawerSettings({ open, onOpenChange }: Props) {
                   id={k.id}
                   onClick={onKSelect}
                   kanji={k.kanji}
-                  selected={k.id === selectedId}
+                  selected={k.position === selectedLevel}
                 />
               ))}
             </m.div>

@@ -40,3 +40,4 @@ apps/server/public/**
 @deploy
 out
 *.secret
+*.rdb

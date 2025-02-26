@@ -1,11 +1,12 @@
 import { z } from "zod";
-import { publicProcedure, router } from "../trpc";
+import { authedProcedure, publicProcedure, router } from "../trpc";
 import type { Database, Kanji, Sentence } from "@rem4d/db";
 import { shuffle } from "../util/shuffle";
 import { tokenize, analyze } from "@rem4d/tokenizer";
 import type { SupabaseClient } from "@rem4d/db";
 import type { RedisClientType } from "../trpc";
 import { dedup } from "../util/dedup";
+import { getUserByTelegramId } from "./util/getUserByTelegramId";
 
 export const sentenceRouter = router({
   findContainingText: publicProcedure
@@ -108,55 +109,55 @@ export const sentenceRouter = router({
 
       return true;
     }),
-  getRandomized: publicProcedure
-    .input(
-      z.object({
-        level: z.number(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const shift = 60;
-      const level = input.level;
-      const userId = 2234;
-      const numberOfUnknownKanji = 3;
-      const { sentences, additional } = await getStatementsForLevel({
-        level,
-        shift,
-        numberOfUnknownKanji,
-        db: ctx.db,
-        redis: ctx.redis,
-      });
+  getRandomized: authedProcedure.query(async ({ ctx }) => {
+    const shift = 60;
+    const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
 
-      let known: number[] = [];
+    if (!storedUser) {
+      return [];
+    }
 
-      const knownKey = await ctx.redis.get(`known.${userId}`);
+    const level = storedUser.level;
+    const userId = storedUser.id;
+    console.log(`Getting sentences for user with level = `, level);
 
-      if (knownKey) {
-        known = JSON.parse(knownKey) as number[];
-      }
+    const numberOfUnknownKanji = 3;
+    const { sentences, additional } = await getStatementsForLevel({
+      level,
+      shift,
+      numberOfUnknownKanji,
+      db: ctx.db,
+      redis: ctx.redis,
+    });
 
-      const sentencesFiltered = sentences.filter((s) => !known.includes(s.id));
-      const additionalFiltered = additional.filter(
-        (s) => !known.includes(s.id),
-      );
+    let known: number[] = [];
 
-      console.log(
-        `Sentences: ${sentencesFiltered.length}, additional: ${additionalFiltered.length}`,
-      );
+    const knownKey = await ctx.redis.get(`known.${userId}`);
 
-      const shuffledS = shuffle(sentencesFiltered).slice(0, 20);
-      const shuffledA = shuffle(additionalFiltered).slice(0, 2);
-      const shuffled = shuffle(shuffledS.concat(shuffledA));
-      const newKnown = known.concat(shuffled.map((s) => s.id));
+    if (knownKey) {
+      known = JSON.parse(knownKey) as number[];
+    }
 
-      void ctx.redis.setEx(
-        `known.${level}-${shift}`,
-        60 * 60,
-        JSON.stringify(newKnown),
-      );
+    const sentencesFiltered = sentences.filter((s) => !known.includes(s.id));
+    const additionalFiltered = additional.filter((s) => !known.includes(s.id));
 
-      return shuffled;
-    }),
+    console.log(
+      `Sentences: ${sentencesFiltered.length}, additional: ${additionalFiltered.length}`,
+    );
+
+    const shuffledS = shuffle(sentencesFiltered).slice(0, 20);
+    const shuffledA = shuffle(additionalFiltered).slice(0, 2);
+    const shuffled = shuffle(shuffledS.concat(shuffledA));
+    const newKnown = known.concat(shuffled.map((s) => s.id));
+
+    void ctx.redis.setEx(
+      `known.${level}-${shift}`,
+      60 * 60,
+      JSON.stringify(newKnown),
+    );
+
+    return shuffled;
+  }),
   getSentencesForLevel: publicProcedure
     .input(
       z.object({
@@ -190,11 +191,9 @@ export const sentenceRouter = router({
       if (error) {
         throw new Error(error.message);
       }
-      if (kanjis) {
-        kanjis.forEach((d) => {
-          allKanjiMap.set(d.kanji, d);
-        });
-      }
+      kanjis.forEach((d) => {
+        allKanjiMap.set(d.kanji, d);
+      });
       const result = await analyze(input, allKanjiMap);
       const params = {
         // new fields
@@ -302,12 +301,10 @@ const getStatementsForLevel = async ({
     .from("sentences")
     .select()
     .lte("level", level)
-    .eq("source", "source1")
-    .gt("level", 48)
-    .lt("level", 98)
+    // .eq("source", "source1")
+    // .gt("level", 48)
+    // .lt("level", 98)
     .lte("unknown_kanji_number", numberOfUnknownKanji);
-  // .gte("level", clamp(level - shift, 0, level))
-  // .order("level", { ascending: false });
 
   if (error) {
     throw new Error(error.message);

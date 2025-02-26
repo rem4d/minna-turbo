@@ -2,6 +2,7 @@ import type { AppRouter } from "@rem4d/api";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { retrieveLaunchParams } from "@telegram-apps/sdk-react";
 import { httpBatchLink, loggerLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 
@@ -24,6 +25,8 @@ const queryClient = new QueryClient({
  * Use only in _app.tsx
  */
 export function TRPCProvider(props: { children: React.ReactNode }) {
+  const { initDataRaw } = retrieveLaunchParams();
+
   const [trpcClient] = useState(() =>
     api.createClient({
       links: [
@@ -39,6 +42,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
           headers() {
             const headers = new Map<string, string>();
             headers.set("x-trpc-source", "client");
+            headers.set("Authorization", `tma ${initDataRaw}`);
 
             return Object.fromEntries(headers);
           },

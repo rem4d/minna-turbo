@@ -8,7 +8,7 @@ import SoundPauseIcon from "@/assets/icons/pause.svg?react";
 import SoundIcon from "@/assets/icons/sound.svg?react";
 import Dropdown from "@/components/Dropdown";
 import { Page } from "@/components/Page";
-import Spinner from "@/components/Spinner";
+import Spinner, { SpinnerBig } from "@/components/Spinner";
 import Toast from "@/components/Toast";
 import { useTtsMutation } from "@/rq/useTtsMutation";
 import { api } from "@/utils/api";
@@ -26,9 +26,12 @@ export const SentencesPage: FC = () => {
   const [showFurigana, setShowFurigana] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [blobSrc, setBlobSrc] = useState("");
+  const [blobSrc, setBlobSrc] = useState<string | undefined>(undefined);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
-  const [toastOpen, setToastOpen] = useState(false);
+  const [toastData, setToastOpen] = useState({
+    open: false,
+    text: "",
+  });
 
   const [favorites, setFavorites] = useLocalStorage<Sentence[]>(
     "kic:favorites",
@@ -38,12 +41,28 @@ export const SentencesPage: FC = () => {
   const lp = useLaunchParams();
   const isMobile = !lp.platform.includes("desktop");
 
-  const { data: list, isLoading: loadingSentence } =
-    api.sentence.getRandomized.useQuery({
-      level: 96,
-    });
+  const utils = api.useUtils();
 
-  const sentence = list?.[activeIndex];
+  const { data: list, isLoading: loadingSentences } =
+    api.sentence.getRandomized.useQuery(undefined);
+
+  const { data: user, isLoading: loadingUser } = api.user.info.useQuery();
+
+  const updateLevelMuatation = api.user.updateLevel.useMutation({
+    onSuccess() {
+      void utils.sentence.getRandomized.reset();
+      // void utils.sentence.getRandomized.invalidate();
+      void utils.user.info.reset();
+    },
+  });
+  // const updateMeaningMutation = api.member.updateMeaning.useMutation({
+  //   onSuccess() {
+  //     void utils.member.membesByPos.invalidate();
+  //   },
+  // });
+  // const change
+
+  const sentence = list?.[activeIndex] ?? null;
   // const hasCharacter = !!sentence?.vox_speaker_id;
 
   const { mutateAsync: ttsMutate, isPending: ttsLoading } = useTtsMutation({
@@ -53,8 +72,8 @@ export const SentencesPage: FC = () => {
   useEffect(() => {
     setShowFurigana(false);
     setIsPlaying(false);
-    setBlobSrc("");
-  }, [sentence?.id]);
+    setBlobSrc(undefined);
+  }, [sentence]);
 
   useEffect(() => {
     if (blobSrc) {
@@ -115,14 +134,22 @@ export const SentencesPage: FC = () => {
     hapticFeedback("light");
   };
 
+  const favIndex = sentence
+    ? favorites.findIndex((e) => e.id === sentence.id)
+    : -1;
+
   const dropdownItems = [
     {
-      title: "Добавить в избранное",
+      title: favIndex === -1 ? "Добавить в избранное" : "Убрать из избранного",
       onClick() {
         if (sentence) {
-          setToastOpen(true);
-
-          // setFavorites(favorites.concat(sentence));
+          if (favIndex === -1) {
+            setFavorites(favorites.concat(sentence));
+            setToastOpen({ open: true, text: "Фраза добавлена в избранное." });
+          } else {
+            setFavorites(favorites.toSpliced(favIndex, 1));
+            setToastOpen({ open: true, text: "Фраза удалена из избранного." });
+          }
         }
       },
     },
@@ -140,24 +167,31 @@ export const SentencesPage: FC = () => {
     },
   ];
 
+  const onChangeLevel = (newLevel: number) => {
+    void updateLevelMuatation.mutate(newLevel);
+  };
+
+  const disableRightNav =
+    (list && (activeIndex === list.length - 1 || list.length === 0)) || !list;
+
   return (
     <Page back sa="notch">
       <div className="relative h-full overflow-hidden" id="page">
         <div
-          className={"text-scorpion mb-3 flex justify-center text-sm"}
+          className="text-scorpion absolute top-2 left-1/2 mb-3 flex h-4 -translate-x-1/2 justify-center text-sm"
           style={{
             paddingTop: isMobile ? 16 : 0,
           }}
         >
-          Ваш уровень: 12
+          {user ? <>Ваш уровень: {user.level}</> : <></>}
         </div>
-        <div className="mt-8">
+        <div className="mt-12">
           {/* nav buttons */}
           <div className="mb-4 flex justify-between px-4">
             <div
               className={twMerge(
                 "relative size-[30px] cursor-pointer",
-                activeIndex === 0 && "pointer-events-none opacity-50",
+                activeIndex === 0 && "pointer-events-none opacity-40",
               )}
               onClick={handlePrevClick}
             >
@@ -183,13 +217,21 @@ export const SentencesPage: FC = () => {
               <Dropdown items={dropdownItems} onOpen={onSettingsOpen} />
             </div>
             <div
-              className="relative size-[30px] cursor-pointer"
+              className={twMerge(
+                "relative size-[30px] cursor-pointer",
+                disableRightNav && "pointer-events-none opacity-40",
+              )}
               onClick={handleNextClick}
             >
               <ArrowIcon className="text-azure-radiance absolute size-[20px] -rotate-90 fill-current" />
             </div>
           </div>
-          {!sentence ? null : (
+          {loadingSentences && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              <SpinnerBig />
+            </div>
+          )}
+          {sentence && (
             <div className="px-4">
               <SentenceText sentence={sentence} showFurigana={showFurigana} />
               <div className="absolute bottom-0 left-0 w-full px-2">
@@ -207,13 +249,20 @@ export const SentencesPage: FC = () => {
         preload="none"
         src={blobSrc}
       />
-      <Toast open={toastOpen} onOpenChange={setToastOpen}>
-        Фраза добавлена в избранное
+      <Toast
+        open={toastData.open}
+        onOpenChange={(open) => setToastOpen((v) => ({ ...v, open: open }))}
+      >
+        {toastData.text}
       </Toast>
-      <DrawerSettings
-        open={settingsModalOpen}
-        onOpenChange={setSettingsModalOpen}
-      />
+      {user && (
+        <DrawerSettings
+          open={settingsModalOpen}
+          level={user.level}
+          onOpenChange={setSettingsModalOpen}
+          onChangeLevel={onChangeLevel}
+        />
+      )}
     </Page>
   );
 };

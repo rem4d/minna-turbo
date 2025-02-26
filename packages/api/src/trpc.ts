@@ -1,32 +1,23 @@
-import { initTRPC } from "@trpc/server";
-// import * as trpcExpress from "@trpc/server/adapters/express";
+import { initTRPC, TRPCError } from "@trpc/server";
+import type * as trpcExpress from "@trpc/server/adapters/express";
 // import superjson from "superjson";
 import { ZodError } from "zod";
 import { client as db } from "@rem4d/db";
 import redisClient from "./redisClient";
+import { getUserFromHeader } from "./util/getUserFromHeader";
 
 export type RedisClientType = typeof redisClient;
 
-/**
- * 1. CONTEXT
- *
- * This section defines the "contexts" that are available in the backend API.
- *
- * These allow you to access things when processing a request, like the database, the session, etc.
- *
- * This helper generates the "internals" for a tRPC context. The API handler and RSC clients each
- * wrap this and provides the required context.
- *
- * @see https://trpc.io/docs/server/context
- */
-export const createTRPCContext = () =>
-  // options: trpcExpress.CreateExpressContextOptions,
-  {
-    return {
-      db,
-      redis: redisClient,
-    };
+export const createTRPCContext = (
+  options: trpcExpress.CreateExpressContextOptions,
+) => {
+  const tgUser = getUserFromHeader(options.req);
+  return {
+    db,
+    user: tgUser,
+    redis: redisClient,
   };
+};
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   // transformer: superjson,
@@ -80,4 +71,18 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 
   return result;
 });
+
 export const publicProcedure = t.procedure.use(timingMiddleware);
+
+export const authedProcedure = publicProcedure.use(
+  async function isAuthed(opts) {
+    const { ctx } = opts;
+    const user = ctx.user;
+    if (!user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    return opts.next({
+      ctx: { user },
+    });
+  },
+);

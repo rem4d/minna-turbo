@@ -6,6 +6,8 @@
   "dependencies": {
     "@rem4d/db": "workspace:*",
     "@rem4d/tokenizer": "workspace:*",
+    "@telegram-apps/init-data-node": "^2.0.2",
+    "@telegram-apps/sdk": "^3.5.0",
     "@trpc/server": "catalog:",
     "envalid": "^8.0.0",
     "openai": "^4.77.0",
@@ -16,19 +18,6 @@
     "@rem4d/eslint-config": "workspace:*",
     "@rem4d/typescript-config": "workspace:*",
     "typescript": "catalog:"
-  },
-  "imports": {
-    "#*": [
-      "./src/*",
-      "./src/*.ts",
-      "./src/*.tsx",
-      "./src/*.js",
-      "./src/*.jsx",
-      "./src/*/index.ts",
-      "./src/*/index.tsx",
-      "./src/*/index.js",
-      "./src/*/index.jsx"
-    ]
   },
   "exports": {
     ".": {

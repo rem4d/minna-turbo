@@ -253,6 +253,7 @@ export type Database = {
           created_at: string
           id: number
           last_visited: string | null
+          level: number
           setting_hide_kana: boolean
           setting_hide_translation: boolean
           telegram_id: string | null
@@ -262,6 +263,7 @@ export type Database = {
           created_at?: string
           id?: number
           last_visited?: string | null
+          level?: number
           setting_hide_kana?: boolean
           setting_hide_translation?: boolean
           telegram_id?: string | null
@@ -271,6 +273,7 @@ export type Database = {
           created_at?: string
           id?: number
           last_visited?: string | null
+          level?: number
           setting_hide_kana?: boolean
           setting_hide_translation?: boolean
           telegram_id?: string | null
