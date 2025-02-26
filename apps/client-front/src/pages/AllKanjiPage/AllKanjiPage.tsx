@@ -15,10 +15,9 @@ export const AllKanjiPage: FC = () => {
 
   const { data: examples, isLoading: examplesLoading } =
     api.kanji.examples.useQuery(
-      { k: selectedK?.kanji },
+      { k: selectedK?.kanji ?? "" },
       { enabled: !!selectedK },
     );
-  console.log(examplesLoading);
 
   const [open, setOpen] = useState(false);
 
@@ -69,13 +68,11 @@ export const AllKanjiPage: FC = () => {
               </div>
             </div>
           )}
-          {/* eslint-disable-next-line */}
           {examplesLoading && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <SpinnerBig />
             </div>
           )}
-          {/* eslint-disable-next-line */}
           {!examplesLoading && examples && (
             <div className="h-full">
               {examples.map((data, i) => (
