@@ -75,10 +75,10 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     >
       <Accordion.Item
         value="1"
-        className="overflow-hidden rounded-tl-[24px] rounded-tr-[24px] text-white/90"
+        className="overflow-hidden rounded-tl-[24px] rounded-tr-[24px] py-1 text-white/90"
       >
         <Accordion.Header>
-          <Accordion.Trigger className="mt-2 flex w-full items-center justify-between px-4 py-3">
+          <Accordion.Trigger className="mt-2 flex w-full items-center justify-between px-4 py-2">
             <span className="font-medium">Перевод</span>
             <ArrowIcon
               className={twMerge(
@@ -91,7 +91,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
         </Accordion.Header>
         <Accordion.Content
           className={twMerge(
-            "px-4 pb-2",
+            "px-4",
             val.includes("1")
               ? "animate-accordion-down"
               : "animate-accordion-up",
