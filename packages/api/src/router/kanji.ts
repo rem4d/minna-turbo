@@ -1,4 +1,4 @@
-import { publicProcedure, router } from "../trpc";
+import { publicProcedure, router } from "#trpc";
 
 export const kanjiRouter = router({
   all: publicProcedure.query(async ({ ctx }) => {

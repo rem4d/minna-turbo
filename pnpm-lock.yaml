@@ -50,7 +50,7 @@ catalogs:
       version: 4.19.2
     typescript:
       specifier: ^5.6.2
-      version: 5.7.2
+      version: 5.7.3
 
 importers:
 
@@ -494,9 +494,6 @@ importers:
       '@rem4d/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript
-      bunchee:
-        specifier: 'catalog:'
-        version: 6.3.2(typescript@5.7.2)
       typescript:
         specifier: 'catalog:'
         version: 5.7.2

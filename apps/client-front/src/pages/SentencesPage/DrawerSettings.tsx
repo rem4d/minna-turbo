@@ -110,7 +110,7 @@ const KCard: FC<KCardProps> = ({ id, kanji, selected, onClick }) => {
         selected && "bg-outer-space rounded-md text-white",
       )}
     >
-      <div className="font-hiragino text-center text-[28px] font-bold select-none">
+      <div className="font-hiragino cursor-pointer text-center text-[28px] font-bold select-none">
         {kanji}
       </div>
     </m.div>
