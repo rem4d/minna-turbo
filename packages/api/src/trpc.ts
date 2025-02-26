@@ -11,7 +11,7 @@ export type RedisClientType = typeof redisClient;
 export const createTRPCContext = (
   options: trpcExpress.CreateExpressContextOptions,
 ) => {
-  const tgUser = getUserFromHeader(options.req);
+  const tgUser = getUserFromHeader(options.req.headers.authorization);
   return {
     db,
     user: tgUser,

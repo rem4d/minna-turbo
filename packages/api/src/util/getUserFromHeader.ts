@@ -1,11 +1,14 @@
-import type { Request } from "express";
 import { validate, parse } from "@telegram-apps/init-data-node";
 
 const BOT_TOKEN = process.env.BOT_TOKEN ?? "";
 
-export function getUserFromHeader(req: Request) {
-  const authHeader = req.headers.authorization;
-  const [authType, initData = ""] = (authHeader ?? "").split(" ");
+export function getUserFromHeader(authHeader?: string) {
+  if (!authHeader) {
+    console.log(`Error: could not find auth header.`);
+    return null;
+  }
+
+  const [authType, initData = ""] = authHeader.split(" ");
 
   if (authType !== "tma") {
     return null;

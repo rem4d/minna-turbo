@@ -7,7 +7,6 @@ export const IndexPage: FC = () => {
   return (
     <Page footer>
       <div className="flex flex-col items-center justify-center space-y-6 p-[33px]">
-        <div>Update</div>
         <Card
           title="Фразы"
           desc="Читайте и слушайте реальные фразы на японском, состоящие только из изученных вами кандзи"
