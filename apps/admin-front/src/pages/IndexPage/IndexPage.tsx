@@ -12,6 +12,7 @@ export const IndexPage: FC = () => {
     page: pageNumber,
   });
 
+  console.log(1);
   const onRowClick = (id: number) => {
     window.open("/edit/" + id, "_blank");
   };
