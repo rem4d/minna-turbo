@@ -37,6 +37,7 @@ export const AllKanjiPage: FC = () => {
               id={k.id}
               kanji={k.kanji}
               level={k.position}
+              en={k.en ?? ""}
               onClick={onCardClick}
             />
           ))}
@@ -109,20 +110,27 @@ interface CardProps {
   kanji: string;
   level: number;
   id: number;
+  en: string;
   onClick: (id: number) => void;
 }
 
-const Card: FC<CardProps> = ({ kanji, id, level, onClick }) => {
+const Card: FC<CardProps> = ({ kanji, en, id, level, onClick }) => {
+  const means = en.split(";")[0];
   return (
     <div
-      className="relative flex aspect-square cursor-pointer flex-col justify-center rounded-md border border-black/10 bg-white p-4 shadow-[3px_3px_0px_rgba(41,41,41,0.1)]"
+      className="relative flex aspect-square cursor-pointer flex-col justify-center overflow-hidden rounded-md border border-black/10 bg-white px-2 py-4 shadow-[3px_3px_0px_rgba(41,41,41,0.1)]"
       onClick={() => onClick(id)}
     >
       <div className="text-rolling-stone/70 absolute top-2 left-2 text-xs">
         {level}
       </div>
-      <div className="font-digi text-center text-3xl font-bold text-black">
-        {kanji}
+      <div className="flex flex-col space-y-1">
+        <div className="font-digi text-center text-3xl font-bold text-black">
+          {kanji}
+        </div>
+        <div className="truncate text-center text-xs whitespace-nowrap text-black">
+          {means}
+        </div>
       </div>
     </div>
   );
