@@ -30,6 +30,7 @@ export const AllKanjiPage: FC = () => {
     <Page back>
       <div className="flex flex-col space-y-8 px-4 pb-4">
         <SectionHeader>Все кандзи</SectionHeader>
+        <div>Update.</div>
         <div className="grid grid-cols-4 gap-4">
           {data?.map((k) => (
             <Card
