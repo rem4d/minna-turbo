@@ -125,9 +125,7 @@ const Card: FC<CardProps> = ({ kanji, en, id, level, onClick }) => {
         {level}
       </div>
       <div className="flex flex-col space-y-1">
-        <div className="font-digi text-center text-3xl font-bold text-black">
-          {kanji}
-        </div>
+        <div className="font-digi text-center text-3xl text-black">{kanji}</div>
         <div className="truncate text-center text-xs whitespace-nowrap text-black">
           {means}
         </div>
