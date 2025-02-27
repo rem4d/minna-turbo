@@ -50,7 +50,7 @@ catalogs:
       version: 4.19.2
     typescript:
       specifier: ^5.6.2
-      version: 5.7.2
+      version: 5.7.3
 
 importers:
 
@@ -487,9 +487,6 @@ importers:
       envalid:
         specifier: ^8.0.0
         version: 8.0.0
-      node-edge-tts:
-        specifier: ^1.2.7
-        version: 1.2.7
       openai:
         specifier: ^4.77.0
         version: 4.77.0(zod@3.24.1)
