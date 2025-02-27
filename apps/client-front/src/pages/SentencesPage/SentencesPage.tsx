@@ -1,16 +1,14 @@
 import type { Sentence } from "@rem4d/db";
 import type { FC } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import EyeClosedIcon from "@/assets/icons/eye-closed.svg?react";
 import EyeOpenIcon from "@/assets/icons/eye-open.svg?react";
-import SoundPauseIcon from "@/assets/icons/pause.svg?react";
-import SoundIcon from "@/assets/icons/sound.svg?react";
 import Dropdown from "@/components/Dropdown";
 import { Page } from "@/components/Page";
-import Spinner, { SpinnerBig } from "@/components/Spinner";
+import PlaySound from "@/components/PlaySound";
+import { SpinnerBig } from "@/components/Spinner";
 import Toast from "@/components/Toast";
-import { useTtsMutation } from "@/rq/useTtsMutation";
 import { api } from "@/utils/api";
 import hapticFeedback from "@/utils/hapticFeedback";
 import { useLaunchParams } from "@telegram-apps/sdk-react";
@@ -24,9 +22,6 @@ import { SentenceText } from "./SentenceText";
 export const SentencesPage: FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [showFurigana, setShowFurigana] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [blobSrc, setBlobSrc] = useState<string | undefined>(undefined);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [toastData, setToastOpen] = useState({
     open: false,
@@ -65,60 +60,9 @@ export const SentencesPage: FC = () => {
   const sentence = list?.[activeIndex] ?? null;
   // const hasCharacter = !!sentence?.vox_speaker_id;
 
-  const { mutateAsync: ttsMutate, isPending: ttsLoading } = useTtsMutation({
-    onSuccess() {},
-  });
-
   useEffect(() => {
     setShowFurigana(false);
-    setIsPlaying(false);
-    setBlobSrc(undefined);
   }, [sentence]);
-
-  useEffect(() => {
-    if (blobSrc) {
-      if (audioRef.current) {
-        void audioRef.current.play();
-        setIsPlaying(true);
-      }
-    }
-  }, [blobSrc]);
-
-  useEffect(() => {
-    if (!audioRef.current) {
-      console.log("Error: no audioRef found.");
-      return;
-    }
-    audioRef.current.addEventListener("ended", () => {
-      setIsPlaying(false);
-    });
-  }, []);
-
-  const onPlayClick = async () => {
-    if (!sentence) {
-      return;
-    }
-
-    if (!isPlaying && !ttsLoading) {
-      hapticFeedback("light");
-    }
-
-    if (!blobSrc) {
-      const blob = await ttsMutate({ text: sentence.text });
-      const objectURL = URL.createObjectURL(blob);
-
-      setBlobSrc(objectURL);
-    } else {
-      if (audioRef.current) {
-        try {
-          void audioRef.current.play();
-          setIsPlaying(true);
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    }
-  };
 
   const handlePrevClick = () => {
     hapticFeedback("light");
@@ -199,16 +143,7 @@ export const SentencesPage: FC = () => {
               <ArrowIcon className="text-azure-radiance absolute size-[20px] rotate-90 fill-current" />
             </div>
             <div className="flex items-center space-x-6">
-              <div className="size-[24px] cursor-pointer" onClick={onPlayClick}>
-                {ttsLoading && <Spinner />}
-                {!ttsLoading ? (
-                  isPlaying ? (
-                    <SoundPauseIcon className="size-[24px] fill-current text-blue-500" />
-                  ) : (
-                    <SoundIcon className="size-[24px]" />
-                  )
-                ) : null}
-              </div>
+              <PlaySound text={sentence?.text} />
 
               <ShowFuriganaComponent
                 showFurigana={showFurigana}
@@ -242,14 +177,6 @@ export const SentencesPage: FC = () => {
           )}
         </div>
       </div>
-
-      <audio
-        className="hidden"
-        ref={audioRef}
-        controls
-        preload="none"
-        src={blobSrc}
-      />
       <Toast
         open={toastData.open}
         onOpenChange={(open) => setToastOpen((v) => ({ ...v, open: open }))}

@@ -1,8 +1,8 @@
 import type { FC } from "react";
 import { useCallback, useState } from "react";
-import SoundIcon from "@/assets/icons/sound.svg?react";
 import Drawer from "@/components/Drawer";
 import { Page } from "@/components/Page";
+import PlaySound from "@/components/PlaySound";
 import SectionHeader from "@/components/SectionHeader";
 import { SpinnerBig } from "@/components/Spinner";
 import { api } from "@/utils/api";
@@ -87,13 +87,11 @@ export const AllKanjiPage: FC = () => {
                       : data.basic_form}
                   </div>
 
-                  <div className="mt-1 flex items-start space-x-2">
+                  <div className="mt-0.5 flex items-start space-x-2">
                     <div className="text-denim text-base whitespace-nowrap">
                       {data.reading === "" ? data.basic_form : data.reading}
                     </div>
-                    <div className="size-[24px] cursor-pointer">
-                      <SoundIcon />
-                    </div>
+                    <PlaySound text={data.reading} />
                   </div>
                   <div className="mt-1.5 text-sm">{data.means}</div>
                 </div>

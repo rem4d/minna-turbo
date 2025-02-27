@@ -14,6 +14,8 @@ import { TRPCProvider } from "./utils/api";
 
 import "./index.css";
 
+import { PlaySoundContextProvider } from "./context/playSoundContext";
+
 function App() {
   const lp = useLaunchParams() as { platform: string };
 
@@ -37,7 +39,9 @@ function App() {
   return (
     <TRPCProvider>
       <Toast.Provider swipeDirection="down">
-        <RouterProvider router={router} />
+        <PlaySoundContextProvider>
+          <RouterProvider router={router} />
+        </PlaySoundContextProvider>
       </Toast.Provider>
     </TRPCProvider>
   );

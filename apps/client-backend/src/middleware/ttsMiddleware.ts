@@ -1,6 +1,6 @@
 import { EdgeTTS } from "node-edge-tts";
 import fs from "node:fs";
-import { Request, Response, RequestHandler, NextFunction } from "express";
+import { Request, Response } from "express";
 
 const tts = new EdgeTTS({
   voice: "ja-JP-NanamiNeural",
