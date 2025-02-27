@@ -52,28 +52,37 @@ export type Database = {
       }
       kanji: {
         Row: {
+          en: string | null
           id: number
           kanji: string
           kun: string[] | null
           means: string | null
           on_: string[] | null
           position: number
+          ru: string | null
+          updated_at: string | null
         }
         Insert: {
+          en?: string | null
           id?: number
           kanji?: string
           kun?: string[] | null
           means?: string | null
           on_?: string[] | null
           position: number
+          ru?: string | null
+          updated_at?: string | null
         }
         Update: {
+          en?: string | null
           id?: number
           kanji?: string
           kun?: string[] | null
           means?: string | null
           on_?: string[] | null
           position?: number
+          ru?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }

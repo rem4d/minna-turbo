@@ -30,7 +30,7 @@ export const AllKanjiPage: FC = () => {
     <Page back>
       <div className="flex flex-col space-y-8 px-4 pb-4">
         <SectionHeader>Все кандзи</SectionHeader>
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-4 gap-4">
           {data?.map((k) => (
             <Card
               key={k.id}
@@ -53,14 +53,14 @@ export const AllKanjiPage: FC = () => {
               </div>
               <div className="flex flex-col items-start space-y-2">
                 <span className="text-lg leading-6 font-bold">
-                  {selectedK.means}
+                  {selectedK.en}
                 </span>
-                {selectedK.kun && (
+                {selectedK.kun && selectedK.kun.length > 0 && (
                   <span className="font-digi rounded-[18px] border px-2 py-1 text-lg leading-5 text-black">
                     {selectedK.kun.join("、")}
                   </span>
                 )}
-                {selectedK.on_ && (
+                {selectedK.on_ && selectedK.on_.length > 0 && (
                   <span className="font-digi rounded-[18px] border px-2 py-1 text-lg leading-5 text-black">
                     {selectedK.on_.join("、")}
                   </span>
@@ -115,13 +115,13 @@ interface CardProps {
 const Card: FC<CardProps> = ({ kanji, id, level, onClick }) => {
   return (
     <div
-      className="relative flex cursor-pointer flex-col justify-center rounded-md bg-white p-4 shadow-md"
+      className="relative flex aspect-square cursor-pointer flex-col justify-center rounded-md border border-black/10 bg-white p-4 shadow-[3px_3px_0px_rgba(41,41,41,0.1)]"
       onClick={() => onClick(id)}
     >
-      <div className="text-rolling-stone absolute top-2 left-2 text-xs">
+      <div className="text-rolling-stone/70 absolute top-2 left-2 text-xs">
         {level}
       </div>
-      <div className="font-hiragino text-center text-3xl font-bold text-black">
+      <div className="font-digi text-center text-3xl font-bold text-black">
         {kanji}
       </div>
     </div>
