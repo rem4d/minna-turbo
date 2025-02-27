@@ -7,6 +7,8 @@ import SectionHeader from "@/components/SectionHeader";
 import { SpinnerBig } from "@/components/Spinner";
 import { api } from "@/utils/api";
 
+import KCard from "./KCard";
+
 export const AllKanjiPage: FC = () => {
   const [selectedKId, setSelectedKId] = useState<number | null>(null);
 
@@ -70,35 +72,7 @@ export const AllKanjiPage: FC = () => {
               </div>
             </div>
           )}
-          {examplesLoading && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              <SpinnerBig />
-            </div>
-          )}
-          {!examplesLoading && examples && (
-            <div className="h-full">
-              {examples.map((data, i) => (
-                <div
-                  key={`${data.basic_form}-${i}`}
-                  className="flex space-y-3 space-x-2"
-                >
-                  <div className="text-lg whitespace-nowrap">
-                    {data.basic_form === data.reading || data.reading === ""
-                      ? ""
-                      : data.basic_form}
-                  </div>
-
-                  <div className="mt-0.5 flex items-start space-x-2">
-                    <div className="text-denim text-base whitespace-nowrap">
-                      {data.reading === "" ? data.basic_form : data.reading}
-                    </div>
-                    <PlaySound text={data.reading} />
-                  </div>
-                  <div className="mt-1.5 text-sm">{data.means}</div>
-                </div>
-              ))}
-            </div>
-          )}
+          {selectedK?.kanji && <KCard selectedK={selectedK.kanji} />}
         </div>
       </Drawer>
     </Page>

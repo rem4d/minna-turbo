@@ -1,43 +1,31 @@
+import React from "react";
 import SoundPauseIcon from "@/assets/icons/pause.svg?react";
 import SoundIcon from "@/assets/icons/sound.svg?react";
 import Spinner from "@/components/Spinner";
-import { usePlaySoundConext } from "@/context/playSoundContext";
 
 interface Props {
-  text?: string | null;
+  reading: string;
+  ttsLoading: boolean;
+  isPlaying: boolean;
+  onClick: (r: string) => void;
 }
-export default function PlaySound({ text }: Props) {
-  const {
-    isPlaying,
-    ttsLoading,
-    onPlayClick,
-    text: contextText,
-  } = usePlaySoundConext();
 
-  const onClick = () => {
-    if (text) {
-      onPlayClick(text);
-    }
-  };
-
-  if (text === contextText) {
-    return (
-      <div className="size-[24px] cursor-pointer" onClick={onClick}>
-        {ttsLoading && <Spinner />}
-        {!ttsLoading ? (
-          isPlaying ? (
-            <SoundPauseIcon className="size-[24px] fill-current text-blue-500" />
-          ) : (
-            <SoundIcon className="size-[24px]" />
-          )
-        ) : null}
-      </div>
-    );
-  }
-
+function PlaySound({ onClick, ttsLoading, isPlaying, reading }: Props) {
   return (
-    <div className="size-[24px] cursor-pointer" onClick={onClick}>
-      <SoundIcon className="size-[24px]" />
+    <div
+      className="size-[24px] cursor-pointer"
+      onClick={() => onClick(reading)}
+    >
+      {ttsLoading && <Spinner />}
+      {!ttsLoading ? (
+        isPlaying ? (
+          <SoundPauseIcon className="size-[24px] fill-current text-blue-500" />
+        ) : (
+          <SoundIcon className="size-[24px]" />
+        )
+      ) : null}
     </div>
   );
 }
+
+export default React.memo(PlaySound);
