@@ -2,9 +2,7 @@ import type { FC } from "react";
 import { useCallback, useState } from "react";
 import Drawer from "@/components/Drawer";
 import { Page } from "@/components/Page";
-import PlaySound from "@/components/PlaySound";
 import SectionHeader from "@/components/SectionHeader";
-import { SpinnerBig } from "@/components/Spinner";
 import { api } from "@/utils/api";
 
 import KCard from "./KCard";
@@ -14,12 +12,6 @@ export const AllKanjiPage: FC = () => {
 
   const { data } = api.kanji.all.useQuery();
   const selectedK = data?.find((d) => d.id === selectedKId);
-
-  const { data: examples, isLoading: examplesLoading } =
-    api.kanji.examples.useQuery(
-      { k: selectedK?.kanji ?? "" },
-      { enabled: !!selectedK },
-    );
 
   const [open, setOpen] = useState(false);
 
@@ -32,7 +24,6 @@ export const AllKanjiPage: FC = () => {
     <Page back>
       <div className="flex flex-col space-y-8 px-4 pb-4">
         <SectionHeader>Все кандзи</SectionHeader>
-        <div>Update.</div>
         <div className="grid grid-cols-4 gap-4">
           {data?.map((k) => (
             <Card
