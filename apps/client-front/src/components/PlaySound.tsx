@@ -5,19 +5,25 @@ import Spinner from "@/components/Spinner";
 
 interface Props {
   reading: string;
-  ttsLoading: boolean;
+  isLoading: boolean;
   isPlaying: boolean;
-  onClick: (r: string) => void;
+  onClick?: (r: string, index?: number) => void;
+  index?: number;
 }
 
-function PlaySound({ onClick, ttsLoading, isPlaying, reading }: Props) {
+function PlaySound({ onClick, isLoading, isPlaying, reading, index }: Props) {
+  // console.log("PlaySound render" + reading);
+  if (!reading) {
+    return null;
+  }
+
   return (
     <div
       className="size-[24px] cursor-pointer"
-      onClick={() => onClick(reading)}
+      onClick={() => onClick?.(reading, index)}
     >
-      {ttsLoading && <Spinner />}
-      {!ttsLoading ? (
+      {isLoading && <Spinner />}
+      {!isLoading ? (
         isPlaying ? (
           <SoundPauseIcon className="size-[24px] fill-current text-blue-500" />
         ) : (

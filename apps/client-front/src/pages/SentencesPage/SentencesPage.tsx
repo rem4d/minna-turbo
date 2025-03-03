@@ -1,6 +1,6 @@
 import type { Sentence } from "@rem4d/db";
 import type { FC } from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import EyeClosedIcon from "@/assets/icons/eye-closed.svg?react";
 import EyeOpenIcon from "@/assets/icons/eye-open.svg?react";
@@ -9,6 +9,7 @@ import { Page } from "@/components/Page";
 import PlaySound from "@/components/PlaySound";
 import { SpinnerBig } from "@/components/Spinner";
 import Toast from "@/components/Toast";
+import { usePlaySoundContext } from "@/context/playSoundContext";
 import { api } from "@/utils/api";
 import hapticFeedback from "@/utils/hapticFeedback";
 import { useLaunchParams } from "@telegram-apps/sdk-react";
@@ -119,6 +120,35 @@ export const SentencesPage: FC = () => {
   const disableRightNav =
     (list && (activeIndex === list.length - 1 || list.length === 0)) ?? !list;
 
+  const {
+    isPlaying,
+    isLoading: isLoadingSound,
+    onLoad,
+    onPlayLatest,
+    onStop,
+    text: contextText,
+  } = usePlaySoundContext();
+
+  const isCurrent = useCallback(
+    (reading: string) => {
+      return contextText === reading;
+    },
+    [contextText],
+  );
+
+  const onLoadSpeech = useCallback(
+    (text: string, index: number | undefined) => {
+      if (text) {
+        onLoad(text, index);
+      }
+    },
+    [onLoad],
+  );
+
+  const onPlay = useCallback(() => {
+    onPlayLatest();
+  }, [onPlayLatest]);
+
   return (
     <Page back>
       <div className="relative h-full overflow-hidden">
@@ -143,8 +173,20 @@ export const SentencesPage: FC = () => {
               <ArrowIcon className="text-azure-radiance absolute size-[20px] rotate-90 fill-current" />
             </div>
             <div className="flex items-center space-x-6">
-              <PlaySound text={sentence?.text} />
-
+              {sentence?.text && (
+                <PlaySound
+                  reading={sentence.text}
+                  isLoading={isLoadingSound}
+                  isPlaying={isPlaying}
+                  onClick={
+                    isCurrent(sentence.text)
+                      ? isPlaying
+                        ? onStop
+                        : onPlay
+                      : onLoadSpeech
+                  }
+                />
+              )}
               <ShowFuriganaComponent
                 showFurigana={showFurigana}
                 onClick={() => setShowFurigana((s) => !s)}

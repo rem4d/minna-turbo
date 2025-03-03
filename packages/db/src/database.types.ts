@@ -442,7 +442,7 @@ export type Database = {
         Returns: {
           cnt: number
           basic_form: string
-          means: string
+          en: string
           reading: string
         }[]
       }
