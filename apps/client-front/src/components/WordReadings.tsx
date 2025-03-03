@@ -53,19 +53,21 @@ export default function WordReadings({ list = [], asGrid = false }: Props) {
               {data.reading === "" ? data.basic_form : data.reading}
             </div>
 
-            <PlaySound
-              reading={data.reading}
-              index={i}
-              isLoading={isCurrent(data.reading, i) && isLoading}
-              isPlaying={isCurrent(data.reading, i) && isPlaying}
-              onClick={
-                isCurrent(data.reading, i)
-                  ? isPlaying
-                    ? onStop
-                    : onPlay
-                  : onLoadSpeech
-              }
-            />
+            {data.reading && (
+              <PlaySound
+                reading={data.reading}
+                index={i}
+                isLoading={isCurrent(data.reading, i) && isLoading}
+                isPlaying={isCurrent(data.reading, i) && isPlaying}
+                onClick={
+                  isCurrent(data.reading, i)
+                    ? isPlaying
+                      ? onStop
+                      : onPlay
+                    : onLoadSpeech
+                }
+              />
+            )}
           </div>
           <div className="text-[18px] whitespace-nowrap">
             {data.basic_form === data.reading || data.reading === ""
@@ -90,19 +92,21 @@ export default function WordReadings({ list = [], asGrid = false }: Props) {
         <div className="text-denim text-base whitespace-nowrap">
           {data.reading === "" ? data.basic_form : data.reading}
         </div>
-        <PlaySound
-          reading={data.reading}
-          index={i}
-          isLoading={isCurrent(data.reading, i) && isLoading}
-          isPlaying={isCurrent(data.reading, i) && isPlaying}
-          onClick={
-            isCurrent(data.reading, i)
-              ? isPlaying
-                ? onStop
-                : onPlay
-              : onLoadSpeech
-          }
-        />
+        {data.reading && (
+          <PlaySound
+            reading={data.reading}
+            index={i}
+            isLoading={isCurrent(data.reading, i) && isLoading}
+            isPlaying={isCurrent(data.reading, i) && isPlaying}
+            onClick={
+              isCurrent(data.reading, i)
+                ? isPlaying
+                  ? onStop
+                  : onPlay
+                : onLoadSpeech
+            }
+          />
+        )}
       </div>
       <div className="mt-1.5 text-sm">{data.en}</div>
     </div>
