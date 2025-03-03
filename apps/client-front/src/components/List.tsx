@@ -68,19 +68,21 @@ export const ListItem: FC<ListItemProps> = ({
 
   return (
     <div
-      className="flex h-[60px] w-full cursor-pointer items-center pl-[16px]"
+      className="flex h-[60px] w-[calc(100%-16px)] cursor-pointer items-center overflow-hidden pl-[16px]"
       onClick={handleClick}
     >
       <div
         className={twMerge(
-          "border-silver/60 flex grow items-center justify-between px-0 py-[9px]",
+          "border-silver/60 flex w-full grow items-center justify-between px-0 py-[9px]",
           showBorder && "border-b",
         )}
       >
-        <div className="flex items-center space-x-[8px]">
+        <div className="flex w-full items-center space-x-[8px]">
           {icon ?? null}
-          <div className="flex flex-col">
-            <div className="text-[17px] leading-5">{title}</div>
+          <div className="flex w-full flex-col">
+            <div className="w-full overflow-hidden text-[17px] leading-5 overflow-ellipsis whitespace-nowrap">
+              {title}
+            </div>
             {sub && (
               <div className="text-jumbo text-[15px] leading-5">{sub}</div>
             )}
