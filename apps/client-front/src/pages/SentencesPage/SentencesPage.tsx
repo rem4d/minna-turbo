@@ -33,37 +33,47 @@ export const SentencesPage: FC = () => {
     "kic:favorites",
     [],
   );
+  const [storedList, setStoredList] = useState<Sentence[]>([] as Sentence[]);
 
   const lp = useLaunchParams();
   const isMobile = !lp.platform.includes("desktop");
 
   const utils = api.useUtils();
 
-  const { data: list, isLoading: loadingSentences } =
-    api.sentence.getRandomized.useQuery(undefined);
+  const { data: list } = api.sentence.getRandomized.useQuery(undefined);
 
-  const { data: user, isLoading: loadingUser } = api.user.info.useQuery();
+  const markAsSeenMutation = api.sentence.markAsSeen.useMutation();
+
+  const { data: user } = api.user.info.useQuery();
 
   const updateLevelMuatation = api.user.updateLevel.useMutation({
     onSuccess() {
       void utils.sentence.getRandomized.reset();
-      // void utils.sentence.getRandomized.invalidate();
       void utils.user.info.reset();
     },
   });
-  // const updateMeaningMutation = api.member.updateMeaning.useMutation({
-  //   onSuccess() {
-  //     void utils.member.membesByPos.invalidate();
-  //   },
-  // });
-  // const change
 
-  const sentence = list?.[activeIndex] ?? null;
+  const sentence = storedList[activeIndex];
+
   // const hasCharacter = !!sentence?.vox_speaker_id;
 
   useEffect(() => {
     setShowFurigana(false);
   }, [sentence]);
+
+  useEffect(() => {
+    if (list && list.length > 0) {
+      setStoredList((sl) => sl.concat(list));
+    }
+  }, [list]);
+
+  useEffect(() => {
+    if (activeIndex === storedList.length - 1) {
+      const ids = storedList.map((l) => l.id);
+      void markAsSeenMutation.mutate({ ids });
+      void utils.sentence.getRandomized.invalidate();
+    }
+  }, [activeIndex, storedList.length, markAsSeenMutation.mutate]);
 
   const handlePrevClick = () => {
     hapticFeedback("light");
@@ -118,7 +128,7 @@ export const SentencesPage: FC = () => {
   };
 
   const disableRightNav =
-    (list && (activeIndex === list.length - 1 || list.length === 0)) ?? !list;
+    activeIndex === storedList.length - 1 || storedList.length === 0;
 
   const {
     isPlaying,
@@ -149,6 +159,14 @@ export const SentencesPage: FC = () => {
     onPlayLatest();
   }, [onPlayLatest]);
 
+  if (!sentence) {
+    return (
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <SpinnerBig />
+      </div>
+    );
+  }
+
   return (
     <Page back>
       <div className="relative h-full overflow-hidden">
@@ -173,7 +191,7 @@ export const SentencesPage: FC = () => {
               <ArrowIcon className="text-azure-radiance absolute size-[20px] rotate-90 fill-current" />
             </div>
             <div className="flex items-center space-x-6">
-              {sentence?.text && (
+              {sentence.text && (
                 <PlaySound
                   reading={sentence.text}
                   isLoading={isLoadingSound}
@@ -204,19 +222,12 @@ export const SentencesPage: FC = () => {
               <ArrowIcon className="text-azure-radiance absolute size-[20px] -rotate-90 fill-current" />
             </div>
           </div>
-          {loadingSentences && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              <SpinnerBig />
+          <div className="px-4">
+            <SentenceText sentence={sentence} showFurigana={showFurigana} />
+            <div className="absolute bottom-0 left-0 w-full px-2">
+              <Accordion sentence={sentence} />
             </div>
-          )}
-          {sentence && (
-            <div className="px-4">
-              <SentenceText sentence={sentence} showFurigana={showFurigana} />
-              <div className="absolute bottom-0 left-0 w-full px-2">
-                <Accordion sentence={sentence} />
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </div>
       <Toast
