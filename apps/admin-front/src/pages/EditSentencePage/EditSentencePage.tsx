@@ -409,23 +409,23 @@ export const EditSentencePage: FC = () => {
               {/*   </Flex> */}
               {/* </div> */}
               {members?.map((m) => (
-                <Flex key={m.basic_form} direction="column">
+                <Flex key={m.members.basic_form} direction="column">
                   <Text
                     size="6"
-                    onClick={() => onMemberClick(m)}
+                    onClick={() => onMemberClick(m.members)}
                     className="cursor-pointer whitespace-nowrap"
                     dangerouslySetInnerHTML={{
-                      __html: m.ruby ?? "",
+                      __html: m.members.ruby ?? "",
                     }}
                   />
                   <Text className="select-none" size="2">
-                    {m.en}
+                    {m.members.en}
                   </Text>
                   <Box>
                     <Badge color="sky" size="1">
-                      {m.pos}
+                      {m.members.pos}
                     </Badge>
-                    {m.pos_detail_1 === "suffix" && (
+                    {m.members.pos_detail_1 === "suffix" && (
                       <Badge color="red" size="1">
                         suffix
                       </Badge>

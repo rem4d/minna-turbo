@@ -1,10 +1,14 @@
-@import "@radix-ui/colors/black-alpha.css";
-@import "@radix-ui/colors/mauve.css";
-@import "@radix-ui/colors/violet.css";
+@import "@radix-ui/colors/black-alpha.css" layer(base);
+@import "@radix-ui/colors/mauve.css" layer(base);
+@import "@radix-ui/colors/violet.css" layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-almost-white: #fefefe;
+  --font-hiragino: Hiragino;
+  --font-digi: Digi;
+}
 
 @font-face {
   font-family: Epkyoka;
@@ -63,14 +67,12 @@
 body {
   padding: 0;
   margin: 0;
-  overflow: hidden;
 }
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
-  overflow: hidden;
 }
 
 .no-scroll::-webkit-scrollbar {

@@ -3,7 +3,9 @@
   "description": "",
   "version": "1.0.0",
   "author": "",
-  "dependencies": {},
+  "dependencies": {
+    "react": "^19.0.0"
+  },
   "devDependencies": {
     "@rem4d/eslint-config": "workspace:*",
     "@rem4d/typescript-config": "workspace:*",
@@ -33,10 +35,9 @@
   "license": "ISC",
   "scripts": {
     "build": "bunchee",
-    "dev": "bunchee --watch",
+    "dev": "tsc",
     "lint": "eslint src/",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module"

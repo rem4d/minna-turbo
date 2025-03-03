@@ -179,13 +179,13 @@ export const memberRouter = router({
       const insertBulk = await findSentencesMembers(data);
       console.log(insertBulk);
 
-      // const { error: error2 } = await ctx.db
-      //   .from("sentence_member")
-      //   .upsert(insertBulk);
-      //
-      // if (error2) {
-      //   throw new Error("Unexpected error while calc bulk.");
-      // }
+      const { error: error2 } = await ctx.db
+        .from("sentence_member")
+        .upsert(insertBulk);
+
+      if (error2) {
+        throw new Error("Unexpected error while calc bulk.");
+      }
 
       return true;
     }),

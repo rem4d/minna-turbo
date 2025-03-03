@@ -12,6 +12,7 @@ import Toast from "@/components/Toast";
 import { usePlaySoundContext } from "@/context/playSoundContext";
 import { api } from "@/utils/api";
 import hapticFeedback from "@/utils/hapticFeedback";
+import { useUnmount } from "@rem4d/utils";
 import { useLaunchParams } from "@telegram-apps/sdk-react";
 import { twMerge } from "tailwind-merge";
 import { useLocalStorage } from "usehooks-ts";
@@ -57,6 +58,12 @@ export const SentencesPage: FC = () => {
 
   // const hasCharacter = !!sentence?.vox_speaker_id;
 
+  useUnmount(() => {
+    const ids = storedList.map((l) => l.id);
+    if (ids.length > 0) {
+      markAsSeenMutation.mutate({ ids });
+    }
+  });
   useEffect(() => {
     setShowFurigana(false);
   }, [sentence]);
