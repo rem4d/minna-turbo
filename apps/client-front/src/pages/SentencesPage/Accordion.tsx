@@ -6,8 +6,6 @@ import * as Accordion from "@radix-ui/react-accordion";
 import Skeleton from "react-loading-skeleton";
 import { twMerge } from "tailwind-merge";
 
-import "react-loading-skeleton/dist/skeleton.css";
-
 import { AnimateHeight } from "./AnimateHeight";
 
 interface AccordionProps {

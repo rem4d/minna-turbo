@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import "react-loading-skeleton/dist/skeleton.css";
 
 @theme {
   --color-athens-gray: #f7f7f9;
@@ -39,6 +40,8 @@
 
   --page-offset-bottom: var(--tg-viewport-safe-area-inset-bottom, 0px);
   --page-offset-top-full: calc(var(--tg-viewport-safe-area-inset-bottom)+var(--tg-viewport-content-safe-area-inset-bottom));
+
+  --footer-height: 100px;
 
   @keyframes accordion-down {
     from {

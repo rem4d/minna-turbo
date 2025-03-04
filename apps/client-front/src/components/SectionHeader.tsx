@@ -1,9 +1,21 @@
-import type { FC } from "react";
-import type { PropsWithChildren } from "react";
+import type { FC, PropsWithChildren } from "react";
+import { twMerge } from "tailwind-merge";
 
-export const SectionHeader: FC<PropsWithChildren> = ({ children }) => {
+interface Props {
+  className?: string;
+}
+
+export const SectionHeader: FC<PropsWithChildren<Props>> = ({
+  children,
+  className = "",
+}) => {
   return (
-    <div className="font-inter mt-2 mb-6 flex justify-center text-lg font-semibold text-black">
+    <div
+      className={twMerge(
+        "font-inter mt-2 mb-6 flex justify-center text-lg font-semibold text-black",
+        className,
+      )}
+    >
       {children}
     </div>
   );

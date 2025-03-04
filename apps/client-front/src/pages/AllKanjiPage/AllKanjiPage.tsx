@@ -5,6 +5,7 @@ import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import { api } from "@/utils/api";
 import { useDebounce } from "@uidotdev/usehooks";
+import Skeleton from "react-loading-skeleton";
 import { isHiragana, isKanji, isKatakana } from "wanakana";
 
 import KCard from "./KCard";
@@ -15,7 +16,7 @@ export const AllKanjiPage: FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 400);
 
-  const { data } = api.kanji.all.useQuery();
+  const { data, isLoading } = api.kanji.all.useQuery();
   const selectedK = data?.find((d) => d.id === selectedKId);
 
   const displayData = debouncedValue
@@ -48,21 +49,35 @@ export const AllKanjiPage: FC = () => {
   return (
     <Page back>
       <div className="flex flex-col space-y-8 px-4 pb-4">
-        <SectionHeader>Все кандзи</SectionHeader>
+        <SectionHeader className={isLoading ? "opacity-0" : ""}>
+          Все кандзи
+        </SectionHeader>
         <SearchBar onChange={setSearchValue} value={searchValue} />
-        <div className="grid grid-cols-4 gap-4">
-          {displayData?.map((k) => (
-            <Card
-              key={k.id}
-              id={k.id}
-              kanji={k.kanji}
-              level={k.position}
-              en={k.en ?? ""}
-              onClick={onCardClick}
-            />
-          ))}
-        </div>
+        {isLoading && (
+          <Skeleton
+            className="aspect-square"
+            count={20}
+            borderRadius={6}
+            containerClassName="grid grid-cols-4 gap-4"
+            inline
+          />
+        )}
+        {!isLoading && (
+          <div className="grid grid-cols-4 gap-4">
+            {displayData?.map((k) => (
+              <Card
+                key={k.id}
+                id={k.id}
+                kanji={k.kanji}
+                level={k.position}
+                en={k.en ?? ""}
+                onClick={onCardClick}
+              />
+            ))}
+          </div>
+        )}
       </div>
+
       <Drawer open={open} onOpenChange={setOpen} noContainer>
         <div className="min-h-[60vh] bg-white px-4 py-4 pb-(--page-offset-bottom)">
           {selectedK && (
