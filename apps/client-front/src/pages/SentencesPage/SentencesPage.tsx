@@ -59,7 +59,7 @@ export const SentencesPage: FC = () => {
   // const hasCharacter = !!sentence?.vox_speaker_id;
 
   useUnmount(() => {
-    const ids = storedList.map((l) => l.id);
+    const ids = storedList.slice(0, activeIndex).map((l) => l.id);
     if (ids.length > 0) {
       markAsSeenMutation.mutate({ ids });
     }
