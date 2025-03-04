@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import { useCallback, useState } from "react";
 import Drawer from "@/components/Drawer";
+import KCard from "@/components/KCard";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import { api } from "@/utils/api";
@@ -8,7 +9,6 @@ import { useDebounce } from "@uidotdev/usehooks";
 import Skeleton from "react-loading-skeleton";
 import { isHiragana, isKanji, isKatakana } from "wanakana";
 
-import KCard from "./KCard";
 import SearchBar from "./SearchBar";
 
 export const AllKanjiPage: FC = () => {
@@ -80,31 +80,7 @@ export const AllKanjiPage: FC = () => {
 
       <Drawer open={open} onOpenChange={setOpen} noContainer>
         <div className="min-h-[60vh] bg-white px-4 py-4 pb-(--page-offset-bottom)">
-          {selectedK && (
-            <div className="mb-4 flex space-x-4">
-              <div className="flex aspect-square h-[96px] justify-center rounded-lg border border-black/10 bg-white drop-shadow-[3px_3px_0px_rgba(41,41,41,0.1)]">
-                <div className="font-digi text-[60px] text-[#000]">
-                  {selectedK.kanji}
-                </div>
-              </div>
-              <div className="flex flex-col items-start space-y-2">
-                <span className="text-lg leading-6 font-bold">
-                  {selectedK.en}
-                </span>
-                {selectedK.kun && selectedK.kun.length > 0 && (
-                  <span className="font-digi rounded-[18px] border px-2 py-1 text-lg leading-5 text-black">
-                    {selectedK.kun.join("、")}
-                  </span>
-                )}
-                {selectedK.on_ && selectedK.on_.length > 0 && (
-                  <span className="font-digi rounded-[18px] border px-2 py-1 text-lg leading-5 text-black">
-                    {selectedK.on_.join("、")}
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-          {selectedK?.kanji && <KCard selectedK={selectedK.kanji} />}
+          {selectedK && <KCard k={selectedK} />}
         </div>
       </Drawer>
     </Page>

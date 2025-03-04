@@ -2,6 +2,7 @@ import type { Kanji } from "@rem4d/db";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getPosition } from "@/utils/event";
 import { clamp } from "@rem4d/utils";
+import { useLaunchParams } from "@telegram-apps/sdk-react";
 import { twMerge } from "tailwind-merge";
 
 import Card from "./Card";
@@ -27,6 +28,9 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
   useEffect(() => {
     setActiveIndex(total > 0 ? total - 1 : 0);
   }, [total]);
+
+  const lp = useLaunchParams();
+  const isMobile = !lp.platform.includes("desktop");
 
   // animation progress(-1 ~ 1)
   const [progress, setProgress] = useState(0);
@@ -177,7 +181,7 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
       <div
         id="deck"
         className={twMerge(
-          "absolute top-1/2 left-1/2 h-[400px] max-h-[450px] w-[300px] max-w-[400px] -translate-x-1/2 -translate-y-1/2",
+          "absolute top-1/2 left-1/2 h-[400px] max-h-[450px] w-full -translate-x-1/2 -translate-y-1/2",
           cardList.length === 0 && "hidden",
         )}
       >
@@ -201,9 +205,10 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
               }}
             >
               <Card
+                k={c}
                 isActive={isActiveCard}
                 index={cardList.length - 1 - index}
-                {...c}
+                isMobile={isMobile}
               />
             </div>
           );

@@ -16,12 +16,14 @@ function PlaySound({ onClick, isLoading, isPlaying, reading, index }: Props) {
   if (!reading) {
     return null;
   }
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    onClick?.(reading, index);
+  };
 
   return (
-    <div
-      className="size-[24px] cursor-pointer"
-      onClick={() => onClick?.(reading, index)}
-    >
+    <div className="size-[24px] cursor-pointer" onClick={handleClick}>
       {isLoading && <Spinner />}
       {!isLoading ? (
         isPlaying ? (
