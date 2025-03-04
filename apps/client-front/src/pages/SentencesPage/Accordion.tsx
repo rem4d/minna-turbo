@@ -1,5 +1,5 @@
 import type { Sentence } from "@rem4d/db";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { api } from "@/utils/api";
 import * as Accordion from "@radix-ui/react-accordion";
@@ -27,14 +27,15 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     storedId.current = sentence.id;
   }, [sentence.id]);
 
-  const utils = api.useUtils();
-  const prev = storedId.current;
+  // const utils = api.useUtils();
+  // const prev = storedId.current;
 
-  const clearMembers = useCallback(() => {
-    if (sentence.id !== prev && prev) {
-      void utils.member.sentenceMembers.setData({ id: prev }, []);
-    }
-  }, [sentence.id, prev, utils]);
+  // it is done to display 3 placehodler lines by default
+  // const clearMembers = useCallback(() => {
+  //   if (sentence.id !== prev && prev) {
+  //     void utils.member.sentenceMembers.setData({ id: prev }, []);
+  //   }
+  // }, [sentence.id, prev, utils]);
 
   // when sentence change
   useEffect(() => {
@@ -46,10 +47,11 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     }
 
     // clean members if member accordion closed
-    if (!storedVal.current.includes("2")) {
-      void clearMembers();
-    }
-  }, [sentence.id, clearMembers]);
+    // if (!storedVal.current.includes("2")) {
+    //   console.log("clear members");
+    //   void clearMembers();
+    // }
+  }, [sentence.id]);
 
   const memberAccordionOpen = val.includes("2");
 
