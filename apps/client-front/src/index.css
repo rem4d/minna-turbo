@@ -263,3 +263,9 @@ animation-delay: -0.15s;
 	}
 }
 
+
+
+.GradientBg {
+  /* background: linear-gradient(0deg, #E9E4EF 0%,  #F2E8DF 50%, #F1E9DD 100%); */
+  background: linear-gradient(0deg, #F1E9DD 0%, #F2E8DF 50%, #E9E4EF 100%);
+}
