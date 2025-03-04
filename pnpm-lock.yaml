@@ -50,7 +50,7 @@ catalogs:
       version: 4.19.2
     typescript:
       specifier: ^5.6.2
-      version: 5.7.2
+      version: 5.7.3
     wanakana:
       specifier: ^5.3.1
       version: 5.3.1
@@ -421,7 +421,7 @@ importers:
         specifier: ^0.22.0
         version: 0.22.0(rollup@4.34.2)(vite@5.4.11(@types/node@22.10.2)(lightningcss@1.29.1))
       wanakana:
-        specifier: ^5.3.1
+        specifier: 'catalog:'
         version: 5.3.1
     devDependencies:
       '@rem4d/eslint-config':
