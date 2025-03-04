@@ -1,11 +1,5 @@
 import type { Kanji } from "@rem4d/db";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useState } from "react";
 import { motion } from "motion/react";
 import { twJoin, twMerge } from "tailwind-merge";
 
@@ -22,23 +16,11 @@ export default function Card({
   isActive,
   index,
 }: CardProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const frontRef = useRef<HTMLDivElement>(null);
-  const backRef = useRef<HTMLDivElement>(null);
-  const examplesRef = useRef<HTMLDivElement>(null);
+  // const cardRef = useRef<HTMLDivElement>(null);
+  // const frontRef = useRef<HTMLDivElement>(null);
+  // const backRef = useRef<HTMLDivElement>(null);
+  // const examplesRef = useRef<HTMLDivElement>(null);
   const [isFlipped, setIsFlipped] = useState(false);
-
-  const handleMove = useCallback((e: MouseEvent | TouchEvent) => {}, []);
-
-  useEffect(() => {
-    window.addEventListener("mousemove", handleMove);
-    window.addEventListener("touchmove", handleMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMove);
-      window.removeEventListener("touchmove", handleMove);
-    };
-  }, [handleMove]);
 
   // const tl = gsap.timeline();
   //
