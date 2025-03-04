@@ -5,7 +5,7 @@
   "author": "",
   "dependencies": {
     "@sglkc/kuromoji": "^1.1.0",
-    "wanakana": "^5.3.1"
+    "wanakana": "catalog:"
   },
   "devDependencies": {
     "@rem4d/db": "workspace:*",

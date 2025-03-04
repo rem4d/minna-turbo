@@ -50,7 +50,10 @@ catalogs:
       version: 4.19.2
     typescript:
       specifier: ^5.6.2
-      version: 5.7.3
+      version: 5.7.2
+    wanakana:
+      specifier: ^5.3.1
+      version: 5.3.1
 
 importers:
 
@@ -242,7 +245,7 @@ importers:
         specifier: ^23.11.1
         version: 23.11.1(typescript@5.7.2)
       wanakana:
-        specifier: ^5.3.1
+        specifier: 'catalog:'
         version: 5.3.1
     devDependencies:
       '@rem4d/eslint-config':
@@ -417,6 +420,9 @@ importers:
       vite-plugin-node-polyfills:
         specifier: ^0.22.0
         version: 0.22.0(rollup@4.34.2)(vite@5.4.11(@types/node@22.10.2)(lightningcss@1.29.1))
+      wanakana:
+        specifier: ^5.3.1
+        version: 5.3.1
     devDependencies:
       '@rem4d/eslint-config':
         specifier: workspace:*
@@ -541,7 +547,7 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
       wanakana:
-        specifier: ^5.3.1
+        specifier: 'catalog:'
         version: 5.3.1
     devDependencies:
       '@rem4d/db':

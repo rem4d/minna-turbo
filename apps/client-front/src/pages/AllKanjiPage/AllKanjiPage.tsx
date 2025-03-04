@@ -5,6 +5,7 @@ import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import { api } from "@/utils/api";
 import { useDebounce } from "@uidotdev/usehooks";
+import { isHiragana, isKanji, isKatakana } from "wanakana";
 
 import KCard from "./KCard";
 import SearchBar from "./SearchBar";
@@ -18,15 +19,23 @@ export const AllKanjiPage: FC = () => {
   const selectedK = data?.find((d) => d.id === selectedKId);
 
   const displayData = debouncedValue
-    ? data?.filter(
-        (d) =>
-          d.kanji.includes(debouncedValue) ||
-          // eslint-disable-next-line
-          d.en?.includes(debouncedValue.toLowerCase()) ||
-          // eslint-disable-next-line
-          d.kun?.join(";").includes(debouncedValue) ||
-          d.on_?.join(";").includes(debouncedValue),
-      )
+    ? data?.filter((d) => {
+        const value = debouncedValue.trim();
+
+        if (isHiragana(value)) {
+          return d.kun?.join(";").includes(debouncedValue);
+        }
+
+        if (isKatakana(value)) {
+          return d.on_?.join(";").includes(debouncedValue);
+        }
+
+        if (isKanji(value)) {
+          return d.kanji === debouncedValue.trim();
+        }
+
+        return d.en?.includes(debouncedValue.toLowerCase());
+      })
     : data;
 
   const [open, setOpen] = useState(false);

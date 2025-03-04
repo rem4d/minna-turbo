@@ -83,14 +83,20 @@ export const sentenceRouter = router({
       }
       return data;
     }),
-  markAsSeen: publicProcedure
+  markAsSeen: authedProcedure
     .input(
       z.object({
         ids: z.array(z.number()),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const userId = 2234;
+      const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
+
+      if (!storedUser) {
+        throw new Error("No user has been found");
+      }
+
+      const userId = storedUser.id;
       let known: number[] = [];
 
       const knownKey = await ctx.redis.get(`known.${userId}`);
@@ -103,7 +109,7 @@ export const sentenceRouter = router({
 
       void ctx.redis.setEx(
         `known.${userId}`,
-        24 * 60 * 60,
+        60 * 24 * 60 * 60, // store data for 60 days
         JSON.stringify(newKnown),
       );
 
@@ -114,7 +120,7 @@ export const sentenceRouter = router({
     const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
 
     if (!storedUser) {
-      return [];
+      throw new Error("No user has been found");
     }
 
     const level = storedUser.level;
