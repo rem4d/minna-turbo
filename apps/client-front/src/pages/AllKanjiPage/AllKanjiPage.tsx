@@ -22,7 +22,7 @@ export const AllKanjiPage: FC = () => {
         (d) =>
           d.kanji.includes(debouncedValue) ||
           // eslint-disable-next-line
-          d.en?.includes(debouncedValue) ||
+          d.en?.includes(debouncedValue.toLowerCase()) ||
           // eslint-disable-next-line
           d.kun?.join(";").includes(debouncedValue) ||
           d.on_?.join(";").includes(debouncedValue),
