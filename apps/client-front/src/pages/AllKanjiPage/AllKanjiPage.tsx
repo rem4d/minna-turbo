@@ -4,14 +4,30 @@ import Drawer from "@/components/Drawer";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import { api } from "@/utils/api";
+import { useDebounce } from "@uidotdev/usehooks";
 
 import KCard from "./KCard";
+import SearchBar from "./SearchBar";
 
 export const AllKanjiPage: FC = () => {
   const [selectedKId, setSelectedKId] = useState<number | null>(null);
+  const [searchValue, setSearchValue] = useState("");
+  const debouncedValue = useDebounce(searchValue, 400);
 
   const { data } = api.kanji.all.useQuery();
   const selectedK = data?.find((d) => d.id === selectedKId);
+
+  const displayData = debouncedValue
+    ? data?.filter(
+        (d) =>
+          d.kanji.includes(debouncedValue) ||
+          // eslint-disable-next-line
+          d.en?.includes(debouncedValue) ||
+          // eslint-disable-next-line
+          d.kun?.join(";").includes(debouncedValue) ||
+          d.on_?.join(";").includes(debouncedValue),
+      )
+    : data;
 
   const [open, setOpen] = useState(false);
 
@@ -24,8 +40,9 @@ export const AllKanjiPage: FC = () => {
     <Page back>
       <div className="flex flex-col space-y-8 px-4 pb-4">
         <SectionHeader>Все кандзи</SectionHeader>
+        <SearchBar onChange={setSearchValue} value={searchValue} />
         <div className="grid grid-cols-4 gap-4">
-          {data?.map((k) => (
+          {displayData?.map((k) => (
             <Card
               key={k.id}
               id={k.id}

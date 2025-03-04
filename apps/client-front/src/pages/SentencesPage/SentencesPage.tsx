@@ -14,8 +14,8 @@ import { api } from "@/utils/api";
 import hapticFeedback from "@/utils/hapticFeedback";
 import { useUnmount } from "@rem4d/utils";
 import { useLaunchParams } from "@telegram-apps/sdk-react";
+import { useLocalStorage } from "@uidotdev/usehooks";
 import { twMerge } from "tailwind-merge";
-import { useLocalStorage } from "usehooks-ts";
 
 import Accordion from "./Accordion";
 import DrawerSettings from "./DrawerSettings";
@@ -64,6 +64,7 @@ export const SentencesPage: FC = () => {
       markAsSeenMutation.mutate({ ids });
     }
   });
+
   useEffect(() => {
     setShowFurigana(false);
   }, [sentence]);

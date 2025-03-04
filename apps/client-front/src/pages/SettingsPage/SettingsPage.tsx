@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { List, ListItem } from "@/components/List";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
-import { useLocalStorage } from "usehooks-ts";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 export const SettingsPage: FC = () => {
   const [favorites, setFavorites] = useLocalStorage<Sentence[]>(
