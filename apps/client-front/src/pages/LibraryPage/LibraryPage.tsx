@@ -38,7 +38,7 @@ export const LibraryPage: FC = () => {
         )}
 
         {isLoading && (
-          <div className="mt-12">
+          <div className="mt-13">
             <div className="mb-6 flex flex-col space-y-1">
               <Skeleton
                 className="mb-2 ml-3"
