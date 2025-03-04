@@ -56,7 +56,7 @@ export const AllKanjiPage: FC = () => {
         {isLoading && (
           <Skeleton
             className="aspect-square"
-            count={20}
+            count={28}
             borderRadius={6}
             containerClassName="grid grid-cols-4 gap-4"
             inline
