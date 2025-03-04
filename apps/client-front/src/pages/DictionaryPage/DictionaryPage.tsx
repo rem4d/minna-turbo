@@ -30,7 +30,7 @@ export const DictionaryPage: FC = () => {
         )}
 
         {isLoading && (
-          <div className="mt-12">
+          <div className="mt-14">
             <Skeleton
               count={16}
               borderRadius={8}
