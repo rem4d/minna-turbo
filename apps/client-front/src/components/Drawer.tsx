@@ -46,6 +46,7 @@ export default function _Drawer({
               <Drawer.Title className="absolute top-6 left-1/2 -translate-x-1/2 justify-self-center text-sm font-medium whitespace-nowrap text-black">
                 {title}
               </Drawer.Title>
+              <Drawer.Description></Drawer.Description>
             </div>
             <div className="no-scroll mx-auto max-h-[80vh] max-w-md overflow-y-scroll">
               {children}
