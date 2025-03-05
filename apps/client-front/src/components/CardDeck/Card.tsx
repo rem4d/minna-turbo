@@ -1,5 +1,5 @@
 import type { Kanji } from "@rem4d/db";
-import React, { useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { motion } from "motion/react";
 import { twJoin, twMerge } from "tailwind-merge";
 

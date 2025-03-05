@@ -1,4 +1,5 @@
 import type { Kanji } from "@rem4d/db";
+import { useLayoutEffect, useRef, useState } from "react";
 import { SpinnerBig } from "@/components/Spinner";
 import WordReadings from "@/components/WordReadings";
 import { api } from "@/utils/api";
@@ -11,13 +12,25 @@ interface Props {
 
 export function KCard({ k, containerClassName = "" }: Props) {
   const { kun, on_, en, kanji } = k;
+  const examplesRef = useRef<HTMLDivElement>(null);
+  const [hasScroll, setHasScroll] = useState(false);
 
   const { data: examples, isLoading: examplesLoading } =
     api.kanji.examples.useQuery({ k: k.kanji ?? "" }, { enabled: !!k });
 
+  useLayoutEffect(() => {
+    if (examplesRef.current) {
+      const scrollHeight = examplesRef.current.scrollHeight;
+      const clientHeight = examplesRef.current.clientHeight;
+
+      setHasScroll(scrollHeight > clientHeight);
+    }
+  }, [examples]);
+
   const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (hasScroll) {
+      e.stopPropagation();
+    }
   };
 
   return (
@@ -48,6 +61,7 @@ export function KCard({ k, containerClassName = "" }: Props) {
       )}
       {!examplesLoading && examples && (
         <div
+          ref={examplesRef}
           className={twMerge("h-full grow", containerClassName)}
           onTouchStart={handleTouchStart}
         >
