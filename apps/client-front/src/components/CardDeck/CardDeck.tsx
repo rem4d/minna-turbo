@@ -170,7 +170,7 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
 
   return (
     <>
-      <div className="relative top-6 h-[8px] w-full overflow-hidden rounded-full bg-white">
+      <div className="relative h-[8px] w-full overflow-hidden rounded-full bg-white">
         <div
           className="absolute h-full rounded-tr-full rounded-br-full bg-black/30 transition-all"
           style={{

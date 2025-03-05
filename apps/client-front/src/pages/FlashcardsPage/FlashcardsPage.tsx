@@ -24,9 +24,9 @@ export const FlashcardsPage: FC = () => {
   return (
     <Page
       back
-      className="GradientBg mt-(--page-offset-top-full) overflow-hidden select-none"
+      className="GradientBg overflow-hidden pt-(--page-offset-top-full) select-none"
     >
-      <div className="GradientBg h-full w-full px-6">
+      <div className="h-full w-full px-6">
         <CardDeck
           cardList={cardListDisplay}
           total={total}
