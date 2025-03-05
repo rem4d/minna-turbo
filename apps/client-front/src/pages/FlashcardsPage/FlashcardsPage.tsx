@@ -22,7 +22,10 @@ export const FlashcardsPage: FC = () => {
   };
 
   return (
-    <Page back className="GradientBg overflow-hidden select-none">
+    <Page
+      back
+      className="GradientBg mt-(--page-offset-top-full) overflow-hidden select-none"
+    >
       <div className="GradientBg h-full w-full px-6">
         <CardDeck
           cardList={cardListDisplay}
