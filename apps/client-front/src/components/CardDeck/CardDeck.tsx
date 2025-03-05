@@ -78,7 +78,7 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
       const K = 70;
       const dxOffset = dx > 0 ? dx + K : dx - K;
 
-      const newProgress = clamp(dxOffset / 100, -1, 1) as number;
+      const newProgress = clamp(dxOffset / 100, -1, 1);
 
       const changedRight =
         Math.floor(Math.abs(newProgress)) === 1 &&

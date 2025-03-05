@@ -85,7 +85,10 @@ export default React.memo(function Card({
         }}
       >
         <div className="size-full py-3">
-          <KCard k={k} />
+          <KCard
+            k={k}
+            containerClassName="overflow-y-scroll overflow-x-hidden"
+          />
         </div>
       </motion.div>
     </motion.div>
