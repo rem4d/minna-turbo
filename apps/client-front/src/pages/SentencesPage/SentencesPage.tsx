@@ -41,11 +41,18 @@ export const SentencesPage: FC = () => {
 
   const utils = api.useUtils();
 
-  const { data: list } = api.sentence.getRandomized.useQuery(undefined);
+  const { data: list, isLoading } = api.sentence.getRandomized.useQuery(
+    undefined,
+    {
+      throwOnError: true,
+    },
+  );
 
   const markAsSeenMutation = api.sentence.markAsSeen.useMutation();
 
-  const { data: user } = api.user.info.useQuery();
+  const { data: user } = api.user.info.useQuery(undefined, {
+    throwOnError: true,
+  });
 
   const updateLevelMuatation = api.user.updateLevel.useMutation({
     onSuccess() {
@@ -167,13 +174,14 @@ export const SentencesPage: FC = () => {
     onPlayLatest();
   }, [onPlayLatest]);
 
-  if (!sentence) {
+  if (isLoading) {
     return (
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <SpinnerBig />
       </div>
     );
   }
+  // console.log(sentence[100].text);
 
   return (
     <Page back>
@@ -186,57 +194,59 @@ export const SentencesPage: FC = () => {
         >
           {user ? <>Ваш уровень: {user.level}</> : <></>}
         </div>
-        <div className={isMobile ? "mt-16" : "mt-10"}>
-          {/* nav buttons */}
-          <div className="mb-4 flex justify-between px-4">
-            <div
-              className={twMerge(
-                "relative size-[30px] cursor-pointer",
-                activeIndex === 0 && "pointer-events-none opacity-40",
-              )}
-              onClick={handlePrevClick}
-            >
-              <ArrowIcon className="text-azure-radiance absolute size-[20px] rotate-90 fill-current" />
-            </div>
-            <div className="flex items-center space-x-6">
-              {sentence.text && (
-                <PlaySound
-                  reading={sentence.text}
-                  isLoading={isLoadingSound}
-                  isPlaying={isPlaying}
-                  onClick={
-                    isCurrent(sentence.text)
-                      ? isPlaying
-                        ? onStop
-                        : onPlay
-                      : onLoadSpeech
-                  }
+        {sentence && (
+          <div className={isMobile ? "mt-16" : "mt-10"}>
+            {/* nav buttons */}
+            <div className="mb-4 flex justify-between px-4">
+              <div
+                className={twMerge(
+                  "relative size-[30px] cursor-pointer",
+                  activeIndex === 0 && "pointer-events-none opacity-40",
+                )}
+                onClick={handlePrevClick}
+              >
+                <ArrowIcon className="text-azure-radiance absolute size-[20px] rotate-90 fill-current" />
+              </div>
+              <div className="flex items-center space-x-6">
+                {sentence.text && (
+                  <PlaySound
+                    reading={sentence.text}
+                    isLoading={isLoadingSound}
+                    isPlaying={isPlaying}
+                    onClick={
+                      isCurrent(sentence.text)
+                        ? isPlaying
+                          ? onStop
+                          : onPlay
+                        : onLoadSpeech
+                    }
+                  />
+                )}
+                <ShowFuriganaComponent
+                  showFurigana={showFurigana}
+                  onClick={() => setShowFurigana((s) => !s)}
                 />
-              )}
-              <ShowFuriganaComponent
-                showFurigana={showFurigana}
-                onClick={() => setShowFurigana((s) => !s)}
-              />
 
-              <Dropdown items={dropdownItems} onOpen={onSettingsOpen} />
+                <Dropdown items={dropdownItems} onOpen={onSettingsOpen} />
+              </div>
+              <div
+                className={twMerge(
+                  "relative size-[30px] cursor-pointer",
+                  disableRightNav && "pointer-events-none opacity-40",
+                )}
+                onClick={handleNextClick}
+              >
+                <ArrowIcon className="text-azure-radiance absolute size-[20px] -rotate-90 fill-current" />
+              </div>
             </div>
-            <div
-              className={twMerge(
-                "relative size-[30px] cursor-pointer",
-                disableRightNav && "pointer-events-none opacity-40",
-              )}
-              onClick={handleNextClick}
-            >
-              <ArrowIcon className="text-azure-radiance absolute size-[20px] -rotate-90 fill-current" />
+            <div className="px-4">
+              <SentenceText sentence={sentence} showFurigana={showFurigana} />
+              <div className="absolute bottom-0 left-0 w-full px-2">
+                <Accordion sentence={sentence} />
+              </div>
             </div>
           </div>
-          <div className="px-4">
-            <SentenceText sentence={sentence} showFurigana={showFurigana} />
-            <div className="absolute bottom-0 left-0 w-full px-2">
-              <Accordion sentence={sentence} />
-            </div>
-          </div>
-        </div>
+        )}
       </div>
       <Toast
         open={toastData.open}

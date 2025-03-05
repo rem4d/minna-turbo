@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import * as Toast from "@radix-ui/react-toast";
 import {
+  Provider as RollbarProvider,
+  ErrorBoundary as RoollbarErrorBoundary,
+} from "@rollbar/react";
+// Provider imports 'rollbar'
+import {
   miniApp,
   requestFullscreen,
   swipeBehavior,
@@ -14,6 +19,7 @@ import { TRPCProvider } from "./utils/api";
 
 import "./index.css";
 
+import ErrorFallbackComponent from "./components/ErrorFallbackComponent";
 import { PlaySoundContextProvider } from "./context/playSoundContext";
 
 function App() {
@@ -36,15 +42,28 @@ function App() {
     }
   }, [lp.platform]);
 
+  const errorFallback = () => <ErrorFallbackComponent />;
+
   return (
-    <TRPCProvider>
-      <Toast.Provider swipeDirection="down">
-        <PlaySoundContextProvider>
-          <RouterProvider router={router} />
-        </PlaySoundContextProvider>
-      </Toast.Provider>
-    </TRPCProvider>
+    <RollbarProvider config={rollbarConfig}>
+      <RoollbarErrorBoundary fallbackUI={errorFallback}>
+        <TRPCProvider>
+          <Toast.Provider swipeDirection="down">
+            <PlaySoundContextProvider>
+              <RouterProvider router={router} />
+            </PlaySoundContextProvider>
+          </Toast.Provider>
+        </TRPCProvider>
+      </RoollbarErrorBoundary>
+    </RollbarProvider>
   );
 }
+
+const rollbarConfig = {
+  accessToken: import.meta.env.VITE_ROLLBAR_API_TOKEN,
+  environment: "production",
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+};
 
 export default App;

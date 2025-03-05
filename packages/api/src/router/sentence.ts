@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { authedProcedure, publicProcedure, router } from "../trpc";
+import {
+  authedProcedure,
+  publicProcedure,
+  redisPrecedure,
+  router,
+} from "../trpc";
 import type { Database, Kanji, Sentence } from "@rem4d/db";
 import { shuffle } from "../util/shuffle";
 import { tokenize, analyze } from "@rem4d/tokenizer";
@@ -115,8 +120,9 @@ export const sentenceRouter = router({
 
       return true;
     }),
-  getRandomized: authedProcedure.query(async ({ ctx }) => {
+  getRandomized: redisPrecedure.query(async ({ ctx }) => {
     const shift = 60;
+
     const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
 
     if (!storedUser) {

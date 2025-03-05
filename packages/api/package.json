@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "author": "",
   "dependencies": {
+    "@redis/client": "^1.6.0",
     "@rem4d/db": "workspace:*",
     "@rem4d/tokenizer": "workspace:*",
     "@telegram-apps/init-data-node": "^2.0.2",
@@ -11,7 +12,6 @@
     "@trpc/server": "catalog:",
     "envalid": "^8.0.0",
     "openai": "^4.77.0",
-    "redis": "^4.7.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {

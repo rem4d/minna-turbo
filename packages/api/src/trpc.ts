@@ -12,6 +12,7 @@ export const createTRPCContext = (
   options: trpcExpress.CreateExpressContextOptions,
 ) => {
   const tgUser = getUserFromHeader(options.req.headers.authorization);
+
   return {
     db,
     user: tgUser,
@@ -82,7 +83,23 @@ export const authedProcedure = publicProcedure.use(
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
     return opts.next({
-      ctx: { user },
+      ctx: {
+        ...ctx,
+        user,
+      },
+    });
+  },
+);
+
+export const redisPrecedure = authedProcedure.use(
+  async function isRedisUp(opts) {
+    const { ctx } = opts;
+    const redis = ctx.redis;
+    if (!redis.isReady) {
+      throw new TRPCError({ code: "SERVICE_UNAVAILABLE" });
+    }
+    return opts.next({
+      ctx,
     });
   },
 );

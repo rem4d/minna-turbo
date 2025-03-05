@@ -1,4 +1,5 @@
-import { createBrowserRouter } from "react-router-dom";
+import { TRPCClientError } from "@trpc/client";
+import { createBrowserRouter, useRouteError } from "react-router-dom";
 
 import { Base } from "./components/Base";
 import { AllKanjiPage } from "./pages/AllKanjiPage";
@@ -19,10 +20,30 @@ export const paths = {
   flashcards: "/flashcards",
 };
 
+const RouteErrorBoundary = () => {
+  const error = useRouteError();
+
+  if (error instanceof TRPCClientError) {
+    return (
+      <div className="bg-athens-gray w-full">
+        <div className="text-center text-black">
+          Connection error has occurered.
+        </div>
+      </div>
+    );
+    // TODO: add other 4xx errors here. For example: 401, 403
+  } else {
+    // re-throw to let the parent Sentry.ErrorBoundary handles
+    // it and logs it.
+    console.log(error);
+    throw error;
+  }
+};
 export const router = createBrowserRouter([
   {
     path: paths.home,
     element: <Base />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         index: true,

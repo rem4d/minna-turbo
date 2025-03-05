@@ -18,6 +18,7 @@ services:
       - 3000:3000
     environment:
       - VITE_API_SERVER=${VITE_API_SERVER}
+      - VITE_ROLLBAR_API_TOKEN=${VITE_ROLLBAR_API_TOKEN}
     stdin_open: true
     tty: true
 
