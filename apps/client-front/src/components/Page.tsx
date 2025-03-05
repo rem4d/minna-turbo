@@ -9,6 +9,7 @@ interface PageProps {
   back?: boolean;
   footer?: boolean;
   className?: string;
+  maxOffset?: boolean;
 }
 
 export function Page({
@@ -16,6 +17,7 @@ export function Page({
   className = "",
   back = false,
   footer = false,
+  maxOffset = false,
 }: PropsWithChildren<PageProps>) {
   const navigate = useNavigate();
 
@@ -34,7 +36,8 @@ export function Page({
       id="page"
       className={twMerge(
         "h-full overflow-x-hidden overflow-y-auto",
-        "pt-(--tg-viewport-safe-area-inset-top)",
+        !maxOffset && "pt-(--tg-top)",
+        maxOffset && "pt-(--page-offset-top-full)",
         footer && "h-[calc(100%-var(--footer-height))]",
         className,
       )}

@@ -39,7 +39,12 @@
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
   --page-offset-bottom: var(--tg-viewport-safe-area-inset-bottom, 0px);
-  --page-offset-top-full: calc(var(--tg-viewport-safe-area-inset-bottom)+var(--tg-viewport-content-safe-area-inset-bottom));
+
+  --tg-top: var(--tg-viewport-safe-area-inset-top, 10px);
+
+  --tg-top-content: var(--tg-viewport-content-safe-area-inset-top, 0px);
+
+  --page-offset-top-full: calc(var(--tg-top) + var(--tg-top-content));
 
   --footer-height: 100px;
 
