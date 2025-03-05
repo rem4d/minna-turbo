@@ -52,7 +52,7 @@ export default React.memo(function Card({
       onClick={handleClick}
       animate={{ rotateY: isFlipped ? 180 : 0 }}
       className={twMerge(
-        "absolute top-0 left-1/2 h-[60vh] -translate-x-1/2 cursor-pointer text-[#000] select-none",
+        "absolute top-0 left-1/2 h-[60vh] max-h-[500px] -translate-x-1/2 cursor-pointer text-[#000] select-none",
         isMobile && "w-[80vw]",
         !isMobile && "w-[350px]",
       )}
