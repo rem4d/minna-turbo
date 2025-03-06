@@ -19,6 +19,7 @@ interface FilterRule {
   kanji: string;
   reading: string[];
   pos?: string;
+  pos_detail_1?: string;
 }
 
 const deferred = new Deferred();
@@ -85,9 +86,9 @@ export const tokenize = async (text: string) => {
 
     for (let i = 0; i < mojiTokens.length; i++) {
       // TODO: why is this here??
-      // if (mojiTokens[i]?.word_type === "REPLACED") {
-      //   continue;
-      // }
+      if (mojiTokens[i]?.word_type === "REPLACED") {
+        continue;
+      }
       const mArr = Array.from(mojiTokens[i]?.surface_form ?? "");
 
       for (let j = 0; j < mArr.length; j++) {
@@ -122,7 +123,8 @@ export const tokenize = async (text: string) => {
           surface_form: wordToReplace,
           basic_form: wordToReplace,
           pos: wordFilterRule.pos ?? "noun",
-          pos_detail_1: "replaced",
+          pos_detail_1: wordFilterRule.pos_detail_1 ?? "REPLACED",
+          // pos_detail_1: wordFilterRule.pos_detail_1 ?? "REPLACED",
           reading: wordFilterRule.reading[0],
           pos_detail_2: "",
           pos_detail_3: "",

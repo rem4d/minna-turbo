@@ -12,6 +12,7 @@ import type { SupabaseClient } from "@rem4d/db";
 import type { RedisClientType } from "../trpc";
 import { dedup } from "../util/dedup";
 import { getUserByTelegramId } from "./util/getUserByTelegramId";
+import { findSingleSentenceMembers } from "./util/findSentenceMembers";
 
 export const sentenceRouter = router({
   findContainingText: publicProcedure
@@ -49,6 +50,56 @@ export const sentenceRouter = router({
             input.pos_detail === t.pos_detail_1
           ) {
             result.push(sentence);
+          }
+        }
+      }
+
+      return result;
+    }),
+  findFurtherMembersUpdates: publicProcedure
+    .input(
+      z.object({
+        text: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const filterText = input.text;
+
+      const { data, error } = await ctx.db
+        .from("sentences")
+        .select("*, members(*) ")
+        // .like("text", `%${filterText}%`)
+        .limit(100);
+
+      if (error) {
+        throw new Error("No sentences found.");
+      }
+
+      const result: {
+        new_members: { id: string; basic_form: string }[];
+        sentence: Sentence;
+      }[] = [];
+
+      for (const sentence of data) {
+        const memberIds = await findSingleSentenceMembers(sentence);
+        const existingIds = sentence.members.map((m) => m.id);
+
+        if (
+          memberIds.toSorted().toString() !== existingIds.toSorted().toString()
+        ) {
+          console.log(`Found: ${sentence.id}`);
+          const { data: memberData } = await ctx.db
+            .from("members")
+            .select("id,basic_form")
+            .in("id", memberIds);
+
+          if (memberData) {
+            result.push({
+              new_members: memberData,
+              sentence,
+            });
+          } else {
+            console.log("Error while retrieving member data from db");
           }
         }
       }

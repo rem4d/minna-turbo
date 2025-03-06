@@ -3,7 +3,7 @@ import * as redis from "@redis/client";
 const url = process.env.REDIS_URL;
 
 const client = redis.createClient({
-  url: url ?? "127.0.0.1",
+  url: url ?? undefined,
 });
 
 client.on("error", (err) => {

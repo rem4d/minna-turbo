@@ -7,6 +7,7 @@ export function Base() {
   const createMatch = useMatch("/create");
   const simulatorMatch = useMatch("/simulator");
   const dictionaryMatch = useMatch("/dictionary");
+  const filterListMatch = useMatch("/filter");
 
   const navigate = useNavigate();
 
@@ -39,6 +40,12 @@ export function Base() {
           active={Boolean(dictionaryMatch)}
         >
           Dictionary
+        </TabNav.Link>
+        <TabNav.Link
+          onClick={() => navigate("/filter")}
+          active={Boolean(filterListMatch)}
+        >
+          Filter list
         </TabNav.Link>
       </TabNav.Root>
       <Outlet />
