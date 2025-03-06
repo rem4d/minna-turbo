@@ -48,6 +48,6 @@
 //
 {
 	"extends": "@rem4d/typescript-config/tsconfig.package.json",
-	"include": ["src"],
+	"include": ["src", "test"],
 	"exclude": ["node_modules"]
 }

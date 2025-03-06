@@ -64,12 +64,17 @@ export const sentenceRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const filterText = input.text;
-
-      const { data, error } = await ctx.db
+      const qb = ctx.db
         .from("sentences")
-        .select("*, members(*) ")
-        // .like("text", `%${filterText}%`)
-        .limit(100);
+        .select("*, members(*)")
+        .lt("level", 500);
+
+      if (filterText) {
+        qb.like("text", `%${filterText}%`);
+      }
+      qb.limit(1000);
+
+      const { data, error } = await qb;
 
       if (error) {
         throw new Error("No sentences found.");

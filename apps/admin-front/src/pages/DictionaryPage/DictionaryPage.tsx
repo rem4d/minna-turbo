@@ -45,6 +45,7 @@ export const DictionaryPage: FC = () => {
     "auxiliary",
     "conj",
     "adjective",
+    "prefix",
   ];
 
   const editInputRef = useRef<HTMLInputElement>(null);

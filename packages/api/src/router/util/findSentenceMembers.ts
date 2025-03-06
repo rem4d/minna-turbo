@@ -2,6 +2,8 @@ import type { Member, Sentence } from "@rem4d/db";
 import { client as db } from "@rem4d/db";
 import { tokenize } from "@rem4d/tokenizer";
 
+const showLogs = true;
+
 const existingMembersMap = new Map<string, Member>();
 
 // init map
@@ -20,7 +22,7 @@ const init = async () => {
       );
     });
   }
-  console.log("Members map has been initialized.");
+  log("Members map has been initialized.");
 };
 
 void init();
@@ -41,7 +43,7 @@ export const findSingleSentenceMembers = async (sentence: Sentence) => {
 
   for (const token of tokens) {
     if (typesToIgnore.includes(token.pos)) {
-      // log(`Found ignored type "${token.pos}" `, token.basic_form, `. Ignore.`);
+      log(`Found ignored type "${token.pos}" `, token.basic_form, `. Ignore.`);
       continue;
     }
     let isJpName = false;
@@ -54,7 +56,7 @@ export const findSingleSentenceMembers = async (sentence: Sentence) => {
         if (token.basic_form === name) {
           // ignore names but keep exceptions
           if (!theseSoundLikeJapaneseNamesButTheyAreNot.includes(name)) {
-            // log(`Found san-name: `, name, `. Ignore.`);
+            log(`Found san-name: `, name, `. Ignore.`);
             isJpName = true;
             continue;
           }
@@ -67,11 +69,15 @@ export const findSingleSentenceMembers = async (sentence: Sentence) => {
     }
 
     const T_KEY = mapKeyFn(token);
-    const member = existingMembersMap.get(T_KEY);
+    let member = existingMembersMap.get(T_KEY);
+
+    if (!member && token.pos_detail_1 === "REPLACED") {
+      member = existingMembersMap.get(mapKeyReplacedFn(token));
+    }
 
     if (member) {
       if (member.is_invalid || member.is_hidden) {
-        // log(`Found invalid/hidden member: `, member.basic_form, `. Ignore.`);
+        log(`Found invalid/hidden member: `, member.basic_form, `. Ignore.`);
         continue;
       }
 
@@ -80,7 +86,8 @@ export const findSingleSentenceMembers = async (sentence: Sentence) => {
         memberIds.push(member.id);
       }
     } else {
-      console.log(`No member was found for: `, token.basic_form);
+      // check for REPLACED members
+      log(`No member was found for: `, token.basic_form);
     }
   }
   return memberIds;
@@ -116,6 +123,9 @@ type MapKeyFnType = <
 const mapKeyFn: MapKeyFnType = (t) =>
   `${t.basic_form}_${t.pos}_${t.pos_detail_1}`;
 
+const mapKeyReplacedFn: MapKeyFnType = (t) =>
+  `${t.basic_form}_${t.pos}_replaced`;
+
 const typesToIgnore = ["assistant", "symbol", "interjection", "フィラー"];
 // const japaneseNamesWithoutSan = ["上田"];
 
@@ -141,5 +151,7 @@ const theseSoundLikeJapaneseNamesButTheyAreNot = [
 ];
 
 const log = (...args: string[]) => {
-  console.log(args);
+  if (showLogs) {
+    console.log(...args);
+  }
 };

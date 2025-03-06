@@ -37,8 +37,7 @@
     "build": "bunchee",
     "dev": "tsc",
     "lint": "eslint src/",
-    "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "git clean -xdf .cache .turbo dist node_modules"
   },
   "type": "module"
 }

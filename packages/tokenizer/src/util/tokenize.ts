@@ -3,6 +3,8 @@ import { isKana, isKanji, isKatakana, toHiragana } from "wanakana";
 import filterList from "./filter.json" with { type: "json" };
 import type { Tokenizer, KanjiMapped } from "./types.js";
 
+const showLogs = true;
+
 class Deferred {
   promise: Promise<Tokenizer>;
   resolve!: (value: Tokenizer) => void;
@@ -48,15 +50,9 @@ const getTokenizer = async () => {
 export const tokenize = async (text: string) => {
   const tokenizer = await getTokenizer();
 
-  // console.log("memory usage:");
-  // console.log("______________________");
-  // for (const [key, value] of Object.entries(process.memoryUsage())) {
-  //   console.log(`Memory usage by ${key}, ${value / 1000000}MB `);
-  // }
   const _mojiTokens = tokenizer.tokenize(text);
-  // console.log(_mojiTokens);
-  // console.log(_mojiTokens.filter((t) => t.surface_form === "万"));
-  // console.log(_mojiTokens);
+  // log(_mojiTokens.filter((t) => t.surface_form === "万"));
+  // log(_mojiTokens);
 
   const issuesMap = fillMap({
     json: filterList,
@@ -64,35 +60,23 @@ export const tokenize = async (text: string) => {
     text,
   });
 
-  // const possibleIssuesMap = fillMap({
-  //   json: possibleFilterList,
-  //   tokens: _mojiTokens,
-  //   text,
-  // });
-  //
-  // possibleIssuesMap.forEach((wordFilterRule, wordToReplace) => {
-  //   if (!issuesMap.get(wordToReplace)) {
-  //     console.log(`Possible issue: ${wordToReplace}`);
-  //   }
-  // });
-
   const mojiTokens = [..._mojiTokens];
 
   issuesMap.forEach((wordFilterRule, wordToReplace) => {
-    // console.log("Checking issue: ", wordFilterRule, wordToReplace);
+    log("Checking issue: ", wordFilterRule, wordToReplace);
     const arr = Array.from(wordToReplace);
     let arrIndex = 0;
     let tokenIndexesToRemove: number[] = [];
 
     for (let i = 0; i < mojiTokens.length; i++) {
       // TODO: why is this here??
-      if (mojiTokens[i]?.word_type === "REPLACED") {
-        continue;
-      }
+      // if (mojiTokens[i]?.word_type === "REPLACED") {
+      //   continue;
+      // }
       const mArr = Array.from(mojiTokens[i]?.surface_form ?? "");
 
-      for (let j = 0; j < mArr.length; j++) {
-        if (mArr[j] === arr[arrIndex]) {
+      for (const arrItem of mArr) {
+        if (arrItem === arr[arrIndex]) {
           // console.log(`Found equal: ${mArr[j]} and ${arr[arrIndex]}`);
           arrIndex++;
 
@@ -114,8 +98,8 @@ export const tokenize = async (text: string) => {
     if (tokenIndexesToRemove.length > 0) {
       const firstIndex = tokenIndexesToRemove[0];
       if (typeof firstIndex === "number") {
-        // console.log(`Remove tokens with indexes: `, tokenIndexesToRemove);
-        // console.log(`Put new element: `, wordToReplace);
+        log(`Remove tokens with indexes: `, tokenIndexesToRemove);
+        log(`Put new element: `, wordToReplace);
         mojiTokens.splice(firstIndex, tokenIndexesToRemove.length, {
           word_id: 0,
           word_type: "REPLACED",
@@ -153,14 +137,13 @@ export const tokenize = async (text: string) => {
       start: token.word_position - 1,
       end: token.word_position - 1 + token.surface_form.length,
       pos: mapPos(token.pos),
-      pos_detail_1: mapPosDetails(token.pos_detail_1),
+      pos_detail_1: mapPosDetails(token.pos_detail_1), // REPLACED included
       pos_detail_2: token.pos_detail_2,
       basic_form: mapBasicForm(token),
       is_kanji: isKanji(token.surface_form),
       is_kana: isKana(token.surface_form),
     };
   });
-  // console.log(tokens);
 
   return tokens;
 };
@@ -273,4 +256,10 @@ const fillMap = ({ json, tokens, text }: FillMapProps) => {
   // console.log(map);
 
   return map;
+};
+
+const log = (...args: any[]) => {
+  if (showLogs) {
+    console.log(...args);
+  }
 };

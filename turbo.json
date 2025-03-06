@@ -30,9 +30,8 @@
     "check-types": {
       "dependsOn": ["^build", "^check-types"]
     },
-    "deploy": {
-      "dependsOn": ["^build"],
-      "cache": false
+    "test": {
+      "dependsOn": ["^test"]
     }
   },
   "globalEnv": [
