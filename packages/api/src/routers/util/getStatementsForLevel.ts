@@ -1,0 +1,102 @@
+import type { Database, Kanji, Sentence } from "@rem4d/db";
+import { analyze } from "@rem4d/tokenizer";
+import type { SupabaseClient } from "@rem4d/db";
+import type { RedisClientType } from "../../trpc";
+
+export const getStatementsForLevel = async ({
+  level,
+  shift,
+  numberOfUnknownKanji,
+  db,
+  redis,
+}: {
+  level: number;
+  shift: number;
+  numberOfUnknownKanji: number;
+  db: SupabaseClient<Database>;
+  redis: RedisClientType;
+}) => {
+  const cached = await redis.get(`${level}-${shift}`);
+
+  if (cached) {
+    console.log(`Return cached value`);
+    return JSON.parse(cached) as {
+      additional: Sentence[];
+      sentences: Sentence[];
+    };
+  }
+
+  const { data: sentences, error } = await db
+    .from("sentences")
+    .select()
+    .lte("level", level)
+    // .eq("source", "source1")
+    // .gt("level", 48)
+    // .lt("level", 98)
+    .lte("unknown_kanji_number", numberOfUnknownKanji);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  console.log(`Found: ${sentences.length} native sentences.`);
+
+  const userKanjiMap = new Map<string, Kanji>();
+  const { data: userKanjis } = await db
+    .from("kanji")
+    .select()
+    .lte("position", level);
+  if (userKanjis) {
+    userKanjis.forEach((d) => {
+      userKanjiMap.set(d.kanji, d);
+    });
+  }
+
+  const additional: Sentence[] = [];
+  if (userKanjiMap.size > 0) {
+    const keys = [...userKanjiMap.keys()];
+    const kanjiString = keys.join("");
+    // console.log(kanjiString);
+
+    console.log(`Searching sentences for ${kanjiString}...`);
+    const frequency = 3;
+
+    const { data: foundA } = await db
+      .rpc("additional_sentences_p", {
+        k_set_input: frequency,
+        lvl_input: level,
+      })
+      .select();
+    // .order('level', { ascending: false})
+
+    console.log(`Found: ${foundA?.length} additional sentences.`);
+
+    // add furigana to any unknown_by_user kanji in the sentence
+    if (foundA) {
+      for (const addit of foundA) {
+        const result = await analyze(addit.text, userKanjiMap);
+        if (result.newLevel > 500) {
+          continue;
+        }
+        additional.push({
+          ...addit,
+          //new fields
+          text_with_furigana: result.textWithHiragana,
+          ruby: result.ruby,
+          level: result.newLevel,
+          unknown_kanji_number: result.unknownKanjiNumber,
+        });
+      }
+    } else {
+      console.log(`No sentences found for : ${kanjiString} `);
+    }
+
+    console.log(`Write cache for key: "${level}-${shift}"`);
+    void redis.setEx(
+      `${level}-${shift}`,
+      24 * 60 * 60, // expire in seconds
+      JSON.stringify({ sentences, additional }),
+    );
+  }
+  return { sentences, additional };
+};

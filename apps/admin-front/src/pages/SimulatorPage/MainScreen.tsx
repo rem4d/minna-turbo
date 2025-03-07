@@ -1,13 +1,9 @@
-import type { Sentence } from "@rem4d/db";
-import type { MemberOutput } from "../../types";
+import type { Member, Sentence } from "@rem4d/db";
 import { CompositePlayer } from "./CompositePlayer";
 import { openUrl } from "@/utils";
 import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 import { useCallback, useState } from "react";
 import { api } from "@/utils/api";
-
-import FuriganaVisibleIcon from "@/assets/icons/furigana-visible.svg?react";
-import FuriganaHiddenIcon from "@/assets/icons/furigana-hidden.svg?react";
 
 interface Props {
   lang: "en" | "ru";
@@ -19,7 +15,7 @@ export default function MainScreen({ sentence, lang }: Props) {
   const [translationSpoilerOpen, setTranslationSpoilerOpen] = useState(false);
 
   const { data: members, isLoading: loadingMembers } =
-    api.member.sentenceMembers.useQuery(
+    api.admin.member.sentenceMembers.useQuery(
       { id: sentence.id },
       {
         enabled: !!sentence.text && membersSpoilerOpen,
@@ -27,7 +23,7 @@ export default function MainScreen({ sentence, lang }: Props) {
     );
   console.log(members);
 
-  const onMemberClick = useCallback((m: MemberOutput) => {
+  const onMemberClick = useCallback((m: Member) => {
     openUrl(`https://jisho.org/search/${m.basic_form}`);
   }, []);
 
@@ -56,22 +52,28 @@ export default function MainScreen({ sentence, lang }: Props) {
           <div className="bg-white border border-gallery w-full p-2 shadow-md">
             {loadingMembers && <div>Loading...</div>}
             <div className="grid grid-cols-3 font-klee text-[18px] gap-4">
-              {members?.map((m) => (
-                <div className="flex flex-col" key={m.basic_form}>
+              {members?.map(({ members }) => (
+                <div className="flex flex-col" key={members.basic_form}>
                   <div
-                    onClick={() => onMemberClick(m)}
+                    onClick={() => onMemberClick(members)}
                     className="cursor-pointer whitespace-nowrap"
                     dangerouslySetInnerHTML={{
-                      __html: m.ruby,
+                      __html: members.ruby ?? "",
                     }}
                   />
                   <div className="font-inter text-sm">
-                    {lang === "en" ? m.en : m.ru ? m.ru : m.en}
+                    {lang === "en"
+                      ? members.en
+                      : members.ru
+                        ? members.ru
+                        : members.en}
                   </div>
                   <div className="mt-2">
-                    <span className="text-sky-500">{m.pos}</span>
-                    {m.pos_detail_1 === "suffix" ? (
-                      <span className="text-red-800">{m.pos_detail_1}</span>
+                    <span className="text-sky-500">{members.pos}</span>
+                    {members.pos_detail_1 === "suffix" ? (
+                      <span className="text-red-800">
+                        {members.pos_detail_1}
+                      </span>
                     ) : null}
                   </div>
                 </div>

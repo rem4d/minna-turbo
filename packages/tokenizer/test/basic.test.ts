@@ -34,7 +34,7 @@ test("[Filter_list]: Use an exception from list.", async () => {
       basic_form: "一人", // exception itself
       reading: "ひとり", // reading from filter list
       pos: "noun", // pos from filter list or default 'noun'
-      pos_detail_1: "REPLACED",
+      pos_detail_1: "replaced",
     }),
   );
 });
@@ -42,8 +42,7 @@ test("[Filter_list]: Use an exception from list.", async () => {
 test("[Filter_list]: Additonal test.", async () => {
   // const text = "明日は必ず終わるようにしてくださいね。";
   // '助動詞語幹',
-  const text = "池田さんは歌がとても好きなようだ";
+  const text = "部分食。";
   const tokens = await tokenize(text);
-
-  console.log(tokens.filter((t) => t.basic_form === "よう"));
+  console.log(tokens);
 });

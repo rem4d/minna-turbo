@@ -54,7 +54,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
   const memberAccordionOpen = val.includes("2");
 
   const { data: members, isFetching: loadingMembers } =
-    api.member.sentenceMembers.useQuery(
+    api.viewer.member.sentenceMembers.useQuery(
       { id: sentence.id },
       {
         enabled: !!sentence.text && memberAccordionOpen,

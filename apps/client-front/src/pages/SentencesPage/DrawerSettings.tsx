@@ -25,7 +25,7 @@ export default function DrawerSettings({
   const [view, setView] = useState<"idle" | "choose">("idle");
   const [selectedLevel, setSelectedLevel] = useState<number>(level);
 
-  const { data: kanjis } = api.kanji.all.useQuery();
+  const { data: kanjis } = api.viewer.kanji.all.useQuery();
   const currentK = kanjis?.find((k) => k.position === selectedLevel);
 
   const onKSelect = (id: number) => {

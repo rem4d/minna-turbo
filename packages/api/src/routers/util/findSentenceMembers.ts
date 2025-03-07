@@ -6,7 +6,6 @@ const showLogs = true;
 
 const existingMembersMap = new Map<string, Member>();
 
-// init map
 const init = async () => {
   const { data: membersData } = await db.from("members").select();
 
@@ -25,6 +24,7 @@ const init = async () => {
   log("Members map has been initialized.");
 };
 
+// init map
 void init();
 
 export const findSingleSentenceMembers = async (sentence: Sentence) => {
@@ -71,7 +71,7 @@ export const findSingleSentenceMembers = async (sentence: Sentence) => {
     const T_KEY = mapKeyFn(token);
     let member = existingMembersMap.get(T_KEY);
 
-    if (!member && token.pos_detail_1 === "REPLACED") {
+    if (!member && token.pos_detail_1 === "replaced") {
       member = existingMembersMap.get(mapKeyReplacedFn(token));
     }
 
@@ -86,8 +86,9 @@ export const findSingleSentenceMembers = async (sentence: Sentence) => {
         memberIds.push(member.id);
       }
     } else {
-      // check for REPLACED members
-      log(`No member was found for: `, token.basic_form);
+      log("MEMBER IS NOT DEFINED IN THE DATABASE: ");
+      log(token);
+      log("______________________________________");
     }
   }
   return memberIds;
@@ -127,7 +128,6 @@ const mapKeyReplacedFn: MapKeyFnType = (t) =>
   `${t.basic_form}_${t.pos}_replaced`;
 
 const typesToIgnore = ["assistant", "symbol", "interjection", "フィラー"];
-// const japaneseNamesWithoutSan = ["上田"];
 
 const theseSoundLikeJapaneseNamesButTheyAreNot = [
   "皆", // all
@@ -150,8 +150,9 @@ const theseSoundLikeJapaneseNamesButTheyAreNot = [
   "歯医者", // dentist
 ];
 
-const log = (...args: string[]) => {
+const log = (...args: any) => {
   if (showLogs) {
+    // eslint-disable-next-line
     console.log(...args);
   }
 };

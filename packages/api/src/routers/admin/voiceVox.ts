@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "path";
-import { publicProcedure, router } from "../trpc";
+import { publicProcedure, router } from "../../trpc";
 import { z } from "zod";
 import { finished } from "node:stream/promises";
 
 import { fileURLToPath } from "url";
-import { sleep } from "../util/sleep";
+import { sleep } from "../../util/sleep";
 
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = path.dirname(__filename);
@@ -71,7 +71,7 @@ async function createAutio(text: string) {
   // console.log("Finish write file");
 }
 
-export const ttsRouter = router({
+export const voicevoxRouter = router({
   synthesize: publicProcedure.input(z.string()).mutation(async function* ({
     input,
   }) {

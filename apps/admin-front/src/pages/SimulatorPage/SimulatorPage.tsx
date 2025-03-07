@@ -1,31 +1,33 @@
-import {
-  Box,
-  Text,
-  Button,
-  Heading,
-  Flex,
-  Grid,
-  Badge,
-  DataList,
-  Code,
-  Switch,
-  Link,
-  IconButton,
-} from "@radix-ui/themes";
-import { useEffect, useState } from "react";
-import { initTTS } from "@/utils/tts";
-import { api } from "@/utils/api";
-import useUnmount from "@/hooks/useUnmount";
-import { ThickArrowLeftIcon, ThickArrowRightIcon } from "@radix-ui/react-icons";
-import MainScreen from "./MainScreen";
+// import {
+//   Box,
+//   Text,
+//   Button,
+//   Heading,
+//   Flex,
+//   Grid,
+//   Badge,
+//   DataList,
+//   Code,
+//   Switch,
+//   Link,
+//   IconButton,
+// } from "@radix-ui/themes";
+// import { useEffect, useState } from "react";
+// import { initTTS } from "@/utils/tts";
+// import { api } from "@/utils/api";
+// import useUnmount from "@/hooks/useUnmount";
+// import { ThickArrowLeftIcon, ThickArrowRightIcon } from "@radix-ui/react-icons";
+// import MainScreen from "./MainScreen";
 
 export const SimulatorPage = () => {
+  return <div>none</div>;
+  /*
   const [activeIndex, setActiveIndex] = useState(0);
   const [lang, setLang] = useState<"en" | "ru">("en");
   const [seenIds, setSeenIds] = useState<number[]>([]);
 
   const { data: list, isLoading: loadingSentence } =
-    api.sentence.getRandomized.useQuery({
+    api.admin.sentence.getRandomized.useQuery({
       level: 96,
     });
 
@@ -140,5 +142,6 @@ export const SimulatorPage = () => {
       ) : null}
     </Box>
   );
+    */
 };
 export default SimulatorPage;

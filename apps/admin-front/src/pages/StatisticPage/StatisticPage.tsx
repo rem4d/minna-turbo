@@ -1,4 +1,3 @@
-import type { Sentence } from "@rem4d/db";
 import {
   Box,
   Text,
@@ -10,29 +9,15 @@ import {
   Grid,
   Spinner,
 } from "@radix-ui/themes";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { api } from "@/utils/api";
 
-/*
-interface GenStatementResponseData {
-  data: {
-    sentences: Sentence[];
-    additional: Sentence[];
-  };
-}
-*/
 export const StatisticPage = () => {
-  // const [loading, setLoading] = useState(false);
-  const [loadingStatementsForLevel, setLoadingStatementsForLevel] =
-    useState(false);
-  // const [list, setList] = useState<StatisticsItem[]>([]);
-  const [sentencesLvl, setSentencesLvl] = useState<Sentence[]>([]);
-  const [additionalLvl, setAdditionalLvl] = useState<Sentence[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
 
-  const { data: list, isLoading } = api.stat.getStat.useQuery();
+  const { data: list, isLoading } = api.admin.stat.getStat.useQuery();
 
-  const getSenForLevel = api.sentence.getSentencesForLevel.useMutation();
+  const getSenForLevel = api.admin.sentence.getSentencesForLevel.useMutation();
 
   const onLevelClick = useCallback((_n: number) => {
     setSelectedLevel(_n);

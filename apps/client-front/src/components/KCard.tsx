@@ -16,7 +16,7 @@ export function KCard({ k, containerClassName = "" }: Props) {
   const [hasScroll, setHasScroll] = useState(false);
 
   const { data: examples, isLoading: examplesLoading } =
-    api.kanji.examples.useQuery({ k: k.kanji ?? "" }, { enabled: !!k });
+    api.viewer.kanji.examples.useQuery({ k: k.kanji ?? "" }, { enabled: !!k });
 
   useLayoutEffect(() => {
     if (examplesRef.current) {

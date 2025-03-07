@@ -70,7 +70,7 @@ export const tokenize = async (text: string) => {
 
     for (let i = 0; i < mojiTokens.length; i++) {
       // TODO: why is this here??
-      // if (mojiTokens[i]?.word_type === "REPLACED") {
+      // if (mojiTokens[i]?.word_type === "replaced") {
       //   continue;
       // }
       const mArr = Array.from(mojiTokens[i]?.surface_form ?? "");
@@ -102,13 +102,12 @@ export const tokenize = async (text: string) => {
         log(`Put new element: `, wordToReplace);
         mojiTokens.splice(firstIndex, tokenIndexesToRemove.length, {
           word_id: 0,
-          word_type: "REPLACED",
+          word_type: "replaced",
           word_position: _mojiTokens[firstIndex]?.word_position ?? 0,
           surface_form: wordToReplace,
           basic_form: wordToReplace,
           pos: wordFilterRule.pos ?? "noun",
-          pos_detail_1: wordFilterRule.pos_detail_1 ?? "REPLACED",
-          // pos_detail_1: wordFilterRule.pos_detail_1 ?? "REPLACED",
+          pos_detail_1: wordFilterRule.pos_detail_1 ?? "replaced",
           reading: wordFilterRule.reading[0],
           pos_detail_2: "",
           pos_detail_3: "",
@@ -137,7 +136,7 @@ export const tokenize = async (text: string) => {
       start: token.word_position - 1,
       end: token.word_position - 1 + token.surface_form.length,
       pos: mapPos(token.pos),
-      pos_detail_1: mapPosDetails(token.pos_detail_1), // REPLACED included
+      pos_detail_1: mapPosDetails(token.pos_detail_1), // "replaced" included
       pos_detail_2: token.pos_detail_2,
       basic_form: mapBasicForm(token),
       is_kanji: isKanji(token.surface_form),

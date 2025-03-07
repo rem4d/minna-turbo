@@ -10,7 +10,7 @@ export const DictionaryPage: FC = () => {
   const { level } = useParams();
 
   const { data: vocabList, isLoading } =
-    api.member.suggestedVocabularyByLevel.useQuery({
+    api.viewer.member.suggestedVocabularyByLevel.useQuery({
       level: Number(level),
     });
 

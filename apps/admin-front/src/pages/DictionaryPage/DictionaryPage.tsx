@@ -53,41 +53,41 @@ export const DictionaryPage: FC = () => {
 
   const utils = api.useUtils();
   const { data: membersByPosData, isLoading: memberByPosLoading } =
-    api.member.membesByPos.useQuery({
+    api.admin.member.membesByPos.useQuery({
       pos: selectedPos,
       limit: MAX_PER_PAGE,
       page: pageNumber,
       basic_form: debouncedMembersByText,
     });
 
-  const { data: total } = api.member.membesByPosTotal.useQuery({
+  const { data: total } = api.admin.member.membesByPosTotal.useQuery({
     pos: selectedPos,
   });
 
   const membersByPos = membersByPosData;
 
-  const updateMeaningMutation = api.member.updateMeaning.useMutation({
+  const updateMeaningMutation = api.admin.member.updateMeaning.useMutation({
     onSuccess() {
-      void utils.member.membesByPos.invalidate();
+      void utils.admin.member.membesByPos.invalidate();
     },
   });
-  const updateRuMutation = api.member.updateRu.useMutation({
+  const updateRuMutation = api.admin.member.updateRu.useMutation({
     onSuccess() {
-      void utils.member.membesByPos.invalidate();
+      void utils.admin.member.membesByPos.invalidate();
     },
   });
-  const setHiddenMutation = api.member.setHidden.useMutation({
+  const setHiddenMutation = api.admin.member.setHidden.useMutation({
     onSuccess() {
-      void utils.member.membesByPos.invalidate();
+      void utils.admin.member.membesByPos.invalidate();
     },
   });
-  const setInvalidMutation = api.member.setInvalid.useMutation({
+  const setInvalidMutation = api.admin.member.setInvalid.useMutation({
     onSuccess() {
-      void utils.member.membesByPos.invalidate();
+      void utils.admin.member.membesByPos.invalidate();
     },
   });
 
-  const findSenMutation = api.sentence.findContainingText.useMutation();
+  const findSenMutation = api.admin.sentence.findContainingText.useMutation();
   const correspondingSentences = findSenMutation.data ?? [];
 
   const handleDocumentClick = useCallback((e: MouseEvent) => {

@@ -8,7 +8,7 @@ import Skeleton from "react-loading-skeleton";
 
 export const LibraryPage: FC = () => {
   const { data: list, isLoading } =
-    api.member.suggestedVocabulariesList.useQuery(undefined, {
+    api.viewer.member.suggestedVocabulariesList.useQuery(undefined, {
       throwOnError: true,
     });
 

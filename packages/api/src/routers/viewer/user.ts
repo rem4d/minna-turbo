@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
-import { authedProcedure, router } from "../trpc";
-import { getUserByTelegramId } from "./util/getUserByTelegramId";
+import { authedProcedure, router } from "../../trpc";
+import { getUserByTelegramId } from "../util/getUserByTelegramId";
 import { z } from "zod";
 
 export const userRouter = router({

@@ -1,6 +1,6 @@
-import { publicProcedure, router } from "../trpc";
+import { publicProcedure, router } from "../../trpc";
 
-export const statRouter = router({
+export const adminStatRouter = router({
   getStat: publicProcedure.query(async ({ ctx }) => {
     const shift = 60;
     const { data, error } = await ctx.db

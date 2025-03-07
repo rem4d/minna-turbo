@@ -6,7 +6,6 @@ import {
   Flex,
   Grid,
   Text,
-  Table,
   TextField,
   Button,
   Badge,
@@ -18,29 +17,34 @@ export default function FilterListPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState("");
 
-  const findSenMutation = api.sentence.findFurtherMembersUpdates.useMutation();
+  const findSenMutation =
+    api.admin.sentence.findFurtherMembersUpdates.useMutation();
   const correspondingSentences = findSenMutation.data ?? [];
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
 
-  const onClick = () => {
+  const onFindMembersDiffClick = () => {
     findSenMutation.mutate({ text: inputValue });
   };
+
+  const onCheckListClick = () => {};
 
   return (
     <div>
       <Box>
         <Grid columns="30% auto" gap="4">
           <Flex direction="column" gap="4">
+            <Button onClick={onCheckListClick}>Check List</Button>
+            <br />
             <TextField.Root
               ref={inputRef}
               placeholder="Text to find sentences by"
               value={inputValue}
               onChange={onInputChange}
             ></TextField.Root>
-            <Button onClick={onClick}>Find members diff</Button>
+            <Button onClick={onFindMembersDiffClick}>Find members diff</Button>
           </Flex>
           <Flex direction="column" gap="4">
             {correspondingSentences.length > 0 && (

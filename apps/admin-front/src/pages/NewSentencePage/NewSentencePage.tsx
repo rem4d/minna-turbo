@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useState } from "react";
 import type { FC } from "react";
 import { openUrl } from "../../utils";
 import {
@@ -9,10 +9,7 @@ import {
   Box,
   TextArea,
   Grid,
-  Badge,
   DataList,
-  Code,
-  Spinner,
 } from "@radix-ui/themes";
 import type { MemberOutput } from "../../types";
 import { initTTS } from "../../utils/tts";
@@ -20,42 +17,15 @@ import { api } from "@/utils/api";
 
 export const NewSentencePage: FC = () => {
   const [input, setInput] = useState("");
-  const [rubyHtml, setRubyHtml] = useState("");
-  const [textWithFuriganaHtml, setTextWithFuriganaHtml] = useState("");
   const [translation, setTranslation] = useState("");
   const [en, setEn] = useState("");
   const [ru, setRu] = useState("");
-  const [openAiResponse, setOpenAiResponse] = useState("");
-  const [openAiTranslation, setOpenAiTranslation] = useState("");
   // const [sentence, setSentence] = useState<Sentence | null>(null);
 
   const { data: analyzeData, mutate: analyze } =
-    api.sentence.analyze.useMutation();
+    api.admin.sentence.analyze.useMutation();
 
-  const members = [];
-  // const { data: members } = api.member.sentenceMembers.useQuery(
-  //   { text: input },
-  //   {
-  //     enabled: !!input && !!analyzeData,
-  //   },
-  // );
-  const createMutation = api.sentence.create.useMutation({});
-
-  const { mutate: checkGrammar, isPending: openAiLoading } =
-    api.openAi.check.useMutation({
-      onSuccess(data) {
-        setOpenAiResponse(data);
-
-        const m = /ranslat[^"]*"([^"\\]*)/.exec(data);
-
-        if (m && m.length > 0) {
-          const last = m[m.length - 1];
-          if (last) {
-            setOpenAiTranslation(last.replace(/"/g, ""));
-          }
-        }
-      },
-    });
+  const createMutation = api.admin.sentence.create.useMutation({});
 
   const onPlayAudio = async () => {
     await initTTS(input);
@@ -195,37 +165,6 @@ export const NewSentencePage: FC = () => {
               </Flex>
             </Flex>
           </Flex>
-          <div>
-            <Flex direction="column" align="start" gap="4">
-              <Button onClick={() => checkGrammar(input)}>
-                Check via OpenAI
-              </Button>
-              {openAiResponse && (
-                <Heading size="4" mb="4">
-                  OpenAI response
-                </Heading>
-              )}
-              {openAiLoading ? <Spinner /> : null}
-              {/* {!correct && !openAiLoading && openAiResponse ? ( */}
-              {/*   <Badge color="red">Incorrect</Badge> */}
-              {/* ) : null} */}
-              {/* {correct && !openAiLoading ? ( */}
-              {/*   <Badge color="green">Correct</Badge> */}
-              {/* ) : null} */}
-              {openAiResponse && (
-                <TextArea
-                  className="w-full"
-                  rows={4}
-                  value={openAiTranslation}
-                />
-              )}
-              {openAiResponse ? (
-                <Box mt="2">
-                  <Text>{openAiResponse}</Text>
-                </Box>
-              ) : null}
-            </Flex>
-          </div>
         </Grid>
 
         <Grid columns="3" my="8" className="">
@@ -247,26 +186,6 @@ export const NewSentencePage: FC = () => {
             {/*     <Heading size="4">Members</Heading> */}
             {/*   </Flex> */}
             {/* </div> */}
-            {members.members.map((m) => (
-              <Flex key={m.basic_form} direction="column">
-                <Text
-                  size="6"
-                  onClick={() => onMemberClick(m)}
-                  className="cursor-pointer whitespace-nowrap"
-                  dangerouslySetInnerHTML={{
-                    __html: m.html,
-                  }}
-                />
-                <Text className="select-none" size="2">
-                  {m.meaning}
-                </Text>
-                <Box>
-                  <Badge color="sky" size="1">
-                    {m.pos}
-                  </Badge>
-                </Box>
-              </Flex>
-            ))}
           </Grid>
         </Grid>
 

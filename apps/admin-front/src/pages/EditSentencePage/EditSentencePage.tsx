@@ -31,17 +31,15 @@ export const EditSentencePage: FC = () => {
   const [translation, setTranslation] = useState("");
   const [en, setEn] = useState("");
   const [ru, setRu] = useState("");
-  const [openAiResponse, setOpenAiResponse] = useState("");
-  const [openAiTranslation, setOpenAiTranslation] = useState("");
 
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data: sentence } = api.sentence.getById.useQuery(Number(id), {
+  const { data: sentence } = api.admin.sentence.getById.useQuery(Number(id), {
     enabled: !!id,
   });
 
-  const { data: members } = api.member.sentenceMembers.useQuery(
+  const { data: members } = api.admin.member.sentenceMembers.useQuery(
     { id: sentence?.id ?? 0 },
     {
       enabled: !!sentence?.id,
@@ -52,29 +50,29 @@ export const EditSentencePage: FC = () => {
   const submitVoiceMutation = useSubmitVoiceMutation({
     onSuccess() {
       toast.success("Successfully assigned speaker.");
-      void utils.sentence.getById.invalidate();
+      void utils.admin.sentence.getById.invalidate();
     },
   });
 
-  const reassignMembersMutation = api.member.reassignMembers.useMutation({
+  const reassignMembersMutation = api.admin.member.reassignMembers.useMutation({
     onSuccess() {
       toast.success("Successfully reassigned.");
-      void utils.member.sentenceMembers.invalidate();
+      void utils.admin.member.sentenceMembers.invalidate();
     },
   });
 
   const removeSpeakerMutation = useRemoveSpeakerMutation({
     onSuccess() {
       toast.success("Successfully removed speaker.");
-      void utils.sentence.getById.invalidate();
+      void utils.admin.sentence.getById.invalidate();
     },
   });
 
   const { data: analyzeData, mutate: analyze } =
-    api.sentence.analyze.useMutation({
+    api.admin.sentence.analyze.useMutation({
       onSuccess() {
         toast.success("Got response.");
-        void utils.sentence.getById.invalidate();
+        void utils.admin.sentence.getById.invalidate();
       },
     });
 
@@ -85,10 +83,10 @@ export const EditSentencePage: FC = () => {
     }
   }, [analyzeData]);
 
-  const updateMutation = api.sentence.update.useMutation({
+  const updateMutation = api.admin.sentence.update.useMutation({
     onSuccess() {
       toast.success("Successfully updated.");
-      void utils.sentence.getById.invalidate();
+      void utils.admin.sentence.getById.invalidate();
     },
     onError() {
       toast.error("Unexpected error during update.");
@@ -96,25 +94,9 @@ export const EditSentencePage: FC = () => {
   });
 
   const { mutate: deleteMutation, isPending: isDeleting } =
-    api.sentence.delete.useMutation({
+    api.admin.sentence.delete.useMutation({
       onSuccess() {
         void navigate("/");
-      },
-    });
-
-  const { mutate: checkGrammar, isPending: openAiLoading } =
-    api.openAi.check.useMutation({
-      onSuccess(data) {
-        setOpenAiResponse(data);
-
-        const m = /ranslat[^"]*"([^"\\]*)/.exec(data);
-
-        if (m && m.length > 0) {
-          const last = m[m.length - 1];
-          if (last) {
-            setOpenAiTranslation(last.replace(/"/g, ""));
-          }
-        }
       },
     });
 
@@ -356,37 +338,6 @@ export const EditSentencePage: FC = () => {
                 </Flex>
               </Flex>
             </Flex>
-            <div>
-              <Flex direction="column" align="start" gap="4">
-                <Button onClick={() => checkGrammar(input)}>
-                  Check via OpenAI
-                </Button>
-                {openAiResponse && (
-                  <Heading size="4" mb="4">
-                    OpenAI response
-                  </Heading>
-                )}
-                {openAiLoading ? <Text>Loading...</Text> : null}
-                {/* {!correct && !openAiLoading && openAiResponse ? ( */}
-                {/*   <Badge color="red">Incorrect</Badge> */}
-                {/* ) : null} */}
-                {/* {correct && !openAiLoading ? ( */}
-                {/*   <Badge color="green">Correct</Badge> */}
-                {/* ) : null} */}
-                {openAiResponse && (
-                  <TextArea
-                    className="w-full"
-                    rows={4}
-                    value={openAiTranslation}
-                  />
-                )}
-                {openAiResponse ? (
-                  <Box mt="2">
-                    <Text>{openAiResponse}</Text>
-                  </Box>
-                ) : null}
-              </Flex>
-            </div>
           </Grid>
 
           <Grid columns="3" my="8" className="">

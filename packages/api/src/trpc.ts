@@ -31,24 +31,10 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
   }),
 });
 
-/**
- * Create a server-side caller
- * @see https://trpc.io/docs/server/server-side-calls
- */
 export const createCallerFactory = t.createCallerFactory;
 
-/**
- * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
- *
- * These are the pieces you use to build your tRPC API. You should import these
- * a lot in the /src/server/api/routers folder
- */
-
-/**
- * This is how you create new routers and subrouters in your tRPC API
- * @see https://trpc.io/docs/router
- */
 export const router = t.router;
+export const mergeRouters = t.mergeRouters;
 
 /**
  * Middleware for timing procedure execution and adding an articifial delay in development.

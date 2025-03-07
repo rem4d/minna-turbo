@@ -7,7 +7,7 @@ export const IndexPage: FC = () => {
   const [pageNumber, setPageNumber] = useState(0);
   const MAX_PER_PAGE = 200;
 
-  const { data: list, isLoading } = api.sentence.list.useQuery({
+  const { data: list, isLoading } = api.admin.sentence.list.useQuery({
     maxPerPage: MAX_PER_PAGE,
     page: pageNumber,
   });

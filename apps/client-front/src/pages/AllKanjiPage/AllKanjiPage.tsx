@@ -16,7 +16,7 @@ export const AllKanjiPage: FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 400);
 
-  const { data, isLoading } = api.kanji.all.useQuery();
+  const { data, isLoading } = api.viewer.kanji.all.useQuery();
   const selectedK = data?.find((d) => d.id === selectedKId);
 
   const displayData = debouncedValue

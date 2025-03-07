@@ -9,7 +9,7 @@ import { clamp } from "@rem4d/utils";
 export const FlashcardsPage: FC = () => {
   const [cardListDisplay, setCardListDisplay] = useState<Kanji[]>([]);
 
-  const { data: list, isLoading } = api.kanji.all.useQuery();
+  const { data: list, isLoading } = api.viewer.kanji.all.useQuery();
 
   const total = clamp(list?.length ?? 0, 0, 20);
 

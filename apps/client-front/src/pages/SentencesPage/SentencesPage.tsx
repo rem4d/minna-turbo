@@ -41,23 +41,23 @@ export const SentencesPage: FC = () => {
 
   const utils = api.useUtils();
 
-  const { data: list, isLoading } = api.sentence.getRandomized.useQuery(
+  const { data: list, isLoading } = api.viewer.sentence.getRandomized.useQuery(
     undefined,
     {
       throwOnError: true,
     },
   );
 
-  const markAsSeenMutation = api.sentence.markAsSeen.useMutation();
+  const markAsSeenMutation = api.viewer.sentence.markAsSeen.useMutation();
 
-  const { data: user } = api.user.info.useQuery(undefined, {
+  const { data: user } = api.viewer.user.info.useQuery(undefined, {
     throwOnError: true,
   });
 
-  const updateLevelMuatation = api.user.updateLevel.useMutation({
+  const updateLevelMuatation = api.viewer.user.updateLevel.useMutation({
     onSuccess() {
-      void utils.sentence.getRandomized.reset();
-      void utils.user.info.reset();
+      void utils.viewer.sentence.getRandomized.reset();
+      void utils.viewer.user.info.reset();
     },
   });
 
@@ -86,7 +86,7 @@ export const SentencesPage: FC = () => {
     if (activeIndex === storedList.length - 1) {
       const ids = storedList.map((l) => l.id);
       void markAsSeenMutation.mutate({ ids });
-      void utils.sentence.getRandomized.invalidate();
+      void utils.viewer.sentence.getRandomized.invalidate();
     }
   }, [activeIndex, storedList.length, markAsSeenMutation.mutate]);
 
