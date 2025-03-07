@@ -71,7 +71,7 @@ export const adminSentenceRouter = router({
       }
 
       const result: {
-        new_members: { id: string; basic_form: string }[];
+        new_members: { id: number; basic_form: string }[];
         sentence: Sentence;
       }[] = [];
 
