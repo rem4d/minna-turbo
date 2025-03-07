@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 export const IndexPage: FC = () => {
-  console.log("Update");
+  console.log("Update2");
   return (
     <Page footer>
       <div className="flex flex-col items-center justify-center space-y-6 p-[33px]">
