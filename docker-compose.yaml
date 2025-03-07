@@ -9,7 +9,8 @@ services:
       context: "./"
       target: frontend
       args:
-        PROJECT: client-front
+        - PROJECT=client-front
+        - VITE_API_SERVER=${VITE_API_SERVER}
     image: "rem4d/client-front:stage"
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
