@@ -1,9 +1,11 @@
 import type { Sentence } from "@rem4d/db";
 import type { FC } from "react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import Drawer from "@/components/Drawer";
 import { List, ListItem } from "@/components/List";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
+import { SentenceViewer } from "@/components/SentenceViewer";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
 export const SettingsPage: FC = () => {
@@ -11,6 +13,11 @@ export const SettingsPage: FC = () => {
     "kic:favorites",
     [],
   );
+  const [modalOpen, setModalOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+
+  const sentence = favorites[activeIndex];
+  console.log(sentence);
 
   const remove = useCallback(
     (id: number) => {
@@ -21,6 +28,28 @@ export const SettingsPage: FC = () => {
     },
     [favorites, setFavorites],
   );
+
+  const onItemClick = useCallback(
+    (id: number) => {
+      const index = favorites.findIndex((e) => e.id === id);
+      if (index === -1) {
+        return;
+      }
+      setModalOpen(true);
+      setActiveIndex(index);
+    },
+    [favorites],
+  );
+
+  const handlePrevClick = () => {
+    setActiveIndex(activeIndex - 1);
+  };
+
+  const handleNextClick = () => {
+    setActiveIndex(activeIndex + 1);
+  };
+  const disableNextNav =
+    activeIndex === favorites.length - 1 || favorites.length === 0;
 
   return (
     <Page footer>
@@ -34,11 +63,23 @@ export const SettingsPage: FC = () => {
               sub={`${fav.id}`}
               title={fav.text}
               onRightIconClick={() => remove(fav.id)}
+              onClick={() => onItemClick(fav.id)}
               showBorder={index < favorites.length - 1}
             />
           ))}
         </List>
       </div>
+      <Drawer open={modalOpen} onOpenChange={setModalOpen} noContainer>
+        <div className="bg-super-silver relative flex h-[90vh] flex-col">
+          <SentenceViewer
+            sentence={sentence}
+            disableNextNav={disableNextNav}
+            disablePrevNav={activeIndex === 0}
+            onNextClick={handleNextClick}
+            onPrevClick={handlePrevClick}
+          />
+        </div>
+      </Drawer>
     </Page>
   );
 };

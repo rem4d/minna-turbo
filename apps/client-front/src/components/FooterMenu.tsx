@@ -28,7 +28,7 @@ export function FooterMenu(): ReactElement {
   return (
     <div
       className={twJoin(
-        "absolute bottom-0 z-40 h-[87px] w-full",
+        "absolute bottom-0 h-[87px] w-full",
         "border-mercury bg-wild-sand/85 border-t backdrop-blur-[20px]",
         "animate-jump flex items-center justify-between divide-x overflow-hidden",
         "animate-once",

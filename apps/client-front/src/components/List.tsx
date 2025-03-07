@@ -27,6 +27,7 @@ interface ListItemProps {
   iconRight?: "arrow" | "remove" | ReactElement;
   to?: string;
   showBorder?: boolean;
+  onClick?: () => void;
   onRightIconClick?: () => void;
 }
 
@@ -37,6 +38,7 @@ export const ListItem: FC<ListItemProps> = ({
   to,
   showBorder,
   onRightIconClick,
+  onClick,
   iconRight = null,
 }) => {
   const navigate = useNavigate();
@@ -45,6 +47,7 @@ export const ListItem: FC<ListItemProps> = ({
     if (to) {
       void navigate(to);
     }
+    onClick?.();
   };
 
   const iconRightElem = () => {
@@ -77,7 +80,7 @@ export const ListItem: FC<ListItemProps> = ({
           showBorder && "border-b",
         )}
       >
-        <div className="flex w-full items-center space-x-[8px]">
+        <div className="flex grow items-center space-x-[8px] overflow-hidden">
           {icon ?? null}
           <div className="flex w-full flex-col">
             <div className="w-full overflow-hidden text-[17px] leading-5 overflow-ellipsis whitespace-nowrap">

@@ -7,13 +7,13 @@ import { AnimatePresence, useAnimation } from "motion/react";
 import * as m from "motion/react-client";
 import { twMerge } from "tailwind-merge";
 
-interface Item {
+export interface DropdownItem {
   title: string;
   onClick: () => void;
 }
 
 interface Props {
-  items: Item[];
+  items: DropdownItem[];
   onOpen?: () => void;
 }
 

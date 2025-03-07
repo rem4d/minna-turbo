@@ -1,29 +1,20 @@
 import type { Sentence } from "@rem4d/db";
 import type { FC } from "react";
-import { useCallback, useEffect, useState } from "react";
-import ArrowIcon from "@/assets/icons/arrow.svg?react";
-import EyeClosedIcon from "@/assets/icons/eye-closed.svg?react";
-import EyeOpenIcon from "@/assets/icons/eye-open.svg?react";
-import Dropdown from "@/components/Dropdown";
+import { useEffect, useState } from "react";
 import { Page } from "@/components/Page";
-import PlaySound from "@/components/PlaySound";
+import { SentenceViewer } from "@/components/SentenceViewer";
 import { SpinnerBig } from "@/components/Spinner";
 import Toast from "@/components/Toast";
-import { usePlaySoundContext } from "@/context/playSoundContext";
 import { api } from "@/utils/api";
 import hapticFeedback from "@/utils/hapticFeedback";
 import { useUnmount } from "@rem4d/utils";
 import { useLaunchParams } from "@telegram-apps/sdk-react";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { twMerge } from "tailwind-merge";
 
-import Accordion from "./Accordion";
 import DrawerSettings from "./DrawerSettings";
-import { SentenceText } from "./SentenceText";
 
 export const SentencesPage: FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [showFurigana, setShowFurigana] = useState(false);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [toastData, setToastOpen] = useState({
     open: false,
@@ -73,10 +64,6 @@ export const SentencesPage: FC = () => {
   });
 
   useEffect(() => {
-    setShowFurigana(false);
-  }, [sentence]);
-
-  useEffect(() => {
     if (list && list.length > 0) {
       setStoredList((sl) => sl.concat(list));
     }
@@ -91,17 +78,11 @@ export const SentencesPage: FC = () => {
   }, [activeIndex, storedList.length, markAsSeenMutation.mutate]);
 
   const handlePrevClick = () => {
-    hapticFeedback("light");
     setActiveIndex(activeIndex - 1);
   };
 
   const handleNextClick = () => {
-    hapticFeedback("light");
     setActiveIndex(activeIndex + 1);
-  };
-
-  const onSettingsOpen = () => {
-    hapticFeedback("light");
   };
 
   const favIndex = sentence
@@ -142,37 +123,8 @@ export const SentencesPage: FC = () => {
     hapticFeedback("medium");
   };
 
-  const disableRightNav =
+  const disableNextNav =
     activeIndex === storedList.length - 1 || storedList.length === 0;
-
-  const {
-    isPlaying,
-    isLoading: isLoadingSound,
-    onLoad,
-    onPlayLatest,
-    onStop,
-    text: contextText,
-  } = usePlaySoundContext();
-
-  const isCurrent = useCallback(
-    (reading: string) => {
-      return contextText === reading;
-    },
-    [contextText],
-  );
-
-  const onLoadSpeech = useCallback(
-    (text: string, index: number | undefined) => {
-      if (text) {
-        onLoad(text, index);
-      }
-    },
-    [onLoad],
-  );
-
-  const onPlay = useCallback(() => {
-    onPlayLatest();
-  }, [onPlayLatest]);
 
   if (isLoading) {
     return (
@@ -181,8 +133,6 @@ export const SentencesPage: FC = () => {
       </div>
     );
   }
-  // console.log(sentence[100].text);
-
   return (
     <Page back>
       <div className="relative h-full overflow-hidden">
@@ -194,59 +144,16 @@ export const SentencesPage: FC = () => {
         >
           {user ? <>Ваш уровень: {user.level}</> : <></>}
         </div>
-        {sentence && (
-          <div className={isMobile ? "mt-16" : "mt-10"}>
-            {/* nav buttons */}
-            <div className="mb-4 flex justify-between px-4">
-              <div
-                className={twMerge(
-                  "relative size-[30px] cursor-pointer",
-                  activeIndex === 0 && "pointer-events-none opacity-40",
-                )}
-                onClick={handlePrevClick}
-              >
-                <ArrowIcon className="text-azure-radiance absolute size-[20px] rotate-90 fill-current" />
-              </div>
-              <div className="flex items-center space-x-6">
-                {sentence.text && (
-                  <PlaySound
-                    reading={sentence.text}
-                    isLoading={isLoadingSound}
-                    isPlaying={isPlaying}
-                    onClick={
-                      isCurrent(sentence.text)
-                        ? isPlaying
-                          ? onStop
-                          : onPlay
-                        : onLoadSpeech
-                    }
-                  />
-                )}
-                <ShowFuriganaComponent
-                  showFurigana={showFurigana}
-                  onClick={() => setShowFurigana((s) => !s)}
-                />
-
-                <Dropdown items={dropdownItems} onOpen={onSettingsOpen} />
-              </div>
-              <div
-                className={twMerge(
-                  "relative size-[30px] cursor-pointer",
-                  disableRightNav && "pointer-events-none opacity-40",
-                )}
-                onClick={handleNextClick}
-              >
-                <ArrowIcon className="text-azure-radiance absolute size-[20px] -rotate-90 fill-current" />
-              </div>
-            </div>
-            <div className="px-4">
-              <SentenceText sentence={sentence} showFurigana={showFurigana} />
-              <div className="absolute bottom-0 left-0 w-full px-2">
-                <Accordion sentence={sentence} />
-              </div>
-            </div>
-          </div>
-        )}
+        <div className={isMobile ? "mt-16" : "mt-10"}>
+          <SentenceViewer
+            sentence={sentence}
+            dropdownItems={dropdownItems}
+            disableNextNav={disableNextNav}
+            disablePrevNav={activeIndex === 0}
+            onNextClick={handleNextClick}
+            onPrevClick={handlePrevClick}
+          />
+        </div>
       </div>
       <Toast
         open={toastData.open}
@@ -266,21 +173,4 @@ export const SentencesPage: FC = () => {
   );
 };
 
-const ShowFuriganaComponent = ({
-  onClick,
-  showFurigana,
-}: {
-  showFurigana: boolean;
-  onClick: () => void;
-}) => {
-  return (
-    <div className="cursor-pointer" onClick={onClick}>
-      {showFurigana ? (
-        <EyeOpenIcon className="size-[24px] text-black/50" />
-      ) : (
-        <EyeClosedIcon className="size-[24px] text-black/50" />
-      )}
-    </div>
-  );
-};
 export default SentencesPage;
