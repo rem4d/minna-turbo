@@ -27,7 +27,7 @@ app.use(
     createContext: createTRPCContext,
   }),
 );
-console.log(2);
+console.log(3);
 
 const ttsRouter: Router = express.Router();
 
