@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 import { FooterMenu } from "./FooterMenu";
 
 export function Base() {
-  const createUser = api.user.create.useMutation();
+  const createUser = api.viewer.user.create.useMutation();
   const initialized = useRef(false);
 
   useEffect(() => {
