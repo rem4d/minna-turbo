@@ -39,7 +39,9 @@
     "SUPABASE_URL",
     "OPENAI_API_KEY",
     "PORT",
-    "HOST"
+    "HOST",
+    "VITE_API_SERVER",
+    "VITE_ROLLBAR_API_TOKEN"
   ],
   "globalPassThroughEnv": ["NODE_ENV"]
 }
