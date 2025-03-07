@@ -66,8 +66,9 @@ WORKDIR /app/apps/${PROJECT}
 RUN mkdir -p public/m
 
 ARG PORT=8000
-ENV PORT=${PORT}
+ENV PORT=$PORT
 ENV NODE_ENV=production
+
 EXPOSE ${PORT}
 
 
@@ -76,6 +77,9 @@ CMD node dist/index.js
 # 4.2. Final image for frontend
 FROM nginx:${NGINX_VERSION}-alpine AS frontend
 ARG PROJECT
+
+ARG VITE_API_SERVER
+ENV VITE_API_SERVER=$VITE_API_SERVER
 
 WORKDIR /usr/share/nginx/
 
