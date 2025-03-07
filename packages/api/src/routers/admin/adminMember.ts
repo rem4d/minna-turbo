@@ -159,7 +159,4 @@ export const adminMemberRouter = router({
       }
       return [];
     }),
-  checkFilterList: publicProcedure.query(async ({ ctx }) => {
-    return true;
-  }),
 });
