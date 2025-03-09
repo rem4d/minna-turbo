@@ -187,6 +187,7 @@
 
 rt {
   font-size: 0.6em;
+  user-select:none;
 }
 
 .lds-ring {
