@@ -184,7 +184,7 @@ const KCard: FC<KCardProps> = ({ id, kanji, selected, onClick }) => {
   );
 };
 
-const duration = 0.4;
+const duration = 0.3;
 const parentVariant = {
   idle: {
     height: "50vh",
