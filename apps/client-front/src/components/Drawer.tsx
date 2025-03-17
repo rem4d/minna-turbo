@@ -48,7 +48,7 @@ export default function _Drawer({
               </Drawer.Title>
               <Drawer.Description></Drawer.Description>
             </div>
-            <div className="no-scroll mx-auto max-h-[90vh] max-w-md overflow-y-scroll">
+            <div className="no-scroll mx-auto max-h-[85vh] max-w-md overflow-y-scroll">
               {children}
             </div>
           </div>

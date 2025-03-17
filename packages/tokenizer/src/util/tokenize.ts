@@ -3,7 +3,7 @@ import { isKana, isKanji, isKatakana, toHiragana } from "wanakana";
 import filterList from "./filter.json" with { type: "json" };
 import type { Tokenizer, KanjiMapped } from "./types.js";
 
-const showLogs = true;
+const showLogs = false;
 
 class Deferred {
   promise: Promise<Tokenizer>;

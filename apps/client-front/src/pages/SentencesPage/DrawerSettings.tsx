@@ -4,6 +4,7 @@ import Button from "@/components/Button";
 import Drawer from "@/components/Drawer";
 import { List, ListItem } from "@/components/List";
 import { api } from "@/utils/api";
+import { convertLevel } from "@/utils/convert";
 import hapticFeedback from "@/utils/hapticFeedback";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-client";
@@ -33,6 +34,7 @@ export default function DrawerSettings({
     if (found) {
       setSelectedLevel(found.position);
       hapticFeedback("light");
+      setView("idle");
     }
   };
 
@@ -78,7 +80,7 @@ export default function DrawerSettings({
                         Изменить
                       </button>
                     }
-                    sub={`${currentK?.position} уровень`}
+                    sub={`${convertLevel(currentK?.position)} уровень`}
                   />
                 </List>
               </div>
@@ -143,7 +145,7 @@ const parentVariant = {
     },
   },
   choose: {
-    height: "100vh",
+    height: "85vh",
     transition: {
       duration,
     },

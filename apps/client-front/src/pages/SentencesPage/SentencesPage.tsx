@@ -6,6 +6,7 @@ import { SentenceViewer } from "@/components/SentenceViewer";
 import { SpinnerBig } from "@/components/Spinner";
 import Toast from "@/components/Toast";
 import { api } from "@/utils/api";
+import { convertLevel } from "@/utils/convert";
 import hapticFeedback from "@/utils/hapticFeedback";
 import { useUnmount } from "@rem4d/utils";
 import { useLaunchParams } from "@telegram-apps/sdk-react";
@@ -142,7 +143,7 @@ export const SentencesPage: FC = () => {
             paddingTop: isMobile ? 16 : 0,
           }}
         >
-          {user ? <>Ваш уровень: {user.level}</> : <></>}
+          {user ? <>Ваш уровень: {convertLevel(user.level)}</> : <></>}
         </div>
         <div className={isMobile ? "mt-16" : "mt-10"}>
           <SentenceViewer
