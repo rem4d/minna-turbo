@@ -7,13 +7,14 @@ import { DrawerSettings } from "@/components/DrawerSettings";
 import { Page } from "@/components/Page";
 import Tabs from "@/components/Tabs";
 import { api } from "@/utils/api";
+import hapticFeedback from "@/utils/hapticFeedback";
 import { clamp, shuffle } from "@rem4d/utils";
 
 export const FlashcardsPage: FC = () => {
   const [cardListDisplay, setCardListDisplay] = useState<Kanji[]>([]);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
 
-  const { data: list, isLoading } = api.viewer.kanji.all.useQuery();
+  const { data: list } = api.viewer.kanji.all.useQuery();
 
   const { data: user } = api.viewer.user.info.useQuery(undefined, {
     throwOnError: true,
@@ -32,7 +33,8 @@ export const FlashcardsPage: FC = () => {
 
   const onChangeLevel = (newLevel: number) => {
     // void updateLevelMuatation.mutate(newLevel);
-    // hapticFeedback("medium");
+    console.log(newLevel);
+    hapticFeedback("medium");
   };
 
   return (
