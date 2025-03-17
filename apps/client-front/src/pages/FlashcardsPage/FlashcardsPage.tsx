@@ -3,6 +3,7 @@ import type { FC } from "react";
 import { useEffect, useState } from "react";
 import { CardDeck } from "@/components/CardDeck/CardDeck";
 import { Page } from "@/components/Page";
+import Tabs from "@/components/Tabs";
 import { api } from "@/utils/api";
 import { clamp } from "@rem4d/utils";
 
@@ -23,7 +24,8 @@ export const FlashcardsPage: FC = () => {
 
   return (
     <Page back maxOffset className="GradientBg overflow-hidden select-none">
-      <div className="h-full w-full px-6">
+      <div className="flex flex-col items-center space-y-6 px-6">
+        <Tabs />
         <CardDeck
           cardList={cardListDisplay}
           total={total}
