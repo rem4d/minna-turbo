@@ -1,6 +1,7 @@
 import type { Sentence } from "@rem4d/db";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
+import { DrawerSettings } from "@/components/DrawerSettings";
 import { Page } from "@/components/Page";
 import { SentenceViewer } from "@/components/SentenceViewer";
 import { SpinnerBig } from "@/components/Spinner";
@@ -11,8 +12,6 @@ import hapticFeedback from "@/utils/hapticFeedback";
 import { useUnmount } from "@rem4d/utils";
 import { useLaunchParams } from "@telegram-apps/sdk-react";
 import { useLocalStorage } from "@uidotdev/usehooks";
-
-import DrawerSettings from "./DrawerSettings";
 
 export const SentencesPage: FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);

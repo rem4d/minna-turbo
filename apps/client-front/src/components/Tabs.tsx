@@ -48,7 +48,7 @@ const TabItem = ({
 
       <m.div
         initial={false}
-        className={twMerge("relative z-10 px-4 py-2 text-sm font-semibold")}
+        className={twMerge("relative z-0 px-4 py-2 text-sm font-semibold")}
         animate={{
           color: isCurrent ? "#fff" : "#000",
         }}
