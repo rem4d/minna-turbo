@@ -29,6 +29,7 @@ export default function DrawerSettings({
     "idle" | "choose_last_kanji" | "choose_repeat_deck"
   >("idle");
   const [selectedLevel, setSelectedLevel] = useState<number>(level);
+  console.log(showRepeatDeckOption);
 
   const { data: kanjis } = api.viewer.kanji.all.useQuery();
   const currentK = kanjis?.find((k) => k.position === selectedLevel);
@@ -49,7 +50,7 @@ export default function DrawerSettings({
     }
   };
 
-  const onKRepeatFromSelect = (id: number) => {};
+  const onKRepeatFromSelect = () => {};
   return (
     <Drawer
       open={open}
