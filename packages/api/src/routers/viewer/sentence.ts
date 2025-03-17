@@ -30,11 +30,9 @@ export const sentenceRouter = router({
 
       const newKnown = dedup(known.concat(input.ids));
 
-      void ctx.redis.setEx(
-        `known.${userId}`,
-        60 * 24 * 60 * 60, // store data for 60 days
-        JSON.stringify(newKnown),
-      );
+      void ctx.redis.set(`known.${userId}`, JSON.stringify(newKnown), {
+        EX: 60 * 60 * 60 * 24,
+      });
 
       return true;
     }),
