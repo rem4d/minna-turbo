@@ -71,9 +71,16 @@ export default React.memo(function Card({
           backfaceVisibility: "hidden",
         }}
       >
-        <div className={"flex size-full items-center justify-center p-6"}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isActive ? 1 : 0, transition: { duration: 0.2 } }}
+          className={twMerge(
+            "flex size-full items-center justify-center p-6 opacity-0",
+            isActive && "opacity-100",
+          )}
+        >
           <div className="font-digi text-[80px]">{k.kanji}</div>
-        </div>
+        </motion.div>
       </motion.div>
 
       {/* back */}

@@ -42,7 +42,7 @@ const TabItem = ({
           style={{
             borderRadius: 30,
           }}
-          className="absolute bottom-0 left-0 h-full w-full bg-[#000]/90"
+          className="bg-mine-shaft absolute bottom-0 left-0 h-full w-full"
         />
       ) : null}
 

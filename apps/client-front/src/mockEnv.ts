@@ -1,6 +1,6 @@
+import type { LaunchParams } from "@telegram-apps/sdk-react";
 import {
   isTMA,
-  LaunchParams,
   mockTelegramEnv,
   parseInitData,
   retrieveLaunchParams,

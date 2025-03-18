@@ -6,6 +6,7 @@ import { List, ListItem } from "@/components/List";
 import { api } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import hapticFeedback from "@/utils/hapticFeedback";
+import { clamp } from "@rem4d/utils";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-client";
 import { twMerge } from "tailwind-merge";
@@ -34,10 +35,15 @@ export default function DrawerSettings({
 
   const { data: kanjis } = api.viewer.kanji.all.useQuery();
   const currentK = kanjis?.find((k) => k.position === selectedLevel);
+  const kFrom = kanjis?.find((k) => k.position === rangeFrom);
+  const kTo = kanjis?.find((k) => k.position === rangeTo);
 
   const onLevelSelect = (position: number) => {
     setSelectedLevel(position);
     hapticFeedback("light");
+    if (selectedLevel === position) {
+      setView("idle");
+    }
   };
 
   const onSubmit = () => {
@@ -50,7 +56,18 @@ export default function DrawerSettings({
   useEffect(() => {
     const id = setTimeout(() => {
       setView("idle");
-    }, 100);
+    }, 200);
+
+    let from: null | number = clamp(selectedLevel - 20, 1, selectedLevel);
+    let to: null | number = clamp(selectedLevel, 1, selectedLevel);
+
+    if (selectedLevel === 1) {
+      from = null;
+      to = null;
+    }
+
+    setRangeFrom(from);
+    setRangeTo(to);
 
     return () => {
       if (id) {
@@ -96,22 +113,27 @@ export default function DrawerSettings({
     },
     [rangeTo, rangeFrom],
   );
+  const onBackClick = () => {
+    setView("idle");
+    if (rangeFrom && rangeTo === null) {
+      setRangeFrom(null);
+    }
+  };
 
   const rangeSelected =
     typeof rangeFrom === "number" && typeof rangeTo === "number";
+
   return (
     <Drawer
       open={open}
       onOpenChange={onOpenChange}
-      onBackClick={() => setView("idle")}
+      onBackClick={onBackClick}
       title={
         view === "choose_last_kanji"
           ? "Выберите последний изученный кандзи"
           : ""
       }
-      back={
-        false /*view === "choose_last_kanji" || view === "choose_repeat_deck"*/
-      }
+      back={view === "choose_last_kanji" || view === "choose_repeat_deck"}
     >
       <m.div
         className="bg-super-silver relative flex flex-col"
@@ -152,8 +174,15 @@ export default function DrawerSettings({
                   <ListItem
                     icon={
                       <div className="text-[16px] whitespace-nowrap">
-                        {"私...私"}
+                        {kFrom && kTo
+                          ? `${kFrom?.kanji}...${kTo?.kanji}`
+                          : "Not assigned"}
                       </div>
+                    }
+                    sub={
+                      kFrom && kTo
+                        ? `(${kTo.position - kFrom.position + 1})`
+                        : undefined
                     }
                     right={
                       <button
