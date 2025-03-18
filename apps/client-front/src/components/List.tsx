@@ -24,7 +24,7 @@ interface ListItemProps {
   title?: string;
   sub?: string;
   icon?: ReactElement;
-  iconRight?: "arrow" | "remove" | ReactElement;
+  right?: "arrow" | "remove" | ReactElement;
   to?: string;
   showBorder?: boolean;
   onClick?: () => void;
@@ -39,7 +39,7 @@ export const ListItem: FC<ListItemProps> = ({
   showBorder,
   onRightIconClick,
   onClick,
-  iconRight = null,
+  right = null,
 }) => {
   const navigate = useNavigate();
 
@@ -50,33 +50,33 @@ export const ListItem: FC<ListItemProps> = ({
     onClick?.();
   };
 
-  const iconRightElem = () => {
-    switch (iconRight) {
+  const rightElem = () => {
+    switch (right) {
       case "arrow":
         return (
-          <div className="size-[24px]" onClick={() => onRightIconClick?.()}>
+          <div className="size-[24px]">
             <ArrowIcon className="text-french-gray absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90 fill-current" />
           </div>
         );
       case "remove":
         return (
-          <div className="size-[24px]" onClick={() => onRightIconClick?.()}>
+          <div className="size-[24px]">
             <RemoveIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
           </div>
         );
       default:
-        return iconRight;
+        return right;
     }
   };
 
   return (
     <div
-      className="flex h-[60px] w-[calc(100%-16px)] cursor-pointer items-center overflow-hidden pl-[16px]"
+      className="flex h-[60px] w-[calc(100%-16px)] items-center overflow-hidden pl-[16px]"
       onClick={handleClick}
     >
       <div
         className={twMerge(
-          "border-silver/60 flex w-full grow items-center justify-between px-0 py-[9px]",
+          "border-silver/60 flex h-full w-full grow items-center justify-between px-0 py-[9px]",
           showBorder && "border-b",
         )}
       >
@@ -91,7 +91,14 @@ export const ListItem: FC<ListItemProps> = ({
             )}
           </div>
         </div>
-        <div className="relative mr-[10px]">{iconRightElem()}</div>
+        {rightElem && (
+          <div
+            className="relative mr-[10px] flex h-full justify-center"
+            onClick={() => onRightIconClick?.()}
+          >
+            {rightElem()}
+          </div>
+        )}
       </div>
     </div>
   );

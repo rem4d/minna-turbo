@@ -1,5 +1,5 @@
 import { useState } from "react";
-import * as m from "motion/react-client";
+import { motion as m } from "motion/react";
 import { twMerge } from "tailwind-merge";
 
 export default function Tabs() {

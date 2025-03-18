@@ -1,13 +1,12 @@
 import type { FC } from "react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "@/components/Button";
 import Drawer from "@/components/Drawer";
 import { List, ListItem } from "@/components/List";
 import { api } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import hapticFeedback from "@/utils/hapticFeedback";
-import { AnimatePresence } from "motion/react";
-import * as m from "motion/react-client";
+import { AnimatePresence, motion as m } from "motion/react";
 import { twMerge } from "tailwind-merge";
 
 interface Props {
@@ -29,18 +28,16 @@ export default function DrawerSettings({
     "idle" | "choose_last_kanji" | "choose_repeat_deck"
   >("idle");
   const [selectedLevel, setSelectedLevel] = useState<number>(level);
-  console.log(showRepeatDeckOption);
+  const [rangeFrom, setRangeFrom] = useState<number | null>(null);
+  const [rangeTo, setRangeTo] = useState<number | null>(null);
 
   const { data: kanjis } = api.viewer.kanji.all.useQuery();
   const currentK = kanjis?.find((k) => k.position === selectedLevel);
 
-  const onKSelect = (id: number) => {
-    const found = kanjis?.find((k) => k.id === id);
-    if (found) {
-      setSelectedLevel(found.position);
-      hapticFeedback("light");
-      setView("idle");
-    }
+  const onLevelSelect = (position: number) => {
+    setSelectedLevel(position);
+    hapticFeedback("light");
+    setView("idle");
   };
 
   const onSubmit = () => {
@@ -50,7 +47,63 @@ export default function DrawerSettings({
     }
   };
 
-  const onKRepeatFromSelect = () => {};
+  // useEffect(() => {
+  //   const id = setTimeout(() => {
+  //     setView("idle");
+  //   }, 100);
+  //
+  //   return () => {
+  //     if (id) {
+  //       clearTimeout(id);
+  //     }
+  //   };
+  // }, [selectedLevel]);
+
+  useEffect(() => {
+    if (typeof rangeTo === "number") {
+      setView("idle");
+    }
+    /*
+    let id: ReturnType<typeof setTimeout> | undefined = undefined;
+
+    if (typeof rangeTo === "number") {
+      id = setTimeout(() => {
+        setView("idle");
+      }, 200);
+    }
+
+    return () => {
+      if (id) {
+        clearTimeout(id);
+      }
+    };
+    */
+  }, [rangeTo]);
+
+  const onRangeSelectClick = useCallback(
+    (level: number) => {
+      if (rangeTo) {
+        setRangeFrom(level);
+        setRangeTo(null);
+      } else {
+        if (level === rangeFrom) {
+          return;
+        }
+        if (typeof rangeFrom === "number") {
+          const max = Math.max(level, rangeFrom);
+          const min = Math.min(level, rangeFrom);
+          setRangeFrom(min);
+          setRangeTo(max);
+        } else {
+          setRangeFrom(level);
+        }
+      }
+    },
+    [rangeTo, rangeFrom],
+  );
+
+  const rangeSelected =
+    typeof rangeFrom === "number" && typeof rangeTo === "number";
   return (
     <Drawer
       open={open}
@@ -61,19 +114,21 @@ export default function DrawerSettings({
           ? "Выберите последний изученный кандзи"
           : ""
       }
-      back={view === "choose_last_kanji" || view === "choose_repeat_deck"}
+      back={
+        false /*view === "choose_last_kanji" || view === "choose_repeat_deck"*/
+      }
     >
-      <m.div
-        className="bg-super-silver relative flex flex-col"
-        initial="idle"
-        animate={
-          view === "choose_last_kanji" || view === "choose_repeat_deck"
-            ? "choose"
-            : "idle"
-        }
-        variants={parentVariant}
-      >
-        <AnimatePresence mode="wait">
+      <AnimatePresence>
+        <m.div
+          className="bg-super-silver relative flex flex-col"
+          initial="idle"
+          animate={
+            view === "choose_last_kanji" || view === "choose_repeat_deck"
+              ? "choose"
+              : "idle"
+          }
+          variants={parentVariant}
+        >
           {view === "idle" && (
             <m.div
               key="c1"
@@ -87,7 +142,7 @@ export default function DrawerSettings({
                         <div className="text-[36px]">{currentK.kanji}</div>
                       )
                     }
-                    iconRight={
+                    right={
                       <button
                         className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent"
                         onClick={() => setView("choose_last_kanji")}
@@ -105,7 +160,7 @@ export default function DrawerSettings({
                         {"私...私"}
                       </div>
                     }
-                    iconRight={
+                    right={
                       <button
                         className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent"
                         onClick={() => setView("choose_repeat_deck")}
@@ -129,52 +184,74 @@ export default function DrawerSettings({
               {kanjis?.map((k) => (
                 <KCard
                   key={k.id}
-                  id={k.id}
-                  onClick={onKSelect}
+                  position={k.position}
+                  onClick={onLevelSelect}
                   kanji={k.kanji}
                   selected={k.position === selectedLevel}
                 />
               ))}
             </m.div>
           )}
-          {view === "choose_repeat_deck" && (
+          {showRepeatDeckOption && view === "choose_repeat_deck" && (
             <m.div
-              key="c2"
+              key="c3"
               className="auto-rows-1fr mt-0 grid grid-cols-9 pb-2"
             >
-              {kanjis?.map((k) => (
-                <KCard
-                  key={k.id}
-                  id={k.id}
-                  onClick={onKRepeatFromSelect}
-                  kanji={k.kanji}
-                  selected={k.position === selectedLevel}
-                />
-              ))}
+              <AnimatePresence propagate>
+                {kanjis?.map((k) => (
+                  <KCard
+                    key={k.id}
+                    position={k.position}
+                    onClick={onRangeSelectClick}
+                    kanji={k.kanji}
+                    disabled={k.position > selectedLevel}
+                    selected={
+                      k.position === rangeFrom || k.position === rangeTo
+                    }
+                    inRange={
+                      rangeSelected &&
+                      k.position > rangeFrom &&
+                      k.position < rangeTo
+                    }
+                  />
+                ))}
+              </AnimatePresence>
             </m.div>
           )}
-        </AnimatePresence>
-      </m.div>
+        </m.div>
+      </AnimatePresence>
     </Drawer>
   );
 }
 
 interface KCardProps {
-  id: number;
+  position: number;
   kanji: string;
   selected: boolean;
-  onClick: (id: number) => void;
+  inRange?: boolean;
+  disabled?: boolean;
+  onClick: (position: number) => void;
 }
 
-const KCard: FC<KCardProps> = ({ id, kanji, selected, onClick }) => {
+const KCard: FC<KCardProps> = ({
+  position,
+  kanji,
+  selected,
+  inRange = false,
+  disabled = false,
+  onClick,
+}) => {
   return (
     <m.div
+      exit={{ opacity: 0, transition: { duration: 1 } }}
       initial={{ scale: 1 }}
       whileTap={{ scale: 1.1 }}
-      onClick={() => onClick(id)}
+      onClick={() => onClick(position)}
       className={twMerge(
         "relative flex aspect-square h-full w-full flex-col justify-center text-black",
         selected && "bg-outer-space rounded-md text-white",
+        inRange && "bg-geyser",
+        disabled && "pointer-events-none opacity-40",
       )}
     >
       <div className="font-hiragino cursor-pointer text-center text-[28px] font-bold select-none">
@@ -190,12 +267,16 @@ const parentVariant = {
     height: "50vh",
     transition: {
       duration,
+      delayChildren: 5,
+      when: "afterChildren",
     },
   },
   choose: {
     height: "85vh",
     transition: {
       duration,
+      delayChildren: 5,
+      when: "afterChildren",
     },
   },
 };

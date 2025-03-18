@@ -3,8 +3,7 @@ import { useState } from "react";
 import DropdownDotsIcon from "@/assets/icons/dropdown-dots.svg?react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { sleep } from "@rem4d/utils";
-import { AnimatePresence, useAnimation } from "motion/react";
-import * as m from "motion/react-client";
+import { AnimatePresence, motion as m, useAnimation } from "motion/react";
 import { twMerge } from "tailwind-merge";
 
 export interface DropdownItem {

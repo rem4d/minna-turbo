@@ -58,7 +58,7 @@ export const SettingsPage: FC = () => {
         <List title="Фразы">
           {favorites.map((fav, index) => (
             <ListItem
-              iconRight="remove"
+              right="remove"
               key={`f-${index}`}
               sub={`${fav.id}`}
               title={fav.text}

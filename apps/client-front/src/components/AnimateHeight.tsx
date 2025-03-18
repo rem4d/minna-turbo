@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
-import * as m from "motion/react-client";
+import { motion as m } from "motion/react";
 
 interface AnimateChangeInHeightProps {
   children: React.ReactNode;

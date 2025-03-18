@@ -19,6 +19,8 @@ import { TRPCProvider } from "./utils/api";
 
 import "./index.css";
 
+import { SkeletonTheme } from "react-loading-skeleton";
+
 import ErrorFallbackComponent from "./components/ErrorFallbackComponent";
 import { PlaySoundContextProvider } from "./context/playSoundContext";
 
@@ -50,7 +52,9 @@ function App() {
         <TRPCProvider>
           <Toast.Provider swipeDirection="down">
             <PlaySoundContextProvider>
-              <RouterProvider router={router} />
+              <SkeletonTheme baseColor="#dadada">
+                <RouterProvider router={router} />
+              </SkeletonTheme>
             </PlaySoundContextProvider>
           </Toast.Provider>
         </TRPCProvider>
