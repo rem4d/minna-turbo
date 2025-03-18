@@ -3,7 +3,7 @@ import type { FC } from "react";
 import { useEffect, useState } from "react";
 import SettingsIcon from "@/assets/icons/settings2.svg?react";
 import { CardDeck } from "@/components/CardDeck/CardDeck";
-import { DrawerSettings } from "@/components/DrawerSettings";
+import DrawerSettings from "@/components/DrawerSettings/DrawerSettings";
 import { Page } from "@/components/Page";
 import Tabs from "@/components/Tabs";
 import { api } from "@/utils/api";

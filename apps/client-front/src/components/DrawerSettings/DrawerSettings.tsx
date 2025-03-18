@@ -6,7 +6,8 @@ import { List, ListItem } from "@/components/List";
 import { api } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import hapticFeedback from "@/utils/hapticFeedback";
-import { AnimatePresence, motion as m } from "motion/react";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-client";
 import { twMerge } from "tailwind-merge";
 
 interface Props {
@@ -37,7 +38,6 @@ export default function DrawerSettings({
   const onLevelSelect = (position: number) => {
     setSelectedLevel(position);
     hapticFeedback("light");
-    setView("idle");
   };
 
   const onSubmit = () => {
@@ -47,23 +47,19 @@ export default function DrawerSettings({
     }
   };
 
-  // useEffect(() => {
-  //   const id = setTimeout(() => {
-  //     setView("idle");
-  //   }, 100);
-  //
-  //   return () => {
-  //     if (id) {
-  //       clearTimeout(id);
-  //     }
-  //   };
-  // }, [selectedLevel]);
+  useEffect(() => {
+    const id = setTimeout(() => {
+      setView("idle");
+    }, 100);
+
+    return () => {
+      if (id) {
+        clearTimeout(id);
+      }
+    };
+  }, [selectedLevel]);
 
   useEffect(() => {
-    if (typeof rangeTo === "number") {
-      setView("idle");
-    }
-    /*
     let id: ReturnType<typeof setTimeout> | undefined = undefined;
 
     if (typeof rangeTo === "number") {
@@ -77,7 +73,6 @@ export default function DrawerSettings({
         clearTimeout(id);
       }
     };
-    */
   }, [rangeTo]);
 
   const onRangeSelectClick = useCallback(
@@ -118,17 +113,17 @@ export default function DrawerSettings({
         false /*view === "choose_last_kanji" || view === "choose_repeat_deck"*/
       }
     >
-      <AnimatePresence>
-        <m.div
-          className="bg-super-silver relative flex flex-col"
-          initial="idle"
-          animate={
-            view === "choose_last_kanji" || view === "choose_repeat_deck"
-              ? "choose"
-              : "idle"
-          }
-          variants={parentVariant}
-        >
+      <m.div
+        className="bg-super-silver relative flex flex-col"
+        initial="idle"
+        animate={
+          view === "choose_last_kanji" || view === "choose_repeat_deck"
+            ? "choose"
+            : "idle"
+        }
+        variants={parentVariant}
+      >
+        <AnimatePresence mode="wait">
           {view === "idle" && (
             <m.div
               key="c1"
@@ -194,32 +189,28 @@ export default function DrawerSettings({
           )}
           {showRepeatDeckOption && view === "choose_repeat_deck" && (
             <m.div
-              key="c3"
+              key="c2"
               className="auto-rows-1fr mt-0 grid grid-cols-9 pb-2"
             >
-              <AnimatePresence propagate>
-                {kanjis?.map((k) => (
-                  <KCard
-                    key={k.id}
-                    position={k.position}
-                    onClick={onRangeSelectClick}
-                    kanji={k.kanji}
-                    disabled={k.position > selectedLevel}
-                    selected={
-                      k.position === rangeFrom || k.position === rangeTo
-                    }
-                    inRange={
-                      rangeSelected &&
-                      k.position > rangeFrom &&
-                      k.position < rangeTo
-                    }
-                  />
-                ))}
-              </AnimatePresence>
+              {kanjis?.map((k) => (
+                <KCard
+                  key={k.id}
+                  position={k.position}
+                  onClick={onRangeSelectClick}
+                  kanji={k.kanji}
+                  disabled={k.position > selectedLevel}
+                  selected={k.position === rangeFrom || k.position === rangeTo}
+                  inRange={
+                    rangeSelected &&
+                    k.position > rangeFrom &&
+                    k.position < rangeTo
+                  }
+                />
+              ))}
             </m.div>
           )}
-        </m.div>
-      </AnimatePresence>
+        </AnimatePresence>
+      </m.div>
     </Drawer>
   );
 }
@@ -243,7 +234,6 @@ const KCard: FC<KCardProps> = ({
 }) => {
   return (
     <m.div
-      exit={{ opacity: 0, transition: { duration: 1 } }}
       initial={{ scale: 1 }}
       whileTap={{ scale: 1.1 }}
       onClick={() => onClick(position)}
@@ -267,16 +257,12 @@ const parentVariant = {
     height: "50vh",
     transition: {
       duration,
-      delayChildren: 5,
-      when: "afterChildren",
     },
   },
   choose: {
     height: "85vh",
     transition: {
       duration,
-      delayChildren: 5,
-      when: "afterChildren",
     },
   },
 };
