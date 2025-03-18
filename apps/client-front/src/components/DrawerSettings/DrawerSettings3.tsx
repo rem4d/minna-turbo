@@ -34,6 +34,7 @@ export default function DrawerSettings({ open, onOpenChange }: Props) {
           animate={view === "screen2" ? "screen2" : "screen1"}
         >
           <AnimatePresence mode="wait" initial={false}>
+            {/* @ts-expect-error ignore  */}
             <Slide key={view}>
               {view === "screen1" && <Screen1 key="s1" onClick={onClick} />}
               {view === "screen2" && <Screen2 key="s2" onClick={onClick} />}
