@@ -260,7 +260,7 @@ const parentVariant = {
     },
   },
   choose: {
-    height: "85vh",
+    height: "90vh",
     transition: {
       duration,
     },

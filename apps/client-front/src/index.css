@@ -42,7 +42,6 @@
   --page-offset-bottom: var(--tg-viewport-safe-area-inset-bottom, 0px);
 
   --tg-top: var(--tg-viewport-safe-area-inset-top, 10px);
-
   --tg-top-content: var(--tg-viewport-content-safe-area-inset-top, 0px);
 
   --page-offset-top-full: calc(var(--tg-top) + var(--tg-top-content));
