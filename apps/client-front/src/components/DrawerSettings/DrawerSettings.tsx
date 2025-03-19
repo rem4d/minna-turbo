@@ -6,7 +6,7 @@ import { List, ListItem } from "@/components/List";
 import { api } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import hapticFeedback from "@/utils/hapticFeedback";
-import { clamp } from "@rem4d/utils";
+import { useLocalStorage } from "@uidotdev/usehooks";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-client";
 import { twMerge } from "tailwind-merge";
@@ -29,28 +29,54 @@ export default function DrawerSettings({
   const [view, setView] = useState<
     "idle" | "choose_last_kanji" | "choose_repeat_deck"
   >("idle");
+
+  const [storedRangeFrom, setStoredRangeFrom] = useLocalStorage<number | null>(
+    "kic:range_from",
+    null,
+  );
+  const [storedRangeTo, setStoredRangeTo] = useLocalStorage<number | null>(
+    "kic:range_to",
+    null,
+  );
+
   const [selectedLevel, setSelectedLevel] = useState<number>(level);
-  const [rangeFrom, setRangeFrom] = useState<number | null>(null);
-  const [rangeTo, setRangeTo] = useState<number | null>(null);
+  const [rangeFrom, setRangeFrom] = useState<number | null>(storedRangeFrom);
+  const [rangeTo, setRangeTo] = useState<number | null>(storedRangeTo);
 
   const { data: kanjis } = api.viewer.kanji.all.useQuery();
   const currentK = kanjis?.find((k) => k.position === selectedLevel);
   const kFrom = kanjis?.find((k) => k.position === rangeFrom);
   const kTo = kanjis?.find((k) => k.position === rangeTo);
 
+  // useEffect(() => {
+  //   if (!open) {
+  //     setView("idle");
+  //   }
+  // }, [open]);
+
   const onLevelSelect = (position: number) => {
     setSelectedLevel(position);
     hapticFeedback("light");
+
+    if (position < selectedLevel) {
+      setRangeFrom(null);
+      setRangeTo(null);
+    }
+
     if (selectedLevel === position) {
       setView("idle");
     }
   };
 
   const onSubmit = () => {
-    if (selectedLevel) {
+    if (selectedLevel !== level) {
       onChangeLevel(selectedLevel);
-      onOpenChange(false);
     }
+
+    onOpenChange(false);
+
+    setStoredRangeFrom(rangeFrom);
+    setStoredRangeTo(rangeTo);
   };
 
   useEffect(() => {
@@ -58,17 +84,20 @@ export default function DrawerSettings({
       setView("idle");
     }, 200);
 
-    let from: null | number = clamp(selectedLevel - 20, 1, selectedLevel);
-    let to: null | number = clamp(selectedLevel, 1, selectedLevel);
-
-    if (selectedLevel === 1) {
-      from = null;
-      to = null;
-    }
-
-    setRangeFrom(from);
-    setRangeTo(to);
-
+    // let from: null | number = clamp(selectedLevel - 19, 1, selectedLevel);
+    // let to: null | number = clamp(selectedLevel, 1, selectedLevel);
+    //
+    // if (selectedLevel === 1) {
+    //   from = null;
+    //   to = null;
+    // } else if (rangeTo && selectedLevel < rangeTo) {
+    //   to = selectedLevel
+    // }
+    //
+    //
+    // setRangeFrom(from);
+    // setRangeTo(to);
+    //
     return () => {
       if (id) {
         clearTimeout(id);
@@ -170,30 +199,32 @@ export default function DrawerSettings({
                     sub={`${convertLevel(currentK?.position)} уровень`}
                   />
                 </List>
-                <List title="Колода для повторения">
-                  <ListItem
-                    icon={
-                      <div className="text-[16px] whitespace-nowrap">
-                        {kFrom && kTo
-                          ? `${kFrom?.kanji}...${kTo?.kanji}`
-                          : "Not assigned"}
-                      </div>
-                    }
-                    sub={
-                      kFrom && kTo
-                        ? `(${kTo.position - kFrom.position + 1})`
-                        : undefined
-                    }
-                    right={
-                      <button
-                        className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent"
-                        onClick={() => setView("choose_repeat_deck")}
-                      >
-                        Изменить
-                      </button>
-                    }
-                  />
-                </List>
+                {showRepeatDeckOption && (
+                  <List title="Колода для повторения">
+                    <ListItem
+                      icon={
+                        <div className="text-[16px] whitespace-nowrap">
+                          {kFrom && kTo
+                            ? `${kFrom?.kanji}...${kTo?.kanji}`
+                            : "Not assigned"}
+                        </div>
+                      }
+                      sub={
+                        kFrom && kTo
+                          ? `(${kTo.position - kFrom.position + 1})`
+                          : undefined
+                      }
+                      right={
+                        <button
+                          className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent"
+                          onClick={() => setView("choose_repeat_deck")}
+                        >
+                          Изменить
+                        </button>
+                      }
+                    />
+                  </List>
+                )}
               </div>
               <Button className="w-full" onClick={onSubmit}>
                 Сохранить

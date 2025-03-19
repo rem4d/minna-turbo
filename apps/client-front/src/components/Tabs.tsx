@@ -1,21 +1,23 @@
-import { useState } from "react";
 import { motion as m } from "motion/react";
 import { twMerge } from "tailwind-merge";
 
-export default function Tabs() {
-  const [current, setCurrent] = useState(0);
+interface TabsProps {
+  current: number;
+  onChange: (n: number) => void;
+}
 
+export default function Tabs({ current, onChange }: TabsProps) {
   return (
     <div className="flex w-fit items-start overflow-hidden rounded-[30px] bg-black/10">
       <TabItem
         text="Новые"
         isCurrent={current === 0}
-        onClick={() => setCurrent(0)}
+        onClick={() => onChange(0)}
       />
       <TabItem
         text="Повторить"
         isCurrent={current === 1}
-        onClick={() => setCurrent(1)}
+        onClick={() => onChange(1)}
       />
     </div>
   );
@@ -31,7 +33,7 @@ const TabItem = ({
   onClick: () => void;
 }) => {
   return (
-    <div className="relative flex justify-center">
+    <div className="relative flex cursor-pointer justify-center">
       {isCurrent ? (
         <m.div
           initial={false}

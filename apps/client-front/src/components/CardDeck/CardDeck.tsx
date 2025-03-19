@@ -27,6 +27,7 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
 
   useEffect(() => {
     setActiveIndex(total > 0 ? total - 1 : 0);
+    setLineProgress(0);
   }, [total]);
 
   const lp = useLaunchParams();
@@ -110,11 +111,11 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
     const isSelect = Math.abs(progress) === 1;
     const isGood = progress === 1;
     const [, currentXString] =
-      /translate\(([^,]+), [^)]+\)/.exec($card.style.transform) || [];
+      /translate\(([^,]+), [^)]+\)/.exec($card.style.transform) ?? [];
     const [, currentYString] =
-      /translate\([^,]+, ([^)]+)\)/.exec($card.style.transform) || [];
+      /translate\([^,]+, ([^)]+)\)/.exec($card.style.transform) ?? [];
     const [, currentRotateString] =
-      /rotate\(([^)]+)\)/.exec($card.style.transform) || [];
+      /rotate\(([^)]+)\)/.exec($card.style.transform) ?? [];
 
     const currentX = Number.parseInt(currentXString, 10);
     const currentY = Number.parseInt(currentYString, 10);
@@ -207,6 +208,7 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
               <Card
                 k={c}
                 isActive={isActiveCard}
+                isInteracting={false}
                 index={cardList.length - 1 - index}
                 isMobile={isMobile}
               />

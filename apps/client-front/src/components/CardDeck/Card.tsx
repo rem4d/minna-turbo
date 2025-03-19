@@ -1,5 +1,5 @@
 import type { Kanji } from "@rem4d/db";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "motion/react";
 import { twJoin, twMerge } from "tailwind-merge";
 
@@ -8,6 +8,7 @@ import KCard from "../KCard";
 interface CardProps {
   k: Kanji;
   isActive: boolean;
+  isInteracting: boolean;
   index: number;
   isMobile: boolean;
 }
@@ -18,27 +19,7 @@ export default React.memo(function Card({
   index,
   isMobile,
 }: CardProps) {
-  // const cardRef = useRef<HTMLDivElement>(null);
-  // const frontRef = useRef<HTMLDivElement>(null);
-  // const backRef = useRef<HTMLDivElement>(null);
-  // const examplesRef = useRef<HTMLDivElement>(null);
   const [isFlipped, setIsFlipped] = useState(false);
-
-  // const tl = gsap.timeline();
-  //
-  // useLayoutEffect(() => {
-  //   const ctx = gsap.context(() => {
-  //     if (isActive) {
-  //       gsap.to(cardRef.current, {
-  //         scale: 1.1,
-  //         y: -30,
-  //       });
-  //     }
-  //   });
-  //   return () => {
-  //     ctx.revert();
-  //   };
-  // }, [isActive]);
 
   const handleClick = () => {
     if (isActive) {
