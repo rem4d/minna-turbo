@@ -9,5 +9,5 @@ export function shuffle<T>(array: T[]) {
     // @ts-expect-error noext
     tmp[j] = c;
   }
-  return tmp.slice(0, 20);
+  return tmp;
 }
