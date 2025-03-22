@@ -1,4 +1,4 @@
-import { TRPCClientError } from "@trpc/client";
+// import { TRPCClientError } from "@trpc/client";
 import { createBrowserRouter, useRouteError } from "react-router-dom";
 
 import { Base } from "./components/Base";
