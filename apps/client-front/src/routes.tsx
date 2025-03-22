@@ -23,6 +23,7 @@ export const paths = {
 const RouteErrorBoundary = () => {
   const error = useRouteError();
 
+  /*
   if (error instanceof TRPCClientError) {
     return (
       <div className="bg-athens-gray relative h-screen w-screen">
@@ -38,6 +39,8 @@ const RouteErrorBoundary = () => {
     console.log(error);
     throw error;
   }
+  */
+  throw error;
 };
 export const router = createBrowserRouter([
   {
