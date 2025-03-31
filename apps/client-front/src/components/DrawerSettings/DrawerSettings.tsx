@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Button from "@/components/Button";
 import Drawer from "@/components/Drawer";
 import { List, ListItem } from "@/components/List";
@@ -177,102 +177,104 @@ export default function DrawerSettings({
         }
         variants={parentVariant}
       >
-        <AnimatePresence mode="wait">
-          {view === "idle" && (
-            <m.div
-              key="c1"
-              className="max-h-50vh flex h-full flex-col justify-between px-4 pb-6"
-            >
-              <div className="flex w-full flex-col space-y-4">
-                <List title="Последний выученный кандзи">
+        <AnimatePresence mode="sync">
+          <m.div
+            key="c1"
+            className={twMerge(
+              "max-h-50vh flex h-full flex-col justify-between px-4 pb-6",
+              view !== "idle" && "hidden",
+            )}
+          >
+            <div className="flex w-full flex-col space-y-4">
+              <List title="Последний выученный кандзи">
+                <ListItem
+                  icon={
+                    currentK && (
+                      <div className="text-[36px]">{currentK.kanji}</div>
+                    )
+                  }
+                  right={
+                    <button
+                      className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent"
+                      onClick={() => setView("choose_last_kanji")}
+                    >
+                      Изменить
+                    </button>
+                  }
+                  sub={`${convertLevel(currentK?.position)} уровень`}
+                />
+              </List>
+              {showRepeatDeckOption && (
+                <List title="Колода для повторения">
                   <ListItem
                     icon={
-                      currentK && (
-                        <div className="text-[36px]">{currentK.kanji}</div>
-                      )
+                      <div className="text-[16px] whitespace-nowrap">
+                        {kFrom && kTo
+                          ? `${kFrom?.kanji}...${kTo?.kanji}`
+                          : "Not assigned"}
+                      </div>
+                    }
+                    sub={
+                      kFrom && kTo
+                        ? `(${kTo.position - kFrom.position + 1})`
+                        : undefined
                     }
                     right={
                       <button
                         className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent"
-                        onClick={() => setView("choose_last_kanji")}
+                        onClick={() => setView("choose_repeat_deck")}
                       >
                         Изменить
                       </button>
                     }
-                    sub={`${convertLevel(currentK?.position)} уровень`}
                   />
                 </List>
-                {showRepeatDeckOption && (
-                  <List title="Колода для повторения">
-                    <ListItem
-                      icon={
-                        <div className="text-[16px] whitespace-nowrap">
-                          {kFrom && kTo
-                            ? `${kFrom?.kanji}...${kTo?.kanji}`
-                            : "Not assigned"}
-                        </div>
-                      }
-                      sub={
-                        kFrom && kTo
-                          ? `(${kTo.position - kFrom.position + 1})`
-                          : undefined
-                      }
-                      right={
-                        <button
-                          className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent"
-                          onClick={() => setView("choose_repeat_deck")}
-                        >
-                          Изменить
-                        </button>
-                      }
-                    />
-                  </List>
-                )}
-              </div>
-              <Button className="w-full" onClick={onSubmit}>
-                Сохранить
-              </Button>
-            </m.div>
-          )}
-          {view === "choose_last_kanji" && (
-            <m.div
-              key="c2"
-              className="auto-rows-1fr mt-0 grid grid-cols-9 pb-2"
-            >
-              <div>1</div>
-              {kanjis?.map((k) => (
-                <KCard
-                  key={k.id}
-                  position={k.position}
-                  onClick={onLevelSelect}
-                  kanji={k.kanji}
-                  selected={k.position === selectedLevel}
-                />
-              ))}
-            </m.div>
-          )}
-          {showRepeatDeckOption && view === "choose_repeat_deck" && (
-            <m.div
-              key="c2"
-              className="auto-rows-1fr mt-0 grid grid-cols-9 pb-2"
-            >
-              {kanjis?.map((k) => (
-                <KCard
-                  key={k.id}
-                  position={k.position}
-                  onClick={onRangeSelectClick}
-                  kanji={k.kanji}
-                  disabled={k.position > selectedLevel}
-                  selected={k.position === rangeFrom || k.position === rangeTo}
-                  inRange={
-                    rangeSelected &&
-                    k.position > rangeFrom &&
-                    k.position < rangeTo
-                  }
-                />
-              ))}
-            </m.div>
-          )}
+              )}
+            </div>
+            <Button className="w-full" onClick={onSubmit}>
+              Сохранить
+            </Button>
+          </m.div>
+          <m.div
+            key="c2"
+            className={twMerge(
+              "auto-rows-1fr mt-0 grid grid-cols-9 pb-2",
+              view !== "choose_last_kanji" && "hidden",
+            )}
+          >
+            {kanjis?.map((k) => (
+              <KCard
+                key={`c2-${k.id}`}
+                position={k.position}
+                onClick={onLevelSelect}
+                kanji={k.kanji}
+                selected={k.position === selectedLevel}
+              />
+            ))}
+          </m.div>
+          <m.div
+            key="c3"
+            className={twMerge(
+              "auto-rows-1fr mt-0 grid grid-cols-9 pb-2",
+              view !== "choose_repeat_deck" && "hidden",
+            )}
+          >
+            {kanjis?.map((k) => (
+              <KCard
+                key={`c3-${k.id}`}
+                position={k.position}
+                onClick={onRangeSelectClick}
+                kanji={k.kanji}
+                disabled={k.position > selectedLevel}
+                selected={k.position === rangeFrom || k.position === rangeTo}
+                inRange={
+                  rangeSelected &&
+                  k.position > rangeFrom &&
+                  k.position < rangeTo
+                }
+              />
+            ))}
+          </m.div>
         </AnimatePresence>
       </m.div>
     </Drawer>
@@ -288,32 +290,34 @@ interface KCardProps {
   onClick: (position: number) => void;
 }
 
-const KCard: FC<KCardProps> = ({
-  position,
-  kanji,
-  selected,
-  inRange = false,
-  disabled = false,
-  onClick,
-}) => {
-  return (
-    <m.div
-      initial={{ scale: 1 }}
-      whileTap={{ scale: 1.1 }}
-      onClick={() => onClick(position)}
-      className={twMerge(
-        "relative flex aspect-square h-full w-full flex-col justify-center text-black",
-        selected && "bg-outer-space rounded-md text-white",
-        inRange && "bg-geyser",
-        disabled && "pointer-events-none opacity-40",
-      )}
-    >
-      <div className="font-hiragino cursor-pointer text-center text-[28px] font-bold select-none">
-        {kanji}
-      </div>
-    </m.div>
-  );
-};
+const KCard: FC<KCardProps> = React.memo(
+  ({
+    position,
+    kanji,
+    selected,
+    inRange = false,
+    disabled = false,
+    onClick,
+  }) => {
+    return (
+      <m.div
+        initial={{ scale: 1 }}
+        whileTap={{ scale: 1.1 }}
+        onClick={() => onClick(position)}
+        className={twMerge(
+          "relative flex aspect-square h-full w-full flex-col justify-center text-black",
+          selected && "bg-outer-space rounded-md text-white",
+          inRange && "bg-geyser",
+          disabled && "pointer-events-none opacity-40",
+        )}
+      >
+        <div className="font-hiragino cursor-pointer text-center text-[28px] font-bold select-none">
+          {kanji}
+        </div>
+      </m.div>
+    );
+  },
+);
 
 const duration = 0.3;
 const parentVariant = {
