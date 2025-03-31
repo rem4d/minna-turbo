@@ -65,7 +65,7 @@ export default function DrawerSettings({
       }
 
       if (selectedLevel === position) {
-        setView("idle");
+        // setView("idle");
       }
     },
     [selectedLevel],
@@ -84,7 +84,7 @@ export default function DrawerSettings({
 
   useEffect(() => {
     const id = setTimeout(() => {
-      setView("idle");
+      // setView("idle");
     }, 200);
 
     // let from: null | number = clamp(selectedLevel - 19, 1, selectedLevel);
@@ -113,7 +113,7 @@ export default function DrawerSettings({
 
     if (typeof rangeTo === "number") {
       id = setTimeout(() => {
-        setView("idle");
+        // setView("idle");
       }, 200);
     }
 
