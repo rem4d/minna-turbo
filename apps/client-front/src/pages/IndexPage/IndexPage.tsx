@@ -6,19 +6,21 @@ import { twMerge } from "tailwind-merge";
 export const IndexPage: FC = () => {
   return (
     <Page footer>
-      <div className="flex flex-col items-center justify-center space-y-6 p-[33px]">
-        <Card
-          title="Фразы"
-          desc="Читайте и слушайте реальные фразы на японском, состоящие только из изученных вами кандзи"
-          to="/sentences"
-          color="yellow"
-        />
-        <Card
-          title="Карточки"
-          desc="Создавайте колоды карт из кандзи"
-          to="/flashcards"
-          color="cyan"
-        />
+      <div className="flex h-[calc(100%-var(--footer-height))] flex-col justify-center">
+        <div className="flex flex-col items-center justify-center space-y-6 p-[33px]">
+          <Card
+            title="Фразы"
+            desc="Читайте и слушайте реальные фразы на японском, состоящие только из изученных вами кандзи"
+            to="/sentences"
+            color="yellow"
+          />
+          <Card
+            title="Карточки"
+            desc="Создавайте колоды карт из кандзи"
+            to="/flashcards"
+            color="cyan"
+          />
+        </div>
       </div>
     </Page>
   );
@@ -39,7 +41,7 @@ const Card: FC<CardProps> = ({ title, desc, to, color }) => {
   return (
     <div
       className={twMerge(
-        "border-heatheredGray/40 relative flex h-[167px] w-full flex-col space-y-4 rounded-xl border p-4 pt-(--page-offset-top-full)",
+        "border-heatheredGray/40 relative flex h-fit w-full flex-col space-y-4 rounded-xl border p-4 pt-(--page-offset-top-full)",
         color === "cyan" ? "bg-polar" : "bg-half-dutch-white",
       )}
       onClick={handleButtonClick}
@@ -50,7 +52,7 @@ const Card: FC<CardProps> = ({ title, desc, to, color }) => {
       </div>
       <button
         className={twMerge(
-          "absolute bottom-4 w-[130px] self-end rounded-full py-2 text-base font-semibold text-black",
+          "relative bottom-2 mt-2 w-[130px] self-end rounded-full py-2 text-base font-semibold text-black",
           color === "yellow" && "bg-supernova text-black",
           color === "cyan" && "bg-scooter text-white",
         )}

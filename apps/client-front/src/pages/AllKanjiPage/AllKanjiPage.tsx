@@ -7,6 +7,7 @@ import SectionHeader from "@/components/SectionHeader";
 import { api } from "@/utils/api";
 import { useDebounce } from "@uidotdev/usehooks";
 import Skeleton from "react-loading-skeleton";
+import { twMerge } from "tailwind-merge";
 import { isHiragana, isKanji, isKatakana } from "wanakana";
 
 import SearchBar from "./SearchBar";
@@ -48,7 +49,12 @@ export const AllKanjiPage: FC = () => {
 
   return (
     <Page back>
-      <div className="flex flex-col space-y-8 px-4 pb-4">
+      <div
+        className={twMerge(
+          "flex flex-col space-y-8 px-4 pb-4",
+          isLoading && "h-full overflow-hidden",
+        )}
+      >
         <SectionHeader className={isLoading ? "opacity-0" : ""}>
           Все кандзи
         </SectionHeader>
@@ -56,14 +62,14 @@ export const AllKanjiPage: FC = () => {
         {isLoading && (
           <Skeleton
             className="aspect-square"
-            count={28}
+            count={38}
             borderRadius={6}
             containerClassName="grid grid-cols-4 gap-4"
             inline
           />
         )}
         {!isLoading && (
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 gap-4 sm:grid-cols-4">
             {displayData?.map((k) => (
               <Card
                 key={k.id}

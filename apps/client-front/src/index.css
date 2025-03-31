@@ -36,12 +36,17 @@
   --font-hiragino: Hiragino;
   --font-digi: Digi;
 
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 380px;
+
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
   --page-offset-bottom: var(--tg-viewport-safe-area-inset-bottom, 0px);
 
   --tg-top: var(--tg-viewport-safe-area-inset-top, 10px);
+  --tg-bottom: var(--tg-viewport-safe-area-inset-bottom, 10px);
+
   --tg-top-content: var(--tg-viewport-content-safe-area-inset-top, 0px);
 
   --page-offset-top-full: calc(var(--tg-top) + var(--tg-top-content));

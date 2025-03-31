@@ -17,7 +17,6 @@ export const SettingsPage: FC = () => {
   const [activeIndex, setActiveIndex] = useState(-1);
 
   const sentence = favorites[activeIndex];
-  console.log(sentence);
 
   const remove = useCallback(
     (id: number) => {
@@ -52,8 +51,8 @@ export const SettingsPage: FC = () => {
     activeIndex === favorites.length - 1 || favorites.length === 0;
 
   return (
-    <Page footer>
-      <div className="flex flex-col space-y-8 px-4">
+    <Page>
+      <div className="relative flex flex-col space-y-8 px-4 pb-(--footer-height)">
         <SectionHeader>Настройки</SectionHeader>
         <List title="Фразы">
           {favorites.map((fav, index) => (

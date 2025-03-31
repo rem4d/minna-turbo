@@ -16,7 +16,7 @@ export function Page({
   children,
   className = "",
   back = false,
-  footer = false,
+  // footer = false,
   maxOffset = false,
 }: PropsWithChildren<PageProps>) {
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ export function Page({
         "h-full overflow-x-hidden overflow-y-auto",
         !maxOffset && "pt-(--tg-top)",
         maxOffset && "pt-(--page-offset-top-full)",
-        footer && "h-[calc(100%-var(--footer-height))]",
+        // footer && "h-[calc(100%-var(--footer-height))]",
         className,
       )}
     >
