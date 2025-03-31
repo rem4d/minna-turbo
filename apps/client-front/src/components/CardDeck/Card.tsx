@@ -37,8 +37,8 @@ export default React.memo(function Card({
         translateY: isActive ? -30 : 0,
       }}
       className={twMerge(
-        "absolute top-0 left-1/2 h-[60vh] max-h-[480px] -translate-x-1/2 cursor-pointer text-[#000] select-none",
-        isMobile && "max-h-[60vh] w-[75vw]",
+        "absolute top-0 left-1/2 h-[50vh] max-h-[500px] -translate-x-1/2 cursor-pointer text-[#000] select-none",
+        isMobile && "w-[75vw]",
         !isMobile && "w-[320px]",
       )}
       transition={{ duration }}
