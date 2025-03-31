@@ -1,5 +1,7 @@
 import type { Kanji } from "@rem4d/db";
+import type { FC } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import ArrowIcon from "@/assets/icons/arrow-circle.svg?react";
 import { getPosition } from "@/utils/event";
 import { clamp } from "@rem4d/utils";
 import { useLaunchParams } from "@telegram-apps/sdk-react";
@@ -169,6 +171,11 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
     };
   }, [handleMove, handleEnd]);
 
+  const disablePrevNav = false;
+  const disableNextNav = false;
+  const handlePrevClick = () => {};
+  const handleNextClick = () => {};
+
   return (
     <>
       <div className="relative h-[8px] w-full overflow-hidden rounded-full bg-white">
@@ -216,6 +223,58 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
           );
         })}
       </div>
+      <Arrows
+        isMobile={isMobile}
+        disableNextNav={disableNextNav}
+        disablePrevNav={disablePrevNav}
+        handleNextClick={handleNextClick}
+        handlePrevClick={handlePrevClick}
+      />
     </>
   );
 }
+
+interface ArrowProps {
+  isMobile: boolean;
+  disableNextNav: boolean;
+  disablePrevNav: boolean;
+  handleNextClick: () => void;
+  handlePrevClick: () => void;
+}
+
+const Arrows: FC<ArrowProps> = ({
+  isMobile,
+  disableNextNav,
+  disablePrevNav,
+  handleNextClick,
+  handlePrevClick,
+}) => {
+  return (
+    <div
+      className={twMerge(
+        "absolute bottom-[80px] left-1/2 flex w-full -translate-x-1/2 justify-between",
+        isMobile && "w-[80vw]",
+        !isMobile && "w-[calc(320px+32px)]",
+      )}
+    >
+      <div
+        className={twMerge(
+          "relative size-[32px] cursor-pointer",
+          disablePrevNav && "pointer-events-none opacity-40",
+        )}
+        onClick={handlePrevClick}
+      >
+        <ArrowIcon className="text-azure-radiance absolute size-full -rotate-90 fill-current" />
+      </div>
+      <div
+        className={twMerge(
+          "relative size-[32px] cursor-pointer",
+          disableNextNav && "pointer-events-none opacity-40",
+        )}
+        onClick={handleNextClick}
+      >
+        <ArrowIcon className="text-azure-radiance absolute size-full rotate-90 fill-current" />
+      </div>
+    </div>
+  );
+};
