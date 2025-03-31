@@ -182,7 +182,7 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
       <div
         id="deck"
         className={twMerge(
-          "absolute top-1/2 left-1/2 h-[400px] max-h-[450px] w-full -translate-x-1/2 -translate-y-1/2",
+          "absolute top-1/2 left-1/2 h-[400px] max-h-[450px] w-full -translate-x-1/2 translate-y-[calc(-50%+30px)]",
           cardList.length === 0 && "hidden",
         )}
       >

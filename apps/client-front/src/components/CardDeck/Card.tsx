@@ -31,11 +31,15 @@ export default React.memo(function Card({
   return (
     <motion.div
       onClick={handleClick}
-      animate={{ rotateY: isFlipped ? 180 : 0 }}
+      animate={{
+        rotateY: isFlipped ? 180 : 0,
+        scale: isActive ? 1.1 : 1,
+        translateY: isActive ? -30 : 0,
+      }}
       className={twMerge(
-        "absolute top-0 left-1/2 h-[60vh] max-h-[500px] -translate-x-1/2 cursor-pointer text-[#000] select-none",
-        isMobile && "w-[80vw]",
-        !isMobile && "w-[350px]",
+        "absolute top-0 left-1/2 h-[60vh] max-h-[480px] -translate-x-1/2 cursor-pointer text-[#000] select-none",
+        isMobile && "max-h-[60vh] w-[75vw]",
+        !isMobile && "w-[320px]",
       )}
       transition={{ duration }}
       style={{
@@ -66,13 +70,13 @@ export default React.memo(function Card({
 
       {/* back */}
       <motion.div
-        className="bg-balticSea absolute top-0 left-0 size-full overflow-hidden rounded-[16px] border border-black/10 bg-white px-6 py-3"
+        className="bg-balticSea absolute top-0 left-0 size-full overflow-hidden rounded-[16px] border border-black/10 bg-white px-2"
         style={{
           backfaceVisibility: "hidden",
           transform: "rotateY(180deg)",
         }}
       >
-        <div className="size-full py-3">
+        <div className="size-full">
           <KCard
             k={k}
             containerClassName="overflow-y-scroll overflow-x-hidden"

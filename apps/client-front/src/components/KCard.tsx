@@ -32,9 +32,8 @@ export function KCard({ k, containerClassName = "" }: Props) {
       e.stopPropagation();
     }
   };
-
   return (
-    <div className="flex h-full grow flex-col">
+    <div className="relative flex h-full grow scale-[0.9] flex-col">
       <div className="mb-4 flex space-x-4">
         <div className="flex aspect-square h-[96px] justify-center rounded-lg border border-black/10 bg-white drop-shadow-[3px_3px_0px_rgba(41,41,41,0.1)]">
           <div className="font-digi text-[60px] text-[#000]">{kanji}</div>

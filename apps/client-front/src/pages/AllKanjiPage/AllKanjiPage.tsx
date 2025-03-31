@@ -64,7 +64,7 @@ export const AllKanjiPage: FC = () => {
             className="aspect-square"
             count={38}
             borderRadius={6}
-            containerClassName="grid grid-cols-4 gap-4"
+            containerClassName="grid grid-cols-3 sm:grid-cols-4 gap-4"
             inline
           />
         )}
@@ -103,6 +103,7 @@ interface CardProps {
 
 const Card: FC<CardProps> = ({ kanji, en, id, level, onClick }) => {
   const means = en.split(";")[0];
+
   return (
     <div
       className="relative flex aspect-square cursor-pointer flex-col justify-center overflow-hidden rounded-md border border-black/10 bg-white px-2 py-4 shadow-[3px_3px_0px_rgba(41,41,41,0.1)]"
