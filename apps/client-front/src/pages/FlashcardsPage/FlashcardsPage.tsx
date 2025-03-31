@@ -60,7 +60,6 @@ export const FlashcardsPage: FC = () => {
 
   const onChangeLevel = (newLevel: number) => {
     // setSelectedLevel(newLevel);
-    hapticFeedback("light");
     void updateLevelMuatation.mutate(newLevel);
     hapticFeedback("medium");
   };
@@ -174,6 +173,10 @@ const RepeatScreen: FC<RepeatScreenProps> = ({ isLoading, list }) => {
   const [isFinished, setFinished] = useState(false);
   const total = list.length;
   const isAssign = false;
+
+  useEffect(() => {
+    setCardListDisplay(list);
+  }, [list]);
 
   const onEvaluate = (card: Kanji) => {
     setCardListDisplay((prev) => prev.filter((c) => c.kanji !== card.kanji));

@@ -54,19 +54,22 @@ export default function DrawerSettings({
   //   }
   // }, [open]);
 
-  const onLevelSelect = (position: number) => {
-    setSelectedLevel(position);
-    hapticFeedback("light");
+  const onLevelSelect = useCallback(
+    (position: number) => {
+      setSelectedLevel(position);
+      hapticFeedback("light");
 
-    if (position < selectedLevel) {
-      setRangeFrom(null);
-      setRangeTo(null);
-    }
+      if (position < selectedLevel) {
+        setRangeFrom(null);
+        setRangeTo(null);
+      }
 
-    if (selectedLevel === position) {
-      setView("idle");
-    }
-  };
+      if (selectedLevel === position) {
+        setView("idle");
+      }
+    },
+    [selectedLevel],
+  );
 
   const onSubmit = () => {
     if (selectedLevel !== level) {
@@ -236,6 +239,7 @@ export default function DrawerSettings({
               key="c2"
               className="auto-rows-1fr mt-0 grid grid-cols-9 pb-2"
             >
+              <div>1</div>
               {kanjis?.map((k) => (
                 <KCard
                   key={k.id}
