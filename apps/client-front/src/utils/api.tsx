@@ -3,7 +3,7 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { retrieveLaunchParams } from "@telegram-apps/sdk-react";
-import { httpBatchLink, loggerLink } from "@trpc/client";
+import { httpBatchLink, httpLink, loggerLink, splitLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 
 /**
@@ -27,6 +27,13 @@ const queryClient = new QueryClient({
 export function TRPCProvider(props: { children: React.ReactNode }) {
   const { initDataRaw } = retrieveLaunchParams();
 
+  const url = `${import.meta.env.VITE_API_SERVER}trpc/api`;
+  const h = new Map<string, string>();
+  h.set("x-trpc-source", "client");
+  h.set("Authorization", `tma ${initDataRaw}`);
+
+  const h_ = Object.fromEntries(h);
+
   const [trpcClient] = useState(() =>
     api.createClient({
       links: [
@@ -36,7 +43,26 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
             (opts.direction === "down" && opts.result instanceof Error),
           colorMode: "ansi",
         }),
-        httpBatchLink({
+        splitLink({
+          condition(op) {
+            return op.context.skipBatch === true;
+          },
+          // when condition is true, use normal request
+          true: httpLink({
+            url,
+            headers() {
+              return h_;
+            },
+          }),
+          // when condition is false, use batching
+          false: httpBatchLink({
+            url,
+            headers() {
+              return h_;
+            },
+          }),
+        }),
+        /*httpBatchLink({
           // transformer: superjson,
           url: `${import.meta.env.VITE_API_SERVER}trpc/api`,
           headers() {
@@ -47,6 +73,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
             return Object.fromEntries(headers);
           },
         }),
+        */
       ],
     }),
   );

@@ -43,6 +43,11 @@ export const SentencesPage: FC = () => {
 
   const { data: user } = api.viewer.user.info.useQuery(undefined, {
     throwOnError: true,
+    trpc: {
+      context: {
+        skipBatch: true,
+      },
+    },
   });
 
   const updateLevelMuatation = api.viewer.user.updateLevel.useMutation({
