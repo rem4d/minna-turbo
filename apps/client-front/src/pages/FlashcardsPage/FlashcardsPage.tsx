@@ -70,7 +70,7 @@ export const FlashcardsPage: FC = () => {
 
   return (
     <Page back maxOffset className="GradientBg overflow-hidden select-none">
-      <div className="flex flex-col items-center space-y-6 px-6">
+      <div className="relative flex h-full flex-col items-center space-y-6 px-6">
         <div className="flex items-center space-x-2">
           <Tabs current={currentTab} onChange={onTabChange} />
           <div
@@ -90,6 +90,7 @@ export const FlashcardsPage: FC = () => {
           <RepeatScreen list={repeatList} isLoading={isLoading} />
         )}
       </div>
+
       {user && (
         <DrawerSettings
           open={settingsModalOpen}

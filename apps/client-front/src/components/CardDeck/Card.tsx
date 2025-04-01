@@ -20,6 +20,7 @@ export default React.memo(function Card({
   isMobile,
 }: CardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const handleClick = () => {
     if (isActive) {
@@ -36,8 +37,9 @@ export default React.memo(function Card({
         scale: isActive ? 1.1 : 1,
         translateY: isActive ? -30 : 0,
       }}
+      onAnimationComplete={() => setLoaded(false)}
       className={twMerge(
-        "absolute top-0 left-1/2 h-[50vh] max-h-[500px] -translate-x-1/2 cursor-pointer text-[#000] select-none",
+        "absolute left-1/2 h-[50vh] max-h-[500px] -translate-x-1/2 cursor-pointer text-[#000] select-none",
         isMobile && "w-[75vw]",
         !isMobile && "w-[320px]",
       )}
@@ -76,12 +78,14 @@ export default React.memo(function Card({
           transform: "rotateY(180deg)",
         }}
       >
-        <div className="size-full">
-          <KCard
-            k={k}
-            containerClassName="overflow-y-scroll overflow-x-hidden"
-          />
-        </div>
+        {loaded && (
+          <div className="size-full">
+            <KCard
+              k={k}
+              containerClassName="overflow-y-scroll overflow-x-hidden"
+            />
+          </div>
+        )}
       </motion.div>
     </motion.div>
   );

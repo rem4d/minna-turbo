@@ -186,42 +186,45 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
           }}
         />
       </div>
-      <div
-        id="deck"
-        className={twMerge(
-          "absolute top-1/2 left-1/2 h-[400px] max-h-[450px] w-full -translate-x-1/2 translate-y-[calc(-50%+30px)]",
-          cardList.length === 0 && "hidden",
-        )}
-      >
-        {cardList.map((c, index) => {
-          const isActiveCard = index === activeIndex;
-          const isLast = cardList.length - 1 === index;
 
-          if (index < cardList.length - 3) {
-            return null;
-          }
+      <div className="relative w-full">
+        <div
+          id="deck"
+          className={twMerge(
+            "absolute top-[calc(50vh/5)] h-[50vh] max-h-[500px] w-full",
+            cardList.length === 0 && "hidden",
+          )}
+        >
+          {cardList.map((c, index) => {
+            const isActiveCard = index === activeIndex;
+            const isLast = cardList.length - 1 === index;
 
-          return (
-            <div
-              key={`card-${c.id}`}
-              {...(isLast && {
-                onTouchStart: handleStart,
-                onMouseDown: handleStart,
-              })}
-              style={{
-                perspective: 1000,
-              }}
-            >
-              <Card
-                k={c}
-                isActive={isActiveCard}
-                isInteracting={false}
-                index={cardList.length - 1 - index}
-                isMobile={isMobile}
-              />
-            </div>
-          );
-        })}
+            if (index < cardList.length - 3) {
+              return null;
+            }
+
+            return (
+              <div
+                key={`card-${c.id}`}
+                {...(isLast && {
+                  onTouchStart: handleStart,
+                  onMouseDown: handleStart,
+                })}
+                style={{
+                  perspective: 1000,
+                }}
+              >
+                <Card
+                  k={c}
+                  isActive={isActiveCard}
+                  isInteracting={false}
+                  index={cardList.length - 1 - index}
+                  isMobile={isMobile}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
       <Arrows
         isMobile={isMobile}
