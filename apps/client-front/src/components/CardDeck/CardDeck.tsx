@@ -280,7 +280,7 @@ const Arrows: FC<ArrowProps> = ({
   return (
     <div
       className={twMerge(
-        "absolute bottom-[80px] left-1/2 flex w-full -translate-x-1/2 justify-between",
+        "absolute bottom-[calc(var(--tg-bottom)+30px)] left-1/2 flex w-full -translate-x-1/2 justify-between",
         isMobile && "w-[80vw]",
         !isMobile && "w-[calc(320px+32px)]",
       )}
