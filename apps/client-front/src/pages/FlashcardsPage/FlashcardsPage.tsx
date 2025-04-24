@@ -128,6 +128,14 @@ const NewScreen: FC<NewScreenProps> = ({ isLoading, list, onUpgradeLevel }) => {
     }
   };
 
+  const onPrevClick = (card: Kanji) => {
+    const cardIndex = list.findIndex((c) => c.id === card.id);
+    if (cardIndex !== -1) {
+      const newCardIndex = cardIndex + 1;
+      setCardListDisplay((l) => l.concat(list[newCardIndex]));
+    }
+  };
+
   const onCloseClick = () => {
     setFinished(false);
     setCardListDisplay(list);
@@ -160,6 +168,7 @@ const NewScreen: FC<NewScreenProps> = ({ isLoading, list, onUpgradeLevel }) => {
       cardList={cardListDisplay}
       total={total}
       onEvaluate={onEvaluate}
+      onPrevClick={onPrevClick}
     />
   );
 };

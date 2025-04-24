@@ -12,7 +12,8 @@ import Card from "./Card";
 interface CardDeckProps {
   total: number;
   cardList: Kanji[];
-  onEvaluate?: (card: Kanji) => void;
+  onEvaluate: (card: Kanji) => void;
+  onPrevClick: (card: Kanji) => void;
 }
 
 interface InteractionStart {
@@ -23,7 +24,12 @@ interface InteractionStart {
   $card?: HTMLDivElement;
 }
 
-export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
+export function CardDeck({
+  cardList,
+  total,
+  onEvaluate,
+  onPrevClick,
+}: CardDeckProps) {
   const interactionRef = useRef<InteractionStart>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -152,7 +158,7 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
           setActiveIndex(total - 1);
         }
 
-        onEvaluate?.(selectedCard);
+        onEvaluate(selectedCard);
       }
     }, 300);
   }, [cardList, onEvaluate, progress, total]);
@@ -171,10 +177,29 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
     };
   }, [handleMove, handleEnd]);
 
-  const disablePrevNav = false;
   const disableNextNav = false;
-  const handlePrevClick = () => {};
-  const handleNextClick = () => {};
+
+  const disablePrevNav = activeIndex === total - 1;
+
+  const handlePrevClick = () => {
+    const selectedCard = cardList[cardList.length - 1];
+    setActiveIndex((prev) => prev + 1);
+
+    const lineProgress = (1 - (cardList.length + 1) / total) * 100;
+    setLineProgress(lineProgress);
+
+    onPrevClick(selectedCard);
+  };
+
+  const handleNextClick = () => {
+    const selectedCard = cardList[cardList.length - 1];
+    setActiveIndex((prev) => prev - 1);
+
+    const lineProgress = (1 - (cardList.length - 1) / total) * 100;
+    setLineProgress(lineProgress);
+
+    onEvaluate(selectedCard);
+  };
 
   return (
     <>
@@ -228,8 +253,8 @@ export function CardDeck({ cardList, total, onEvaluate }: CardDeckProps) {
       </div>
       <Arrows
         isMobile={isMobile}
-        disableNextNav={disableNextNav}
         disablePrevNav={disablePrevNav}
+        disableNextNav={disableNextNav}
         handleNextClick={handleNextClick}
         handlePrevClick={handlePrevClick}
       />
@@ -267,7 +292,7 @@ const Arrows: FC<ArrowProps> = ({
         )}
         onClick={handlePrevClick}
       >
-        <ArrowIcon className="text-azure-radiance absolute size-full -rotate-90 fill-current" />
+        <ArrowIcon className="text-mine-shaft absolute size-full -rotate-90 fill-current" />
       </div>
       <div
         className={twMerge(
@@ -276,7 +301,7 @@ const Arrows: FC<ArrowProps> = ({
         )}
         onClick={handleNextClick}
       >
-        <ArrowIcon className="text-azure-radiance absolute size-full rotate-90 fill-current" />
+        <ArrowIcon className="text-mine-shaft absolute size-full rotate-90 fill-current" />
       </div>
     </div>
   );
