@@ -129,7 +129,6 @@ const NewScreen: FC<NewScreenProps> = ({ isLoading, list, onUpgradeLevel }) => {
   };
 
   const onPrevClick = (card: Kanji) => {
-    console.log(1);
     const cardIndex = list.findIndex((c) => c.id === card.id);
     if (cardIndex !== -1) {
       const newCardIndex = cardIndex + 1;
@@ -189,6 +188,14 @@ const RepeatScreen: FC<RepeatScreenProps> = ({ isLoading, list }) => {
     setCardListDisplay(list);
   }, [list]);
 
+  const onPrevClick = (card: Kanji) => {
+    const cardIndex = list.findIndex((c) => c.id === card.id);
+    if (cardIndex !== -1) {
+      const newCardIndex = cardIndex + 1;
+      setCardListDisplay((l) => l.concat(list[newCardIndex]));
+    }
+  };
+
   const onEvaluate = (card: Kanji) => {
     setCardListDisplay((prev) => prev.filter((c) => c.kanji !== card.kanji));
 
@@ -223,6 +230,7 @@ const RepeatScreen: FC<RepeatScreenProps> = ({ isLoading, list }) => {
       cardList={cardListDisplay}
       total={total}
       onEvaluate={onEvaluate}
+      onPrevClick={onPrevClick}
     />
   );
 };
