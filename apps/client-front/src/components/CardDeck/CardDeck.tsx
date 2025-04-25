@@ -205,7 +205,7 @@ export function CardDeck({
     <>
       <div className="relative h-[8px] w-full overflow-hidden rounded-full bg-white">
         <div
-          className="absolute h-full rounded-tr-full rounded-br-full bg-black/30 transition-all"
+          className="bg-mine-shaft/50 absolute h-full rounded-tr-full rounded-br-full transition-all"
           style={{
             width: `${lineProgress}%`,
           }}
