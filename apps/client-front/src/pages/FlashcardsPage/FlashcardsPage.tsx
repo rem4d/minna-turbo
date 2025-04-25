@@ -255,9 +255,9 @@ interface CongratsScreenProps {
 const CongratsScreen = ({ onCloseClick, level }: CongratsScreenProps) => {
   return (
     <div className="absolute top-0 left-0 h-full w-full">
-      <div className="relative top-[40px] mt-(--page-offset-top-full) w-full">
+      <div className="relative top-2 mt-(--page-offset-top-full) w-full">
         <div
-          className="absolute top-6 right-3 size-[40px] cursor-pointer rounded-full bg-white"
+          className="absolute right-3 size-[40px] cursor-pointer rounded-full bg-white"
           onClick={onCloseClick}
         >
           <CrossIcon className="absolute top-1/2 left-1/2 size-[34px] -translate-x-1/2 -translate-y-1/2 rotate-[45deg]" />
