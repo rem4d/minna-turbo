@@ -5,7 +5,9 @@ import AgainIcon from "@/assets/icons/again.svg?react";
 import CrossIcon from "@/assets/icons/cross.svg?react";
 import FireworksIcon from "@/assets/icons/fireworks.svg?react";
 import SettingsIcon from "@/assets/icons/settings2.svg?react";
+import clickJson from "@/assets/lottie/click2.json";
 import { CardDeck } from "@/components/CardDeck/CardDeck";
+import Drawer from "@/components/Drawer";
 import DrawerSettings from "@/components/DrawerSettings/DrawerSettings";
 import { Page } from "@/components/Page";
 import { SpinnerBig } from "@/components/Spinner";
@@ -15,6 +17,7 @@ import { convertLevel } from "@/utils/convert";
 import hapticFeedback from "@/utils/hapticFeedback";
 import { shuffle } from "@rem4d/utils";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import Lottie from "lottie-react";
 import { Link } from "react-router-dom";
 
 export const FlashcardsPage: FC = () => {
@@ -22,6 +25,12 @@ export const FlashcardsPage: FC = () => {
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [isFinished, setFinished] = useState(false);
   const [level, setLevel] = useState(0);
+
+  const [showHelpModal, setShowHelpModal] = useLocalStorage(
+    "kic:show_help_modal",
+    true,
+  );
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
 
   const [storedRangeFrom] = useLocalStorage<number | null>(
     "kic:range_from",
@@ -33,7 +42,23 @@ export const FlashcardsPage: FC = () => {
     throwOnError: true,
   });
 
-  const { data: list } = api.viewer.kanji.all.useQuery();
+  const { data: list, isSuccess } = api.viewer.kanji.all.useQuery();
+
+  useEffect(() => {
+    let id: null | ReturnType<typeof setTimeout>;
+
+    if (isSuccess && showHelpModal) {
+      id = setTimeout(() => {
+        setHelpModalOpen(true);
+      }, 1000);
+    }
+
+    return () => {
+      if (id) {
+        clearTimeout(id);
+      }
+    };
+  }, [isSuccess, setHelpModalOpen, showHelpModal]);
 
   const newList = useMemo(
     () =>
@@ -84,6 +109,10 @@ export const FlashcardsPage: FC = () => {
     setFinished(false);
   };
 
+  const onModalOpenChange = () => {
+    setHelpModalOpen(!helpModalOpen);
+    setShowHelpModal(false);
+  };
   return (
     <Page back maxOffset className="GradientBg overflow-hidden select-none">
       {isFinished ? (
@@ -125,6 +154,20 @@ export const FlashcardsPage: FC = () => {
           )}
         </>
       )}
+
+      <Drawer open={helpModalOpen} onOpenChange={onModalOpenChange}>
+        <div className="relative flex size-full flex-col space-y-2">
+          <p className="mt-2 self-center px-2 text-center text-sm text-black">
+            Click on the card to see the meaning <br />
+            Swipe any direction to see the next one
+          </p>
+          <div className="relative bottom-0 self-center">
+            <div className="h-full max-w-[400px]">
+              <Lottie as="div" animationData={clickJson} />
+            </div>
+          </div>
+        </div>
+      </Drawer>
     </Page>
   );
 };

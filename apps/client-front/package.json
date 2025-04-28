@@ -24,6 +24,7 @@
     "edge-tts-client": "^1.0.2",
     "i": "^0.3.7",
     "i18next": "^25.0.1",
+    "lottie-react": "^2.4.1",
     "motion": "^12.3.1",
     "pnpm": "^10.2.1",
     "react": "catalog:",
