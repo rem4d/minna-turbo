@@ -45,7 +45,7 @@ void i18n
           see_all: "See all",
           all_kanji: "All kanji",
           find: "Search...",
-          dictionary: "Dictonary",
+          dictionary: "Dictionary",
           dict_level: "Level {{val, number}} dictonary",
 
           word_zero: "words",
