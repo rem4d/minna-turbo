@@ -2,17 +2,16 @@ import type { Sentence } from "@rem4d/db";
 import type { FC } from "react";
 import { useCallback, useEffect, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
-import EyeClosedIcon from "@/assets/icons/eye-closed.svg?react";
-import EyeOpenIcon from "@/assets/icons/eye-open.svg?react";
 import Dropdown from "@/components/Dropdown";
+import { EyeToggle } from "@/components/EyeToggle";
 import PlaySound from "@/components/PlaySound";
+import Accordion from "@/components/SentenceViewer/Accordion";
 import { usePlaySoundContext } from "@/context/playSoundContext";
 import hapticFeedback from "@/utils/hapticFeedback";
 import { useLaunchParams } from "@telegram-apps/sdk-react";
 import { twMerge } from "tailwind-merge";
 
 import type { DropdownItem } from "../Dropdown";
-import Accordion from "../../components/SentenceViewer/Accordion";
 import { SentenceText } from "./SentenceText";
 
 interface Props {
@@ -113,8 +112,8 @@ export const SentenceViewer: FC<Props> = ({
                 }
               />
             )}
-            <ShowFuriganaComponent
-              showFurigana={showFurigana}
+            <EyeToggle
+              show={showFurigana}
               onClick={() => setShowFurigana((s) => !s)}
             />
 
@@ -140,24 +139,6 @@ export const SentenceViewer: FC<Props> = ({
         </div>
       </div>
     )
-  );
-};
-
-const ShowFuriganaComponent = ({
-  onClick,
-  showFurigana,
-}: {
-  showFurigana: boolean;
-  onClick: () => void;
-}) => {
-  return (
-    <div className="cursor-pointer" onClick={onClick}>
-      {showFurigana ? (
-        <EyeOpenIcon className="size-[24px] text-black/50" />
-      ) : (
-        <EyeClosedIcon className="size-[24px] text-black/50" />
-      )}
-    </div>
   );
 };
 export default SentenceViewer;

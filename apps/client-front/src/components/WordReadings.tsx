@@ -1,6 +1,7 @@
 import { Fragment, useCallback } from "react";
 import PlaySound from "@/components/PlaySound";
 import { usePlaySoundContext } from "@/context/playSoundContext";
+import { twMerge } from "tailwind-merge";
 
 interface ListItem {
   basic_form: string | null;
@@ -11,9 +12,14 @@ interface ListItem {
 interface Props {
   list?: ListItem[];
   asGrid?: boolean;
+  hideMeanings?: boolean;
 }
 
-export default function WordReadings({ list = [], asGrid = false }: Props) {
+export default function WordReadings({
+  list = [],
+  asGrid = false,
+  hideMeanings = false,
+}: Props) {
   const {
     isPlaying,
     isLoading,
@@ -89,9 +95,11 @@ export default function WordReadings({ list = [], asGrid = false }: Props) {
       </div>
 
       <div className="mt-0.5 flex items-start space-x-2">
-        <div className="text-denim text-base whitespace-nowrap">
-          {data.reading === "" ? data.basic_form : data.reading}
-        </div>
+        {hideMeanings ? null : (
+          <div className="text-denim text-base whitespace-nowrap">
+            {data.reading === "" ? data.basic_form : data.reading}
+          </div>
+        )}
         {data.reading && (
           <PlaySound
             reading={data.reading}
@@ -108,7 +116,9 @@ export default function WordReadings({ list = [], asGrid = false }: Props) {
           />
         )}
       </div>
-      <div className="mt-1.5 text-sm">{data.en}</div>
+      <div className={twMerge("mt-1.5 text-sm", hideMeanings && "hidden")}>
+        {data.en}
+      </div>
     </div>
   ));
 

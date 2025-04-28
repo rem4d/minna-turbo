@@ -5,15 +5,19 @@ import WordReadings from "@/components/WordReadings";
 import { api } from "@/utils/api";
 import { twMerge } from "tailwind-merge";
 
+import { EyeToggle } from "./EyeToggle";
+
 interface Props {
   k: Kanji;
+  useEye?: boolean;
   containerClassName?: string;
 }
 
-export function KCard({ k, containerClassName = "" }: Props) {
+export function KCard({ k, useEye = false, containerClassName = "" }: Props) {
   const { kun, on_, en, kanji } = k;
   const examplesRef = useRef<HTMLDivElement>(null);
   const [hasScroll, setHasScroll] = useState(false);
+  const [eyeOpen, setEyeOpen] = useState(false);
 
   const { data: examples, isLoading: examplesLoading } =
     api.viewer.kanji.examples.useQuery({ k: k.kanji ?? "" }, { enabled: !!k });
@@ -32,9 +36,15 @@ export function KCard({ k, containerClassName = "" }: Props) {
       e.stopPropagation();
     }
   };
+
+  const handleEyeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEyeOpen((s) => !s);
+  };
+
   return (
     <div className="relative flex h-full grow scale-[0.9] flex-col">
-      <div className="mb-4 flex space-x-4">
+      <div className="mb-2 flex space-x-4">
         <div className="flex aspect-square h-[96px] justify-center rounded-lg border border-black/10 bg-white drop-shadow-[3px_3px_0px_rgba(41,41,41,0.1)]">
           <div className="font-digi text-[60px] text-[#000]">{kanji}</div>
         </div>
@@ -52,6 +62,16 @@ export function KCard({ k, containerClassName = "" }: Props) {
           )}
         </div>
       </div>
+      {useEye ? (
+        <div className="relative h-[44px] w-full">
+          <div className="bg-gallery absolute top-1/2 h-[1px] w-full -translate-y-1/2"></div>
+          <div className="border-gallery absolute top-1/2 right-2 size-[44px] -translate-y-1/2 cursor-pointer rounded-full border bg-white">
+            <div className="flex size-full items-center justify-center">
+              <EyeToggle show={eyeOpen} onClick={handleEyeClick} />
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {examplesLoading && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -64,7 +84,7 @@ export function KCard({ k, containerClassName = "" }: Props) {
           className={twMerge("h-full grow", containerClassName)}
           onTouchStart={handleTouchStart}
         >
-          <WordReadings list={examples} />
+          <WordReadings list={examples} hideMeanings={!eyeOpen} />
         </div>
       )}
     </div>

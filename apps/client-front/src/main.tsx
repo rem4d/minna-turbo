@@ -16,7 +16,6 @@ try {
     startParam: string;
     fullscreen: boolean;
   };
-  console.log(lp.startParam);
 
   // Configure all application dependencies.
   init({
