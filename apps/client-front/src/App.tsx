@@ -14,6 +14,8 @@ import {
 } from "@telegram-apps/sdk-react";
 import { RouterProvider } from "react-router-dom";
 
+import "./utils/i18n";
+
 import { router } from "./routes";
 import { TRPCProvider } from "./utils/api";
 
