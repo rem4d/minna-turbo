@@ -7,6 +7,7 @@ import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import { SentenceViewer } from "@/components/SentenceViewer";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { useTranslation } from "react-i18next";
 
 export const SettingsPage: FC = () => {
   const [favorites, setFavorites] = useLocalStorage<Sentence[]>(
@@ -17,6 +18,7 @@ export const SettingsPage: FC = () => {
   const [activeIndex, setActiveIndex] = useState(-1);
 
   const sentence = favorites[activeIndex];
+  const { t } = useTranslation();
 
   const remove = useCallback(
     (id: number) => {
@@ -53,8 +55,8 @@ export const SettingsPage: FC = () => {
   return (
     <Page>
       <div className="relative flex flex-col space-y-8 px-4 pb-(--footer-height)">
-        <SectionHeader>Настройки</SectionHeader>
-        <List title="Фразы">
+        <SectionHeader>{t("settings")}</SectionHeader>
+        <List title={t("sentences")}>
           {favorites.map((fav, index) => (
             <ListItem
               right="remove"

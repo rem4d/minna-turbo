@@ -319,7 +319,7 @@ const CongratsScreen = ({ onCloseClick, level }: CongratsScreenProps) => {
           </div>
           <div className="mt-[100px] py-6 text-center">
             <div className="text-[24px]">{t("congrats")}</div>
-            <div className="text-[24px]">You learned 7 new kanji</div>
+            <div className="text-[24px]">{t("congrats_learned")}</div>
             <div className="mt-4 text-[14px] text-black/90">
               {t("congrats_level")} <b>{level}</b>
             </div>

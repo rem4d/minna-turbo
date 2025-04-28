@@ -6,6 +6,7 @@ import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import { api } from "@/utils/api";
 import { useDebounce } from "@uidotdev/usehooks";
+import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
 import { twMerge } from "tailwind-merge";
 import { isHiragana, isKanji, isKatakana } from "wanakana";
@@ -41,6 +42,7 @@ export const AllKanjiPage: FC = () => {
     : data;
 
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   const onCardClick = useCallback((id: number) => {
     setSelectedKId(id);
@@ -56,9 +58,13 @@ export const AllKanjiPage: FC = () => {
         )}
       >
         <SectionHeader className={isLoading ? "opacity-0" : ""}>
-          Все кандзи
+          {t("all_kanji")}
         </SectionHeader>
-        <SearchBar onChange={setSearchValue} value={searchValue} />
+        <SearchBar
+          onChange={setSearchValue}
+          value={searchValue}
+          placeholderText={t("find")}
+        />
         {isLoading && (
           <Skeleton
             className="aspect-square"

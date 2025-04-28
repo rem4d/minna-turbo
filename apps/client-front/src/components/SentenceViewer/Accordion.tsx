@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { api } from "@/utils/api";
 import * as Accordion from "@radix-ui/react-accordion";
+import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
 import { twMerge } from "tailwind-merge";
 
@@ -65,6 +66,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
   const onValueChange = (v: string[]) => {
     setVal(v);
   };
+  const { t } = useTranslation();
 
   return (
     <Accordion.Root
@@ -79,7 +81,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
       >
         <Accordion.Header>
           <Accordion.Trigger className="mt-2 flex w-full items-center justify-between px-4 py-2">
-            <span className="font-medium">Перевод</span>
+            <span className="font-medium">{t("translation")}</span>
             <ArrowIcon
               className={twMerge(
                 "mr-2 fill-current",
@@ -114,7 +116,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
       >
         <Accordion.Header>
           <Accordion.Trigger className="mt-2 flex w-full items-center justify-between px-4 py-3 pt-5">
-            <span className="font-medium">Словарь</span>
+            <span className="font-medium">{t("glossary")}</span>
             <ArrowIcon
               className={twMerge(
                 "mr-2 fill-current text-black",

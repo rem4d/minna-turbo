@@ -4,6 +4,8 @@ import { List, ListItem } from "@/components/List";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import { api } from "@/utils/api";
+import { ruTranslateByNumber } from "@/utils/convert";
+import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
 
 export const LibraryPage: FC = () => {
@@ -12,26 +14,28 @@ export const LibraryPage: FC = () => {
       throwOnError: true,
     });
 
+  const { t } = useTranslation();
+  // sub={`${data.cnt} ${ruTranslateByNumber(data.cnt ?? 0, ["слов", "слово", "слова", "слов"])}`}
   return (
     <Page>
       <div className="relative flex flex-col space-y-8 px-4 pb-(--footer-height)">
         {!isLoading && (
           <>
-            <SectionHeader>Библиотека</SectionHeader>
-            <List title="Кандзи">
+            <SectionHeader>{t("library")}</SectionHeader>
+            <List title={t("kanji")}>
               <ListItem
-                title="Смотреть все"
+                title={t("see_all")}
                 icon={<KanjiIcon className="size-[20px]" />}
                 to="/library/all-kanji"
                 right="arrow"
               />
             </List>
-            <List title="Рекомендованные словари">
+            <List title={t("recommended_vocabulary")}>
               {list?.map((data, i) => (
                 <ListItem
                   key={`level-${data.level_from}`}
-                  title={`Уровень ${i + 1}`}
-                  sub={`${data.cnt} слов`}
+                  title={`${t("level_uppercase")} ${i + 1}`}
+                  sub={`${data.cnt} ${t("word", { count: data.cnt ?? 0 })}`}
                   to={`/library/dict/${i + 1}`}
                   showBorder={i < list.length - 1}
                   right="arrow"

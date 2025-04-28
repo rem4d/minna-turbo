@@ -2,9 +2,10 @@ import SearchIcon from "@/assets/icons/search.svg?react";
 
 interface Props {
   value: string;
+  placeholderText: string;
   onChange?: (v: string) => void;
 }
-export default function SearchBar({ onChange, value }: Props) {
+export default function SearchBar({ onChange, value, placeholderText }: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange?.(event.target.value);
   };
@@ -16,7 +17,7 @@ export default function SearchBar({ onChange, value }: Props) {
       <input
         className="w-full outline-none"
         type="text"
-        placeholder="Search..."
+        placeholder={placeholderText}
         onChange={handleChange}
         value={value}
         spellCheck="false"
