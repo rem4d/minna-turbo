@@ -1,6 +1,6 @@
 import type { FC, ReactElement } from "react";
 import BubbleIcon from "@/assets/images/bubble2.svg?react";
-import DeckIcon from "@/assets/images/deck.svg?react";
+import DeckIcon from "@/assets/images/deck2.svg?react";
 import { Page } from "@/components/Page";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
@@ -56,20 +56,30 @@ const Card: FC<CardProps> = ({ title, desc, to, color, icon }) => {
     <div
       className={twMerge(
         "border-heatheredGray/40 relative flex h-[200px] w-full flex-col justify-between space-y-4 overflow-hidden rounded-[20px] border p-6 shadow-md",
-        color === "cyan" ? "bg-polar" : "bg-half-dutch-white",
+
+        color === "cyan"
+          ? "border-[#d1ccdb]/50 bg-[#e5e0f7] shadow-[#d1ccdb]"
+          : "bg-half-dutch-white border-[#e7dfc7]/50 shadow-[#e7dfc7]",
       )}
       onClick={handleButtonClick}
     >
       {icon}
       <div className="relative z-10 flex flex-col space-y-2">
-        <div className="text-2xl font-semibold text-black">{title}</div>
+        <div
+          className={twMerge(
+            "text-2xl font-semibold",
+            color === "cyan" ? "text-[#4c406e]" : "text-[#4b3e1a]",
+          )}
+        >
+          {title}
+        </div>
         <div className="text-boulder text-sm">{desc}</div>
       </div>
       <button
         className={twMerge(
           "relative w-[50%] self-start rounded-[14px] py-2 text-base font-semibold text-black",
           color === "yellow" && "bg-[#ffd664] text-black",
-          color === "cyan" && "bg-scooter text-white",
+          color === "cyan" && "bg-[#705fa2] text-white",
         )}
       >
         Начать
