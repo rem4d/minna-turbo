@@ -11,9 +11,15 @@ interface Props {
   k: Kanji;
   useEye?: boolean;
   containerClassName?: string;
+  className?: string;
 }
 
-export function KCard({ k, useEye = false, containerClassName = "" }: Props) {
+export function KCard({
+  k,
+  useEye = false,
+  containerClassName = "",
+  className = "",
+}: Props) {
   const { kun, on_, en, kanji } = k;
   const examplesRef = useRef<HTMLDivElement>(null);
   const [hasScroll, setHasScroll] = useState(false);
@@ -43,7 +49,12 @@ export function KCard({ k, useEye = false, containerClassName = "" }: Props) {
   };
 
   return (
-    <div className="relative flex h-full grow scale-[0.9] flex-col">
+    <div
+      className={twMerge(
+        "relative flex h-full grow scale-[0.9] flex-col",
+        className,
+      )}
+    >
       <div className={twMerge("mb-4 flex space-x-4", useEye && "mb-0")}>
         <div className="flex aspect-square h-[96px] justify-center rounded-lg border border-black/10 bg-white drop-shadow-[3px_3px_0px_rgba(41,41,41,0.1)]">
           <div className="font-digi text-[60px] text-[#000]">{kanji}</div>

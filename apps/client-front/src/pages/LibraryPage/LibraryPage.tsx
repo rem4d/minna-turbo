@@ -23,6 +23,7 @@ export const LibraryPage: FC = () => {
                 title="Смотреть все"
                 icon={<KanjiIcon className="size-[20px]" />}
                 to="/library/all-kanji"
+                right="arrow"
               />
             </List>
             <List title="Рекомендованные словари">
@@ -33,6 +34,7 @@ export const LibraryPage: FC = () => {
                   sub={`${data.cnt} слов`}
                   to={`/library/dict/${i + 1}`}
                   showBorder={i < list.length - 1}
+                  right="arrow"
                 />
               ))}
             </List>

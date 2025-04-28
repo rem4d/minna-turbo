@@ -93,7 +93,7 @@ export const ListItem: FC<ListItemProps> = ({
         </div>
         {rightElem && (
           <div
-            className="relative mr-[10px] flex h-full justify-center"
+            className="relative mr-[0px] flex h-full justify-center"
             onClick={() => onRightIconClick?.()}
           >
             {rightElem()}

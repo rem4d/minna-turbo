@@ -86,7 +86,7 @@ export const AllKanjiPage: FC = () => {
 
       <Drawer open={open} onOpenChange={setOpen} noContainer>
         <div className="flex h-full min-h-[60vh] flex-col bg-white px-4 py-4 pb-(--page-offset-bottom)">
-          {selectedK && <KCard k={selectedK} />}
+          {selectedK && <KCard k={selectedK} className="scale-[1.0]" />}
         </div>
       </Drawer>
     </Page>
