@@ -35,7 +35,7 @@ export function KCard({
 
       setHasScroll(scrollHeight > clientHeight);
     }
-  }, [examples]);
+  }, [examples, eyeOpen]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (hasScroll) {

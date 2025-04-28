@@ -34,7 +34,6 @@ function App() {
       user: { languageCode: string };
     };
   };
-  console.log(lp);
   const { i18n } = useTranslation();
   const userLang = lp?.initData?.user?.languageCode === "ru" ? "ru" : "en";
   const [hasLoadedTrans, setHasLoadedTrans] = useState(false);
