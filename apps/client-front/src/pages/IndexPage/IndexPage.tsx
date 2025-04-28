@@ -2,17 +2,19 @@ import type { FC, ReactElement } from "react";
 import BubbleIcon from "@/assets/images/bubble2.svg?react";
 import DeckIcon from "@/assets/images/deck2.svg?react";
 import { Page } from "@/components/Page";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 export const IndexPage: FC = () => {
+  const { t } = useTranslation();
   return (
     <Page footer>
       <div className="flex h-[calc(100%-var(--footer-height))] flex-col justify-center">
         <div className="flex flex-col items-center justify-center space-y-6 p-[33px]">
           <Card
-            title="Фразы"
-            desc="Читайте и слушайте реальные фразы на японском, состоящие только из изученных вами кандзи"
+            title={t("sentences")}
+            desc={t("sentences_desc")}
             to="/sentences"
             color="yellow"
             icon={
@@ -23,8 +25,8 @@ export const IndexPage: FC = () => {
             }
           />
           <Card
-            title="Карточки"
-            desc="Повышайте свой уровень, изучая новые кандзи с помощью карточек"
+            title={t("flashcards")}
+            desc={t("flashcards_desc")}
             to="/flashcards"
             color="cyan"
             icon={
@@ -49,6 +51,7 @@ interface CardProps {
 
 const Card: FC<CardProps> = ({ title, desc, to, color, icon }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const handleButtonClick = () => {
     void navigate(to);
   };
@@ -82,7 +85,7 @@ const Card: FC<CardProps> = ({ title, desc, to, color, icon }) => {
           color === "cyan" && "bg-[#705fa2] text-white",
         )}
       >
-        Начать
+        {t("start")}
       </button>
     </div>
   );

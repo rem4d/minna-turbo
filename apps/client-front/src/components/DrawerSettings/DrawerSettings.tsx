@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Button from "@/components/Button";
 import Drawer from "@/components/Drawer";
 import { List, ListItem } from "@/components/List";
@@ -9,6 +9,7 @@ import hapticFeedback from "@/utils/hapticFeedback";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-client";
+import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
 
 interface Props {
@@ -48,11 +49,7 @@ export default function DrawerSettings({
   const kFrom = kanjis?.find((k) => k.position === rangeFrom);
   const kTo = kanjis?.find((k) => k.position === rangeTo);
 
-  // useEffect(() => {
-  //   if (!open) {
-  //     setView("idle");
-  //   }
-  // }, [open]);
+  const { t } = useTranslation();
 
   const onLevelSelect = useCallback(
     (position: number) => {
@@ -81,48 +78,6 @@ export default function DrawerSettings({
     setStoredRangeFrom(rangeFrom);
     setStoredRangeTo(rangeTo);
   };
-
-  useEffect(() => {
-    const id = setTimeout(() => {
-      // setView("idle");
-    }, 200);
-
-    // let from: null | number = clamp(selectedLevel - 19, 1, selectedLevel);
-    // let to: null | number = clamp(selectedLevel, 1, selectedLevel);
-    //
-    // if (selectedLevel === 1) {
-    //   from = null;
-    //   to = null;
-    // } else if (rangeTo && selectedLevel < rangeTo) {
-    //   to = selectedLevel
-    // }
-    //
-    //
-    // setRangeFrom(from);
-    // setRangeTo(to);
-    //
-    return () => {
-      if (id) {
-        clearTimeout(id);
-      }
-    };
-  }, [selectedLevel]);
-
-  useEffect(() => {
-    let id: ReturnType<typeof setTimeout> | undefined = undefined;
-
-    if (typeof rangeTo === "number") {
-      id = setTimeout(() => {
-        // setView("idle");
-      }, 200);
-    }
-
-    return () => {
-      if (id) {
-        clearTimeout(id);
-      }
-    };
-  }, [rangeTo]);
 
   const onRangeSelectClick = useCallback(
     (level: number) => {
@@ -160,11 +115,7 @@ export default function DrawerSettings({
       open={open}
       onOpenChange={onOpenChange}
       onBackClick={onBackClick}
-      title={
-        view === "choose_last_kanji"
-          ? "Выберите последний изученный кандзи"
-          : ""
-      }
+      title={view === "choose_last_kanji" ? t("choose_the_last_kanji") : ""}
       back={view === "choose_last_kanji" || view === "choose_repeat_deck"}
     >
       <m.div
@@ -184,7 +135,7 @@ export default function DrawerSettings({
               className="max-h-50vh flex h-full flex-col justify-between px-4 pb-6"
             >
               <div className="flex w-full flex-col space-y-4">
-                <List title="Последний выученный кандзи">
+                <List title={t("the_last_kanji")}>
                   <ListItem
                     icon={
                       currentK && (
@@ -196,20 +147,20 @@ export default function DrawerSettings({
                         className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent"
                         onClick={() => setView("choose_last_kanji")}
                       >
-                        Изменить
+                        {t("change")}
                       </button>
                     }
-                    sub={`${convertLevel(currentK?.position)} уровень`}
+                    sub={`${convertLevel(currentK?.position)} ${t("level")}`}
                   />
                 </List>
                 {showRepeatDeckOption && (
-                  <List title="Колода для повторения">
+                  <List title={t("repeat_deck")}>
                     <ListItem
                       icon={
                         <div className="text-[16px] whitespace-nowrap">
                           {kFrom && kTo
                             ? `${kFrom?.kanji}...${kTo?.kanji}`
-                            : "Not assigned"}
+                            : t("not_assigned")}
                         </div>
                       }
                       sub={
@@ -222,7 +173,7 @@ export default function DrawerSettings({
                           className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent"
                           onClick={() => setView("choose_repeat_deck")}
                         >
-                          Изменить
+                          {t("change")}
                         </button>
                       }
                     />
@@ -230,7 +181,7 @@ export default function DrawerSettings({
                 )}
               </div>
               <Button className="w-full" onClick={onSubmit}>
-                Сохранить
+                {t("save")}
               </Button>
             </m.div>
           )}

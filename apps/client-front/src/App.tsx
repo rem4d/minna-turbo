@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import * as Toast from "@radix-ui/react-toast";
 import {
   Provider as RollbarProvider,
@@ -21,13 +21,32 @@ import { TRPCProvider } from "./utils/api";
 
 import "./index.css";
 
+import { useTranslation } from "react-i18next";
 import { SkeletonTheme } from "react-loading-skeleton";
 
 import ErrorFallbackComponent from "./components/ErrorFallbackComponent";
 import { PlaySoundContextProvider } from "./context/playSoundContext";
 
 function App() {
-  const lp = useLaunchParams() as { platform: string };
+  const lp = useLaunchParams() as {
+    platform: string;
+    user: { languageCode: string };
+  };
+  const { i18n } = useTranslation();
+  const userLang = lp?.user?.languageCode ?? "en";
+  const [hasLoadedTrans, setHasLoadedTrans] = useState(false);
+
+  useLayoutEffect(() => {
+    if (userLang && userLang === "ru") {
+      void i18n.changeLanguage(userLang);
+    } else {
+      setHasLoadedTrans(true);
+    }
+  }, [userLang, i18n]);
+
+  useEffect(() => {
+    setHasLoadedTrans(true);
+  }, [i18n.language]);
 
   useEffect(() => {
     if (swipeBehavior.isSupported()) {
@@ -55,7 +74,7 @@ function App() {
           <Toast.Provider swipeDirection="down">
             <PlaySoundContextProvider>
               <SkeletonTheme baseColor="#dadada">
-                <RouterProvider router={router} />
+                {hasLoadedTrans ? <RouterProvider router={router} /> : null}
               </SkeletonTheme>
             </PlaySoundContextProvider>
           </Toast.Provider>

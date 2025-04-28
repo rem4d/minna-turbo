@@ -3,6 +3,7 @@ import LibraryIcon from "@/assets/icons/book.svg?react";
 import HomeIcon from "@/assets/icons/home.svg?react";
 import SettingsIcon from "@/assets/icons/settings.svg?react";
 import { paths } from "@/routes";
+import { useTranslation } from "react-i18next";
 import { NavLink, useMatch } from "react-router-dom";
 import { twJoin, twMerge } from "tailwind-merge";
 
@@ -14,6 +15,7 @@ export function FooterMenu(): ReactElement {
   const settingsMatch = useMatch(paths.settings);
   const sentencesMatch = useMatch(paths.sentences);
   const flashcardsMatch = useMatch(paths.flashcards);
+  const { t } = useTranslation();
 
   const hideFooter =
     Boolean(dictMatch) ||
@@ -37,19 +39,19 @@ export function FooterMenu(): ReactElement {
     >
       <Item
         to={paths.home}
-        title="Главная"
+        title={t("home")}
         icon={<HomeIcon className="size-[20px] fill-current" />}
         active={Boolean(homeMatch)}
       />
       <Item
         to={paths.library}
-        title="Библиотека"
+        title={t("library")}
         icon={<LibraryIcon className="size-[20px] fill-current" />}
         active={Boolean(libraryMatch) || Boolean(dictMatch)}
       />
       <Item
         to={paths.settings}
-        title="Настройки"
+        title={t("settings")}
         icon={<SettingsIcon className="size-[22px] fill-current" />}
         active={Boolean(settingsMatch)}
       />

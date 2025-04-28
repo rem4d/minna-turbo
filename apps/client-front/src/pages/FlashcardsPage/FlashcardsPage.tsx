@@ -18,6 +18,7 @@ import hapticFeedback from "@/utils/hapticFeedback";
 import { shuffle } from "@rem4d/utils";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import Lottie from "lottie-react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export const FlashcardsPage: FC = () => {
@@ -83,6 +84,8 @@ export const FlashcardsPage: FC = () => {
   }, [storedRangeFrom, storedRangeTo, list]);
 
   const utils = api.useUtils();
+  const { t } = useTranslation();
+
   const updateLevelMuatation = api.viewer.user.updateLevel.useMutation({
     onSuccess() {
       void utils.viewer.user.info.reset();
@@ -158,8 +161,8 @@ export const FlashcardsPage: FC = () => {
       <Drawer open={helpModalOpen} onOpenChange={onModalOpenChange}>
         <div className="relative flex size-full flex-col space-y-2">
           <p className="mt-2 self-center px-2 text-center text-sm text-black">
-            Click on the card to see the meaning <br />
-            Swipe any direction to see the next one
+            {t("help_modal.a")} <br />
+            {t("help_modal.b")}
           </p>
           <div className="relative bottom-0 self-center">
             <div className="h-full max-w-[400px]">
@@ -227,6 +230,7 @@ const RepeatScreen: FC<RepeatScreenProps> = ({ isLoading, list }) => {
 
   const total = list.length;
   const isAssign = cardListDisplay.length === 0;
+  const { t } = useTranslation();
 
   useEffect(() => {
     setCardListDisplay(list);
@@ -262,7 +266,7 @@ const RepeatScreen: FC<RepeatScreenProps> = ({ isLoading, list }) => {
           onClick={onAgainClick}
         >
           <AgainIcon className="text-denim size-[80px] fill-current" />
-          <div className="text-black/90">Еще раз</div>
+          <div className="text-black/90">{t("again")}</div>
         </div>
       </div>
     );
@@ -271,7 +275,7 @@ const RepeatScreen: FC<RepeatScreenProps> = ({ isLoading, list }) => {
   if (isAssign) {
     return (
       <div className="flex size-full flex-col items-center justify-center text-center">
-        Назначте колоду для повторения в настройках
+        {t("assign_deck")}
       </div>
     );
   }
@@ -297,6 +301,7 @@ interface CongratsScreenProps {
 }
 
 const CongratsScreen = ({ onCloseClick, level }: CongratsScreenProps) => {
+  const { t } = useTranslation();
   return (
     <div className="absolute top-0 left-0 h-full w-full">
       <div className="relative top-2 mt-(--page-offset-top-full) w-full">
@@ -313,16 +318,16 @@ const CongratsScreen = ({ onCloseClick, level }: CongratsScreenProps) => {
             <FireworksIcon className="size-full" />
           </div>
           <div className="mt-[100px] py-6 text-center">
-            <div className="text-[24px]">Congratulations!</div>
+            <div className="text-[24px]">{t("congrats")}</div>
             <div className="text-[24px]">You learned 7 new kanji</div>
             <div className="mt-4 text-[14px] text-black/90">
-              now your level is <b>{level}</b>
+              {t("congrats_level")} <b>{level}</b>
             </div>
           </div>
         </div>
         <div>
           <Link className="text-denim" to="/sentences">
-            Practice sentences
+            {t("congrats_practice_sentences")}
           </Link>
         </div>
       </div>

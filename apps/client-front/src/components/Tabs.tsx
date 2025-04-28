@@ -1,4 +1,5 @@
 import { motion as m } from "motion/react";
+import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
 
 interface TabsProps {
@@ -7,15 +8,16 @@ interface TabsProps {
 }
 
 export default function Tabs({ current, onChange }: TabsProps) {
+  const { t } = useTranslation();
   return (
     <div className="flex w-fit items-start overflow-hidden rounded-[30px] bg-black/10">
       <TabItem
-        text="Новые"
+        text={t("new")}
         isCurrent={current === 0}
         onClick={() => onChange(0)}
       />
       <TabItem
-        text="Повторить"
+        text={t("repeat")}
         isCurrent={current === 1}
         onClick={() => onChange(1)}
       />

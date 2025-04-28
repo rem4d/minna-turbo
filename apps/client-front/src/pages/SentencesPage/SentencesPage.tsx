@@ -12,6 +12,7 @@ import hapticFeedback from "@/utils/hapticFeedback";
 import { useUnmount } from "@rem4d/utils";
 import { useLaunchParams } from "@telegram-apps/sdk-react";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { useTranslation } from "react-i18next";
 
 export const SentencesPage: FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -58,6 +59,7 @@ export const SentencesPage: FC = () => {
   });
 
   const sentence = storedList[activeIndex];
+  const { t } = useTranslation();
 
   // const hasCharacter = !!sentence?.vox_speaker_id;
 
@@ -96,27 +98,27 @@ export const SentencesPage: FC = () => {
 
   const dropdownItems = [
     {
-      title: favIndex === -1 ? "Добавить в избранное" : "Убрать из избранного",
+      title: favIndex === -1 ? t("add_to_fav") : t("remove_from_fav"),
       onClick() {
         if (sentence) {
           if (favIndex === -1) {
             setFavorites(favorites.concat(sentence));
-            setToastOpen({ open: true, text: "Фраза добавлена в избранное." });
+            setToastOpen({ open: true, text: t("sentence_added") });
           } else {
             setFavorites(favorites.toSpliced(favIndex, 1));
-            setToastOpen({ open: true, text: "Фраза удалена из избранного." });
+            setToastOpen({ open: true, text: t("sentence_removed") });
           }
         }
       },
     },
     {
-      title: "Настройки",
+      title: t("settings"),
       onClick() {
         setSettingsModalOpen(true);
       },
     },
     {
-      title: "Помощь",
+      title: t("help"),
       onClick() {
         console.log("h");
       },
@@ -147,7 +149,13 @@ export const SentencesPage: FC = () => {
             paddingTop: isMobile ? 16 : 0,
           }}
         >
-          {user ? <>Ваш уровень: {convertLevel(user.level)}</> : <></>}
+          {user ? (
+            <>
+              {t("your_level")}: {convertLevel(user.level)}
+            </>
+          ) : (
+            <></>
+          )}
         </div>
         <div className={isMobile ? "mt-16" : "mt-10"}>
           <SentenceViewer

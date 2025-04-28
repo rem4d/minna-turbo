@@ -33,9 +33,6 @@ export const SentenceViewer: FC<Props> = ({
 }: Props) => {
   const [showFurigana, setShowFurigana] = useState(false);
 
-  const lp = useLaunchParams();
-  const isMobile = !lp.platform.includes("desktop");
-
   useEffect(() => {
     setShowFurigana(false);
   }, [sentence]);
