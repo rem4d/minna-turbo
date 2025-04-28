@@ -4,7 +4,6 @@ import { List, ListItem } from "@/components/List";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import { api } from "@/utils/api";
-import { ruTranslateByNumber } from "@/utils/convert";
 import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
 
@@ -15,7 +14,6 @@ export const LibraryPage: FC = () => {
     });
 
   const { t } = useTranslation();
-  // sub={`${data.cnt} ${ruTranslateByNumber(data.cnt ?? 0, ["слов", "слово", "слова", "слов"])}`}
   return (
     <Page>
       <div className="relative flex flex-col space-y-8 px-4 pb-(--footer-height)">

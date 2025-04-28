@@ -28,7 +28,7 @@ import ErrorFallbackComponent from "./components/ErrorFallbackComponent";
 import { PlaySoundContextProvider } from "./context/playSoundContext";
 
 function App() {
-  const lp = useLaunchParams() as {
+  const lp = useLaunchParams() as unknown as {
     platform: string;
     user: { languageCode: string };
   };
