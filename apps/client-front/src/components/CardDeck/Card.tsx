@@ -11,6 +11,7 @@ interface CardProps {
   isInteracting: boolean;
   index: number;
   isMobile: boolean;
+  useEye?: boolean;
 }
 
 export default React.memo(function Card({
@@ -18,6 +19,7 @@ export default React.memo(function Card({
   isActive,
   index,
   isMobile,
+  useEye = false,
 }: CardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -83,7 +85,7 @@ export default React.memo(function Card({
             <KCard
               k={k}
               containerClassName="overflow-y-scroll overflow-x-hidden"
-              useEye
+              useEye={useEye}
             />
           </div>
         )}

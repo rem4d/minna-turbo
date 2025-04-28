@@ -14,6 +14,7 @@ interface CardDeckProps {
   cardList: Kanji[];
   onEvaluate: (card: Kanji) => void;
   onPrevClick: (card: Kanji) => void;
+  useEye?: boolean;
 }
 
 interface InteractionStart {
@@ -29,6 +30,7 @@ export function CardDeck({
   total,
   onEvaluate,
   onPrevClick,
+  useEye = false,
 }: CardDeckProps) {
   const interactionRef = useRef<InteractionStart>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -245,6 +247,7 @@ export function CardDeck({
                   isInteracting={false}
                   index={cardList.length - 1 - index}
                   isMobile={isMobile}
+                  useEye={useEye}
                 />
               </div>
             );

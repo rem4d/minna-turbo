@@ -243,6 +243,7 @@ const RepeatScreen: FC<RepeatScreenProps> = ({ isLoading, list }) => {
       total={total}
       onEvaluate={onEvaluate}
       onPrevClick={onPrevClick}
+      useEye
     />
   );
 };

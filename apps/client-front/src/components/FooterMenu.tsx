@@ -72,7 +72,7 @@ text-[11px] font-unbounded font-normal text-gray-chateau
   return (
     <NavLink
       to={to}
-      className={twMerge(navLinkCn, active && "text-pacific-blue")}
+      className={twMerge(navLinkCn, active && "text-mine-shaft")}
     >
       {icon}
       <span className="mt-1">{title}</span>

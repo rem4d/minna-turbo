@@ -44,7 +44,7 @@ export function KCard({ k, useEye = false, containerClassName = "" }: Props) {
 
   return (
     <div className="relative flex h-full grow scale-[0.9] flex-col">
-      <div className="mb-2 flex space-x-4">
+      <div className={twMerge("mb-4 flex space-x-4", useEye && "mb-0")}>
         <div className="flex aspect-square h-[96px] justify-center rounded-lg border border-black/10 bg-white drop-shadow-[3px_3px_0px_rgba(41,41,41,0.1)]">
           <div className="font-digi text-[60px] text-[#000]">{kanji}</div>
         </div>
@@ -62,10 +62,11 @@ export function KCard({ k, useEye = false, containerClassName = "" }: Props) {
           )}
         </div>
       </div>
+
       {useEye ? (
-        <div className="relative h-[44px] w-full">
+        <div className="relative h-[40px] min-h-[40px] w-full">
           <div className="bg-gallery absolute top-1/2 h-[1px] w-full -translate-y-1/2"></div>
-          <div className="border-gallery absolute top-1/2 right-2 size-[44px] -translate-y-1/2 cursor-pointer rounded-full border bg-white">
+          <div className="border-gallery absolute top-1/2 right-2 size-[40px] -translate-y-1/2 cursor-pointer rounded-full border bg-white">
             <div className="flex size-full items-center justify-center">
               <EyeToggle show={eyeOpen} onClick={handleEyeClick} />
             </div>
@@ -78,13 +79,17 @@ export function KCard({ k, useEye = false, containerClassName = "" }: Props) {
           <SpinnerBig />
         </div>
       )}
+
       {!examplesLoading && examples && (
         <div
           ref={examplesRef}
           className={twMerge("h-full grow", containerClassName)}
           onTouchStart={handleTouchStart}
         >
-          <WordReadings list={examples} hideMeanings={!eyeOpen} />
+          <WordReadings
+            list={examples}
+            hideMeanings={useEye ? !eyeOpen : false}
+          />
         </div>
       )}
     </div>
