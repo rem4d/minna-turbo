@@ -30,11 +30,13 @@ import { PlaySoundContextProvider } from "./context/playSoundContext";
 function App() {
   const lp = useLaunchParams() as unknown as {
     platform: string;
-    user: { languageCode: string };
+    initData: {
+      user: { languageCode: string };
+    };
   };
   console.log(lp);
   const { i18n } = useTranslation();
-  const userLang = lp?.user?.languageCode ?? "en";
+  const userLang = lp?.initData?.user?.languageCode === "ru" ? "ru" : "en";
   const [hasLoadedTrans, setHasLoadedTrans] = useState(false);
 
   useLayoutEffect(() => {
