@@ -48,6 +48,8 @@ void i18n
           dictionary: "Dictionary",
           dict_level: "Level {{val, number}} dictonary",
           fav_sentences: "Favourites",
+          translation_language: "Translation language",
+          choose_translation_language: "Select translation language",
 
           word_zero: "words",
           word_one: "word",
@@ -106,6 +108,8 @@ void i18n
           dictionary: "Словарь",
           dict_level: "Словарь {{val}} уровня",
           fav_sentences: "Избранные фразы",
+          translation_language: "Язык перевода",
+          choose_translation_language: "Выберите язык перевода",
 
           word_zero: "слов",
           word_one: "слово",

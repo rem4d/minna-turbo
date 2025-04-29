@@ -1,6 +1,7 @@
 import type { FC, ReactElement, ReactNode } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import RemoveIcon from "@/assets/icons/remove.svg?react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
@@ -24,7 +25,7 @@ interface ListItemProps {
   title?: string;
   sub?: string;
   icon?: ReactElement;
-  right?: "arrow" | "remove" | ReactElement;
+  right?: "arrow" | "remove" | "change" | ReactElement;
   to?: string;
   showBorder?: boolean;
   onClick?: () => void;
@@ -42,6 +43,7 @@ export const ListItem: FC<ListItemProps> = ({
   right = null,
 }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleClick = () => {
     if (to) {
@@ -63,6 +65,12 @@ export const ListItem: FC<ListItemProps> = ({
           <div className="size-[24px]">
             <RemoveIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
           </div>
+        );
+      case "change":
+        return (
+          <button className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent">
+            {t("change")}
+          </button>
         );
       default:
         return right;

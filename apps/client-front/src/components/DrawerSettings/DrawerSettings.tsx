@@ -142,14 +142,8 @@ export default function DrawerSettings({
                         <div className="text-[36px]">{currentK.kanji}</div>
                       )
                     }
-                    right={
-                      <button
-                        className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent"
-                        onClick={() => setView("choose_last_kanji")}
-                      >
-                        {t("change")}
-                      </button>
-                    }
+                    right="change"
+                    onRightIconClick={() => setView("choose_last_kanji")}
                     sub={`${convertLevel(currentK?.position)} ${t("level")}`}
                   />
                 </List>
