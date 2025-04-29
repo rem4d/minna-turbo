@@ -42,15 +42,15 @@ export const SettingsPage: FC = () => {
     [favorites],
   );
 
-  const handlePrevClick = () => {
-    setActiveIndex(activeIndex - 1);
-  };
-
-  const handleNextClick = () => {
-    setActiveIndex(activeIndex + 1);
-  };
-  const disableNextNav =
-    activeIndex === favorites.length - 1 || favorites.length === 0;
+  // const handlePrevClick = () => {
+  //   setActiveIndex(activeIndex - 1);
+  // };
+  //
+  // const handleNextClick = () => {
+  //   setActiveIndex(activeIndex + 1);
+  // };
+  // const disableNextNav =
+  //   activeIndex === favorites.length - 1 || favorites.length === 0;
 
   return (
     <Page>
@@ -72,13 +72,7 @@ export const SettingsPage: FC = () => {
       </div>
       <Drawer open={modalOpen} onOpenChange={setModalOpen} noContainer>
         <div className="bg-super-silver relative flex h-[90vh] flex-col">
-          <SentenceViewer
-            sentence={sentence}
-            disableNextNav={disableNextNav}
-            disablePrevNav={activeIndex === 0}
-            onNextClick={handleNextClick}
-            onPrevClick={handlePrevClick}
-          />
+          <SentenceViewer sentence={sentence} />
         </div>
       </Drawer>
     </Page>
