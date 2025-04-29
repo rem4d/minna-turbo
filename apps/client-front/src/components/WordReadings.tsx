@@ -95,7 +95,7 @@ export default function WordReadings({
       </div>
 
       <div className="mt-0.5 flex items-start space-x-2">
-        {hideMeanings ? null : (
+        {hideMeanings || (data.reading && data.reading.length > 7) ? null : (
           <div className="text-denim text-base whitespace-nowrap">
             {data.reading === "" ? data.basic_form : data.reading}
           </div>
