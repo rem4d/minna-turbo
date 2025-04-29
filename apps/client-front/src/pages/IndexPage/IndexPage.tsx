@@ -30,7 +30,7 @@ export const IndexPage: FC = () => {
             to="/flashcards"
             color="cyan"
             icon={
-              <div className="absolute right-4 bottom-0 z-0 w-[70px] opacity-40">
+              <div className="absolute right-2 -bottom-2 z-0 w-[70px] opacity-40">
                 <DeckIcon className="size-full" />
               </div>
             }
