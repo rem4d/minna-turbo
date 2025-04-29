@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { init } from "@/init.ts";
-import { retrieveLaunchParams } from "@telegram-apps/sdk-react";
+import { retrieveLaunchParams } from "@/utils/tgUtils.ts";
 import { createRoot } from "react-dom/client";
 
 import App from "./App";

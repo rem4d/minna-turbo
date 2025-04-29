@@ -14,7 +14,7 @@ import { SpinnerBig } from "@/components/Spinner";
 import Tabs from "@/components/Tabs";
 import { api } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
-import hapticFeedback from "@/utils/hapticFeedback";
+import { hapticFeedback } from "@/utils/tgUtils";
 import { shuffle } from "@rem4d/utils";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import Lottie from "lottie-react";

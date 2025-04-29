@@ -1,7 +1,7 @@
 /* eslint-disable */
 import type { PropsWithChildren } from "react";
 import { useEffect } from "react";
-import { backButton } from "@telegram-apps/sdk-react";
+import { backButton } from "@/utils/tgUtils";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 

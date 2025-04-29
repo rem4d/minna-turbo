@@ -7,8 +7,7 @@ import { EyeToggle } from "@/components/EyeToggle";
 import PlaySound from "@/components/PlaySound";
 import Accordion from "@/components/SentenceViewer/Accordion";
 import { usePlaySoundContext } from "@/context/playSoundContext";
-import hapticFeedback from "@/utils/hapticFeedback";
-import { useLaunchParams } from "@telegram-apps/sdk-react";
+import { hapticFeedback } from "@/utils/tgUtils";
 import { twMerge } from "tailwind-merge";
 
 import type { DropdownItem } from "../Dropdown";

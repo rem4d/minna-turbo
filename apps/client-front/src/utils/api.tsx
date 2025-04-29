@@ -1,8 +1,8 @@
 import type { AppRouter } from "@rem4d/api";
 import { useState } from "react";
+import { retrieveLaunchParams } from "@/utils/tgUtils";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { retrieveLaunchParams } from "@telegram-apps/sdk-react";
 import { httpBatchLink, httpLink, loggerLink, splitLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 

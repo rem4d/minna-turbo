@@ -1,4 +1,3 @@
-/* eslint-disable */
 import {
   $debug,
   backButton,
@@ -14,6 +13,11 @@ import {
  * Initializes the application and configures its dependencies.
  */
 export function init({ debug }: { debug: boolean }): void {
+  if (import.meta.env.VITE_NO_SDK === "true") {
+    console.log("No_sdk test environment loaded.");
+    return;
+  }
+
   // Set @telegram-apps/sdk-react debug mode.
   $debug.set(debug);
 

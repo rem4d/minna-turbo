@@ -5,13 +5,6 @@ import {
   ErrorBoundary as RoollbarErrorBoundary,
 } from "@rollbar/react";
 // Provider imports 'rollbar'
-import {
-  miniApp,
-  requestFullscreen,
-  swipeBehavior,
-  useLaunchParams,
-  viewport,
-} from "@telegram-apps/sdk-react";
 import { RouterProvider } from "react-router-dom";
 
 import "./utils/i18n";
@@ -26,6 +19,7 @@ import { SkeletonTheme } from "react-loading-skeleton";
 
 import ErrorFallbackComponent from "./components/ErrorFallbackComponent";
 import { PlaySoundContextProvider } from "./context/playSoundContext";
+import { useLaunchParams, useMiniAppSetup } from "./utils/tgUtils";
 
 function App() {
   const lp = useLaunchParams() as unknown as {
@@ -50,22 +44,7 @@ function App() {
     setHasLoadedTrans(true);
   }, [i18n.language]);
 
-  useEffect(() => {
-    if (swipeBehavior.isSupported()) {
-      swipeBehavior.mount();
-      swipeBehavior.disableVertical();
-    }
-    viewport.expand();
-
-    miniApp.setBackgroundColor("#f3f3f3");
-    miniApp.setHeaderColor("#f3f3f3");
-
-    const fcIsAvail = requestFullscreen.isAvailable();
-
-    if (fcIsAvail && !lp.platform.includes("desktop")) {
-      requestFullscreen();
-    }
-  }, [lp.platform]);
+  useMiniAppSetup();
 
   const errorFallback = () => <ErrorFallbackComponent />;
 

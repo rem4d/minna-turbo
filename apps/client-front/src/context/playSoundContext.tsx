@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import { useTtsMutation } from "@/rq/useTtsMutation";
-import hapticFeedback from "@/utils/hapticFeedback";
+import { hapticFeedback } from "@/utils/tgUtils";
 
 interface PlaySoundContextValue {
   isLoading: boolean;

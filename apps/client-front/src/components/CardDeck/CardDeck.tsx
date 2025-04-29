@@ -3,8 +3,8 @@ import type { FC } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow-circle.svg?react";
 import { getPosition } from "@/utils/event";
+import { useLaunchParams } from "@/utils/tgUtils";
 import { clamp } from "@rem4d/utils";
-import { useLaunchParams } from "@telegram-apps/sdk-react";
 import { twMerge } from "tailwind-merge";
 
 import Card from "./Card";

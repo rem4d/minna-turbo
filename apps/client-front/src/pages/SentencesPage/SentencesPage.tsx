@@ -8,9 +8,8 @@ import { SpinnerBig } from "@/components/Spinner";
 import Toast from "@/components/Toast";
 import { api } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
-import hapticFeedback from "@/utils/hapticFeedback";
+import { hapticFeedback, useLaunchParams } from "@/utils/tgUtils";
 import { useUnmount } from "@rem4d/utils";
-import { useLaunchParams } from "@telegram-apps/sdk-react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 
