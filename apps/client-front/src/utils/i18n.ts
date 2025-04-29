@@ -55,20 +55,21 @@ void i18n
 
 Imagine you have bought a book on learning kanji. It doesn't matter which one, they are all built the same way - you learn the kanji in order and learn new words with those kanji in them. <br /><br />
 
-This section has a similar system, except that here you are offered not words, but phrases. These are phrases that you can encounter in real life. <br /><br />
+This section has a similar system, except that here you are offered not words, but sentences. These are sentences that you can encounter in real life. <br /><br />
+
 
 <title> How is everything organized? </title>
 
 Kanji need to be learned in the order in which they are listed in the app. You can see a detailed list of all kanji in the "Library" section.
 <br /> <br />
 
-The level is your position in the kanji sequence. The more kanji you know, the higher your level and the more complex phrases are formed. You may come across phrases that include kanji you don't already know, but don't worry, readings for them will be automatically added on top of the furigana.
+The level is your position in the kanji sequence. The more kanji you know, the higher your level and the more complex sentences are formed. You may come across sentences that include kanji you don't already know, but don't worry, readings for them will be automatically added on top of the furigana.
 <br /> <br />
 
 You can change the level at any time, this app doesn't provide any tracking of your progress or curriculum.
 <br /> <br />
 
-In the "Flashcards" section, you can learn and repeat kanji. And then come back here and practice new phrases with the newly learned kanji.
+In the "Flashcards" section, you can learn and repeat kanji. And then come back here and practice new sentences with the newly learned kanji.
 `,
 
           word_zero: "words",
