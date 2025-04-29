@@ -47,6 +47,7 @@ void i18n
           find: "Search...",
           dictionary: "Dictionary",
           dict_level: "Level {{val, number}} dictonary",
+          fav_sentences: "Favourites",
 
           word_zero: "words",
           word_one: "word",
@@ -104,6 +105,7 @@ void i18n
           find: "Поиск...",
           dictionary: "Словарь",
           dict_level: "Словарь {{val}} уровня",
+          fav_sentences: "Избранные фразы",
 
           word_zero: "слов",
           word_one: "слово",

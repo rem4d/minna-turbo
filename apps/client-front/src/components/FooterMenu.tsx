@@ -15,6 +15,7 @@ export function FooterMenu(): ReactElement {
   const settingsMatch = useMatch(paths.settings);
   const sentencesMatch = useMatch(paths.sentences);
   const flashcardsMatch = useMatch(paths.flashcards);
+  const favouritesMatch = useMatch(paths.favouriteSentences);
   const { t } = useTranslation();
 
   const hideFooter =
@@ -53,7 +54,7 @@ export function FooterMenu(): ReactElement {
         to={paths.settings}
         title={t("settings")}
         icon={<SettingsIcon className="size-[22px] fill-current" />}
-        active={Boolean(settingsMatch)}
+        active={Boolean(settingsMatch) || Boolean(favouritesMatch)}
       />
     </div>
   );

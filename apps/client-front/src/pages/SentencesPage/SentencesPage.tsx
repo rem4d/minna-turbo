@@ -1,10 +1,10 @@
 import type { Sentence } from "@rem4d/db";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
-import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { DrawerSettings } from "@/components/DrawerSettings";
 import { Page } from "@/components/Page";
 import { SentenceViewer } from "@/components/SentenceViewer";
+import SentenceNavButtons from "@/components/SentenceViewer/SentenceNavButtons";
 import { SpinnerBig } from "@/components/Spinner";
 import Toast from "@/components/Toast";
 import { api } from "@/utils/api";
@@ -13,7 +13,6 @@ import { hapticFeedback, useLaunchParams } from "@/utils/tgUtils";
 import { useUnmount } from "@rem4d/utils";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
-import { twMerge } from "tailwind-merge";
 
 export const SentencesPage: FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -160,27 +159,12 @@ export const SentencesPage: FC = () => {
             <></>
           )}
         </div>
-        {/* nav buttons */}
-        <div className="absolute top-1/2 flex w-full -translate-y-1/2 justify-between px-2">
-          <div
-            className={twMerge(
-              "relative flex size-[30px] cursor-pointer items-center justify-center",
-              activeIndex === 0 && "pointer-events-none opacity-40",
-            )}
-            onClick={handlePrevClick}
-          >
-            <ArrowIcon className="text-azure-radiance absolute size-[20px] rotate-90 fill-current" />
-          </div>
-          <div
-            className={twMerge(
-              "relative flex size-[30px] cursor-pointer items-center justify-center",
-              disableNextNav && "pointer-events-none opacity-40",
-            )}
-            onClick={handleNextClick}
-          >
-            <ArrowIcon className="text-azure-radiance absolute size-[20px] -rotate-90 fill-current" />
-          </div>
-        </div>
+        <SentenceNavButtons
+          disablePrevNav={activeIndex === 0}
+          disableNextNav={disableNextNav}
+          handleNextClick={handleNextClick}
+          handlePrevClick={handlePrevClick}
+        />
         <div className={isMobile ? "mt-16" : "mt-10"}>
           <SentenceViewer sentence={sentence} dropdownItems={dropdownItems} />
         </div>

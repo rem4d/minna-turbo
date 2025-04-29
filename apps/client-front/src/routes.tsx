@@ -4,6 +4,7 @@ import { createBrowserRouter, useRouteError } from "react-router-dom";
 import { Base } from "./components/Base";
 import { AllKanjiPage } from "./pages/AllKanjiPage";
 import { DictionaryPage } from "./pages/DictionaryPage";
+import { FavouriteSentencesPage } from "./pages/FavouriteSentencesPage";
 import { FlashcardsPage } from "./pages/FlashcardsPage";
 import { IndexPage } from "./pages/IndexPage";
 import { LibraryPage } from "./pages/LibraryPage";
@@ -18,6 +19,7 @@ export const paths = {
   dict: "/library/dict/:level",
   sentences: "/sentences",
   flashcards: "/flashcards",
+  favouriteSentences: "/settings/fav-sentences",
 };
 
 const RouteErrorBoundary = () => {
@@ -75,6 +77,10 @@ export const router = createBrowserRouter([
       {
         path: paths.flashcards,
         element: <FlashcardsPage />,
+      },
+      {
+        path: paths.favouriteSentences,
+        element: <FavouriteSentencesPage />,
       },
     ],
   },
