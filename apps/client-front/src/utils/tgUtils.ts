@@ -22,7 +22,7 @@ interface TgLaunchParams {
 export const retrieveLaunchParams = (): TgLaunchParams => {
   if (noSdk) {
     return {
-      platform: "desktop",
+      platform: "ios",
       startParam: "",
       fullscreen: true,
       initDataRaw,
@@ -35,7 +35,7 @@ export const retrieveLaunchParams = (): TgLaunchParams => {
 export const useLaunchParams = () => {
   if (noSdk) {
     return {
-      platform: "desktop",
+      platform: "ios",
       initData: {
         user: { languageCode: "en" },
       },

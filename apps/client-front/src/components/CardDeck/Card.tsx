@@ -74,7 +74,7 @@ export default React.memo(function Card({
 
       {/* back */}
       <motion.div
-        className="bg-balticSea absolute top-0 left-0 size-full overflow-hidden rounded-[16px] border border-black/10 bg-white px-2"
+        className="bg-balticSea absolute top-0 left-0 size-full overflow-hidden rounded-[16px] border border-black/10 bg-white px-0"
         style={{
           backfaceVisibility: "hidden",
           transform: "rotateY(180deg)",
@@ -84,7 +84,7 @@ export default React.memo(function Card({
           <div className="size-full">
             <KCard
               k={k}
-              containerClassName="overflow-y-scroll overflow-x-hidden"
+              containerClassName="overflow-y-scroll overflow-x-hidden pr-2"
               useEye={useEye}
             />
           </div>
