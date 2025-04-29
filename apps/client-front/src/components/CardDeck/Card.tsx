@@ -84,7 +84,7 @@ export default React.memo(function Card({
           <div className="size-full">
             <KCard
               k={k}
-              containerClassName="overflow-y-scroll overflow-x-hidden pr-2"
+              containerClassName="overflow-y-scroll no-scroll overflow-x-hidden"
               useEye={useEye}
             />
           </div>
