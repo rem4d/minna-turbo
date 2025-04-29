@@ -41,7 +41,7 @@ export default React.memo(function Card({
       }}
       onAnimationComplete={() => setLoaded(true)}
       className={twMerge(
-        "absolute left-1/2 h-[50vh] max-h-[500px] -translate-x-1/2 cursor-pointer text-[#000] select-none",
+        "absolute left-1/2 h-[50vh] max-h-[500px] min-h-[400px] -translate-x-1/2 cursor-pointer text-[#000] select-none",
         isMobile && "w-[75vw]",
         !isMobile && "w-[320px]",
       )}

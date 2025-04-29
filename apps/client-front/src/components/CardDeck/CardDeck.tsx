@@ -218,7 +218,7 @@ export function CardDeck({
         <div
           id="deck"
           className={twMerge(
-            "absolute top-[calc(50vh/5)] h-[50vh] max-h-[500px] w-full",
+            "absolute top-[calc(50vh/5)] w-full",
             cardList.length === 0 && "hidden",
           )}
         >
