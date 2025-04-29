@@ -132,7 +132,7 @@ In the "Flashcards" section, you can learn and repeat kanji. And then come back 
           translation_language: "Язык перевода",
           choose_translation_language: "Выберите язык перевода",
           help_sentences_modal: `
-<title> Туториал </title>
+<title> Добро пожаловать в <br /> раздел изучения фраз! </title>
 
 Представьте, что вы купили книгу по изучению кандзи. Не имеет значения какую именно, все они построены  одинаково - вы изучаете по порядку кандзи и изучаете новые слова, в составе которых эти кандзи присутствуют.
 <br /><br />
