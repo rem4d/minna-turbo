@@ -1,6 +1,7 @@
 import type { Sentence } from "@rem4d/db";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
+import Drawer from "@/components/Drawer";
 import { DrawerSettings } from "@/components/DrawerSettings";
 import { Page } from "@/components/Page";
 import { SentenceViewer } from "@/components/SentenceViewer";
@@ -12,7 +13,7 @@ import { convertLevel } from "@/utils/convert";
 import { hapticFeedback, useLaunchParams } from "@/utils/tgUtils";
 import { useUnmount } from "@rem4d/utils";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 export const SentencesPage: FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -21,6 +22,7 @@ export const SentencesPage: FC = () => {
     open: false,
     text: "",
   });
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const [favorites, setFavorites] = useLocalStorage<Sentence[]>(
     "kic:favorites",
@@ -122,7 +124,7 @@ export const SentencesPage: FC = () => {
     {
       title: t("help"),
       onClick() {
-        console.log("h");
+        setHelpOpen(true);
       },
     },
   ];
@@ -183,6 +185,14 @@ export const SentencesPage: FC = () => {
           onChangeLevel={onChangeLevel}
         />
       )}
+      <Drawer open={helpOpen} onOpenChange={() => setHelpOpen(false)}>
+        <div className="px-4 pb-4">
+          <Trans
+            i18nKey="help_sentences_modal"
+            components={{ title: <div className="mb-4 text-center text-xl" /> }}
+          />
+        </div>
+      </Drawer>
     </Page>
   );
 };

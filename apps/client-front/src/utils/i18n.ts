@@ -50,6 +50,26 @@ void i18n
           fav_sentences: "Favourites",
           translation_language: "Translation language",
           choose_translation_language: "Select translation language",
+          help_sentences_modal: `
+<title> Welcome tutorial </title>
+
+Imagine you have bought a book on learning kanji. It doesn't matter which one, they are all built the same way - you learn the kanji in order and learn new words with those kanji in them. <br /><br />
+
+This section has a similar system, except that here you are offered not words, but phrases. These are phrases that you can encounter in real life. <br /><br />
+
+<title> How is everything organized? </title>
+
+Kanji need to be learned in the order in which they are listed in the app. You can see a detailed list of all kanji in the "Library" section.
+<br /> <br />
+
+The level is your position in the kanji sequence. The more kanji you know, the higher your level and the more complex phrases are formed. You may come across phrases that include kanji you don't already know, but don't worry, readings for them will be automatically added on top of the furigana.
+<br /> <br />
+
+You can change the level at any time, this app doesn't provide any tracking of your progress or curriculum.
+<br /> <br />
+
+In the "Flashcards" section, you can learn and repeat kanji. And then come back here and practice new phrases with the newly learned kanji.
+`,
 
           word_zero: "words",
           word_one: "word",
@@ -110,6 +130,28 @@ void i18n
           fav_sentences: "Избранные фразы",
           translation_language: "Язык перевода",
           choose_translation_language: "Выберите язык перевода",
+          help_sentences_modal: `
+<title> Туториал </title>
+
+Представьте, что вы купили книгу по изучению кандзи. Не имеет значения какую именно, все они построены  одинаково - вы изучаете по порядку кандзи и изучаете новые слова, в составе которых эти кандзи присутствуют.
+<br /><br />
+
+
+Данный раздел имеет похожую систему, за исключением того, что здесь вам предлагаются не слова, а фразы. Эти фразы вы  можете встретить в реальной жизни. <br /><br />
+
+<title> Как все устроено? </title>
+
+Кандзи необходимо изучать в том порядке, в котором они приведены в приложении. Подробный список всех кандзи вы можете посмотреть в разделе "Библиотека".
+<br /><br />
+
+Уровень - это ваша позиция в последовательности кандзи. Чем больше кандзи вы знаете, тем выше ваш уровень и тем сложнее фразы формируются. Вам могут попадаться фразы, включающие кандзи, которые вы еще не знаете, но не переживайте, чтения для них будут автоматически добавлены сверху фуриганой.
+<br /><br />
+
+Поменять уровень вы можете в любой момент, это приложение не предусматривает какой-либо трекинг вашего прогресса или учебный план.
+<br /><br />
+
+В разделе "Карточки" вы можете изучать и повторять кандзи. А потом возвращаться сюда и практиковать новые фразы с новыми изученными кандзи.
+`,
 
           word_zero: "слов",
           word_one: "слово",
