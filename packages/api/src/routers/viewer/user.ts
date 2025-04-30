@@ -24,27 +24,34 @@ export const userRouter = router({
     const userId = user.id;
     const username = user.username;
 
-    try {
-      const data = await ctx.db
-        .from("users")
-        .upsert(
-          {
-            telegram_id: String(userId),
-            telegram_username: username,
-            last_visited: new Date().toISOString(),
-          },
-          { onConflict: "telegram_id" },
-        )
-        .select();
-
-      if (data.data && data.data.length > 0) {
-        return {
-          user: data.data[0],
-        };
-      }
-    } catch (err) {
-      throw new TRPCError({ code: "BAD_GATEWAY" });
+    if (!userId || !username) {
+      console.log("Empty fields. Could not create user.");
+      throw new TRPCError({ code: "BAD_REQUEST" });
     }
+
+    const { data, error } = await ctx.db
+      .from("users")
+      .upsert(
+        {
+          telegram_id: String(userId),
+          telegram_username: username,
+          last_visited: new Date().toISOString(),
+        },
+        { onConflict: "telegram_id" },
+      )
+      .select();
+
+    if (data && data.length > 0) {
+      return {
+        user: data[0],
+      };
+    }
+
+    if (error) {
+      throw new TRPCError({ code: "BAD_REQUEST" });
+    }
+
+    throw new Error("Could not create user.");
   }),
   updateLevel: authedProcedure
     .input(z.number())

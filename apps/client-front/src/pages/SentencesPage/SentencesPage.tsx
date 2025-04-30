@@ -60,6 +60,11 @@ export const SentencesPage: FC = () => {
     },
   });
 
+  const resetCacheMutation = api.viewer.sentence.resetCache.useMutation({
+    onSuccess() {
+      void utils.viewer.sentence.getRandomized.reset();
+    },
+  });
   const sentence = storedList[activeIndex];
   const { t } = useTranslation();
 
@@ -103,6 +108,7 @@ export const SentencesPage: FC = () => {
   const dropdownItems = [
     {
       title: favIndex === -1 ? t("add_to_fav") : t("remove_from_fav"),
+      disabled: !sentence,
       onClick() {
         if (sentence) {
           if (favIndex === -1) {
@@ -134,6 +140,10 @@ export const SentencesPage: FC = () => {
     hapticFeedback("medium");
   };
 
+  const onResetCacheClick = () => {
+    resetCacheMutation.mutate();
+  };
+
   const disableNextNav =
     activeIndex === storedList.length - 1 || storedList.length === 0;
 
@@ -148,14 +158,14 @@ export const SentencesPage: FC = () => {
     <Page back>
       <div className="relative h-full overflow-hidden">
         <div
-          className="text-scorpion absolute top-2 left-1/2 mb-3 flex h-4 -translate-x-1/2 justify-center text-sm"
+          className="text-scorpion/90 absolute top-2 left-1/2 mb-3 flex h-4 -translate-x-1/2 justify-center text-sm"
           style={{
             paddingTop: isMobile ? 16 : 0,
           }}
         >
           {user ? (
             <>
-              {t("your_level")}: {convertLevel(user.level)}
+              {t("your_level")} {convertLevel(user.level)}
             </>
           ) : (
             <></>
@@ -168,7 +178,11 @@ export const SentencesPage: FC = () => {
           handlePrevClick={handlePrevClick}
         />
         <div className={isMobile ? "mt-16" : "mt-10"}>
-          <SentenceViewer sentence={sentence} dropdownItems={dropdownItems} />
+          <SentenceViewer
+            sentence={sentence}
+            dropdownItems={dropdownItems}
+            onResetCacheClick={onResetCacheClick}
+          />
         </div>
       </div>
       <Toast

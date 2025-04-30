@@ -7,6 +7,7 @@ import PlaySound from "@/components/PlaySound";
 import Accordion from "@/components/SentenceViewer/Accordion";
 import { usePlaySoundContext } from "@/context/playSoundContext";
 import { hapticFeedback } from "@/utils/tgUtils";
+import { useTranslation } from "react-i18next";
 
 import type { DropdownItem } from "../Dropdown";
 import { SentenceText } from "./SentenceText";
@@ -14,11 +15,13 @@ import { SentenceText } from "./SentenceText";
 interface Props {
   sentence?: Sentence;
   dropdownItems?: DropdownItem[];
+  onResetCacheClick: () => void;
 }
 
 export const SentenceViewer: FC<Props> = ({
   sentence,
   dropdownItems,
+  onResetCacheClick,
 }: Props) => {
   const [showFurigana, setShowFurigana] = useState(false);
 
@@ -36,7 +39,7 @@ export const SentenceViewer: FC<Props> = ({
   } = usePlaySoundContext();
 
   const isCurrent = useCallback(
-    (reading: string) => {
+    (reading?: string | null) => {
       return contextText === reading;
     },
     [contextText],
@@ -58,44 +61,57 @@ export const SentenceViewer: FC<Props> = ({
   const onSettingsOpen = () => {
     hapticFeedback("light");
   };
+  const { t } = useTranslation();
 
   return (
-    sentence && (
-      <div>
-        <div className="flex justify-center px-4">
-          <div className="flex items-center space-x-6">
-            {sentence.text && (
-              <PlaySound
-                reading={sentence.text}
-                isLoading={isLoadingSound}
-                isPlaying={isPlaying}
-                onClick={
-                  isCurrent(sentence.text)
-                    ? isPlaying
-                      ? onStop
-                      : onPlay
-                    : onLoadSpeech
-                }
-              />
-            )}
-            <EyeToggle
-              show={showFurigana}
-              onClick={() => setShowFurigana((s) => !s)}
-            />
+    <div>
+      <div className="flex justify-center px-4">
+        <div className="flex items-center space-x-6">
+          <PlaySound
+            reading={sentence?.text}
+            isLoading={isLoadingSound}
+            isPlaying={isPlaying}
+            onClick={
+              isCurrent(sentence?.text)
+                ? isPlaying
+                  ? onStop
+                  : onPlay
+                : onLoadSpeech
+            }
+          />
+          <EyeToggle
+            show={showFurigana}
+            onClick={() => setShowFurigana((s) => !s)}
+          />
 
-            {dropdownItems && (
-              <Dropdown items={dropdownItems} onOpen={onSettingsOpen} />
-            )}
-          </div>
+          {dropdownItems && (
+            <Dropdown items={dropdownItems} onOpen={onSettingsOpen} />
+          )}
         </div>
+      </div>
+      {sentence ? (
         <div className="min-h-[400px] px-4">
           <SentenceText sentence={sentence} showFurigana={showFurigana} />
           <div className="absolute bottom-0 left-0 w-full px-2">
             <Accordion sentence={sentence} />
           </div>
         </div>
-      </div>
-    )
+      ) : (
+        <div className="tems-center mt-8 flex flex-col items-center justify-center space-y-8 px-4">
+          <div className="text-scorpion/90 text-center text-sm">
+            {/* <Trans i18nKey="no_sentences" /> */}
+            <div className="mb-4">{t("no_sentences_title")}</div>
+            <div>{t("no_sentences_desc")}</div>
+          </div>
+          <div
+            className="w-fit cursor-pointer px-10 text-blue-500"
+            onClick={onResetCacheClick}
+          >
+            {t("reset_cache")}
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 export default SentenceViewer;

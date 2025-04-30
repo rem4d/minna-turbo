@@ -19,20 +19,24 @@ export const getStatementsForLevel = async ({
   const cached = await redis.get(`${level}-${shift}`);
 
   if (cached) {
-    console.log(`Return cached value`);
-    return JSON.parse(cached) as {
+    const arr = JSON.parse(cached) as {
       additional: Sentence[];
       sentences: Sentence[];
     };
+    return arr;
   }
 
   const { data: sentences, error } = await db
     .from("sentences")
-    .select()
+    .select(
+      "id,text,ruby,level,text_with_furigana,en,ru,vox_file_path,vox_speaker_id",
+    )
     .lte("level", level)
+    .gt("level", 0)
     .not("ru", "is", null)
     .not("en", "is", null)
     .lte("unknown_kanji_number", numberOfUnknownKanji);
+  console.log(sentences);
 
   if (error) {
     throw new Error(error.message);

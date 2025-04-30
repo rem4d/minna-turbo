@@ -71,7 +71,6 @@ You can change the level at any time, this app doesn't provide any tracking of y
 
 In the "Flashcards" section, you can learn and repeat kanji. And then come back here and practice new sentences with the newly learned kanji.
 `,
-
           word_zero: "words",
           word_one: "word",
           word_two: "words",
@@ -84,6 +83,10 @@ In the "Flashcards" section, you can learn and repeat kanji. And then come back 
             b: "Swipe any direction to see the next one.",
           },
           again: "Again",
+          no_sentences_title: `You've seen everything!`,
+          no_sentences_desc: `You  may know very few kanji, so there's not many sentences could be made up.
+Please select more kanji in settings to see more sentences. Or you could reset cache using the button below.`,
+          reset_cache: "Reset cache",
         },
       },
       ru: {
@@ -153,19 +156,22 @@ In the "Flashcards" section, you can learn and repeat kanji. And then come back 
 
 В разделе "Карточки" вы можете изучать и повторять кандзи. А потом возвращаться сюда и практиковать новые фразы с новыми изученными кандзи.
 `,
-
           word_zero: "слов",
           word_one: "слово",
           word_two: "слова",
           word_few: "слова",
           word_many: "слов",
           word_other: "слов",
-
           help_modal: {
             a: "Нажмите на карточку, чтобы увидеть ее значение.",
             b: "Проведите пальцем в любом направлении, чтобы увидеть следующую.",
           },
           again: "Еще раз",
+
+          no_sentences_title: "Фразы закончились!",
+          no_sentences_desc:
+            "Возможно, пока вы знаете очень мало кандзи, поэтому не так много существует фраз, которые можно составить. Пожалуйста выберите больше кандзи в настройках, чтобы увидеть больше фраз. Либо сбросьте кэш, нажав на кнопку ниже.",
+          reset_cache: "Сбросить кэш",
         },
       },
     },

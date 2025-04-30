@@ -84,4 +84,18 @@ export const sentenceRouter = router({
 
     return shuffled;
   }),
+  resetCache: redisPrecedure.mutation(async ({ ctx }) => {
+    const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
+
+    if (!storedUser) {
+      throw new Error("No user has been found");
+    }
+    const userId = storedUser.id;
+    try {
+      void ctx.redis.del(`known.${userId}`);
+      return true;
+    } catch {
+      throw new Error("Redis error.");
+    }
+  }),
 });

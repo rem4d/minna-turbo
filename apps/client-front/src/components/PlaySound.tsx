@@ -2,9 +2,10 @@ import React from "react";
 import SoundPauseIcon from "@/assets/icons/pause.svg?react";
 import SoundIcon from "@/assets/icons/sound.svg?react";
 import Spinner from "@/components/Spinner";
+import { twMerge } from "tailwind-merge";
 
 interface Props {
-  reading: string;
+  reading?: string | null;
   isLoading: boolean;
   isPlaying: boolean;
   onClick?: (r: string, index?: number) => void;
@@ -12,18 +13,22 @@ interface Props {
 }
 
 function PlaySound({ onClick, isLoading, isPlaying, reading, index }: Props) {
-  // console.log("PlaySound render" + reading);
-  if (!reading) {
-    return null;
-  }
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    onClick?.(reading, index);
+    if (reading) {
+      onClick?.(reading, index);
+    }
   };
 
   return (
-    <div className="size-[24px] cursor-pointer" onClick={handleClick}>
+    <div
+      className={twMerge(
+        "size-[24px] cursor-pointer",
+        !reading && "pointer-events-none opacity-50",
+      )}
+      onClick={handleClick}
+    >
       {isLoading && <Spinner />}
       {!isLoading ? (
         isPlaying ? (

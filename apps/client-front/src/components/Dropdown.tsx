@@ -9,6 +9,7 @@ import { twMerge } from "tailwind-merge";
 export interface DropdownItem {
   title: string;
   onClick: () => void;
+  disabled?: boolean;
 }
 
 interface Props {
@@ -60,7 +61,10 @@ export default function Dropdown({ items, onOpen }: Props) {
                   <Item
                     closeMenu={closeMenu}
                     key={`${item.title}-${index}`}
-                    className={index === items.length - 1 ? "border-none" : ""}
+                    className={twMerge(
+                      index === items.length - 1 && "border-none",
+                      item.disabled && "pointer-events-none opacity-50",
+                    )}
                     onSelect={item.onClick}
                   >
                     {item.title}
