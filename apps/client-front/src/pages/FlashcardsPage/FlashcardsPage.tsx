@@ -89,6 +89,7 @@ export const FlashcardsPage: FC = () => {
   const updateLevelMuatation = api.viewer.user.updateLevel.useMutation({
     onSuccess() {
       void utils.viewer.user.info.reset();
+      void utils.viewer.sentence.getRandomized.reset();
     },
   });
 

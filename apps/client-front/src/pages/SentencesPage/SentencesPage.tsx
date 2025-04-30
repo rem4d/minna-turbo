@@ -59,12 +59,14 @@ export const SentencesPage: FC = () => {
     onSuccess() {
       void utils.viewer.sentence.getRandomized.reset();
       void utils.viewer.user.info.reset();
+      setActiveIndex(0);
     },
   });
 
   const resetCacheMutation = api.viewer.sentence.resetCache.useMutation({
     onSuccess() {
       void utils.viewer.sentence.getRandomized.reset();
+      setActiveIndex(0);
     },
   });
   const sentence = storedList[activeIndex];
@@ -82,6 +84,8 @@ export const SentencesPage: FC = () => {
   useEffect(() => {
     if (list && list.length > 0) {
       setStoredList((sl) => sl.concat(list));
+    } else {
+      setStoredList([]);
     }
   }, [list]);
 
@@ -156,6 +160,7 @@ export const SentencesPage: FC = () => {
       </div>
     );
   }
+
   return (
     <Page back>
       <div className="relative h-full overflow-hidden">
@@ -174,7 +179,7 @@ export const SentencesPage: FC = () => {
           )}
         </div>
         <SentenceNavButtons
-          disablePrevNav={activeIndex === 0}
+          disablePrevNav={activeIndex === 0 || storedList.length === 0}
           disableNextNav={disableNextNav}
           handleNextClick={handleNextClick}
           handlePrevClick={handlePrevClick}
