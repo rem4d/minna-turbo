@@ -1,4 +1,4 @@
-import type { Sentence } from "@rem4d/db";
+import type { SentenceOutput } from "@rem4d/api";
 import React, { useEffect, useRef, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { api } from "@/utils/api";
@@ -11,7 +11,7 @@ import { twMerge } from "tailwind-merge";
 import { AnimateHeight } from "../AnimateHeight";
 
 interface AccordionProps {
-  sentence: Sentence;
+  sentence: SentenceOutput;
 }
 
 export default function AccordionComponent({ sentence }: AccordionProps) {

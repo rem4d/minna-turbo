@@ -1,10 +1,10 @@
-import type { Sentence } from "@rem4d/db";
+import type { SentenceOutput } from "@rem4d/api";
 import type { ReactElement } from "react";
 import { Character } from "@/components/Character";
 import { twMerge } from "tailwind-merge";
 
 export interface Props {
-  sentence: Sentence;
+  sentence: SentenceOutput;
   showFurigana: boolean;
 }
 

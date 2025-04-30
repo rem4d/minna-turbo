@@ -1,4 +1,3 @@
-import type { Sentence } from "@rem4d/db";
 import type { FC } from "react";
 import { useCallback, useEffect, useState } from "react";
 import Dropdown from "@/components/Dropdown";
@@ -7,13 +6,14 @@ import PlaySound from "@/components/PlaySound";
 import Accordion from "@/components/SentenceViewer/Accordion";
 import { usePlaySoundContext } from "@/context/playSoundContext";
 import { hapticFeedback } from "@/utils/tgUtils";
+import { SentenceOutput } from "@rem4d/api";
 import { useTranslation } from "react-i18next";
 
 import type { DropdownItem } from "../Dropdown";
 import { SentenceText } from "./SentenceText";
 
 interface Props {
-  sentence?: Sentence;
+  sentence?: SentenceOutput;
   dropdownItems?: DropdownItem[];
   onResetCacheClick?: () => void;
 }

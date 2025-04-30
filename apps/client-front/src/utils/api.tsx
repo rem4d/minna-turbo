@@ -10,7 +10,7 @@ import { createTRPCReact } from "@trpc/react-query";
  * A set of typesafe hooks for consuming your API.
  */
 export const api = createTRPCReact<AppRouter>();
-export { type RouterInputs, type RouterOutputs } from "@rem4d/api";
+// export { type RouterInputs, type RouterOutputs } from "@rem4d/api";
 
 const queryClient = new QueryClient({
   defaultOptions: {

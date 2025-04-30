@@ -1,4 +1,3 @@
-import type { Sentence } from "@rem4d/db";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
 import Drawer from "@/components/Drawer";
@@ -11,6 +10,7 @@ import Toast from "@/components/Toast";
 import { api } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import { hapticFeedback, useLaunchParams } from "@/utils/tgUtils";
+import { type SentenceOutput } from "@rem4d/api";
 import { useUnmount } from "@rem4d/utils";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Trans, useTranslation } from "react-i18next";
@@ -24,11 +24,13 @@ export const SentencesPage: FC = () => {
   });
   const [helpOpen, setHelpOpen] = useState(false);
 
-  const [favorites, setFavorites] = useLocalStorage<Sentence[]>(
+  const [favorites, setFavorites] = useLocalStorage<SentenceOutput[]>(
     "kic:favorites",
     [],
   );
-  const [storedList, setStoredList] = useState<Sentence[]>([] as Sentence[]);
+  const [storedList, setStoredList] = useState<SentenceOutput[]>(
+    [] as SentenceOutput[],
+  );
 
   const lp = useLaunchParams();
   const isMobile = !lp.platform.includes("desktop");

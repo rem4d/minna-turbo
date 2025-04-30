@@ -1,4 +1,4 @@
-import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
+import type { inferRouterOutputs } from "@trpc/server";
 
 import type { AppRouter } from "./routers/_app";
 import { appRouter } from "./routers/_app";
@@ -20,7 +20,6 @@ const createCaller = createCallerFactory(appRouter);
  * type PostByIdInput = RouterInputs['post']['byId']
  *      ^? { id: number }
  **/
-type RouterInputs = inferRouterInputs<AppRouter>;
 
 /**
  * Inference helpers for output types
@@ -29,6 +28,8 @@ type RouterInputs = inferRouterInputs<AppRouter>;
  *      ^? Post[]
  **/
 type RouterOutputs = inferRouterOutputs<AppRouter>;
+type SentenceOutput =
+  RouterOutputs["viewer"]["sentence"]["getRandomized"][number];
 
 export { createTRPCContext, appRouter, createCaller };
-export type { AppRouter, RouterInputs, RouterOutputs };
+export type { AppRouter, SentenceOutput };
