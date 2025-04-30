@@ -147,7 +147,7 @@ export const SentencesPage: FC = () => {
   };
 
   const disableNextNav =
-    activeIndex === storedList.length - 1 || storedList.length === 0;
+    activeIndex === storedList.length || storedList.length === 0;
 
   if (isLoading) {
     return (
