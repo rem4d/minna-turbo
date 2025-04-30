@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { api } from "@/utils/api";
 import * as Accordion from "@radix-ui/react-accordion";
+import { useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
 import { twMerge } from "tailwind-merge";
@@ -66,7 +67,12 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
   const onValueChange = (v: string[]) => {
     setVal(v);
   };
+
   const { t } = useTranslation();
+  const [transLang] = useLocalStorage<"ru" | "en" | null>(
+    "kic:translation_language",
+    null,
+  );
 
   return (
     <Accordion.Root
@@ -101,7 +107,9 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
         >
           <AnimateHeight>
             <div>
-              <div className="text-sm">{sentence.ru}</div>
+              <div className="text-sm">
+                {transLang === "ru" ? sentence.ru : sentence.en}
+              </div>
             </div>
           </AnimateHeight>
         </Accordion.Content>
