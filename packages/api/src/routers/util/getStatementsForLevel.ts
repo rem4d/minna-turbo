@@ -30,9 +30,8 @@ export const getStatementsForLevel = async ({
     .from("sentences")
     .select()
     .lte("level", level)
-    // .eq("source", "source1")
-    // .gt("level", 48)
-    // .lt("level", 98)
+    .not("ru", "is", null)
+    .not("en", "is", null)
     .lte("unknown_kanji_number", numberOfUnknownKanji);
 
   if (error) {
@@ -92,10 +91,13 @@ export const getStatementsForLevel = async ({
     }
 
     console.log(`Write cache for key: "${level}-${shift}"`);
-    void redis.setEx(
+
+    void redis.set(
       `${level}-${shift}`,
-      24 * 60 * 60, // expire in seconds
       JSON.stringify({ sentences, additional }),
+      {
+        EX: 24 * 60 * 60 * 60, // expire in 3 months
+      },
     );
   }
   return { sentences, additional };

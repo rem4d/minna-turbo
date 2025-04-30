@@ -37,7 +37,7 @@ export const sentenceRouter = router({
       return true;
     }),
   getRandomized: redisPrecedure.query(async ({ ctx }) => {
-    const shift = 60;
+    const shift = 50;
 
     const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
 
@@ -76,13 +76,11 @@ export const sentenceRouter = router({
     const shuffledS = shuffle(sentencesFiltered).slice(0, 20);
     const shuffledA = shuffle(additionalFiltered).slice(0, 2);
     const shuffled = shuffle(shuffledS.concat(shuffledA));
-    const newKnown = known.concat(shuffled.map((s) => s.id));
+    // const newKnown = known.concat(shuffled.map((s) => s.id));
 
-    void ctx.redis.setEx(
-      `known.${level}-${shift}`,
-      60 * 60,
-      JSON.stringify(newKnown),
-    );
+    // void ctx.redis.set(`known.${level}-${shift}`, JSON.stringify(newKnown), {
+    //   EX: 60 * 60 * 60 * 24, // expire in 3 months,
+    // });
 
     return shuffled;
   }),
