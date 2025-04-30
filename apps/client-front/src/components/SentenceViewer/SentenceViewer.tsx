@@ -15,7 +15,7 @@ import { SentenceText } from "./SentenceText";
 interface Props {
   sentence?: Sentence;
   dropdownItems?: DropdownItem[];
-  onResetCacheClick: () => void;
+  onResetCacheClick?: () => void;
 }
 
 export const SentenceViewer: FC<Props> = ({
@@ -105,7 +105,7 @@ export const SentenceViewer: FC<Props> = ({
           </div>
           <div
             className="w-fit cursor-pointer px-10 text-blue-500"
-            onClick={onResetCacheClick}
+            onClick={() => onResetCacheClick?.()}
           >
             {t("reset_cache")}
           </div>
