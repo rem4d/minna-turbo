@@ -36,7 +36,6 @@ export const getStatementsForLevel = async ({
     .not("ru", "is", null)
     .not("en", "is", null)
     .lte("unknown_kanji_number", numberOfUnknownKanji);
-  console.log(sentences);
 
   if (error) {
     throw new Error(error.message);
