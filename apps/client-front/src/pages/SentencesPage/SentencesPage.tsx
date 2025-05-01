@@ -23,6 +23,7 @@ export const SentencesPage: FC = () => {
     text: "",
   });
   const [helpOpen, setHelpOpen] = useState(false);
+  const [showNoSentencesMessage, setShowNoSentencesMessage] = useState(false);
 
   const [favorites, setFavorites] = useLocalStorage<SentenceOutput[]>(
     "kic:favorites",
@@ -84,10 +85,17 @@ export const SentencesPage: FC = () => {
   useEffect(() => {
     if (list && list.length > 0) {
       setStoredList((sl) => sl.concat(list));
-    } else {
-      setStoredList([]);
     }
   }, [list]);
+
+  useEffect(() => {
+    if (list && list.length === 0 && activeIndex === storedList.length) {
+      setShowNoSentencesMessage(true);
+      // setStoredList([]);
+    } else {
+      setShowNoSentencesMessage(false);
+    }
+  }, [list, activeIndex, storedList]);
 
   useEffect(() => {
     if (activeIndex === storedList.length - 1) {
@@ -147,9 +155,11 @@ export const SentencesPage: FC = () => {
   };
 
   const onResetCacheClick = () => {
+    setStoredList([]);
     resetCacheMutation.mutate();
   };
 
+  const disablePrevNav = activeIndex === 0;
   const disableNextNav =
     activeIndex === storedList.length || storedList.length === 0;
 
@@ -179,17 +189,30 @@ export const SentencesPage: FC = () => {
           )}
         </div>
         <SentenceNavButtons
-          disablePrevNav={activeIndex === 0 || storedList.length === 0}
+          disablePrevNav={disablePrevNav}
           disableNextNav={disableNextNav}
           handleNextClick={handleNextClick}
           handlePrevClick={handlePrevClick}
         />
         <div className={isMobile ? "mt-16" : "mt-10"}>
-          <SentenceViewer
-            sentence={sentence}
-            dropdownItems={dropdownItems}
-            onResetCacheClick={onResetCacheClick}
-          />
+          <SentenceViewer sentence={sentence} dropdownItems={dropdownItems} />
+
+          {/* no sentences message*/}
+          {showNoSentencesMessage && (
+            <div className="tems-center mt-8 flex flex-col items-center justify-center space-y-8 px-4">
+              <div className="text-scorpion/90 text-center text-sm">
+                {/* <Trans i18nKey="no_sentences" /> */}
+                <div className="mb-4">{t("no_sentences_title")}</div>
+                <div>{t("no_sentences_desc")}</div>
+              </div>
+              <div
+                className="w-fit cursor-pointer px-10 text-blue-500"
+                onClick={() => onResetCacheClick?.()}
+              >
+                {t("reset_cache")}
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <Toast

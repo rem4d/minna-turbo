@@ -39,5 +39,13 @@
     "pos_detail_1": "independent"
   },
   { "kanji": "部分食", "reading": ["ブブンショク"] },
-  { "kanji": "思い通り", "reading": ["オモイドアリ"] }
+  { "kanji": "思い通り", "reading": ["オモイドアリ"] },
+  { "kanji": "少しずつ", "reading": ["スコシズツ"] },
+  { "kanji": "行ってらっしゃい", "reading": ["イッテラッシャイ"] },
+  { "kanji": "しかない", "reading": ["シカナイ"] },
+  { "kanji": "わけではない", "reading": ["ワケデハナイ"] },
+  { "kanji": "どこか", "reading": ["ドコカ"] },
+  { "kanji": "法政部", "reading": ["ホウセイブ"] },
+  { "kanji": "申込書", "reading": ["モウシコミショ"] },
+  { "kanji": "ために", "reading": ["タメに"], "pos": "conj" }
 ]

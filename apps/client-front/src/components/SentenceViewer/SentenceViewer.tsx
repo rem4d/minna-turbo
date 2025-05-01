@@ -1,3 +1,4 @@
+import type { SentenceOutput } from "@rem4d/api";
 import type { FC } from "react";
 import { useCallback, useEffect, useState } from "react";
 import Dropdown from "@/components/Dropdown";
@@ -6,8 +7,6 @@ import PlaySound from "@/components/PlaySound";
 import Accordion from "@/components/SentenceViewer/Accordion";
 import { usePlaySoundContext } from "@/context/playSoundContext";
 import { hapticFeedback } from "@/utils/tgUtils";
-import { SentenceOutput } from "@rem4d/api";
-import { useTranslation } from "react-i18next";
 
 import type { DropdownItem } from "../Dropdown";
 import { SentenceText } from "./SentenceText";
@@ -15,13 +14,11 @@ import { SentenceText } from "./SentenceText";
 interface Props {
   sentence?: SentenceOutput;
   dropdownItems?: DropdownItem[];
-  onResetCacheClick?: () => void;
 }
 
 export const SentenceViewer: FC<Props> = ({
   sentence,
   dropdownItems,
-  onResetCacheClick,
 }: Props) => {
   const [showFurigana, setShowFurigana] = useState(false);
 
@@ -61,7 +58,6 @@ export const SentenceViewer: FC<Props> = ({
   const onSettingsOpen = () => {
     hapticFeedback("light");
   };
-  const { t } = useTranslation();
 
   return (
     <div>
@@ -96,21 +92,7 @@ export const SentenceViewer: FC<Props> = ({
             <Accordion sentence={sentence} />
           </div>
         </div>
-      ) : (
-        <div className="tems-center mt-8 flex flex-col items-center justify-center space-y-8 px-4">
-          <div className="text-scorpion/90 text-center text-sm">
-            {/* <Trans i18nKey="no_sentences" /> */}
-            <div className="mb-4">{t("no_sentences_title")}</div>
-            <div>{t("no_sentences_desc")}</div>
-          </div>
-          <div
-            className="w-fit cursor-pointer px-10 text-blue-500"
-            onClick={() => onResetCacheClick?.()}
-          >
-            {t("reset_cache")}
-          </div>
-        </div>
-      )}
+      ) : null}
     </div>
   );
 };

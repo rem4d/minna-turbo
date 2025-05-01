@@ -15,6 +15,7 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
     sentence.ruby?.includes("<rt>") &&
     !sentence.text_with_furigana?.includes("<rt>");
 
+  const showId = false;
   return (
     <>
       <div className={!hasCharacter ? "w-full" : ""}>
@@ -38,6 +39,11 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
                   !hasCharacter && "mt-[24px]",
                 )}
               >
+                {showId && (
+                  <div className="text-mine-shaft/70 mt-2 text-center text-xs">
+                    ID: {sentence.id}
+                  </div>
+                )}
                 <div
                   className={twMerge(
                     "font-yu-gothic relative min-h-[67px] rounded-[20px] border border-black/20 bg-white px-4 py-4 text-xl leading-6 font-medium text-black",

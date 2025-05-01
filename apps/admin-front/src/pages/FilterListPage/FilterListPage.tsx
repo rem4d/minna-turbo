@@ -29,14 +29,14 @@ export default function FilterListPage() {
     findSenMutation.mutate({ text: inputValue });
   };
 
-  const onCheckListClick = () => {};
+  // const onCheckListClick = () => {};
 
   return (
     <div>
       <Box>
         <Grid columns="30% auto" gap="4">
           <Flex direction="column" gap="4">
-            <Button onClick={onCheckListClick}>Check List</Button>
+            {/* <Button onClick={onCheckListClick}>Check List</Button> */}
             <br />
             <TextField.Root
               ref={inputRef}
