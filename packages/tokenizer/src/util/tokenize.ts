@@ -52,7 +52,7 @@ export const tokenize = async (text: string) => {
 
   const _mojiTokens = tokenizer.tokenize(text);
   // log(_mojiTokens.filter((t) => t.surface_form === "万"));
-  // log(_mojiTokens);
+  log(_mojiTokens);
 
   const issuesMap = fillMap({
     json: filterList,

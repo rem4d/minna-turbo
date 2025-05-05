@@ -2,7 +2,7 @@ import type { Member, Sentence } from "@rem4d/db";
 import { client as db } from "@rem4d/db";
 import { tokenize } from "@rem4d/tokenizer";
 
-const showLogs = true;
+const showLogs = false;
 
 const existingMembersMap = new Map<string, Member>();
 
@@ -33,6 +33,7 @@ export const findSingleSentenceMembers = async (sentence: Sentence) => {
   const japaneseNameRegex = /([\u4E00-\u9FAFお]{1,2}|[ァ-ヴ]{2,12})(?=さん)/;
 
   const tokens = await tokenize(sentence.text);
+
   const memberIds = [] as number[];
 
   const hasSan = japaneseNameRegex.test(sentence.text);

@@ -505,6 +505,9 @@ importers:
       '@rem4d/tokenizer':
         specifier: workspace:*
         version: link:../tokenizer
+      '@rem4d/utils':
+        specifier: workspace:^
+        version: link:../utils
       '@telegram-apps/init-data-node':
         specifier: ^2.0.2
         version: 2.0.2(typescript@5.7.2)

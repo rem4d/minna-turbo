@@ -65,6 +65,7 @@ export const adminSentenceRouter = router({
       qb.limit(1000);
 
       const { data, error } = await qb;
+      // console.log(data);
 
       if (error) {
         throw new Error("No sentences found.");

@@ -2,6 +2,7 @@ import type { Database, Kanji, Sentence } from "@rem4d/db";
 import { analyze } from "@rem4d/tokenizer";
 import type { SupabaseClient } from "@rem4d/db";
 import type { RedisClientType } from "../../trpc";
+import { clamp } from "@rem4d/utils";
 
 export const getStatementsForLevel = async ({
   level,
@@ -32,7 +33,7 @@ export const getStatementsForLevel = async ({
       "id,text,ruby,level,text_with_furigana,en,ru,vox_file_path,vox_speaker_id",
     )
     .lte("level", level)
-    .gt("level", 0)
+    .gt("level", clamp(level - shift, 0, level))
     .not("ru", "is", null)
     .not("en", "is", null)
     .lte("unknown_kanji_number", numberOfUnknownKanji);

@@ -15,7 +15,7 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
     sentence.ruby?.includes("<rt>") &&
     !sentence.text_with_furigana?.includes("<rt>");
 
-  const showId = false;
+  const showId = import.meta.env.DEV ?? false;
   return (
     <>
       <div className={!hasCharacter ? "w-full" : ""}>

@@ -7,6 +7,7 @@
     "@redis/client": "^1.6.0",
     "@rem4d/db": "workspace:*",
     "@rem4d/tokenizer": "workspace:*",
+    "@rem4d/utils": "workspace:^",
     "@telegram-apps/init-data-node": "^2.0.2",
     "@telegram-apps/sdk": "^3.5.0",
     "@trpc/server": "catalog:",
