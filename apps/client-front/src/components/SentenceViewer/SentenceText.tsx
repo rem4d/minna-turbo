@@ -9,7 +9,7 @@ export interface Props {
 }
 
 export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
-  const hasCharacter = !!sentence.vox_speaker_id;
+  const hasCharacter = false; // !!sentence.vox_speaker_id;
 
   const onlyOneHasFurigana =
     sentence.ruby?.includes("<rt>") &&
