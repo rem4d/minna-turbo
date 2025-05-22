@@ -5,6 +5,7 @@ const server = app.listen(env.PORT, () => {
   const { HOST, PORT } = env;
   logger.info(`Server running on http://${HOST}:${PORT}`);
 });
+console.log(1);
 
 const onCloseSignal = () => {
   logger.info("sigint received, shutting down");
