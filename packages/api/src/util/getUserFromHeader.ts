@@ -36,7 +36,7 @@ export function getUserFromHeader(authHeader?: string) {
   }
 
   try {
-    validate(initData, BOT_TOKEN);
+    validate(initData, BOT_TOKEN, { expiresIn: 0 });
     const user = {
       id: tgUser.id,
       username: tgUser.username,
