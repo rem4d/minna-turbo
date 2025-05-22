@@ -56,7 +56,7 @@ export const FavouriteSentencesPage: FC = () => {
 
   return (
     <Page back>
-      <div className="relative flex flex-col space-y-8 px-4">
+      <div className="relative flex flex-col space-y-8 px-4 pb-(--footer-height)">
         <SectionHeader>{t("fav_sentences")}</SectionHeader>
         <List title={t("")}>
           {favorites.map((fav, index) => (

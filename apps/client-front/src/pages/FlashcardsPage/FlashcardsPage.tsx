@@ -51,7 +51,7 @@ export const FlashcardsPage: FC = () => {
     if (isSuccess && showHelpModal) {
       id = setTimeout(() => {
         setHelpModalOpen(true);
-      }, 1000);
+      }, 500);
     }
 
     return () => {
