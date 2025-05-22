@@ -22,8 +22,17 @@ export const SentencesPage: FC = () => {
     open: false,
     text: "",
   });
-  const [helpOpen, setHelpOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useLocalStorage<boolean | null>(
+    "kic:help_open",
+    null,
+  );
   const [showNoSentencesMessage, setShowNoSentencesMessage] = useState(false);
+
+  useEffect(() => {
+    if (helpOpen === null) {
+      setHelpOpen(true);
+    }
+  }, [helpOpen]);
 
   const [favorites, setFavorites] = useLocalStorage<SentenceOutput[]>(
     "kic:favorites",
