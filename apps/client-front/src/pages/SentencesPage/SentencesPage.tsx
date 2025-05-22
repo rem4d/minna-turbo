@@ -23,7 +23,6 @@ export const SentencesPage: FC = () => {
     text: "",
   });
   const [helpOpen, setHelpOpen] = useState(false);
-  console.log(1);
   const [showNoSentencesMessage, setShowNoSentencesMessage] = useState(false);
 
   const [favorites, setFavorites] = useLocalStorage<SentenceOutput[]>(
