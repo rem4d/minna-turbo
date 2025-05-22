@@ -10,6 +10,7 @@ interface Props {
   children: React.ReactNode;
   noContainer?: boolean;
   title?: string | null;
+  contentClassName?: string;
 }
 
 export default function _Drawer({
@@ -20,6 +21,7 @@ export default function _Drawer({
   title = null,
   back = false,
   noContainer = false,
+  contentClassName = "",
 }: Props) {
   const element = document.getElementById("page");
   const props = noContainer ? {} : { container: element };
@@ -32,7 +34,12 @@ export default function _Drawer({
       <Drawer.Portal>
         <Drawer.Overlay className="absolute inset-0 bg-black/40" />
         <Drawer.Content className="absolute right-0 bottom-0 left-0 mt-24 flex h-fit flex-col rounded-t-[10px] outline-none">
-          <div className="bg-super-silver flex-1 rounded-t-[10px] pt-2 pb-(--tg-bottom)">
+          <div
+            className={twMerge(
+              "bg-super-silver flex-1 rounded-t-[10px] pt-2 pb-(--tg-bottom)",
+              contentClassName,
+            )}
+          >
             <div className="bg-gray-chateau mx-auto mb-4 h-1.5 w-12 flex-shrink-0 rounded-full" />
             <div
               className={twMerge(

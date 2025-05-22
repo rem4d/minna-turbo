@@ -72,7 +72,12 @@ export const FavouriteSentencesPage: FC = () => {
           ))}
         </List>
       </div>
-      <Drawer open={modalOpen} onOpenChange={setModalOpen} noContainer>
+      <Drawer
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        noContainer
+        contentClassName="pb-0"
+      >
         <div className="bg-super-silver relative flex h-[80vh] flex-col">
           <SentenceNavButtons
             disablePrevNav={activeIndex === 0}
