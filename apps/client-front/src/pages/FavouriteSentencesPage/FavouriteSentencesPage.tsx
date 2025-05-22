@@ -56,7 +56,7 @@ export const FavouriteSentencesPage: FC = () => {
 
   return (
     <Page back>
-      <div className="relative flex flex-col space-y-8 px-4 pb-(--footer-height)">
+      <div className="relative flex flex-col space-y-8 px-4">
         <SectionHeader>{t("fav_sentences")}</SectionHeader>
         <List title={t("")}>
           {favorites.map((fav, index) => (
@@ -72,8 +72,8 @@ export const FavouriteSentencesPage: FC = () => {
           ))}
         </List>
       </div>
-      <Drawer open={modalOpen} onOpenChange={setModalOpen}>
-        <div className="bg-super-silver relative flex h-[90vh] flex-col">
+      <Drawer open={modalOpen} onOpenChange={setModalOpen} noContainer>
+        <div className="bg-super-silver relative flex h-[80vh] flex-col">
           <SentenceNavButtons
             disablePrevNav={activeIndex === 0}
             disableNextNav={disableNextNav}

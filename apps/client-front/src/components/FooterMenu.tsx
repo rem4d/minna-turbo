@@ -22,7 +22,6 @@ export function FooterMenu(): ReactElement {
     Boolean(dictMatch) ||
     Boolean(sentencesMatch) ||
     Boolean(flashcardsMatch) ||
-    Boolean(favouritesMatch) ||
     Boolean(allKanjiMatch);
 
   if (hideFooter) {
