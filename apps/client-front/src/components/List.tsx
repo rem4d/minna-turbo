@@ -23,7 +23,7 @@ export const List: FC<ListProps> = ({ title, children }) => {
 
 interface ListItemProps {
   title?: string;
-  sub?: string;
+  sub?: string | null;
   icon?: ReactElement;
   right?: "arrow" | "remove" | "change" | ReactElement;
   to?: string;

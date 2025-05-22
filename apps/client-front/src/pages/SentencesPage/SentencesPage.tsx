@@ -238,7 +238,7 @@ export const SentencesPage: FC = () => {
           onChangeLevel={onChangeLevel}
         />
       )}
-      <Drawer open={helpOpen} onOpenChange={() => setHelpOpen(false)}>
+      <Drawer open={!!helpOpen} onOpenChange={() => setHelpOpen(false)}>
         <div className="px-4 pb-4">
           <Trans
             i18nKey="help_sentences_modal"

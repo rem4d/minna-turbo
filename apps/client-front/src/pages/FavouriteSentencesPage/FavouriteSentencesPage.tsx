@@ -17,6 +17,7 @@ export const FavouriteSentencesPage: FC = () => {
   );
   const [modalOpen, setModalOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const showId = false;
 
   const sentence = favorites[activeIndex];
   const { t } = useTranslation();
@@ -62,7 +63,7 @@ export const FavouriteSentencesPage: FC = () => {
             <ListItem
               right="remove"
               key={`f-${index}`}
-              sub={`${fav.id}`}
+              sub={showId ? `${fav.id}` : null}
               title={fav.text}
               onRightIconClick={() => remove(fav.id)}
               onClick={() => onItemClick(fav.id)}
@@ -71,7 +72,7 @@ export const FavouriteSentencesPage: FC = () => {
           ))}
         </List>
       </div>
-      <Drawer open={modalOpen} onOpenChange={setModalOpen} noContainer>
+      <Drawer open={modalOpen} onOpenChange={setModalOpen}>
         <div className="bg-super-silver relative flex h-[90vh] flex-col">
           <SentenceNavButtons
             disablePrevNav={activeIndex === 0}
