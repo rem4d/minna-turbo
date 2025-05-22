@@ -1,5 +1,9 @@
-import { useRef } from "react";
-import useEffectOnce from "./useEffectOnce";
+import type { EffectCallback } from "react";
+import { useEffect, useRef } from "react";
+
+const useEffectOnce = (effect: EffectCallback) => {
+  useEffect(effect, []);
+};
 
 const useUnmount = (fn: () => any): void => {
   const fnRef = useRef(fn);

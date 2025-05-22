@@ -10,8 +10,8 @@ import Toast from "@/components/Toast";
 import { api } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import { hapticFeedback, useLaunchParams } from "@/utils/tgUtils";
+import useUnmount from "@/utils/useUnmount";
 import { type SentenceOutput } from "@rem4d/api";
-import { useUnmount } from "@rem4d/utils";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Trans, useTranslation } from "react-i18next";
 
