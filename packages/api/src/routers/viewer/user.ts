@@ -26,6 +26,7 @@ export const userRouter = router({
 
     if (!userId || !username) {
       console.log("Empty fields. Could not create user.");
+      console.log(user);
       throw new TRPCError({ code: "BAD_REQUEST" });
     }
 

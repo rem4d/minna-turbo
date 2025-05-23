@@ -1,8 +1,6 @@
 import { env } from "./config/envConfig";
 import { app, logger } from "./server";
 
-console.log("BOT_TOKEN: ", env.BOT_TOKEN);
-
 const server = app.listen(env.PORT, () => {
   const { HOST, PORT } = env;
   logger.info(`Server running on http://${HOST}:${PORT}`);

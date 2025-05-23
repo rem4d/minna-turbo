@@ -44,6 +44,8 @@ export function getUserFromHeader(authHeader?: string) {
       last_name: tgUser.last_name,
       language: tgUser.language_code,
     };
+    console.log("PASSED___ Validated user:");
+    console.log(user);
     return user;
   } catch (err) {
     console.log(err);
