@@ -1,4 +1,4 @@
-import type { Sentence } from "@rem4d/db";
+import type { Favourite } from "@/types";
 import type { FC } from "react";
 import { useCallback, useState } from "react";
 import Drawer from "@/components/Drawer";
@@ -11,7 +11,7 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 
 export const FavouriteSentencesPage: FC = () => {
-  const [favorites, setFavorites] = useLocalStorage<Sentence[]>(
+  const [favorites, setFavorites] = useLocalStorage<Favourite[]>(
     "kic:favorites",
     [],
   );

@@ -1,7 +1,9 @@
+import type { Favourite } from "@/types";
 import type { FC } from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Drawer from "@/components/Drawer";
 import { DrawerSettings } from "@/components/DrawerSettings";
+import ConfirmModal from "@/components/Modal/ConfirmModal";
 import { Page } from "@/components/Page";
 import { SentenceViewer } from "@/components/SentenceViewer";
 import SentenceNavButtons from "@/components/SentenceViewer/SentenceNavButtons";
@@ -27,6 +29,7 @@ export const SentencesPage: FC = () => {
     null,
   );
   const [showNoSentencesMessage, setShowNoSentencesMessage] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   useEffect(() => {
     if (helpOpen === null) {
@@ -34,7 +37,7 @@ export const SentencesPage: FC = () => {
     }
   }, [helpOpen]);
 
-  const [favorites, setFavorites] = useLocalStorage<SentenceOutput[]>(
+  const [favorites, setFavorites] = useLocalStorage<Favourite[]>(
     "kic:favorites",
     [],
   );
@@ -128,20 +131,23 @@ export const SentencesPage: FC = () => {
     ? favorites.findIndex((e) => e.id === sentence.id)
     : -1;
 
+  const addToFavFn = useCallback(() => {
+    if (sentence) {
+      if (favIndex === -1) {
+        setConfirmModalOpen(true);
+      } else {
+        setFavorites(favorites.toSpliced(favIndex, 1));
+        setToastOpen({ open: true, text: t("sentence_removed") });
+      }
+    }
+  }, [sentence, favIndex, favorites, setFavorites, setConfirmModalOpen]);
+
   const dropdownItems = [
     {
       title: favIndex === -1 ? t("add_to_fav") : t("remove_from_fav"),
       disabled: !sentence,
       onClick() {
-        if (sentence) {
-          if (favIndex === -1) {
-            setFavorites(favorites.concat(sentence));
-            setToastOpen({ open: true, text: t("sentence_added") });
-          } else {
-            setFavorites(favorites.toSpliced(favIndex, 1));
-            setToastOpen({ open: true, text: t("sentence_removed") });
-          }
-        }
+        addToFavFn();
       },
     },
     {
@@ -171,6 +177,16 @@ export const SentencesPage: FC = () => {
   const disablePrevNav = activeIndex === 0;
   const disableNextNav =
     activeIndex === storedList.length || storedList.length === 0;
+
+  const handleModalConfirm = (msg: string) => {
+    setFavorites(favorites.concat({ ...sentence, msg }));
+    setToastOpen({ open: true, text: t("sentence_added") });
+    setConfirmModalOpen(false);
+  };
+
+  const handleModalCancel = () => {
+    setConfirmModalOpen(false);
+  };
 
   if (isLoading) {
     return (
@@ -246,6 +262,11 @@ export const SentencesPage: FC = () => {
           />
         </div>
       </Drawer>
+      <ConfirmModal
+        open={confirmModalOpen}
+        onCancel={handleModalCancel}
+        onConfirm={handleModalConfirm}
+      />
     </Page>
   );
 };

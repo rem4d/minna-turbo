@@ -14,6 +14,7 @@ export function getUserFromHeader(authHeader?: string) {
     return null;
   }
 
+  // console.log(0);
   const parsed = parse(initData);
   const tgUser = parsed.user;
 

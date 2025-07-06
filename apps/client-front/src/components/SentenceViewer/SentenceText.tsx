@@ -1,10 +1,11 @@
+import type { Favourite } from "@/types";
 import type { SentenceOutput } from "@rem4d/api";
 import type { ReactElement } from "react";
 import { Character } from "@/components/Character";
 import { twMerge } from "tailwind-merge";
 
 export interface Props {
-  sentence: SentenceOutput;
+  sentence: SentenceOutput | Favourite;
   showFurigana: boolean;
 }
 
@@ -15,7 +16,9 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
     sentence.ruby?.includes("<rt>") &&
     !sentence.text_with_furigana?.includes("<rt>");
 
-  const showId = import.meta.env.DEV ?? false;
+  // const showMeta = import.meta.env.DEV ?? false;
+  const showMeta = true;
+
   return (
     <>
       <div className={!hasCharacter ? "w-full" : ""}>
@@ -39,9 +42,16 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
                   !hasCharacter && "mt-[24px]",
                 )}
               >
-                {showId && (
-                  <div className="text-mine-shaft/70 mt-2 text-center text-xs">
-                    ID: {sentence.id}
+                {showMeta && (
+                  <div className="flex flex-col">
+                    <div className="text-mine-shaft/70 mt-2 text-center text-xs">
+                      ID: {sentence.id}
+                    </div>
+                    {isFav(sentence) && (
+                      <div className="text-mine-shaft/70 mt-2 text-center text-xs">
+                        Msg: {sentence.msg}
+                      </div>
+                    )}
                   </div>
                 )}
                 <div
@@ -83,3 +93,7 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
     </>
   );
 }
+
+const isFav = (sentence: SentenceOutput | Favourite): sentence is Favourite => {
+  return "msg" in sentence;
+};
