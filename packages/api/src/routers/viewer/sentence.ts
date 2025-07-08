@@ -50,7 +50,7 @@ export const sentenceRouter = router({
     console.log(`Getting sentences for user with level = `, level);
 
     const numberOfUnknownKanji = 3;
-    const { sentences, additional } = await getStatementsForLevel({
+    const { sentences /*, additional */ } = await getStatementsForLevel({
       level,
       shift,
       numberOfUnknownKanji,
@@ -67,15 +67,16 @@ export const sentenceRouter = router({
     }
 
     const sentencesFiltered = sentences.filter((s) => !known.includes(s.id));
-    const additionalFiltered = additional.filter((s) => !known.includes(s.id));
+    // const additionalFiltered = additional.filter((s) => !known.includes(s.id));
 
-    console.log(
-      `Sentences: ${sentencesFiltered.length}, additional: ${additionalFiltered.length}`,
-    );
+    // console.log(
+    //   `Sentences: ${sentencesFiltered.length}, additional: ${additionalFiltered.length}`,
+    // );
+    console.log(`Sentences: ${sentencesFiltered.length}`);
 
     const shuffledS = shuffle(sentencesFiltered).slice(0, 20);
-    const shuffledA = shuffle(additionalFiltered).slice(0, 2);
-    const shuffled = shuffle(shuffledS.concat(shuffledA));
+    // const shuffledA = shuffle(additionalFiltered).slice(0, 2);
+    const shuffled = shuffle(shuffledS.concat(/*shuffledA*/ []));
     // const newKnown = known.concat(shuffled.map((s) => s.id));
 
     // void ctx.redis.set(`known.${level}-${shift}`, JSON.stringify(newKnown), {
