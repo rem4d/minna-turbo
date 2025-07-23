@@ -119,8 +119,8 @@ export const EditSentencePage: FC = () => {
     setInput((i) => i.replace(new RegExp(" ", "g"), ""));
   };
 
-  const onMemberClick = useCallback((m: MemberOutput) => {
-    openUrl(`https://jisho.org/search/${m.basic_form}`);
+  const onMemberClick = useCallback((bs: string) => {
+    openUrl(`https://jisho.org/search/${bs}`);
   }, []);
 
   const handleUpdateData = () => {
@@ -363,7 +363,7 @@ export const EditSentencePage: FC = () => {
                 <Flex key={m.members.basic_form} direction="column">
                   <Text
                     size="6"
-                    onClick={() => onMemberClick(m.members)}
+                    onClick={() => onMemberClick(m.members.basic_form)}
                     className="cursor-pointer whitespace-nowrap"
                     dangerouslySetInnerHTML={{
                       __html: m.members.ruby ?? "",

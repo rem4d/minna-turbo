@@ -48,5 +48,6 @@
   { "kanji": "法政部", "reading": ["ホウセイブ"] },
   { "kanji": "申込書", "reading": ["モウシコミショ"] },
   { "kanji": "ために", "reading": ["タメに"], "pos": "conj" },
-  { "kanji": "身に付ける", "reading": ["ミニツケル"] }
+  { "kanji": "身に付ける", "reading": ["ミニツケル"] },
+  { "kanji": "かれら", "reading": ["カレラ"] }
 ]

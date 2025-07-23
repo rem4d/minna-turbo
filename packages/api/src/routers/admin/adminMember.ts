@@ -23,6 +23,7 @@ export const adminMemberRouter = router({
         .eq("sentence_id", sentenceId);
 
       const insertBulk = await findSentencesMembers(data);
+      console.log(insertBulk);
 
       const { error: error2 } = await ctx.db
         .from("sentence_member")
