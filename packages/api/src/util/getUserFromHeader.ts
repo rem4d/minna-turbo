@@ -45,7 +45,8 @@ export function getUserFromHeader(authHeader?: string) {
       last_name: tgUser.last_name,
       language: tgUser.language_code,
     };
-    console.log("PASSED___ Validated user:");
+    const date = new Date();
+    console.log(`[${date.toISOString()}] PASSED___ Validated user:`);
     console.log(user);
     return user;
   } catch (err) {

@@ -22,10 +22,10 @@ export const userRouter = router({
   create: authedProcedure.mutation(async ({ ctx }) => {
     const user = ctx.user;
     const userId = user.id;
-    const username = user.username;
+    const username = user.username ?? "N/A";
 
-    if (!userId || !username) {
-      console.log("Empty fields. Could not create user.");
+    if (!userId) {
+      console.log("Empty userId. Could not create user.");
       console.log(user);
       throw new TRPCError({ code: "BAD_REQUEST" });
     }
