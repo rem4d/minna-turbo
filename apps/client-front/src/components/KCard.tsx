@@ -75,9 +75,9 @@ export function KCard({
       </div>
 
       {useEye ? (
-        <div className="relative h-[40px] min-h-[40px] w-full">
+        <div className="relative h-[30px] min-h-[30px] w-full">
           <div className="bg-gallery absolute top-1/2 h-[1px] w-full -translate-y-1/2"></div>
-          <div className="border-gallery absolute top-1/2 right-2 size-[40px] -translate-y-1/2 cursor-pointer rounded-full border bg-white">
+          <div className="border-gallery absolute top-1/2 right-2 size-[50px] -translate-y-1/2 cursor-pointer rounded-full border bg-white">
             <div className="flex size-full items-center justify-center">
               <EyeToggle show={eyeOpen} onClick={handleEyeClick} />
             </div>
