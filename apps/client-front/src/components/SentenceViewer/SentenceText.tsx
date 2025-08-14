@@ -2,6 +2,7 @@ import type { Favourite } from "@/types";
 import type { SentenceOutput } from "@rem4d/api";
 import type { ReactElement } from "react";
 import { Character } from "@/components/Character";
+import { api } from "@/utils/api";
 import { twMerge } from "tailwind-merge";
 
 export interface Props {
@@ -12,12 +13,13 @@ export interface Props {
 export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
   const hasCharacter = false; // !!sentence.vox_speaker_id;
 
+  const { data: user } = api.viewer.user.info.useQuery();
+
   const onlyOneHasFurigana =
     sentence.ruby?.includes("<rt>") &&
     !sentence.text_with_furigana?.includes("<rt>");
 
-  // const showMeta = import.meta.env.DEV ?? false;
-  const showMeta = true;
+  const showMeta = user && user.id === 4245;
 
   return (
     <>
