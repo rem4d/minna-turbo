@@ -47,7 +47,6 @@ function App() {
   useMiniAppSetup();
 
   const errorFallback = () => <ErrorFallbackComponent />;
-  console.log(3);
 
   return (
     <RollbarProvider config={rollbarConfig}>

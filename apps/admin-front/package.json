@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@rem4d/eslint-config": "workspace:*",
+    "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
