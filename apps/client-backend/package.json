@@ -5,7 +5,7 @@
     "@rem4d/db": "workspace:*",
     "@rem4d/tokenizer": "workspace:*",
     "@rem4d/typescript-config": "workspace:*",
-    "@trpc/server": "^11.0.0-rc.666",
+    "@trpc/server": "catalog:",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "envalid": "^8.0.0",
