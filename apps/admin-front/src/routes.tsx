@@ -4,7 +4,6 @@ import { NewSentencePage } from "./pages/NewSentencePage";
 import { Base } from "./components/Base";
 import { StatisticPage } from "./pages/StatisticPage";
 import { EditSentencePage } from "./pages/EditSentencePage";
-import { SimulatorPage } from "./pages/SimulatorPage";
 import { DictionaryPage } from "./pages/DictionaryPage";
 import { FilterListPage } from "./pages/FilterListPage";
 
@@ -28,10 +27,6 @@ export const router = createBrowserRouter([
       {
         path: "/stats",
         element: <StatisticPage />,
-      },
-      {
-        path: "/simulator",
-        element: <SimulatorPage />,
       },
       {
         path: "/dictionary",
