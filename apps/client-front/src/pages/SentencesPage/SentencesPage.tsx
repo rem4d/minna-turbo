@@ -35,7 +35,7 @@ export const SentencesPage: FC = () => {
     if (helpOpen === null) {
       setHelpOpen(true);
     }
-  }, [helpOpen]);
+  }, [helpOpen, setHelpOpen]);
 
   const [favorites, setFavorites] = useLocalStorage<Favourite[]>(
     "kic:favorites",
@@ -115,7 +115,12 @@ export const SentencesPage: FC = () => {
       void markAsSeenMutation.mutate({ ids });
       void utils.viewer.sentence.getRandomized.invalidate();
     }
-  }, [activeIndex, storedList.length, markAsSeenMutation.mutate]);
+  }, [
+    activeIndex,
+    storedList,
+    markAsSeenMutation,
+    utils.viewer.sentence.getRandomized,
+  ]);
 
   const handlePrevClick = () => {
     hapticFeedback("light");
@@ -140,7 +145,7 @@ export const SentencesPage: FC = () => {
         setToastOpen({ open: true, text: t("sentence_removed") });
       }
     }
-  }, [sentence, favIndex, favorites, setFavorites, setConfirmModalOpen]);
+  }, [t, sentence, favIndex, favorites, setFavorites, setConfirmModalOpen]);
 
   const dropdownItems = [
     {

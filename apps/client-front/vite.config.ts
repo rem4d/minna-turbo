@@ -1,8 +1,8 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
+import checker from "vite-plugin-checker";
 import mkcert from "vite-plugin-mkcert";
-// import checker from "vite-plugin-checker";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -46,16 +46,16 @@ export default defineConfig(({ mode }) => {
       svgr(),
       tailwindcss(),
 
-      // checker({
-      //   typescript: true,
-      //   eslint: {
-      //     useFlatConfig: true,
-      //     lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
-      //   },
-      //   overlay: {
-      //     initialIsOpen: false,
-      //   },
-      // }),
+      checker({
+        typescript: true,
+        eslint: {
+          useFlatConfig: true,
+          lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
+        },
+        overlay: {
+          initialIsOpen: false,
+        },
+      }),
     ],
   };
 });

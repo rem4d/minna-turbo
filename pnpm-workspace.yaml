@@ -19,5 +19,7 @@ catalog:
   "@types/react": ^19.0.0
   "@types/react-dom": ^19.0.0
   "react-hot-toast": ^2.5.1
+  "vite": ^7.1.1
   "vitest": ^3.0.7
+  "vite-plugin-checker": ^0.10.0
   "wanakana": ^5.3.1

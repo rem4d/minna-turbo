@@ -80,21 +80,20 @@ export const FavouriteSentencesPage: FC = () => {
           </div>
         ) : (
           <List title={t("")}>
-            {sentences &&
-              sentences.map((sen, index) => (
-                <ListItem
-                  right="remove"
-                  key={`s-${index}`}
-                  sub={showId ? `${sen.id}` : null}
-                  title={sen.text}
-                  onRightIconClick={(e) => {
-                    e.stopPropagation();
-                    remove(sen.id);
-                  }}
-                  onClick={() => onItemClick(sen.id)}
-                  showBorder={index < sentences.length - 1}
-                />
-              ))}
+            {sentences?.map((sen, index) => (
+              <ListItem
+                right="remove"
+                key={`s-${index}`}
+                sub={showId ? `${sen.id}` : null}
+                title={sen.text}
+                onRightIconClick={(e) => {
+                  e.stopPropagation();
+                  remove(sen.id);
+                }}
+                onClick={() => onItemClick(sen.id)}
+                showBorder={index < sentences.length - 1}
+              />
+            ))}
           </List>
         )}
       </div>

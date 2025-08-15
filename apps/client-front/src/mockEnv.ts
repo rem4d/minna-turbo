@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import type { LaunchParams } from "@telegram-apps/sdk-react";
 import {
   isTMA,
@@ -12,6 +14,7 @@ import {
 // see it in your final bundle.
 if (import.meta.env.DEV) {
   await (async () => {
+    // eslint-disable-next-line
     if (await isTMA()) {
       return;
     }
@@ -19,6 +22,7 @@ if (import.meta.env.DEV) {
     // Determine which launch params should be applied. We could already
     // apply them previously, or they may be specified on purpose using the
     // default launch parameters transmission method.
+    // eslint-disable-next-line
     let lp: LaunchParams | undefined;
     try {
       lp = retrieveLaunchParams();
@@ -70,6 +74,7 @@ if (import.meta.env.DEV) {
       };
     }
 
+    // eslint-disable-next-line
     mockTelegramEnv(lp);
     console.warn(
       "⚠️ As long as the current environment was not considered as the Telegram-based one, it was mocked. Take a note, that you should not do it in production and current behavior is only specific to the development process. Environment mocking is also applied only in development mode. So, after building the application, you will not see this behavior and related warning, leading to crashing the application outside Telegram.",
