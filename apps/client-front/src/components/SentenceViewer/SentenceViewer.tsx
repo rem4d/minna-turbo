@@ -14,10 +14,12 @@ import { SentenceText } from "./SentenceText";
 interface Props {
   sentence?: SentenceOutput;
   dropdownItems?: DropdownItem[];
+  msg?: string;
 }
 
 export const SentenceViewer: FC<Props> = ({
   sentence,
+  msg,
   dropdownItems,
 }: Props) => {
   const [showFurigana, setShowFurigana] = useState(false);
@@ -87,7 +89,11 @@ export const SentenceViewer: FC<Props> = ({
       </div>
       {sentence ? (
         <div className="min-h-[400px] px-4">
-          <SentenceText sentence={sentence} showFurigana={showFurigana} />
+          <SentenceText
+            sentence={sentence}
+            showFurigana={showFurigana}
+            msg={msg}
+          />
           <div className="absolute bottom-0 left-0 w-full px-2">
             <Accordion sentence={sentence} />
           </div>

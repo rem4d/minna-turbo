@@ -26,10 +26,11 @@ export const FavouriteSentencesPage: FC = () => {
     {
       ids,
     },
-    { enabled: ids && ids.length > 0 },
+    // { enabled: ids && ids.length > 0 },
   );
 
   const sentence = sentences ? sentences[activeIndex] : undefined;
+  const msg = favorites[activeIndex]?.msg;
   const { t } = useTranslation();
 
   const remove = useCallback(
@@ -64,6 +65,11 @@ export const FavouriteSentencesPage: FC = () => {
   const disableNextNav =
     activeIndex === favorites.length - 1 || favorites.length === 0;
 
+  const onRightIconClick = useCallback(
+    (e: React.MouseEvent, id: number) => {},
+    [],
+  );
+
   return (
     <Page back>
       <div className="relative flex h-full flex-col space-y-8 px-4 pb-(--footer-height)">
@@ -78,12 +84,15 @@ export const FavouriteSentencesPage: FC = () => {
               sentences.map((sen, index) => (
                 <ListItem
                   right="remove"
-                  key={`f-${index}`}
+                  key={`s-${index}`}
                   sub={showId ? `${sen.id}` : null}
                   title={sen.text}
-                  onRightIconClick={() => remove(sen.id)}
+                  onRightIconClick={(e) => {
+                    e.stopPropagation();
+                    remove(sen.id);
+                  }}
                   onClick={() => onItemClick(sen.id)}
-                  showBorder={index < favorites.length - 1}
+                  showBorder={index < sentences.length - 1}
                 />
               ))}
           </List>
@@ -102,7 +111,7 @@ export const FavouriteSentencesPage: FC = () => {
             handleNextClick={handleNextClick}
             handlePrevClick={handlePrevClick}
           />
-          <SentenceViewer sentence={sentence} />
+          <SentenceViewer msg={msg} sentence={sentence} />
         </div>
       </Drawer>
     </Page>

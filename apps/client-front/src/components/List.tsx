@@ -29,7 +29,7 @@ interface ListItemProps {
   to?: string;
   showBorder?: boolean;
   onClick?: () => void;
-  onRightIconClick?: () => void;
+  onRightIconClick?: (e: React.MouseEvent) => void;
 }
 
 export const ListItem: FC<ListItemProps> = ({
@@ -102,7 +102,7 @@ export const ListItem: FC<ListItemProps> = ({
         {rightElem && (
           <div
             className="relative mr-[0px] flex h-full justify-center"
-            onClick={() => onRightIconClick?.()}
+            onClick={(e) => onRightIconClick?.(e)}
           >
             {rightElem()}
           </div>

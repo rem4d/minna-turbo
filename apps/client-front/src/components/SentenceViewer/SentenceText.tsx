@@ -1,4 +1,3 @@
-import type { Favourite } from "@/types";
 import type { SentenceOutput } from "@rem4d/api";
 import type { ReactElement } from "react";
 import { Character } from "@/components/Character";
@@ -6,11 +5,16 @@ import { api } from "@/utils/api";
 import { twMerge } from "tailwind-merge";
 
 export interface Props {
-  sentence: SentenceOutput | Favourite;
+  sentence: SentenceOutput;
   showFurigana: boolean;
+  msg?: string;
 }
 
-export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
+export function SentenceText({
+  sentence,
+  msg,
+  showFurigana,
+}: Props): ReactElement {
   const hasCharacter = false; // !!sentence.vox_speaker_id;
 
   const { data: user } = api.viewer.user.info.useQuery();
@@ -49,9 +53,9 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
                     <div className="text-mine-shaft/70 mt-2 text-center text-xs">
                       ID: {sentence.id}
                     </div>
-                    {isFav(sentence) && (
+                    {msg && (
                       <div className="text-mine-shaft/70 mt-2 text-center text-xs">
-                        Msg: {sentence.msg}
+                        Msg: {msg}
                       </div>
                     )}
                   </div>
@@ -95,7 +99,3 @@ export function SentenceText({ sentence, showFurigana }: Props): ReactElement {
     </>
   );
 }
-
-const isFav = (sentence: SentenceOutput | Favourite): sentence is Favourite => {
-  return "msg" in sentence;
-};
