@@ -65,10 +65,10 @@ export const FavouriteSentencesPage: FC = () => {
   const disableNextNav =
     activeIndex === favorites.length - 1 || favorites.length === 0;
 
-  const onRightIconClick = useCallback(
-    (e: React.MouseEvent, id: number) => {},
-    [],
-  );
+  // const onRightIconClick = useCallback(
+  //   (e: React.MouseEvent, id: number) => {},
+  //   [],
+  // );
 
   return (
     <Page back>
