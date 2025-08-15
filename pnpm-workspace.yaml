@@ -22,4 +22,7 @@ catalog:
   "vite": ^7.1.1
   "vitest": ^3.0.7
   "vite-plugin-checker": ^0.10.0
+  "vite-plugin-svgr": ^4.3.0
+  "vite-tsconfig-paths": ^5.1.4
+  "vite-plugin-node-polyfills": ^0.22.0
   "wanakana": ^5.3.1
