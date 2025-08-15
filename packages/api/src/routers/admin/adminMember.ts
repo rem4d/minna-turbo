@@ -160,4 +160,20 @@ export const adminMemberRouter = router({
       }
       return [];
     }),
+  randomUntranslatedMember: publicProcedure.query(async ({ ctx }) => {
+    const { data, error } = await ctx.db
+      .from("members")
+      .select(
+        "id,basic_form,en,ru,sentences:sentence_member(id:sentence_id,...sentences(text,en,ru))",
+      )
+      .not("sentences", "is", null)
+      .is("ru", null)
+      .limit(1)
+      .single();
+
+    if (error) {
+      throw new Error("randomUntranslatedMember error");
+    }
+    return data;
+  }),
 });

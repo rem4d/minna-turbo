@@ -5,6 +5,7 @@ export function Base() {
   const homeMatch = useMatch("/");
   const statsMatch = useMatch("/stats");
   const createMatch = useMatch("/create");
+  const rusifyMatch = useMatch("/rusify");
   const dictionaryMatch = useMatch("/dictionary");
   const filterListMatch = useMatch("/filter");
 
@@ -39,6 +40,12 @@ export function Base() {
           active={Boolean(filterListMatch)}
         >
           Filter list
+        </TabNav.Link>
+        <TabNav.Link
+          onClick={() => navigate("/rusify")}
+          active={Boolean(rusifyMatch)}
+        >
+          Rusificator
         </TabNav.Link>
       </TabNav.Root>
       <Outlet />
