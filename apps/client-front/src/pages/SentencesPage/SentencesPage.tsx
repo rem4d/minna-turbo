@@ -128,7 +128,7 @@ export const SentencesPage: FC = () => {
   };
 
   const favIndex = sentence
-    ? favorites.findIndex((e) => e.id === sentence.id)
+    ? favorites.findIndex((e) => e.sentenceId === sentence.id)
     : -1;
 
   const addToFavFn = useCallback(() => {

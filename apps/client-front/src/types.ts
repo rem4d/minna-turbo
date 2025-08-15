@@ -1,5 +1,4 @@
-import { type SentenceOutput } from "@rem4d/api";
-
-export interface Favourite extends SentenceOutput {
+export interface Favourite {
+  id: number;
   msg?: string;
 }

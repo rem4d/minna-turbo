@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { authedProcedure, redisPrecedure, router } from "../../trpc";
+import {
+  authedProcedure,
+  publicProcedure,
+  redisPrecedure,
+  router,
+} from "../../trpc";
 import { shuffle } from "../../util/shuffle";
 import { dedup } from "../../util/dedup";
 import { getUserByTelegramId } from "../util/getUserByTelegramId";
@@ -99,4 +104,27 @@ export const sentenceRouter = router({
       throw new Error("Redis error.");
     }
   }),
+  getByIds: publicProcedure
+    .input(
+      z.object({
+        ids: z.array(z.number()),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const ids = input.ids;
+      if (ids.length === 0) {
+        return [];
+      }
+      const { data, error } = await ctx.db
+        .from("sentences")
+        .select(
+          "id,text,ruby,level,text_with_furigana,en,ru,vox_file_path,vox_speaker_id",
+        )
+        .in("id", ids);
+
+      if (error) {
+        throw new Error("Error getByIds.");
+      }
+      return data;
+    }),
 });

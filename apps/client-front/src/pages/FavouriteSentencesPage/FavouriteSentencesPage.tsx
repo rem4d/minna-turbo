@@ -7,6 +7,8 @@ import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import { SentenceViewer } from "@/components/SentenceViewer";
 import SentenceNavButtons from "@/components/SentenceViewer/SentenceNavButtons";
+import { SpinnerBig } from "@/components/Spinner";
+import { api } from "@/utils/api";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 
@@ -18,8 +20,16 @@ export const FavouriteSentencesPage: FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const showId = false;
+  const ids = favorites.map((f) => f.id);
 
-  const sentence = favorites[activeIndex];
+  const { data: sentences, isLoading } = api.viewer.sentence.getByIds.useQuery(
+    {
+      ids,
+    },
+    { enabled: ids && ids.length > 0 },
+  );
+
+  const sentence = sentences ? sentences[activeIndex] : undefined;
   const { t } = useTranslation();
 
   const remove = useCallback(
@@ -56,21 +66,28 @@ export const FavouriteSentencesPage: FC = () => {
 
   return (
     <Page back>
-      <div className="relative flex flex-col space-y-8 px-4 pb-(--footer-height)">
+      <div className="relative flex h-full flex-col space-y-8 px-4 pb-(--footer-height)">
         <SectionHeader>{t("fav_sentences")}</SectionHeader>
-        <List title={t("")}>
-          {favorites.map((fav, index) => (
-            <ListItem
-              right="remove"
-              key={`f-${index}`}
-              sub={showId ? `${fav.id}` : null}
-              title={fav.text}
-              onRightIconClick={() => remove(fav.id)}
-              onClick={() => onItemClick(fav.id)}
-              showBorder={index < favorites.length - 1}
-            />
-          ))}
-        </List>
+        {isLoading ? (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <SpinnerBig />
+          </div>
+        ) : (
+          <List title={t("")}>
+            {sentences &&
+              sentences.map((sen, index) => (
+                <ListItem
+                  right="remove"
+                  key={`f-${index}`}
+                  sub={showId ? `${sen.id}` : null}
+                  title={sen.text}
+                  onRightIconClick={() => remove(sen.id)}
+                  onClick={() => onItemClick(sen.id)}
+                  showBorder={index < favorites.length - 1}
+                />
+              ))}
+          </List>
+        )}
       </div>
       <Drawer
         open={modalOpen}
