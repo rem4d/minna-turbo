@@ -1,6 +1,7 @@
 import type { PropsWithChildren } from "react";
 import { useState } from "react";
-import DropdownDotsIcon from "@/assets/icons/dropdown-dots.svg?react";
+// import DropdownDotsIcon from "@/assets/icons/dropdown-dots.svg?react";
+import SettingsIcon from "@/assets/icons/settings2.svg?react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { sleep } from "@rem4d/utils";
 import { AnimatePresence, motion as m, useAnimation } from "motion/react";
@@ -37,7 +38,8 @@ export default function Dropdown({ items, onOpen }: Props) {
   return (
     <DropdownMenu.Root open={open} onOpenChange={onOpenChange}>
       <DropdownMenu.Trigger className="z-0 inline-flex size-[24px] cursor-pointer items-center justify-center whitespace-nowrap select-none focus-visible:outline-none">
-        <DropdownDotsIcon className="stroke-rolling-stone" />
+        {/* <DropdownDotsIcon className="stroke-rolling-stone" /> */}
+        <SettingsIcon className="stroke-rolling-stone absolute" />
       </DropdownMenu.Trigger>
 
       <AnimatePresence>
