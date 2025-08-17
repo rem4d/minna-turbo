@@ -1,51 +1,51 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../../trpc";
 import type { Kanji, Sentence } from "@rem4d/db";
-import { tokenize, analyze } from "@rem4d/tokenizer";
+import { analyze } from "@rem4d/tokenizer";
 import { findSingleSentenceMembers } from "../util/findSentenceMembers";
 
 export const adminSentenceRouter = router({
-  findContainingText: publicProcedure
-    .input(
-      z.object({
-        text: z.string(),
-        pos: z.string(),
-        pos_detail: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const filterText =
-        input.pos === "verb"
-          ? input.text.substring(0, input.text.length - 1)
-          : input.text;
-
-      const { data, error } = await ctx.db
-        .from("sentences")
-        .select()
-        .like("text", `%${filterText}%`)
-        .limit(100);
-      if (error) {
-        throw new Error("No sentences found.");
-      }
-
-      const result: Sentence[] = [];
-
-      for (const sentence of data) {
-        const _tokens = await tokenize(sentence.text);
-        const tokens = _tokens.filter((t) => t.pos === input.pos);
-
-        for (const t of tokens) {
-          if (
-            input.text === t.basic_form &&
-            input.pos_detail === t.pos_detail_1
-          ) {
-            result.push(sentence);
-          }
-        }
-      }
-
-      return result;
-    }),
+  // findContainingText: publicProcedure
+  //   .input(
+  //     z.object({
+  //       text: z.string(),
+  //       pos: z.string(),
+  //       pos_detail: z.string(),
+  //     }),
+  //   )
+  //   .mutation(async ({ ctx, input }) => {
+  //     const filterText =
+  //       input.pos === "verb"
+  //         ? input.text.substring(0, input.text.length - 1)
+  //         : input.text;
+  //
+  //     const { data, error } = await ctx.db
+  //       .from("sentences")
+  //       .select()
+  //       .like("text", `%${filterText}%`)
+  //       .limit(100);
+  //     if (error) {
+  //       throw new Error("No sentences found.");
+  //     }
+  //
+  //     const result: Sentence[] = [];
+  //
+  //     for (const sentence of data) {
+  //       const _tokens = await tokenize(sentence.text);
+  //       const tokens = _tokens.filter((t) => t.pos === input.pos);
+  //
+  //       for (const t of tokens) {
+  //         if (
+  //           input.text === t.basic_form &&
+  //           input.pos_detail === t.pos_detail_1
+  //         ) {
+  //           result.push(sentence);
+  //         }
+  //       }
+  //     }
+  //
+  //     return result;
+  //   }),
   findFurtherMembersUpdates: publicProcedure
     .input(
       z.object({

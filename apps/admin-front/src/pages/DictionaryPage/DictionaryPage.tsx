@@ -28,7 +28,6 @@ export const DictionaryPage: FC = () => {
   const [isEditingRu, setIsEditingRu] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingValue, setEditingValue] = useState("");
-  const [sentencesByText, setSentencesByText] = useState("");
   const [membersByText, setMembersByText] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [currentMemberId, setCurrentMemberId] = useState<number | null>(null);
@@ -87,8 +86,9 @@ export const DictionaryPage: FC = () => {
     },
   });
 
-  const findSenMutation = api.admin.sentence.findContainingText.useMutation();
-  const correspondingSentences = findSenMutation.data ?? [];
+  const findSentencesMutation = api.admin.member.getSentences.useMutation();
+
+  const correspondingSentences = findSentencesMutation.data ?? [];
 
   const handleDocumentClick = useCallback((e: MouseEvent) => {
     if (e.target) {
@@ -187,26 +187,15 @@ export const DictionaryPage: FC = () => {
       const found = membersByPos?.find((m) => m.id === id);
       if (found) {
         setCurrentMemberId(id);
-        setSentencesByText(found.basic_form);
 
-        void findSenMutation.mutate(
-          {
-            text: found.basic_form,
-            pos: found.pos,
-            pos_detail: found.pos_detail_1,
-          },
-          // {
-          //   enabled:
-          //     !!sentencesByText &&
-          //     sentencesByText.length > 0 &&
-          //     Boolean(selectedPosDetail),
-          // },
-        );
+        void findSentencesMutation.mutate({
+          id: id,
+        });
       } else {
         console.error("No corresponding member found.");
       }
     },
-    [membersByPos, findSenMutation],
+    [membersByPos, findSentencesMutation],
   );
 
   const onSetInvalidClick = useCallback(
@@ -224,7 +213,6 @@ export const DictionaryPage: FC = () => {
   );
 
   const onPosChange = (v: string) => {
-    setSentencesByText("");
     setPageNumber(1);
     setSelectedPos(v);
   };
@@ -392,7 +380,6 @@ export const DictionaryPage: FC = () => {
         <Flex direction="column" gap="4">
           {correspondingSentences.length > 0 && (
             <Flex direction="column" gap="1">
-              <Text size="4">{sentencesByText}</Text>
               <Text size="1">
                 <Text size="2">{correspondingSentences.length}</Text> sentences
                 found.
@@ -431,7 +418,7 @@ export const DictionaryPage: FC = () => {
                     {s.ru}
                   </Text>
                   <Text className="text-white/20" size="2">
-                    {s.en ? s.en : (s.translation ?? "")}
+                    {s.en}
                   </Text>
                 </Flex>
               </Flex>

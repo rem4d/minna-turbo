@@ -160,20 +160,19 @@ export const adminMemberRouter = router({
       }
       return [];
     }),
-  randomUntranslatedMember: publicProcedure.query(async ({ ctx }) => {
-    const { data, error } = await ctx.db
-      .from("members")
-      .select(
-        "id,basic_form,en,ru,sentences:sentence_member(id:sentence_id,...sentences(text,en,ru))",
-      )
-      .not("sentences", "is", null)
-      .is("ru", null)
-      .limit(1)
-      .single();
+  getSentences: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const memberId = input.id;
 
-    if (error) {
-      throw new Error("randomUntranslatedMember error");
-    }
-    return data;
-  }),
+      const { data, error } = await ctx.db
+        .from("sentence_member")
+        .select("id:sentence_id,...sentences(text,text_with_furigana,en,ru)")
+        .eq("member_id", memberId);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data;
+    }),
 });
