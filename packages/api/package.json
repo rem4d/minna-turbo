@@ -29,6 +29,7 @@
   "license": "ISC",
   "private": true,
   "scripts": {
+    "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "check-types": "tsc --noEmit",
     "dev": "tsc"

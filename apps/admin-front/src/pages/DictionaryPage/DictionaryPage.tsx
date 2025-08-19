@@ -86,7 +86,8 @@ export const DictionaryPage: FC = () => {
     },
   });
 
-  const findSentencesMutation = api.admin.member.getSentences.useMutation();
+  const findSentencesMutation =
+    api.admin.member.getMemberSentences.useMutation();
 
   const correspondingSentences = findSentencesMutation.data ?? [];
 

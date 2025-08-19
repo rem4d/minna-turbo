@@ -1,0 +1,30 @@
+
+Given the sentence \"お先に失礼します。病院へ行かなければならないものですから。\" \nSplit it to parts of speech and put them into JSON array.\n\nEach item in the array should have: original form (original), part of speech (pos), dictionary form (dict_form), english translation (en), russian translation (ru), reading in hiragana (reading), comment for explanation in Russian and common usage (comment)\n\nOutput using the following JSON format:\n\n\n[\n\\t{\n\\t\\t\"original\": \"行かなければならない\",\n\\t\\t\"pos\": \"verb\",\n    \"dict_form\": \"行く\",\n    \"en\": \"go\",\n    \"ru\": \"идти\",\n    \"reading\":\"いく\"\n\\t}\n]
+
+
+
+お先に失礼します。病院へ行かなければならないものですから。
+
+
+
+Given the sentence \"又、その頃お電話します。\"
+Split it to parts of speech and put them into JSON array.
+
+Each item in the array should have: original form (original), part of speech (pos), dictionary form (dict_form), english translation (en), russian translation (ru), reading in hiragana (reading), comment for explanation in Russian and common usage (comment).
+Do not include punctuation.
+
+Output using the following JSON format:
+
+
+[
+	{
+		"original": "行かなければならない",
+		"pos": "verb",
+    "dict_form": "行く",
+    "en": "go",
+    "ru": "идти",
+    "reading":"いく"
+	}
+]
+
+

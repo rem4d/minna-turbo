@@ -15,7 +15,6 @@ import {
   Code,
   Spinner,
 } from "@radix-ui/themes";
-import type { MemberOutput } from "../../types";
 import { useNavigate, useParams } from "react-router-dom";
 import { initTTS } from "../../utils/tts";
 import { api } from "@/utils/api";
@@ -23,14 +22,41 @@ import Speakers from "@/components/Speakers";
 import { Player } from "@/components/Player";
 import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
 import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
+// import { AiMemberOutput } from "@rem4d/api";
 
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
   const [rubyHtml, setRubyHtml] = useState("");
   const [textWithFuriganaHtml, setTextWithFuriganaHtml] = useState("");
   const [translation, setTranslation] = useState("");
+  // const [aiMembers, setAiMembers] = useState<AiMemberOutput[]>(
+  //   [] as AIMemberOutput[],
+  // );
   const [en, setEn] = useState("");
   const [ru, setRu] = useState("");
+  const [aiPrompt, setAiPrompt] = useState("");
+
+  useEffect(() => {
+    setAiPrompt(`Given the sentence "${input}"
+Split it to parts of speech and put them into JSON array.
+
+Each item in the array should have: original form (original), part of speech (pos), dictionary form (dict_form), english translation (en), russian translation (ru), reading in hiragana (reading), comment for explanation in Russian and common usage (comment).
+Do not include punctuation.
+
+Output using the following JSON format:
+
+[
+	{
+		"original": "行かなければならない",
+		"pos": "verb",
+    "dict_form": "行く",
+    "en": "go",
+    "ru": "идти",
+    "reading":"いく"
+	}
+]
+`);
+  }, [input]);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -75,6 +101,20 @@ export const EditSentencePage: FC = () => {
         void utils.admin.sentence.getById.invalidate();
       },
     });
+
+  // const aiMembersMutation = api.admin.member.aiMembers.useMutation({
+  //   onSuccess(data) {
+  //     console.log(data);
+  //     toast.success("Got response.");
+  //   },
+  // });
+  //
+  // const onGetAIMembersClick = () => {
+  //   aiMembersMutation.mutate({
+  //     prompt: aiPrompt,
+  //   });
+  // };
+  // console.log(input);
 
   useEffect(() => {
     if (analyzeData) {
@@ -296,6 +336,25 @@ export const EditSentencePage: FC = () => {
                   onChange={(e) => setRu(e.target.value)}
                 />
               </Box>
+              <Box>
+                <Heading size="5">AI members</Heading>
+                <TextArea
+                  mt="6"
+                  mb="6"
+                  rows={17}
+                  value={aiPrompt}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Paste some text..."
+                />
+                {/* <Button onClick={onGetAIMembersClick}>Get members</Button> */}
+                {/* <Flex direction="column" gapY="2"> */}
+                {/*   {aiMembers?.map((m) => ( */}
+                {/*     <Flex key={m} direction="column"> */}
+                {/*       <Text></Text> */}
+                {/*     </Flex> */}
+                {/*   ))} */}
+                {/* </Flex> */}
+              </Box>
             </Flex>
           </Grid>
           <Grid className="" mt="6" columns="2" gap="2">
@@ -347,18 +406,6 @@ export const EditSentencePage: FC = () => {
               className="font-klee text-xl"
               gap="4"
             >
-              {/* <div className="col-span-4"> */}
-              {/*   <Flex direction="column" gapY="4" align="start"> */}
-              {/*     <Button onClick={onTokenizeClick}>Tokenize</Button> */}
-              {/*     <Text */}
-              {/*       size="6" */}
-              {/*       dangerouslySetInnerHTML={{ */}
-              {/*         __html: tokenizedHtml, */}
-              {/*       }} */}
-              {/*     /> */}
-              {/*     <Heading size="4">Members</Heading> */}
-              {/*   </Flex> */}
-              {/* </div> */}
               {members?.map((m) => (
                 <Flex key={m.members.basic_form} direction="column">
                   <Text
