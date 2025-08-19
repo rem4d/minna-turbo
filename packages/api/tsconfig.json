@@ -1,6 +1,6 @@
 {
 	"extends": "@rem4d/typescript-config/tsconfig.package.json",
-	"exclude": ["node_modules"],
+	"exclude": ["node_modules", "dist"],
   "compilerOptions": {
     // CANT USE WITH PATH!
     // https://turbo.build/repo/docs/core-concepts/internal-packages#just-in-time-packages

@@ -24,14 +24,20 @@ import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
 import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
 // import { AiMemberOutput } from "@rem4d/api";
 
+interface AIMember {
+  original: string;
+  pos: string;
+  dict_form: string;
+  en: string;
+  ru: string;
+  reading: string;
+}
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
   const [rubyHtml, setRubyHtml] = useState("");
   const [textWithFuriganaHtml, setTextWithFuriganaHtml] = useState("");
   const [translation, setTranslation] = useState("");
-  // const [aiMembers, setAiMembers] = useState<AiMemberOutput[]>(
-  //   [] as AIMemberOutput[],
-  // );
+  const [aiMembers, setAIMembers] = useState<AIMember[]>([] as AIMember[]);
   const [en, setEn] = useState("");
   const [ru, setRu] = useState("");
   const [aiPrompt, setAiPrompt] = useState("");
@@ -102,19 +108,20 @@ Output using the following JSON format:
       },
     });
 
-  // const aiMembersMutation = api.admin.member.aiMembers.useMutation({
-  //   onSuccess(data) {
-  //     console.log(data);
-  //     toast.success("Got response.");
-  //   },
-  // });
-  //
-  // const onGetAIMembersClick = () => {
-  //   aiMembersMutation.mutate({
-  //     prompt: aiPrompt,
-  //   });
-  // };
-  // console.log(input);
+  const aiMembersMutation = api.admin.member.aiMembers.useMutation({
+    onSuccess(data) {
+      console.log(data);
+      setAIMembers(data);
+      toast.success("Got response.");
+    },
+  });
+
+  const onGetAIMembersClick = () => {
+    aiMembersMutation.mutate({
+      prompt: aiPrompt,
+    });
+  };
+  console.log(input);
 
   useEffect(() => {
     if (analyzeData) {
@@ -160,6 +167,7 @@ Output using the following JSON format:
   };
 
   const onMemberClick = useCallback((bs: string) => {
+    setAIMembers([]);
     openUrl(`https://jisho.org/search/${bs}`);
   }, []);
 
@@ -346,14 +354,53 @@ Output using the following JSON format:
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Paste some text..."
                 />
-                {/* <Button onClick={onGetAIMembersClick}>Get members</Button> */}
-                {/* <Flex direction="column" gapY="2"> */}
-                {/*   {aiMembers?.map((m) => ( */}
-                {/*     <Flex key={m} direction="column"> */}
-                {/*       <Text></Text> */}
-                {/*     </Flex> */}
-                {/*   ))} */}
-                {/* </Flex> */}
+                <Button onClick={onGetAIMembersClick}>Get members</Button>
+                {aiMembersMutation.isPending && <Text>Loading...</Text>}
+                {aiMembers.length > 0 && (
+                  <Box>
+                    <Text size="2">{aiMembers.length} members.</Text>
+                  </Box>
+                )}
+                <Flex
+                  mt="4"
+                  direction="column"
+                  gapY="2"
+                  overflow="scroll"
+                  maxHeight="500px"
+                >
+                  {aiMembers.map((m, i) => (
+                    <Flex
+                      key={`${m.en}${i}`}
+                      gapY="2"
+                      direction="column"
+                      maxWidth="300px"
+                    >
+                      <Text size="1">
+                        <pre>{JSON.stringify(m, undefined, 2)}</pre>
+                      </Text>
+                      {/* <Flex> */}
+                      {/*   <Badge>En</Badge> */}
+                      {/*   <Text>{m.en}</Text> */}
+                      {/* </Flex> */}
+                      {/* <Flex> */}
+                      {/*   <Badge>Ru</Badge> */}
+                      {/*   <Text>{m.ru}</Text> */}
+                      {/* </Flex> */}
+                      {/* <Flex> */}
+                      {/*   <Badge>Pos</Badge> */}
+                      {/*   <Text>{m.pos}</Text> */}
+                      {/* </Flex> */}
+                      {/* <Flex> */}
+                      {/*   <Badge>Dict form</Badge> */}
+                      {/*   <Text>{m.dict_form}</Text> */}
+                      {/* </Flex> */}
+                      {/* <Flex> */}
+                      {/*   <Badge>Reading</Badge> */}
+                      {/*   <Text>{m.reading}</Text> */}
+                      {/* </Flex> */}
+                    </Flex>
+                  ))}
+                </Flex>
               </Box>
             </Flex>
           </Grid>

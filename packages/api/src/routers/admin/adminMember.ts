@@ -175,53 +175,65 @@ export const adminMemberRouter = router({
       }
       return data;
     }),
-  // aiMembers: publicProcedure
-  //   .input(z.object({ prompt: z.string() }))
-  //   .mutation(async ({ input }) => {
-  //     const uri = "https://api.mistral.ai/v1/chat/completions";
-  //     const response = await fetch(uri, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${process.env.MISTRAL_API_KEY}`,
-  //       },
-  //       body: JSON.stringify({
-  //         model: "mistral-large-latest",
-  //         messages: [
-  //           {
-  //             role: "user",
-  //             content: input.prompt,
-  //           },
-  //         ],
-  //         response_format: { type: "json_object" },
-  //       }),
-  //     });
-  //
-  //     if (!response.ok) {
-  //       const text = await response.text();
-  //       throw new Error(`Unexpected error: ${response.status}. ${text}`);
-  //     }
-  //
-  //     const data = (await response.json()) as unknown as {
-  //       choices: { message: { content: string } }[];
-  //     };
-  //
-  //     try {
-  //       const content = data.choices[0]?.message.content ?? "";
-  //       const aiMembers = JSON.parse(content);
-  //       return aiMembers as unknown as AiMemberd[];
-  //     } catch (err) {
-  //       console.log(err);
-  //       return [];
-  //     }
-  //   }),
-});
+  updateRujr: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        ru: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { data, error } = await ctx.db
+        .from("members")
+        .update({
+          ru: input.ru,
+        })
+        .eq("id", input.id)
+        .select()
+        .single();
+      if (error) {
+        throw new Error("Error when update.");
+      }
+      return data;
+    }),
+  aiMembers: publicProcedure
+    .input(z.object({ prompt: z.string() }))
+    .mutation(async ({ input }) => {
+      const uri = "https://api.mistral.ai/v1/chat/completions";
+      const response = await fetch(uri, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.MISTRAL_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "mistral-large-latest",
+          messages: [
+            {
+              role: "user",
+              content: input.prompt,
+            },
+          ],
+          response_format: { type: "json_object" },
+        }),
+      });
 
-// interface AiMemberd {
-//   original: string;
-//   pos: string;
-//   dict_form: string;
-//   en: string;
-//   ru: string;
-//   reading: string;
-// }
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Unexpected error: ${response.status}. ${text}`);
+      }
+
+      const data = (await response.json()) as unknown as {
+        choices: { message: { content: string } }[];
+      };
+
+      try {
+        const content = data.choices[0]?.message.content ?? "";
+        const aiMembers = JSON.parse(content);
+        return aiMembers;
+      } catch (err) {
+        console.log(err);
+        return [];
+      }
+    }),
+});
