@@ -22,47 +22,19 @@ import Speakers from "@/components/Speakers";
 import { Player } from "@/components/Player";
 import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
 import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
-// import { AiMemberOutput } from "@rem4d/api";
+import useMistral from "@/hooks/useMistral";
 
-interface AIMember {
-  original: string;
-  pos: string;
-  dict_form: string;
-  en: string;
-  ru: string;
-  reading: string;
-}
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
   const [rubyHtml, setRubyHtml] = useState("");
   const [textWithFuriganaHtml, setTextWithFuriganaHtml] = useState("");
   const [translation, setTranslation] = useState("");
-  const [aiMembers, setAIMembers] = useState<AIMember[]>([] as AIMember[]);
   const [en, setEn] = useState("");
   const [ru, setRu] = useState("");
-  const [aiPrompt, setAiPrompt] = useState("");
 
-  useEffect(() => {
-    setAiPrompt(`Given the sentence "${input}"
-Split it to parts of speech and put them into JSON array.
-
-Each item in the array should have: original form (original), part of speech (pos), dictionary form (dict_form), english translation (en), russian translation (ru), reading in hiragana (reading), comment for explanation in Russian and common usage (comment).
-Do not include punctuation.
-
-Output using the following JSON format:
-
-[
-	{
-		"original": "行かなければならない",
-		"pos": "verb",
-    "dict_form": "行く",
-    "en": "go",
-    "ru": "идти",
-    "reading":"いく"
-	}
-]
-`);
-  }, [input]);
+  const { aiMembers, aiPrompt, aiMembersMutation } = useMistral({
+    sentenceText: input,
+  });
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -108,20 +80,11 @@ Output using the following JSON format:
       },
     });
 
-  const aiMembersMutation = api.admin.member.aiMembers.useMutation({
-    onSuccess(data) {
-      console.log(data);
-      setAIMembers(data);
-      toast.success("Got response.");
-    },
-  });
-
   const onGetAIMembersClick = () => {
     aiMembersMutation.mutate({
       prompt: aiPrompt,
     });
   };
-  console.log(input);
 
   useEffect(() => {
     if (analyzeData) {
@@ -167,7 +130,6 @@ Output using the following JSON format:
   };
 
   const onMemberClick = useCallback((bs: string) => {
-    setAIMembers([]);
     openUrl(`https://jisho.org/search/${bs}`);
   }, []);
 
@@ -351,7 +313,7 @@ Output using the following JSON format:
                   mb="6"
                   rows={17}
                   value={aiPrompt}
-                  onChange={(e) => setInput(e.target.value)}
+                  disabled
                   placeholder="Paste some text..."
                 />
                 <Button onClick={onGetAIMembersClick}>Get members</Button>
@@ -401,6 +363,40 @@ Output using the following JSON format:
                     </Flex>
                   ))}
                 </Flex>
+                <Grid
+                  columns="4"
+                  gridColumn="span 2"
+                  className="font-klee text-xl"
+                  gap="4"
+                >
+                  {aiMembers?.map((m) => (
+                    <Flex key={m.dict_form} direction="column">
+                      <Text
+                        size="6"
+                        className="cursor-pointer whitespace-nowrap"
+                        onClick={() => onMemberClick(m.dict_form)}
+                      >
+                        {m.pos === "auxiliary verb" ? m.original : m.dict_form}
+                        {m.pos === "auxiliary verb" && (
+                          <Badge color="red" size="1">
+                            {m.dict_form}
+                          </Badge>
+                        )}
+                      </Text>
+                      <Text className="select-none" size="2">
+                        {m.ru}
+                      </Text>
+                      <Text className="select-none" size="2">
+                        {m.en}
+                      </Text>
+                      <Box>
+                        <Badge color="sky" size="1">
+                          {m.pos}
+                        </Badge>
+                      </Box>
+                    </Flex>
+                  ))}
+                </Grid>
               </Box>
             </Flex>
           </Grid>
