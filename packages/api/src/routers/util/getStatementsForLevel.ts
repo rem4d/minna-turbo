@@ -36,6 +36,7 @@ export const getStatementsForLevel = async ({
     .gt("level", clamp(level - shift, 0, level))
     .not("ru", "is", null)
     .not("en", "is", null)
+    .eq("status", "member2_checked")
     .lte("unknown_kanji_number", numberOfUnknownKanji);
 
   if (error) {

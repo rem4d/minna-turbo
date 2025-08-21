@@ -56,7 +56,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
   const memberAccordionOpen = val.includes("2");
 
   const { data: members, isFetching: loadingMembers } =
-    api.viewer.member.sentenceMembers.useQuery(
+    api.viewer.member.sentenceMembers2.useQuery(
       { id: sentence.id },
       {
         enabled: !!sentence.text && memberAccordionOpen,
@@ -171,15 +171,15 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
                   )}
                 >
                   {members?.map((m) => (
-                    <React.Fragment key={m.members.basic_form}>
+                    <React.Fragment key={m.basic_form}>
                       <div
                         className="font-yu-gothic cursor-pointer font-medium whitespace-nowrap"
                         dangerouslySetInnerHTML={{
-                          __html: m.members.ruby ?? "",
+                          __html: m.basic_form,
                         }}
                       />
                       <div className="relative top-1 text-sm leading-5">
-                        {m.members.en}
+                        {transLang === "ru" ? m.ru : m.en}
                       </div>
                     </React.Fragment>
                   ))}
