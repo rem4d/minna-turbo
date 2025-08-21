@@ -153,7 +153,7 @@ export type Database = {
           level: number | null
           original: string | null
           pos: string
-          reading: string | null
+          reading: string
           ru: string
           ruby: string | null
           updated_at: string | null
@@ -168,7 +168,7 @@ export type Database = {
           level?: number | null
           original?: string | null
           pos: string
-          reading?: string | null
+          reading: string
           ru: string
           ruby?: string | null
           updated_at?: string | null
@@ -183,7 +183,7 @@ export type Database = {
           level?: number | null
           original?: string | null
           pos?: string
-          reading?: string | null
+          reading?: string
           ru?: string
           ruby?: string | null
           updated_at?: string | null
