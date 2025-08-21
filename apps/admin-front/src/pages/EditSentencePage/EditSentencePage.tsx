@@ -79,6 +79,12 @@ For readings including comments use only hiragana.
       enabled: !!sentence?.id,
     },
   );
+  const { data: members2 } = api.admin.member.sentenceMembers2.useQuery(
+    { id: sentence?.id ?? 0 },
+    {
+      enabled: !!sentence?.id,
+    },
+  );
   const utils = api.useUtils();
 
   const submitVoiceMutation = useSubmitVoiceMutation({
@@ -481,6 +487,7 @@ For readings including comments use only hiragana.
             </Flex>
           </Grid>
 
+          <Heading size="5">Members</Heading>
           <Grid columns="3" my="8" className="">
             <Grid
               columns="4"
@@ -515,6 +522,52 @@ For readings including comments use only hiragana.
               ))}
             </Grid>
           </Grid>
+          {members2 && members2.length > 0 && (
+            <Box>
+              <Heading size="5">Members2</Heading>
+              <Grid columns="3" my="8" className="">
+                <Grid
+                  columns="4"
+                  gridColumn="span 2"
+                  className="font-klee text-xl"
+                  gap="4"
+                >
+                  {members2?.map((m) => (
+                    <Flex key={m.basic_form} direction="column">
+                      {/* <Text */}
+                      {/*   size="6" */}
+                      {/*   onClick={() => onMemberClick(m.basic_form)} */}
+                      {/*   className="cursor-pointer whitespace-nowrap" */}
+                      {/*   dangerouslySetInnerHTML={{ */}
+                      {/*     __html: m.members.ruby ?? "", */}
+                      {/*   }} */}
+                      {/* /> */}
+                      <Text className="select-none" size="6">
+                        {m.pos === "auxiliary verb" || m.pos === "auxiliary" ? (
+                          <>
+                            {m.original} <Text size="2">({m.basic_form})</Text>
+                          </>
+                        ) : (
+                          m.basic_form
+                        )}
+                      </Text>
+                      <Text className="select-none" size="2">
+                        {m.en}
+                      </Text>
+                      <Text className="select-none" size="2">
+                        {m.ru}
+                      </Text>
+                      <Box>
+                        <Badge color="sky" size="1">
+                          {m.pos}
+                        </Badge>
+                      </Box>
+                    </Flex>
+                  ))}
+                </Grid>
+              </Grid>
+            </Box>
+          )}
 
           <div>
             <Button

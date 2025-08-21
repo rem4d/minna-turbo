@@ -151,6 +151,7 @@ export type Database = {
           is_hidden: boolean | null
           is_invalid: boolean | null
           level: number | null
+          original: string | null
           pos: string
           reading: string | null
           ru: string | null
@@ -165,6 +166,7 @@ export type Database = {
           is_hidden?: boolean | null
           is_invalid?: boolean | null
           level?: number | null
+          original?: string | null
           pos: string
           reading?: string | null
           ru?: string | null
@@ -179,6 +181,7 @@ export type Database = {
           is_hidden?: boolean | null
           is_invalid?: boolean | null
           level?: number | null
+          original?: string | null
           pos?: string
           reading?: string | null
           ru?: string | null
