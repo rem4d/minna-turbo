@@ -2,10 +2,12 @@ import type { SentenceOutput } from "@rem4d/api";
 import React, { useEffect, useRef, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { api } from "@/utils/api";
+import { Mistral } from "@mistralai/mistralai";
 import * as Accordion from "@radix-ui/react-accordion";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
+import Markdown from "react-markdown";
 import { twMerge } from "tailwind-merge";
 
 import { AnimateHeight } from "../AnimateHeight";
@@ -18,6 +20,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
   const [val, setVal] = useState([] as string[]);
   const storedVal = useRef([] as string[]);
   const storedId = useRef<number | null>(null);
+  const [aiResopnse, setAiResopnse] = useState("");
 
   useEffect(() => {
     storedVal.current = val;
@@ -27,30 +30,15 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     storedId.current = sentence.id;
   }, [sentence.id]);
 
-  // const utils = api.useUtils();
-  // const prev = storedId.current;
-
-  // it is done to display 3 placehodler lines by default
-  // const clearMembers = useCallback(() => {
-  //   if (sentence.id !== prev && prev) {
-  //     void utils.member.sentenceMembers.setData({ id: prev }, []);
-  //   }
-  // }, [sentence.id, prev, utils]);
-
   // when sentence change
   useEffect(() => {
     // force close translation accordion
     const index = storedVal.current.indexOf("1");
+
     if (index > -1) {
       const arr = storedVal.current.toSpliced(index, 1);
       setVal(arr);
     }
-
-    // clean members if member accordion closed
-    // if (!storedVal.current.includes("2")) {
-    //   console.log("clear members");
-    //   void clearMembers();
-    // }
   }, [sentence.id]);
 
   const memberAccordionOpen = val.includes("2");
@@ -74,6 +62,21 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     null,
   );
 
+  const onAiClick = async () => {
+    if (val.includes("3")) {
+      console.log("closed");
+    } else {
+      if (aiResopnse) {
+        return;
+      }
+      const response = await callApi(sentence.text);
+      if (response) {
+        setAiResopnse(response);
+      }
+      console.log("open");
+    }
+  };
+
   return (
     <Accordion.Root
       type="multiple"
@@ -83,7 +86,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     >
       <Accordion.Item
         value="1"
-        className="overflow-hidden rounded-tl-[24px] rounded-tr-[24px] py-1 text-white/90"
+        className="bg-mine-shaft overflow-hidden rounded-tl-[24px] rounded-tr-[24px] py-1 text-white/90"
       >
         <Accordion.Header>
           <Accordion.Trigger className="mt-2 flex w-full items-center justify-between px-4 py-2">
@@ -116,14 +119,11 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
       </Accordion.Item>
 
       <Accordion.Item
-        className={twMerge(
-          "rounded-tl-[24px] rounded-tr-[24px] bg-white",
-          "pb-[calc(var(--page-offset-bottom)+20px)]",
-        )}
+        className={twMerge("rounded-tl-[24px] rounded-tr-[24px] bg-white py-1")}
         value="2"
       >
         <Accordion.Header>
-          <Accordion.Trigger className="mt-2 flex w-full items-center justify-between px-4 py-3 pt-5">
+          <Accordion.Trigger className="mt-2 flex w-full items-center justify-between px-4 py-2">
             <span className="font-medium">{t("glossary")}</span>
             <ArrowIcon
               className={twMerge(
@@ -134,6 +134,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
             />
           </Accordion.Trigger>
         </Accordion.Header>
+
         <Accordion.Content
           className={twMerge(
             "px-4",
@@ -189,6 +190,70 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
           </AnimateHeight>
         </Accordion.Content>
       </Accordion.Item>
+      <Accordion.Item
+        value="3"
+        className={twMerge(
+          "text-mine-shaft overflow-hidden rounded-tl-[24px] rounded-tr-[24px] bg-[#f3f3f3]",
+          "pb-[calc(var(--page-offset-bottom)+20px)]",
+        )}
+        onClick={onAiClick}
+      >
+        <Accordion.Header>
+          <Accordion.Trigger className="mt-2 flex w-full items-center justify-between px-4 py-3 pt-2">
+            <span className="font-medium">AI</span>
+            <ArrowIcon
+              className={twMerge(
+                "mr-2 fill-current",
+                val.includes("3") && "rotate-180",
+              )}
+              aria-hidden
+            />
+          </Accordion.Trigger>
+        </Accordion.Header>
+        <Accordion.Content
+          className={twMerge(
+            "px-4",
+            val.includes("3")
+              ? "animate-accordion-down"
+              : "animate-accordion-up",
+          )}
+        >
+          <AnimateHeight>
+            <div className="no-scroll max-h-[40vh] w-full overflow-y-scroll py-2">
+              <div className="text-sm">
+                <Markdown>{aiResopnse}</Markdown>
+              </div>
+            </div>
+          </AnimateHeight>
+        </Accordion.Content>
+      </Accordion.Item>
     </Accordion.Root>
   );
 }
+
+const mClient = new Mistral({
+  apiKey: import.meta.env.VITE_MISTRAL_API_KEY,
+});
+
+const callApi = async (text: string) => {
+  const prompt = `Разбери на русском '${text}'`;
+  const model = "mistral-large-latest";
+  try {
+    const response = await mClient.chat.complete({
+      model,
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    });
+    const content = response?.choices[0]?.message.content;
+    if (typeof content === "string") {
+      return content;
+    }
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};

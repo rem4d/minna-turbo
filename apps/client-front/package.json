@@ -27,6 +27,7 @@
     "react-dom": "catalog:",
     "react-i18next": "^15.5.1",
     "react-loading-skeleton": "^3.5.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "catalog:",
     "rollbar": "^2.26.4",
     "tailwind-merge": "catalog:",
