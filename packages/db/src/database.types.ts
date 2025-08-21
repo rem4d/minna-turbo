@@ -146,7 +146,7 @@ export type Database = {
         Row: {
           basic_form: string
           created_at: string
-          en: string
+          en: string | null
           id: number
           is_hidden: boolean | null
           is_invalid: boolean | null
@@ -154,14 +154,14 @@ export type Database = {
           original: string | null
           pos: string
           reading: string | null
-          ru: string | null
+          ru: string
           ruby: string | null
           updated_at: string | null
         }
         Insert: {
           basic_form: string
           created_at?: string
-          en: string
+          en?: string | null
           id?: number
           is_hidden?: boolean | null
           is_invalid?: boolean | null
@@ -169,14 +169,14 @@ export type Database = {
           original?: string | null
           pos: string
           reading?: string | null
-          ru?: string | null
+          ru: string
           ruby?: string | null
           updated_at?: string | null
         }
         Update: {
           basic_form?: string
           created_at?: string
-          en?: string
+          en?: string | null
           id?: number
           is_hidden?: boolean | null
           is_invalid?: boolean | null
@@ -184,7 +184,7 @@ export type Database = {
           original?: string | null
           pos?: string
           reading?: string | null
-          ru?: string | null
+          ru?: string
           ruby?: string | null
           updated_at?: string | null
         }
