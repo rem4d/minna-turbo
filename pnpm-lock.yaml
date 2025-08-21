@@ -277,6 +277,9 @@ importers:
 
   apps/batcher:
     dependencies:
+      '@mistralai/mistralai':
+        specifier: ^1.9.17
+        version: 1.9.17(zod@3.24.1)
       '@rem4d/db':
         specifier: workspace:*
         version: link:../../packages/db

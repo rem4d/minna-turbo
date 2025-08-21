@@ -5,7 +5,7 @@ import type { AIMember } from "./tools";
 
 const mClient = new Mistral({
   apiKey: import.meta.env.VITE_MISTRAL_API_KEY,
-  serverURL: 'http://localhost:11434',
+  serverURL: "http://localhost:11434",
 });
 
 export default function useMistral({ sentenceText }: { sentenceText: string }) {
