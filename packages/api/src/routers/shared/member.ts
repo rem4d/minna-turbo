@@ -36,7 +36,7 @@ export const memberRouter = router({
     .query(async ({ input, ctx }) => {
       const { data, error } = await ctx.db
         .from("sentence_member2")
-        .select("*, ...members2(basic_form, original, pos, en, ru)")
+        .select("*, ...members2(basic_form, original, pos, en, ru, reading)")
         .eq("sentence_id", Number(input.id))
         .eq("members2.is_hidden", false)
         .order("position", { ascending: true })

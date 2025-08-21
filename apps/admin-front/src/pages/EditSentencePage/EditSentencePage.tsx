@@ -324,6 +324,10 @@ For readings including comments use only hiragana.
                     {sentence.unknown_kanji_number}
                   </DataList.Value>
                 </DataList.Item>
+                <DataList.Item>
+                  <DataList.Label minWidth="88px">Status</DataList.Label>
+                  <DataList.Value>{sentence.status}</DataList.Value>
+                </DataList.Item>
               </DataList.Root>
             </Flex>
             <Flex direction="column" gap="4">
@@ -542,6 +546,7 @@ For readings including comments use only hiragana.
                       {/*     __html: m.members.ruby ?? "", */}
                       {/*   }} */}
                       {/* /> */}
+                      <Text size="1">{m.reading}</Text>
                       <Text className="select-none" size="6">
                         {m.pos === "auxiliary verb" || m.pos === "auxiliary" ? (
                           <>
