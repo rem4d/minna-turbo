@@ -22,19 +22,49 @@ import Speakers from "@/components/Speakers";
 import { Player } from "@/components/Player";
 import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
 import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
-import useMistral from "@/hooks/useMistral";
+// import { AiMemberOutput } from "@rem4d/api";
 
+interface AIMember {
+  original: string;
+  pos: string;
+  dict_form: string;
+  en: string;
+  ru: string;
+  reading: string;
+}
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
   const [rubyHtml, setRubyHtml] = useState("");
   const [textWithFuriganaHtml, setTextWithFuriganaHtml] = useState("");
   const [translation, setTranslation] = useState("");
+  const [aiMembers, setAIMembers] = useState<AIMember[]>([] as AIMember[]);
   const [en, setEn] = useState("");
   const [ru, setRu] = useState("");
+  const [aiPrompt, setAiPrompt] = useState("");
 
-  const { aiMembers, aiPrompt, aiMembersMutation } = useMistral({
-    sentenceText: input,
-  });
+  useEffect(() => {
+    setAiPrompt(`Given the sentence "${input}"
+Split it to parts of speech and put them into JSON array.
+
+Each item in the array should have: original form (original), part of speech (pos), dictionary polite form (dict_form), english translation of \"dict_form\" (en), russian translation of \"dict_form\"" (ru), reading of \"dict_form\" in hiragana (reading).
+
+Do not include punctuation.
+
+Output using the following JSON format:
+
+[
+	{
+		"original": "行かなければならない",
+		"pos": "verb",
+		"dict_form": "行く",
+		"en": "go",
+		"ru": "идти",
+		"reading":"いく"
+	}
+]
+For readings including comments use only hiragana.
+`);
+  }, [input]);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -80,7 +110,16 @@ export const EditSentencePage: FC = () => {
       },
     });
 
+  const aiMembersMutation = api.admin.member.aiMembers.useMutation({
+    onSuccess(data) {
+      setAIMembers(data.filter((m) => m.pos !== "particle"));
+      console.log(data);
+      toast.success("Got response.");
+    },
+  });
+
   const onGetAIMembersClick = () => {
+    setAIMembers([]);
     aiMembersMutation.mutate({
       prompt: aiPrompt,
     });
@@ -313,7 +352,7 @@ export const EditSentencePage: FC = () => {
                   mb="6"
                   rows={17}
                   value={aiPrompt}
-                  disabled
+                  onChange={(e) => setAiPrompt(e.target.value)}
                   placeholder="Paste some text..."
                 />
                 <Button onClick={onGetAIMembersClick}>Get members</Button>

@@ -88,6 +88,11 @@ export const getStatementsForLevel = async ({
           ruby: result.ruby,
           level: result.newLevel,
           unknown_kanji_number: result.unknownKanjiNumber,
+          created_at: "",
+          source: "",
+          status: "",
+          translation: null,
+          updated_at: "",
         });
       }
     } else {
