@@ -10,7 +10,7 @@ export default function AiScreen({
   text = "",
 }: AiScreenProps) {
   return (
-    <div className="no-scroll max-h-[60vh] min-h-[40vh] w-full overflow-y-scroll py-2">
+    <div className="no-scroll max-h-[50vh] min-h-[40vh] w-full overflow-y-scroll py-2">
       <div className="relative flex flex-col space-y-4">
         {loading && <div>Loading...</div>}
         <Markdown>{text}</Markdown>
