@@ -87,6 +87,7 @@ In the "Flashcards" section, you can learn and repeat kanji. And then come back 
           no_sentences_desc: `You  may know very few kanji, so there's not many sentences could be made up.
 Please select more kanji in settings to see more sentences. Or you could reset cache using the button below.`,
           reset_cache: "Reset cache",
+          ai_review: "AI review",
         },
       },
       ru: {
@@ -172,6 +173,7 @@ Please select more kanji in settings to see more sentences. Or you could reset c
           no_sentences_desc:
             "Возможно, пока вы знаете очень мало кандзи, поэтому не так много существует фраз, которые можно составить. Пожалуйста выберите больше кандзи в настройках, чтобы увидеть больше фраз. Либо сбросьте кэш, нажав на кнопку ниже.",
           reset_cache: "Сбросить кэш",
+          ai_review: "AI разбор",
         },
       },
     },

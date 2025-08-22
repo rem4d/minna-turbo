@@ -2,7 +2,7 @@ import type { AppRouter } from "@rem4d/api";
 import { useState } from "react";
 import { retrieveLaunchParams } from "@/utils/tgUtils";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { httpBatchLink, httpLink, loggerLink, splitLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 
@@ -82,7 +82,7 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
     <api.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         {props.children}
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </api.Provider>
   );
