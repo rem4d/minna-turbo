@@ -40,6 +40,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     setChunks("");
     setTitle(t("glossary"));
   }, [sentence.id, t]);
+  console.log("");
 
   // when sentence change
   useEffect(() => {
