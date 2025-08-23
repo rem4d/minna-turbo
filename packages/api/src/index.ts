@@ -31,7 +31,10 @@ type RouterOutputs = inferRouterOutputs<AppRouter>;
 type SentenceOutput =
   RouterOutputs["viewer"]["sentence"]["getRandomized"][number];
 
+type Member2Output =
+  RouterOutputs["viewer"]["member"]["sentenceMembers2"][number];
+
 // type AiMemberOutput = RouterOutputs["admin"]["member"]["aiMembers"][number];
 
 export { createTRPCContext, appRouter, createCaller };
-export type { AppRouter, SentenceOutput };
+export type { AppRouter, SentenceOutput, Member2Output };
