@@ -1,5 +1,5 @@
 import type { SentenceOutput } from "@rem4d/api";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { AnimateHeight } from "@/components/AnimateHeight";
 import { api } from "@/utils/api";
@@ -53,6 +53,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     if (openItems.includes("1")) {
       setOpenItems((prev) => prev.filter((item) => item !== "1"));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sentence.id]);
 
   const onValueChange = (v: string[]) => {

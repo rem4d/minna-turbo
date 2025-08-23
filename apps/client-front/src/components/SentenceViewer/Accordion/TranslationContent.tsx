@@ -1,7 +1,7 @@
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { AnimateHeight } from "@/components/AnimateHeight";
 import * as Accordion from "@radix-ui/react-accordion";
-import { SentenceOutput } from "@rem4d/api";
+import { type SentenceOutput } from "@rem4d/api";
 import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
 
