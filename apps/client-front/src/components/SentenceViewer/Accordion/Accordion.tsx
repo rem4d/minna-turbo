@@ -18,40 +18,18 @@ interface AccordionProps {
 }
 export default function AccordionComponent({ sentence }: AccordionProps) {
   const [openItems, setOpenItems] = useState([] as string[]);
-  const storedVal = useRef([] as string[]);
-  const storedId = useRef<number | null>(null);
   const [isAskAiClicked, setIsAskAiClicked] = useState(false);
   const [screen, setScreen] = useState<"ai" | "glossary">("glossary");
   const [chunks, setChunks] = useState("");
-  const [aiLoading, setAiLoading] = useState(false);
+  const [isAiLoading, setIsAiLoading] = useState(false);
 
   const { t } = useTranslation();
   const [title, setTitle] = useState(t("glossary"));
 
-  useEffect(() => {
-    storedVal.current = openItems;
-  });
-
-  useEffect(() => {
-    storedId.current = sentence.id;
-    setScreen("glossary");
-    setIsAskAiClicked(false);
-    setChunks("");
-    setTitle(t("glossary"));
-  }, [sentence.id, t]);
-
-  // when sentence change
-  useEffect(() => {
-    // force close translation accordion
-    const index = storedVal.current.indexOf("1");
-
-    if (index > -1) {
-      const arr = storedVal.current.toSpliced(index, 1);
-      setOpenItems(arr);
-    }
-  }, [sentence.id]);
-
-  const memberAccordionOpen = openItems.includes("2");
+  const [transLang] = useLocalStorage<"ru" | "en" | null>(
+    "kic:translation_language",
+    null,
+  );
 
   const {
     data: members,
@@ -60,30 +38,37 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
   } = api.viewer.member.sentenceMembers2.useQuery(
     { id: sentence.id },
     {
-      enabled: !!sentence.text && memberAccordionOpen,
+      enabled: !!sentence.text && openItems.includes("2"),
       placeholderData: (prev) => prev,
     },
   );
+  useEffect(() => {
+    setScreen("glossary");
+    setIsAskAiClicked(false);
+    setChunks("");
+    setTitle(t("glossary"));
+  }, [sentence.id, t]);
+
+  useEffect(() => {
+    if (openItems.includes("1")) {
+      setOpenItems((prev) => prev.filter((item) => item !== "1"));
+    }
+  }, [sentence.id]);
 
   const onValueChange = (v: string[]) => {
     setOpenItems(v);
   };
 
-  const [transLang] = useLocalStorage<"ru" | "en" | null>(
-    "kic:translation_language",
-    null,
-  );
-
   const handleAskAiClick = async () => {
     setScreen("ai");
-    setAiLoading(true);
+    setIsAiLoading(true);
     setTitle(t("ai_review"));
 
     const stream = await runStream(sentence.text);
 
     for await (const delta of stream) {
       if ("content" in delta.data) {
-        setAiLoading(false);
+        setIsAiLoading(false);
         // @ts-ignore
         const text = delta.data.content as unknown as string;
         setChunks((ch) => `${ch}${text}`);
@@ -133,7 +118,9 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
           )}
         >
           <AnimateHeight>
-            {screen === "ai" && <AiScreen loading={aiLoading} text={chunks} />}
+            {screen === "ai" && (
+              <AiScreen loading={isAiLoading} text={chunks} />
+            )}
             {screen === "glossary" && (
               <GlossaryContent
                 members={members}
