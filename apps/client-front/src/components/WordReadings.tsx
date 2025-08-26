@@ -1,12 +1,14 @@
 import { Fragment, useCallback } from "react";
 import PlaySound from "@/components/PlaySound";
 import { usePlaySoundContext } from "@/context/playSoundContext";
+import { useLocalStorage } from "@uidotdev/usehooks";
 import { twMerge } from "tailwind-merge";
 
 interface ListItem {
   basic_form: string | null;
   reading: string | null;
   en: string | null;
+  ru: string | null;
 }
 
 interface Props {
@@ -29,6 +31,11 @@ export default function WordReadings({
     onStop,
     text: contextText,
   } = usePlaySoundContext();
+
+  const [transLang] = useLocalStorage<"ru" | "en" | null>(
+    "kic:translation_language",
+    null,
+  );
 
   const onLoadSpeech = useCallback(
     (text: string, index: number | undefined) => {
@@ -80,7 +87,9 @@ export default function WordReadings({
               ? ""
               : data.basic_form}
           </div>
-          <div className="text-sm">{data.en}</div>
+          <div className="text-sm">
+            {transLang === "en" ? data.en : data.ru}
+          </div>
         </Fragment>
       ))}
     </div>
@@ -117,7 +126,7 @@ export default function WordReadings({
         )}
       </div>
       <div className={twMerge("mt-1.5 text-sm", hideMeanings && "hidden")}>
-        {data.en}
+        {transLang === "en" ? data.en : data.ru}
       </div>
     </div>
   ));

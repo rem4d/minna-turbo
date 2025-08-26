@@ -354,14 +354,15 @@ export type Database = {
           member_id: number | null
           pos: string | null
           reading: string | null
+          ru: string | null
           ruby: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "sentence_member_member_id_fkey"
+            foreignKeyName: "sentence_member2_member_id_fkey"
             columns: ["member_id"]
             isOneToOne: false
-            referencedRelation: "members"
+            referencedRelation: "members2"
             referencedColumns: ["id"]
           },
         ]
@@ -421,6 +422,17 @@ export type Database = {
           cnt: number
           en: string
           reading: string
+          ru: string
+        }[]
+      }
+      kanji_examples2: {
+        Args: { kanji_input: string }
+        Returns: {
+          basic_form: string
+          cnt: number
+          en: string
+          reading: string
+          ru: string
         }[]
       }
       stat_kanji_list: {

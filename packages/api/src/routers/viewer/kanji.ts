@@ -22,7 +22,7 @@ export const kanjiRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { data, error } = await ctx.db
-        .rpc("kanji_examples", {
+        .rpc("kanji_examples2", {
           kanji_input: input.k,
         })
         .limit(8);

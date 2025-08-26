@@ -3,6 +3,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { SpinnerBig } from "@/components/Spinner";
 import WordReadings from "@/components/WordReadings";
 import { api } from "@/utils/api";
+import { useLocalStorage } from "@uidotdev/usehooks";
 import { twMerge } from "tailwind-merge";
 
 import { EyeToggle } from "./EyeToggle";
@@ -20,11 +21,15 @@ export function KCard({
   containerClassName = "",
   className = "",
 }: Props) {
-  const { kun, on_, en, kanji } = k;
+  const { kun, on_, en, ru, kanji } = k;
   const examplesRef = useRef<HTMLDivElement>(null);
   const [hasScroll, setHasScroll] = useState(false);
   const [eyeOpen, setEyeOpen] = useState(false);
 
+  const [transLang] = useLocalStorage<"ru" | "en" | null>(
+    "kic:translation_language",
+    null,
+  );
   const { data: examples, isLoading: examplesLoading } =
     api.viewer.kanji.examples.useQuery({ k: k.kanji ?? "" }, { enabled: !!k });
 
@@ -60,7 +65,9 @@ export function KCard({
           <div className="font-digi text-[60px] text-[#000]">{kanji}</div>
         </div>
         <div className="flex flex-col items-start space-y-2">
-          <span className="text-lg leading-6 font-bold">{en}</span>
+          <span className="text-lg leading-6 font-bold">
+            {transLang === "en" ? en : ru}
+          </span>
           {kun && kun.length > 0 && (
             <span className="font-digi rounded-[18px] border px-2 py-1 text-lg leading-5 text-black">
               {kun.join("、")}
@@ -75,7 +82,7 @@ export function KCard({
       </div>
 
       {useEye ? (
-        <div className="relative h-[30px] min-h-[30px] w-full">
+        <div className="relative h-[40px] min-h-[30px] w-full">
           <div className="bg-gallery absolute top-1/2 h-[1px] w-full -translate-y-1/2"></div>
           <div className="border-gallery absolute top-1/2 right-2 size-[50px] -translate-y-1/2 cursor-pointer rounded-full border bg-white">
             <div className="flex size-full items-center justify-center">
