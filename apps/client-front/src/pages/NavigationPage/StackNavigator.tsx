@@ -1,4 +1,5 @@
 // @ts-nocheck
+
 import React, { useState, useRef, useCallback } from "react";
 import {
   motion,
@@ -65,10 +66,9 @@ const StackNavigator = ({ initialScreen }) => {
     (skipAnimation = false) => {
       if (screens.length > 1) {
         setDirection(-1);
-        if (skipAnimation) {
-          setIsGestureCompleting(true);
+        if (!skipAnimation) {
+          setScreens((prev) => prev.slice(0, -1));
         }
-        setScreens((prev) => prev.slice(0, -1));
       }
     },
     [screens.length],
@@ -120,12 +120,15 @@ const StackNavigator = ({ initialScreen }) => {
 
     if (currentDragX > threshold || velocity > 500) {
       // Complete the gesture - animate to full width then pop
+      setIsGestureCompleting(true);
       animate(dragX, window.innerWidth, {
         type: "spring",
         stiffness: 400,
         damping: 30,
         onComplete: () => {
-          pop(true); // Skip exit animation
+          // Remove screen after animation completes
+          setScreens((prev) => prev.slice(0, -1));
+          // Reset all gesture states
           setIsGestureActive(false);
           setIsGestureCompleting(false);
           dragX.set(0);
@@ -201,32 +204,42 @@ const StackNavigator = ({ initialScreen }) => {
 
       {/* Current screen with gesture support */}
       <AnimatePresence initial={false} custom={direction} mode="popLayout">
-        <motion.div
-          key={currentScreen.key}
-          custom={direction}
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit={isGestureCompleting ? false : "exit"}
-          transition={transition}
-          className="screen current-screen"
-          style={{
-            zIndex: 1,
-            x: isGestureActive ? dragX : 0,
-            boxShadow: isGestureActive
-              ? currentScreenShadow
-              : "0 0 0 rgba(0,0,0,0)",
-          }}
-        >
-          <NavigationBar
-            title={currentScreen.title}
-            canGoBack={canGoBack}
-            onBack={pop}
-          />
-          <div className="screen-content">
-            <currentScreen.component navigation={{ push, pop, canGoBack }} />
-          </div>
-        </motion.div>
+        {screens.map((screen, index) => {
+          if (index === screens.length - 1) {
+            // Current screen - only render if not completing gesture
+            if (isGestureCompleting) return null;
+
+            return (
+              <motion.div
+                key={screen.key}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={transition}
+                className="screen current-screen"
+                style={{
+                  zIndex: 1,
+                  x: isGestureActive ? dragX : 0,
+                  boxShadow: isGestureActive
+                    ? currentScreenShadow
+                    : "0 0 0 rgba(0,0,0,0)",
+                }}
+              >
+                <NavigationBar
+                  title={screen.title}
+                  canGoBack={canGoBack}
+                  onBack={pop}
+                />
+                <div className="screen-content">
+                  <screen.component navigation={{ push, pop, canGoBack }} />
+                </div>
+              </motion.div>
+            );
+          }
+          return null;
+        })}
       </AnimatePresence>
 
       {/* Gesture indicator */}
