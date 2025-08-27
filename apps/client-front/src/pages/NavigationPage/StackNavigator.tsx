@@ -20,6 +20,7 @@ const StackNavigator = ({ initialScreen }) => {
   ]);
   const [direction, setDirection] = useState(1);
   const [isGestureActive, setIsGestureActive] = useState(false);
+  const [isGestureCompleting, setIsGestureCompleting] = useState(false);
 
   // Motion values for interactive gesture
   const dragX = useMotionValue(0);
@@ -60,12 +61,18 @@ const StackNavigator = ({ initialScreen }) => {
     ]);
   };
 
-  const pop = useCallback(() => {
-    if (screens.length > 1) {
-      setDirection(-1);
-      setScreens((prev) => prev.slice(0, -1));
-    }
-  }, [screens.length]);
+  const pop = useCallback(
+    (skipAnimation = false) => {
+      if (screens.length > 1) {
+        setDirection(-1);
+        if (skipAnimation) {
+          setIsGestureCompleting(true);
+        }
+        setScreens((prev) => prev.slice(0, -1));
+      }
+    },
+    [screens.length],
+  );
 
   const canGoBack = screens.length > 1;
   const currentScreen = screens[screens.length - 1];
@@ -118,8 +125,9 @@ const StackNavigator = ({ initialScreen }) => {
         stiffness: 400,
         damping: 30,
         onComplete: () => {
-          pop();
+          pop(true); // Skip exit animation
           setIsGestureActive(false);
+          setIsGestureCompleting(false);
           dragX.set(0);
         },
       });
@@ -199,7 +207,7 @@ const StackNavigator = ({ initialScreen }) => {
           variants={slideVariants}
           initial="enter"
           animate="center"
-          exit="exit"
+          exit={isGestureCompleting ? false : "exit"}
           transition={transition}
           className="screen current-screen"
           style={{
