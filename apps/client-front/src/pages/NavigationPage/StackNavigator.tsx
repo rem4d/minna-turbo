@@ -1,81 +1,145 @@
 // @ts-nocheck
-import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import './StackNavigator.css';
+import React, { useState, useRef, useCallback } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useTransform,
+  animate,
+} from "framer-motion";
+import "./StackNavigator.css";
 
 const StackNavigator = ({ initialScreen }) => {
   const [screens, setScreens] = useState([
     {
-      id: 'initial',
+      id: "initial",
       component: initialScreen,
-      title: 'Home',
-      key: Date.now()
-    }
+      title: "Home",
+      key: Date.now(),
+    },
   ]);
   const [direction, setDirection] = useState(1);
-  const touchStartX = useRef(0);
-  const touchCurrentX = useRef(0);
-  const isDragging = useRef(false);
+  const [isGestureActive, setIsGestureActive] = useState(false);
 
-  const push = (ScreenComponent, title = 'Screen') => {
+  // Motion values for interactive gesture
+  const dragX = useMotionValue(0);
+  const dragProgress = useTransform(dragX, [0, 300], [0, 1]);
+
+  // Pre-define transforms to avoid conditional hook calls
+  const previousScreenTransform = useTransform(
+    dragProgress,
+    [0, 1],
+    ["translateX(-30%) scale(0.95)", "translateX(0%) scale(1)"],
+  );
+
+  const currentScreenShadow = useTransform(
+    dragProgress,
+    [0, 0.5, 1],
+    [
+      "0 0 0 rgba(0,0,0,0)",
+      "-10px 0 30px rgba(0,0,0,0.1)",
+      "-20px 0 40px rgba(0,0,0,0.2)",
+    ],
+  );
+
+  // Refs for gesture tracking
+  const touchStartX = useRef(0);
+  const gestureStarted = useRef(false);
+  const containerRef = useRef(null);
+
+  const push = (ScreenComponent, title = "Screen") => {
     setDirection(1);
-    setScreens(prev => [...prev, {
-      id: `screen-${Date.now()}`,
-      component: ScreenComponent,
-      title,
-      key: Date.now()
-    }]);
+    setScreens((prev) => [
+      ...prev,
+      {
+        id: `screen-${Date.now()}`,
+        component: ScreenComponent,
+        title,
+        key: Date.now(),
+      },
+    ]);
   };
 
-  const pop = () => {
+  const pop = useCallback(() => {
     if (screens.length > 1) {
       setDirection(-1);
-      setScreens(prev => prev.slice(0, -1));
+      setScreens((prev) => prev.slice(0, -1));
     }
-  };
+  }, [screens.length]);
 
   const canGoBack = screens.length > 1;
   const currentScreen = screens[screens.length - 1];
+  const previousScreen = screens[screens.length - 2];
 
-  // Gesture handling for swipe back
+  // Handle touch start
   const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchCurrentX.current = e.touches[0].clientX;
+    if (!canGoBack) return;
 
-    // Only enable swipe from left edge
-    if (touchStartX.current < 20 && canGoBack) {
-      isDragging.current = true;
+    const touch = e.touches[0];
+    touchStartX.current = touch.clientX;
+
+    // Only start gesture from left edge (first 20px)
+    if (touch.clientX <= 20) {
+      gestureStarted.current = true;
+      setIsGestureActive(true);
+      dragX.set(0);
     }
   };
 
+  // Handle touch move with real-time tracking
   const handleTouchMove = (e) => {
-    if (!isDragging.current) return;
+    if (!gestureStarted.current || !canGoBack) return;
 
-    touchCurrentX.current = e.touches[0].clientX;
-    const deltaX = touchCurrentX.current - touchStartX.current;
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - touchStartX.current;
 
     // Only allow rightward swipes
     if (deltaX > 0) {
       e.preventDefault();
+      // Update the drag position in real-time
+      dragX.set(Math.min(deltaX, window.innerWidth * 0.8));
     }
   };
 
+  // Handle touch end with spring animation
   const handleTouchEnd = () => {
-    if (!isDragging.current) return;
+    if (!gestureStarted.current || !canGoBack) return;
 
-    const deltaX = touchCurrentX.current - touchStartX.current;
+    const currentDragX = dragX.get();
     const threshold = window.innerWidth * 0.3;
+    const velocity = dragX.getVelocity();
 
-    if (deltaX > threshold && canGoBack) {
-      pop();
+    gestureStarted.current = false;
+
+    if (currentDragX > threshold || velocity > 500) {
+      // Complete the gesture - animate to full width then pop
+      animate(dragX, window.innerWidth, {
+        type: "spring",
+        stiffness: 400,
+        damping: 30,
+        onComplete: () => {
+          pop();
+          setIsGestureActive(false);
+          dragX.set(0);
+        },
+      });
+    } else {
+      // Cancel the gesture - spring back to 0
+      animate(dragX, 0, {
+        type: "spring",
+        stiffness: 400,
+        damping: 30,
+        onComplete: () => {
+          setIsGestureActive(false);
+        },
+      });
     }
-
-    isDragging.current = false;
   };
 
+  // Animation variants for screen transitions
   const slideVariants = {
     enter: (direction) => ({
-      x: direction > 0 ? '100%' : '-100%',
+      x: direction > 0 ? "100%" : "-100%",
       opacity: 1,
     }),
     center: {
@@ -85,13 +149,13 @@ const StackNavigator = ({ initialScreen }) => {
     },
     exit: (direction) => ({
       zIndex: 0,
-      x: direction < 0 ? '100%' : '-30%',
+      x: direction < 0 ? "100%" : "-30%",
       opacity: direction < 0 ? 1 : 0.8,
     }),
   };
 
   const transition = {
-    type: 'spring',
+    type: "spring",
     stiffness: 300,
     damping: 30,
     mass: 0.8,
@@ -99,11 +163,35 @@ const StackNavigator = ({ initialScreen }) => {
 
   return (
     <div
+      ref={containerRef}
       className="stack-navigator"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Previous screen - always rendered when there's a back stack */}
+      {canGoBack && previousScreen && (
+        <motion.div
+          className="screen previous-screen"
+          style={{
+            zIndex: 0,
+            transform: previousScreenTransform,
+          }}
+        >
+          <NavigationBar
+            title={previousScreen.title}
+            canGoBack={screens.length > 2}
+            onBack={() => {}}
+          />
+          <div className="screen-content">
+            <previousScreen.component
+              navigation={{ push, pop, canGoBack: screens.length > 2 }}
+            />
+          </div>
+        </motion.div>
+      )}
+
+      {/* Current screen with gesture support */}
       <AnimatePresence initial={false} custom={direction} mode="popLayout">
         <motion.div
           key={currentScreen.key}
@@ -113,7 +201,14 @@ const StackNavigator = ({ initialScreen }) => {
           animate="center"
           exit="exit"
           transition={transition}
-          className="screen"
+          className="screen current-screen"
+          style={{
+            zIndex: 1,
+            x: isGestureActive ? dragX : 0,
+            boxShadow: isGestureActive
+              ? currentScreenShadow
+              : "0 0 0 rgba(0,0,0,0)",
+          }}
         >
           <NavigationBar
             title={currentScreen.title}
@@ -126,9 +221,14 @@ const StackNavigator = ({ initialScreen }) => {
         </motion.div>
       </AnimatePresence>
 
-      {/* Previous screen shadow overlay */}
-      {screens.length > 1 && (
-        <div className="previous-screen-overlay" />
+      {/* Gesture indicator */}
+      {isGestureActive && (
+        <motion.div
+          className="gesture-indicator"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        />
       )}
     </div>
   );
