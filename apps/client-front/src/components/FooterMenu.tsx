@@ -51,7 +51,7 @@ export function FooterMenu(): ReactElement {
         active={Boolean(libraryMatch) || Boolean(dictMatch)}
       />
       <Item
-        to={paths.settings}
+        to="/nav"
         title={t("settings")}
         icon={<SettingsIcon className="size-[22px] fill-current" />}
         active={Boolean(settingsMatch) || Boolean(favouritesMatch)}
