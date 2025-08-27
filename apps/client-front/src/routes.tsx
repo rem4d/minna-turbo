@@ -8,6 +8,7 @@ import { FavouriteSentencesPage } from "./pages/FavouriteSentencesPage";
 import { FlashcardsPage } from "./pages/FlashcardsPage";
 import { IndexPage } from "./pages/IndexPage";
 import { LibraryPage } from "./pages/LibraryPage";
+import { NavigationPage } from "./pages/NavigationPage";
 import { SentencesPage } from "./pages/SentencesPage";
 import { SettingsPage } from "./pages/SettingsPage";
 
@@ -20,6 +21,7 @@ export const paths = {
   sentences: "/sentences",
   flashcards: "/flashcards",
   favouriteSentences: "/settings/fav-sentences",
+  navigation: "/nav",
 };
 
 const RouteErrorBoundary = () => {
@@ -81,6 +83,10 @@ export const router = createBrowserRouter([
       {
         path: paths.favouriteSentences,
         element: <FavouriteSentencesPage />,
+      },
+      {
+        path: paths.navigation,
+        element: <NavigationPage />,
       },
     ],
   },
