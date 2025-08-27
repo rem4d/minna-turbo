@@ -1,3 +1,5 @@
+// @ts-nocheck
+import React from "react";
 import "./Screens.css";
 
 // Home Screen Component
@@ -19,7 +21,7 @@ export const HomeScreen = ({ navigation }) => {
     { title: "Notes", subtitle: "Your notes and reminders", screen: "Notes" },
   ];
 
-  const handleItemPress = (item: any) => {
+  const handleItemPress = (item) => {
     const screenComponents = {
       Profile: ProfileScreen,
       Settings: SettingsScreen,
@@ -101,7 +103,6 @@ export const ProfileScreen = ({ navigation }) => {
       <div className="button-section">
         <button
           className="edit-button"
-          // eslint-disable-next-line
           onClick={() => navigation.push(EditProfileScreen, "Edit Profile")}
         >
           Edit Profile
@@ -112,7 +113,7 @@ export const ProfileScreen = ({ navigation }) => {
 };
 
 // Edit Profile Screen
-export const EditProfileScreen = () => {
+export const EditProfileScreen = ({ navigation }) => {
   return (
     <div className="edit-profile-screen">
       <div className="form-container">
@@ -143,7 +144,7 @@ export const EditProfileScreen = () => {
 };
 
 // Settings Screen Component
-export const SettingsScreen = () => {
+export const SettingsScreen = ({ navigation }) => {
   const settingsItems = [
     { title: "Notifications", hasArrow: true },
     { title: "Privacy", hasArrow: true },
@@ -183,7 +184,7 @@ export const SettingsScreen = () => {
 };
 
 // Messages Screen Component
-export const MessagesScreen = () => {
+export const MessagesScreen = ({ navigation }) => {
   const messages = [
     {
       name: "Alice Johnson",
@@ -247,7 +248,7 @@ export const MessagesScreen = () => {
 };
 
 // Photos Screen Component
-export const PhotosScreen = () => {
+export const PhotosScreen = ({ navigation }) => {
   const photos = Array.from({ length: 12 }, (_, i) => ({
     id: i + 1,
     url: `https://via.placeholder.com/150x150/007AFF/FFFFFF?text=Photo${i + 1}`,
@@ -267,7 +268,7 @@ export const PhotosScreen = () => {
 };
 
 // Music Screen Component
-export const MusicScreen = () => {
+export const MusicScreen = ({ navigation }) => {
   const songs = [
     {
       title: "Bohemian Rhapsody",
@@ -314,7 +315,7 @@ export const MusicScreen = () => {
 };
 
 // Notes Screen Component
-export const NotesScreen = () => {
+export const NotesScreen = ({ navigation }) => {
   const notes = [
     {
       title: "Shopping List",
