@@ -32,6 +32,7 @@ export function KCard({
   );
   const { data: examples, isLoading: examplesLoading } =
     api.viewer.kanji.examples.useQuery({ k: k.kanji ?? "" }, { enabled: !!k });
+  console.log(1)
 
   useLayoutEffect(() => {
     if (examplesRef.current) {
