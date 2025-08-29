@@ -129,7 +129,7 @@ export default function StackNavigator() {
       opacity: 1,
     }),
     center: {
-      // zIndex: 1,
+      zIndex: 1, // comment it as temp workaround, have to fix Drawer z index
       x: 0,
       opacity: 1,
     },
@@ -142,7 +142,6 @@ export default function StackNavigator() {
       };
     },
   };
-  console.log(direction);
 
   return (
     <div

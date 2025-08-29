@@ -32,8 +32,8 @@ export default function _Drawer({
       {...props}
     >
       <Drawer.Portal>
-        <Drawer.Overlay className="absolute inset-0 bg-black/40" />
-        <Drawer.Content className="absolute right-0 bottom-0 left-0 mt-24 flex h-fit flex-col rounded-t-[10px] outline-none">
+        <Drawer.Overlay className="absolute inset-0 z-20 bg-black/40" />
+        <Drawer.Content className="absolute right-0 bottom-0 left-0 z-20 mt-24 flex h-fit flex-col rounded-t-[10px] outline-none">
           <div
             className={twMerge(
               "bg-super-silver flex-1 rounded-t-[10px] pt-2 pb-(--tg-bottom)",

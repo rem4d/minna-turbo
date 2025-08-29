@@ -47,7 +47,7 @@ export default function Dropdown({ items, onOpen }: Props) {
           <DropdownMenu.Portal forceMount>
             <DropdownMenu.Content
               align="start"
-              className="bg-athens-gray mt-1 origin-top-left overflow-hidden rounded-xl border text-left shadow-xl"
+              className="bg-athens-gray z-20 mt-1 origin-top-left overflow-hidden rounded-xl border text-left shadow-xl"
               asChild
             >
               <m.div
