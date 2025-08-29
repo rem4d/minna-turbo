@@ -140,8 +140,8 @@ function Card({
   if (!id) return null;
 
   return (
-    <div style={style} onClick={() => onClick?.(id)}>
-      <div className="relative m-2 flex aspect-square cursor-pointer flex-col justify-center overflow-hidden rounded-md border border-black/10 bg-white px-4 py-4 shadow-[3px_3px_0px_rgba(41,41,41,0.1)]">
+    <div className="" style={style} onClick={() => onClick?.(id)}>
+      <div className="relative m-2 flex aspect-square cursor-pointer flex-col justify-center overflow-hidden rounded-md border border-black/10 bg-white px-1 py-2 shadow-[3px_3px_0px_rgba(41,41,41,0.1)]">
         <div className="text-rolling-stone/70 absolute top-2 left-2 text-xs">
           {level}
         </div>
