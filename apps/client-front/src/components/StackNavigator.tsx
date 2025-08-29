@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useStackNavContext } from "@/context/stackNavContext";
 import {
   animate,
@@ -82,7 +82,10 @@ export default function StackNavigator() {
     }
   };
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = useCallback(() => {
+    console.log("end called");
+    console.log(gestureStarted.current);
+    console.log(canGoBack);
     if (!gestureStarted.current || !canGoBack) return;
 
     const currentDragX = dragX.get();
@@ -120,7 +123,7 @@ export default function StackNavigator() {
         },
       });
     }
-  };
+  }, [dragX, gestureStarted, canGoBack, opac, pop]);
 
   // Animation variants for screen transitions
   const slideVariants = {
@@ -143,13 +146,19 @@ export default function StackNavigator() {
     },
   };
 
+  useEffect(() => {
+    window.addEventListener("touchend", handleTouchEnd);
+    return () => {
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [handleTouchEnd]);
+
   return (
     <div
       ref={containerRef}
       className="relative h-full w-full"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
     >
       {/* Previous screen - always rendered when there's a back stack */}
       {canGoBack && previousScreen && (
