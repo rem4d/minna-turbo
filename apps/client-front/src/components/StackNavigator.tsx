@@ -77,7 +77,7 @@ export default function StackNavigator() {
       // e.preventDefault();
 
       // Update the drag position in real-time
-      console.log("Update the drag position in real-time");
+      // console.log("Update the drag position in real-time");
       dragX.set(Math.min(deltaX, window.innerWidth * 0.8));
     }
   };
@@ -137,10 +137,11 @@ export default function StackNavigator() {
       return {
         zIndex: 0,
         x: direction < 0 ? "100%" : "-30%",
-        opacity: direction < 0 ? 1 : 0.8,
+        // opacity: direction < 0 ? 1 : 0.8,
       };
     },
   };
+  console.log("render");
 
   return (
     <div

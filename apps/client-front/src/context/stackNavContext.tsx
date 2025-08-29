@@ -62,7 +62,7 @@ export const StackNavContextProvider = ({
       const newScreens = screens.toSpliced(screens.length - 1, 1);
       setScreens(newScreens);
     }
-  }, [screens.length, screens]);
+  }, [screens]);
 
   const push = (ScreenComponent: React.ElementType, title = "Screen") => {
     setDirection(1);
