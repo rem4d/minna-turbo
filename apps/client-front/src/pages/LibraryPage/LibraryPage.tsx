@@ -4,17 +4,33 @@ import { FooterMenu } from "@/components/FooterMenu";
 import { List, ListItem } from "@/components/List";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
+import StackNavigator from "@/components/StackNavigator";
+import {
+  StackNavContextProvider,
+  useStackNavContext,
+} from "@/context/stackNavContext";
 import { api } from "@/utils/api";
 import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
 
-export const LibraryPage: FC = () => {
+import { AllKanjiPage } from "../AllKanjiPage";
+
+const LibraryPage = () => {
+  return (
+    <StackNavContextProvider initialScreen={LibraryScreen}>
+      <StackNavigator />
+    </StackNavContextProvider>
+  );
+};
+
+const LibraryScreen: FC = () => {
   const { data: list, isLoading } =
     api.viewer.member.suggestedVocabulariesList.useQuery(undefined, {
       throwOnError: true,
     });
 
   const { t } = useTranslation();
+  const { push } = useStackNavContext();
   return (
     <>
       <Page>
@@ -26,7 +42,7 @@ export const LibraryPage: FC = () => {
                 <ListItem
                   title={t("see_all")}
                   icon={<KanjiIcon className="size-[20px]" />}
-                  to="/library/all-kanji"
+                  onClick={() => push(AllKanjiPage, "AllKanji")}
                   right="arrow"
                 />
               </List>

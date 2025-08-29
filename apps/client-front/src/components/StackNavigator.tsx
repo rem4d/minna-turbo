@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useStackNavContext } from "@/context/stackNavContext";
 import {
   animate,
   AnimatePresence,
@@ -7,20 +8,12 @@ import {
   useTransform,
 } from "motion/react";
 
-interface StackNavigatorProps {
-  initialScreen: React.ElementType;
-}
+export default function StackNavigator() {
+  const { push, pop, len, direction, currentScreen, previousScreen } =
+    useStackNavContext();
 
-export default function StackNavigator({ initialScreen }: StackNavigatorProps) {
-  const [screens, setScreens] = useState([
-    {
-      id: "initial",
-      component: initialScreen,
-      title: "Home",
-      key: Date.now(),
-    },
-  ]);
-  const [direction, setDirection] = useState(1);
+  const canGoBack = len > 1;
+
   const [isGestureActive, setIsGestureActive] = useState(false);
 
   // Motion values for interactive gesture
@@ -28,9 +21,7 @@ export default function StackNavigator({ initialScreen }: StackNavigatorProps) {
   const opac = useMotionValue(1);
   const [show, setShow] = useState(true);
   const dragProgress = useTransform(dragX, [0, 300], [0, 1]);
-  // console.log(`dragProgress: ${dragProgress.get()} `);
 
-  // Pre-define transforms to avoid conditional hook calls
   const previousScreenTransform = useTransform(
     dragProgress,
     [0, 1],
@@ -61,30 +52,6 @@ export default function StackNavigator({ initialScreen }: StackNavigatorProps) {
   const touchStartX = useRef(0);
   const gestureStarted = useRef(false);
   const containerRef = useRef(null);
-
-  const pop = useCallback(() => {
-    if (screens.length > 1) {
-      setDirection(-1);
-      setScreens((prev) => prev.slice(0, -1));
-    }
-  }, [screens.length]);
-
-  const push = (ScreenComponent: React.ElementType, title = "Screen") => {
-    setDirection(1);
-    setScreens((prev) => [
-      ...prev,
-      {
-        id: `screen-${Date.now()}`,
-        component: ScreenComponent,
-        title,
-        key: Date.now(),
-      },
-    ]);
-  };
-
-  const canGoBack = screens.length > 1;
-  const currentScreen = screens[screens.length - 1];
-  const previousScreen = screens[screens.length - 2];
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (!canGoBack) return;
@@ -186,16 +153,14 @@ export default function StackNavigator({ initialScreen }: StackNavigatorProps) {
       {/* Previous screen - always rendered when there's a back stack */}
       {canGoBack && previousScreen && (
         <motion.div
-          className="previous absolute top-0 right-0 bottom-0 left-0 z-0 flex h-full flex-col bg-amber-400"
+          className="previous absolute top-0 right-0 bottom-0 left-0 z-0 flex h-full flex-col"
           style={{
             zIndex: 0,
             transform: previousScreenTransform,
           }}
         >
           <div className="h-full w-full">
-            <previousScreen.component
-              navigation={{ push, pop, canGoBack: screens.length > 2 }}
-            />
+            <previousScreen.component />
           </div>
         </motion.div>
       )}
@@ -225,7 +190,7 @@ export default function StackNavigator({ initialScreen }: StackNavigatorProps) {
           }}
         >
           <div className="h-full w-full">
-            <currentScreen.component navigation={{ push, pop, canGoBack }} />
+            <currentScreen.component />
           </div>
         </motion.div>
       </AnimatePresence>

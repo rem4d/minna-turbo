@@ -50,7 +50,7 @@ export const AllKanjiPage: FC = () => {
   }, []);
 
   return (
-    <Page backTo="/library">
+    <Page back>
       <div
         className={twMerge(
           "flex flex-col space-y-8 px-4 pb-4",

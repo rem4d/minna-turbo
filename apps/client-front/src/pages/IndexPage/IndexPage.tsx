@@ -4,30 +4,30 @@ import DeckIcon from "@/assets/images/deck2.svg?react";
 import { FooterMenu } from "@/components/FooterMenu";
 import { Page } from "@/components/Page";
 import StackNavigator from "@/components/StackNavigator";
+import {
+  StackNavContextProvider,
+  useStackNavContext,
+} from "@/context/stackNavContext";
 import { useTranslation } from "react-i18next";
-// import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 import { FlashcardsPage } from "../FlashcardsPage";
 import { SentencesPage } from "../SentencesPage";
 
 export const IndexPage: FC = () => {
-  return <StackNavigator initialScreen={IndexBody} />;
+  return (
+    <StackNavContextProvider initialScreen={IndexScreen}>
+      <StackNavigator />
+    </StackNavContextProvider>
+  );
 };
 
-interface IndexBodyProps {
-  navigation: {
-    push: (screen: React.ElementType, title: string) => void;
-    pop: () => void;
-    canGoBack: boolean;
-  };
-}
-
-const IndexBody = ({ navigation }: IndexBodyProps) => {
+const IndexScreen = () => {
   const { t } = useTranslation();
+  const { push } = useStackNavContext();
   return (
     <>
-      <Page footer>
+      <Page>
         <div className="flex h-[calc(100%-var(--footer-height))] flex-col justify-center">
           <div className="flex flex-col items-center justify-center space-y-6 p-[33px]">
             <Card
@@ -35,10 +35,9 @@ const IndexBody = ({ navigation }: IndexBodyProps) => {
               desc={t("sentences_desc")}
               to="/sentences"
               color="yellow"
-              onClick={() => navigation.push(SentencesPage, "Sentences")}
+              onClick={() => push(SentencesPage, "Sentences")}
               icon={
                 <div className="absolute -right-2 -bottom-2 z-0 w-[40%] opacity-40">
-                  {/* <BubbleIcon className="size-full" /> */}
                   <BubbleIcon className="size-full" />
                 </div>
               }
@@ -48,7 +47,7 @@ const IndexBody = ({ navigation }: IndexBodyProps) => {
               desc={t("flashcards_desc")}
               to="/flashcards"
               color="cyan"
-              onClick={() => navigation.push(FlashcardsPage, "Flashcards")}
+              onClick={() => push(FlashcardsPage, "Flashcards")}
               icon={
                 <div className="absolute right-2 -bottom-2 z-0 w-[70px] opacity-40">
                   <DeckIcon className="size-full" />
@@ -74,10 +73,6 @@ interface CardProps {
 
 const Card: FC<CardProps> = ({ title, desc, onClick, color, icon }) => {
   const { t } = useTranslation();
-  // const navigate = useNavigate();
-  // const handleButtonClick = () => {
-  //   void navigate(to);
-  // };
   return (
     <div
       className={twMerge(

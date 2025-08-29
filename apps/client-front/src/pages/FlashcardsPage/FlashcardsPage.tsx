@@ -118,11 +118,7 @@ export const FlashcardsPage: FC = () => {
     setShowHelpModal(false);
   };
   return (
-    <Page
-      backTo="/"
-      maxOffset
-      className="GradientBg overflow-hidden select-none"
-    >
+    <Page back maxOffset className="GradientBg overflow-hidden select-none">
       {isFinished ? (
         <CongratsScreen
           onCloseClick={onCongratsCloseClick}

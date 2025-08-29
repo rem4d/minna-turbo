@@ -1,35 +1,34 @@
 import type { PropsWithChildren } from "react";
 import { useEffect } from "react";
+import { useStackNavContext } from "@/context/stackNavContext";
 import { backButton } from "@/utils/tgUtils";
-import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 interface PageProps {
-  footer?: boolean;
+  back?: boolean;
   className?: string;
   maxOffset?: boolean;
-  backTo?: string;
 }
 
 export function Page({
   children,
-  backTo,
   className = "",
-  // footer = false,
+  back = false,
   maxOffset = false,
 }: PropsWithChildren<PageProps>) {
-  const navigate = useNavigate();
+  const { pop } = useStackNavContext();
 
   useEffect(() => {
-    if (backTo) {
+    if (back) {
       backButton.show();
       return backButton.onClick(() => {
-        void navigate(backTo);
+        pop();
       });
+    } else {
+      backButton.hide();
     }
-    backButton.hide();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [backTo]);
+  }, [back]);
 
   return (
     <div
@@ -37,7 +36,6 @@ export function Page({
         "bg-athens-gray h-full overflow-x-hidden overflow-y-auto",
         !maxOffset && "pt-(--tg-top)",
         maxOffset && "pt-(--page-offset-top-full)",
-        // footer && "h-[calc(100%-var(--footer-height))]",
         className,
       )}
     >
