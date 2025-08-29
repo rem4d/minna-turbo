@@ -137,11 +137,12 @@ export default function StackNavigator() {
       return {
         zIndex: 0,
         x: direction < 0 ? "100%" : "-30%",
-        opacity: direction < 0 ? 1 : 0.8,
+        opacity: 1,
+        // opacity: direction < 0 ? 1 : 0.8,
       };
     },
   };
-  console.log("render");
+  console.log(direction);
 
   return (
     <div
