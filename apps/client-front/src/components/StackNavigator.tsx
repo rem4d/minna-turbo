@@ -137,7 +137,7 @@ export default function StackNavigator() {
       return {
         zIndex: 0,
         x: direction < 0 ? "100%" : "-30%",
-        // opacity: direction < 0 ? 1 : 0.8,
+        opacity: direction < 0 ? 1 : 0.8,
       };
     },
   };
