@@ -2,12 +2,15 @@ import type { PropsWithChildren } from "react";
 import { useEffect } from "react";
 import { useStackNavContext } from "@/context/stackNavContext";
 import { backButton } from "@/utils/tgUtils";
+import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 interface PageProps {
   back?: boolean;
   className?: string;
   maxOffset?: boolean;
+  useRouter?: boolean;
+  to?: string;
 }
 
 export function Page({
@@ -15,14 +18,21 @@ export function Page({
   className = "",
   back = false,
   maxOffset = false,
+  useRouter = false,
+  to = "/",
 }: PropsWithChildren<PageProps>) {
   const { pop } = useStackNavContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (back) {
       backButton.show();
       return backButton.onClick(() => {
-        pop();
+        if (useRouter) {
+          navigate(to);
+        } else {
+          pop();
+        }
       });
     } else {
       backButton.hide();
