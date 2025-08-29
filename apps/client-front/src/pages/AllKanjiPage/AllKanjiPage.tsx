@@ -20,24 +20,24 @@ export const AllKanjiPage: FC = () => {
   const [selectedKId, setSelectedKId] = useState<number | null>(null);
   const [searchValue, setSearchValue] = useState("");
   const gridRef = useRef<HTMLDivElement>(null);
-  const [cellSize, setCellSize] = useState(0);
-  const [colCount, setColCount] = useState(0);
+  const [gridWidth, setGridWidth] = useState(0);
 
   useEffect(() => {
     const elem = gridRef.current;
     if (!elem) return;
 
     const observer = new ResizeObserver((entries) => {
-      const size = entries[0].contentRect.width;
-      console.log(size);
+      const w = entries[0].contentRect.width;
+      setGridWidth(w);
+      // console.log(size);
 
-      if (size > 350) {
-        setColCount(4);
-        setCellSize(size / 4);
-      } else {
-        setColCount(3);
-        setCellSize(size / 3);
-      }
+      // if (size > 350) {
+      //   setColCount(4);
+      //   setCellSize(size / 4);
+      // } else {
+      //   setColCount(3);
+      //   setCellSize(size / 3);
+      // }
     });
     observer.observe(elem);
 
@@ -82,6 +82,9 @@ export const AllKanjiPage: FC = () => {
   const len = displayData?.length ?? 0;
   const virtualizedRowCount = len / 4 + 1;
 
+  const colCount = gridWidth > 350 ? 4 : 3;
+  const colSize = gridWidth / colCount;
+
   return (
     <Page back useRouter to="/library">
       <div
@@ -117,9 +120,9 @@ export const AllKanjiPage: FC = () => {
               cellComponent={Card}
               cellProps={{ list: displayData ?? [], onClick: onCardClick }}
               columnCount={colCount}
-              columnWidth={cellSize}
+              columnWidth={colSize}
               rowCount={virtualizedRowCount}
-              rowHeight={cellSize}
+              rowHeight={colSize}
             />
           )}
         </div>
