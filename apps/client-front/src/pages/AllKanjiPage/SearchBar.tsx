@@ -11,7 +11,7 @@ export default function SearchBar({ onChange, value, placeholderText }: Props) {
   };
 
   return (
-    <div className="flex items-center space-x-2 rounded-[10px] bg-black/10 p-2">
+    <div className="mb-2 flex items-center space-x-2 rounded-[10px] bg-black/10 p-2">
       <SearchIcon className="stroke-rolling-stone size-[20px]" />
 
       <input

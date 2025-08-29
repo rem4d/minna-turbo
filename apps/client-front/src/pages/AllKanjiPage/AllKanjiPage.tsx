@@ -101,10 +101,7 @@ export const AllKanjiPage: FC = () => {
             inline
           />
         )}
-        <div
-          className="no-scroll h-[calc(100vh-160px)] w-full overflow-y-scroll"
-          ref={gridRef}
-        >
+        <div className="no-scroll h-[calc(100vh-145px)] w-full" ref={gridRef}>
           {!isLoading && (
             <Grid
               className="no-scroll flex flex-col items-center"
