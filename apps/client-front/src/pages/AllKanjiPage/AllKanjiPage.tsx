@@ -1,15 +1,16 @@
 import type { FC } from "react";
+import type { CellComponentProps } from "react-window";
 import { useCallback, useState } from "react";
 import Drawer from "@/components/Drawer";
 import KCard from "@/components/KCard";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import { api } from "@/utils/api";
-import { KanjiOutput } from "@rem4d/api";
+import { type KanjiOutput } from "@rem4d/api";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
-import { CellComponentProps, Grid } from "react-window";
+import { Grid } from "react-window";
 import { twMerge } from "tailwind-merge";
 import { isHiragana, isKanji, isKatakana } from "wanakana";
 
@@ -80,14 +81,15 @@ export const AllKanjiPage: FC = () => {
           />
         )}
         {!isLoading && (
-          <div className="h-[calc(100vh-160px)] overflow-y-scroll">
+          <div className="no-scroll h-[calc(100vh-160px)] overflow-y-scroll">
             <Grid
+              className="no-scroll flex flex-col items-center"
               cellComponent={Card}
               cellProps={{ list: displayData ?? [], onClick: onCardClick }}
               columnCount={4}
-              columnWidth={100}
+              columnWidth={90}
               rowCount={virtualizedRowCount}
-              rowHeight={100}
+              rowHeight={90}
             />
           </div>
         )}
@@ -134,6 +136,7 @@ function Card({
   const kanji = list[index]?.kanji;
   const level = list[index]?.position;
   const id = list[index]?.id;
+
   if (!id) return null;
 
   return (
