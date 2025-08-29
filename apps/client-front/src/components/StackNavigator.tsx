@@ -66,24 +66,29 @@ export default function StackNavigator() {
       dragX.set(0);
     }
   };
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!gestureStarted.current || !canGoBack) return;
 
-    const touch = e.touches[0];
-    const deltaX = touch.clientX - touchStartX.current;
+  const handleTouchMove = useCallback(
+    (e: TouchEvent) => {
+      console.log("move called", Date.now());
+      if (!gestureStarted.current || !canGoBack) return;
 
-    // Only allow rightward swipes
-    if (deltaX > 0) {
-      // e.preventDefault();
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - touchStartX.current;
 
-      // Update the drag position in real-time
-      // console.log("Update the drag position in real-time");
-      dragX.set(Math.min(deltaX, window.innerWidth * 0.8));
-    }
-  };
+      // Only allow rightward swipes
+      if (deltaX > 0) {
+        // e.preventDefault();
+
+        // Update the drag position in real-time
+        // console.log("Update the drag position in real-time");
+        dragX.set(Math.min(deltaX, window.innerWidth * 0.8));
+      }
+    },
+    [canGoBack, gestureStarted, dragX],
+  );
 
   const handleTouchEnd = useCallback(() => {
-    console.log("end called");
+    console.log("end called", Date.now());
     console.log(gestureStarted.current);
     console.log(canGoBack);
     if (!gestureStarted.current || !canGoBack) return;
@@ -148,17 +153,19 @@ export default function StackNavigator() {
 
   useEffect(() => {
     window.addEventListener("touchend", handleTouchEnd);
+    window.addEventListener("touchmove", handleTouchMove);
+
     return () => {
       window.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener("touchmove", handleTouchMove);
     };
-  }, [handleTouchEnd]);
+  }, [handleTouchEnd, handleTouchMove]);
 
   return (
     <div
       ref={containerRef}
       className="relative h-full w-full"
       onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
     >
       {/* Previous screen - always rendered when there's a back stack */}
       {canGoBack && previousScreen && (
