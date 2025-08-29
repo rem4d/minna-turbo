@@ -175,8 +175,6 @@ export default function StackNavigator({ initialScreen }: StackNavigatorProps) {
     },
   };
 
-  console.log(direction);
-
   return (
     <div
       ref={containerRef}

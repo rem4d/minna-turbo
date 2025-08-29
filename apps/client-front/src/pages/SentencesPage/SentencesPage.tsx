@@ -200,7 +200,7 @@ export const SentencesPage: FC = () => {
   );
 
   return (
-    <Page back>
+    <Page backTo="/">
       {isLoading ? (
         loader
       ) : (

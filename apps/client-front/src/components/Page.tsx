@@ -1,4 +1,3 @@
-/* eslint-disable */
 import type { PropsWithChildren } from "react";
 import { useEffect } from "react";
 import { backButton } from "@/utils/tgUtils";
@@ -6,30 +5,31 @@ import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 interface PageProps {
-  back?: boolean;
   footer?: boolean;
   className?: string;
   maxOffset?: boolean;
+  backTo?: string;
 }
 
 export function Page({
   children,
+  backTo,
   className = "",
-  back = false,
   // footer = false,
   maxOffset = false,
 }: PropsWithChildren<PageProps>) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (back) {
+    if (backTo) {
       backButton.show();
       return backButton.onClick(() => {
-        navigate(-1);
+        void navigate(backTo);
       });
     }
     backButton.hide();
-  }, [back]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [backTo]);
 
   return (
     <div

@@ -21,7 +21,7 @@ export const DictionaryPage: FC = () => {
   }
 
   return (
-    <Page back>
+    <Page backTo="/library">
       <div className="relative px-4">
         {!isLoading && (
           <>
