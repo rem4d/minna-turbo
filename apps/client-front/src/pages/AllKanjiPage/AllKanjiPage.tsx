@@ -87,9 +87,9 @@ export const AllKanjiPage: FC = () => {
               cellComponent={Card}
               cellProps={{ list: displayData ?? [], onClick: onCardClick }}
               columnCount={4}
-              columnWidth={90}
+              columnWidth={89}
               rowCount={virtualizedRowCount}
-              rowHeight={90}
+              rowHeight={89}
             />
           </div>
         )}
@@ -137,10 +137,13 @@ function Card({
   const level = list[index]?.position;
   const id = list[index]?.id;
 
+  // eslint-disable-next-line
+  const handleClick = () => onClick?.(id);
+
   if (!id) return null;
 
   return (
-    <div className="" style={style} onClick={() => onClick?.(id)}>
+    <div className="" style={style} onClick={handleClick}>
       <div className="relative m-2 flex aspect-square cursor-pointer flex-col justify-center overflow-hidden rounded-md border border-black/10 bg-white px-1 py-2 shadow-[3px_3px_0px_rgba(41,41,41,0.1)]">
         <div className="text-rolling-stone/70 absolute top-2 left-2 text-xs">
           {level}
