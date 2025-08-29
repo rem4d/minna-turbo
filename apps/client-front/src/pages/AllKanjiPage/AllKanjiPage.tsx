@@ -29,15 +29,6 @@ export const AllKanjiPage: FC = () => {
     const observer = new ResizeObserver((entries) => {
       const w = entries[0].contentRect.width;
       setGridWidth(w);
-      // console.log(size);
-
-      // if (size > 350) {
-      //   setColCount(4);
-      //   setCellSize(size / 4);
-      // } else {
-      //   setColCount(3);
-      //   setCellSize(size / 3);
-      // }
     });
     observer.observe(elem);
 
@@ -86,7 +77,7 @@ export const AllKanjiPage: FC = () => {
   const colSize = gridWidth / colCount;
 
   return (
-    <Page back useRouter to="/library">
+    <Page back>
       <div
         className={twMerge(
           "flex flex-col space-y-8 px-4 pb-4",
@@ -126,20 +117,6 @@ export const AllKanjiPage: FC = () => {
             />
           )}
         </div>
-        {/* {!isLoading && ( */}
-        {/*   <div className="grid grid-cols-3 gap-4 sm:grid-cols-4"> */}
-        {/*     {displayData?.map((k) => ( */}
-        {/*       <Card */}
-        {/*         key={k.id} */}
-        {/*         id={k.id} */}
-        {/*         kanji={k.kanji} */}
-        {/*         level={k.position} */}
-        {/*         en={k.en ?? ""} */}
-        {/*         onClick={onCardClick} */}
-        {/*       /> */}
-        {/*     ))} */}
-        {/*   </div> */}
-        {/* )} */}
       </div>
 
       <Drawer open={open} onOpenChange={setOpen} noContainer>
