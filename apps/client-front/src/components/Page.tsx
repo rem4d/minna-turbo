@@ -29,7 +29,7 @@ export function Page({
       backButton.show();
       return backButton.onClick(() => {
         if (useRouter) {
-          navigate(to);
+          void navigate(to);
         } else {
           pop();
         }
