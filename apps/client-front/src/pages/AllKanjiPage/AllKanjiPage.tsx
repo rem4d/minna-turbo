@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import type { CellComponentProps } from "react-window";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Drawer from "@/components/Drawer";
 import KCard from "@/components/KCard";
 import { Page } from "@/components/Page";
@@ -19,6 +19,33 @@ import SearchBar from "./SearchBar";
 export const AllKanjiPage: FC = () => {
   const [selectedKId, setSelectedKId] = useState<number | null>(null);
   const [searchValue, setSearchValue] = useState("");
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [cellSize, setCellSize] = useState(0);
+  const [colCount, setColCount] = useState(0);
+
+  useEffect(() => {
+    const elem = gridRef.current;
+    if (!elem) return;
+
+    const observer = new ResizeObserver((entries) => {
+      const size = entries[0].contentRect.width;
+      console.log(size);
+
+      if (size > 350) {
+        setColCount(4);
+        setCellSize(size / 4);
+      } else {
+        setColCount(3);
+        setCellSize(size / 3);
+      }
+    });
+    observer.observe(elem);
+
+    return () => {
+      observer.unobserve(elem);
+    };
+  }, []);
+
   const debouncedValue = useDebounce(searchValue, 400);
 
   const { data: list, isLoading } = api.viewer.kanji.all.useQuery();
@@ -74,25 +101,28 @@ export const AllKanjiPage: FC = () => {
         {isLoading && (
           <Skeleton
             className="aspect-square"
-            count={displayData?.length ?? 0}
+            count={32}
             borderRadius={6}
             containerClassName="grid grid-cols-3 sm:grid-cols-4 gap-4"
             inline
           />
         )}
-        {!isLoading && (
-          <div className="no-scroll h-[calc(100vh-160px)] overflow-y-scroll">
+        <div
+          className="no-scroll h-[calc(100vh-160px)] w-full overflow-y-scroll"
+          ref={gridRef}
+        >
+          {!isLoading && (
             <Grid
               className="no-scroll flex flex-col items-center"
               cellComponent={Card}
               cellProps={{ list: displayData ?? [], onClick: onCardClick }}
-              columnCount={4}
-              columnWidth={89}
+              columnCount={colCount}
+              columnWidth={cellSize}
               rowCount={virtualizedRowCount}
-              rowHeight={89}
+              rowHeight={cellSize}
             />
-          </div>
-        )}
+          )}
+        </div>
         {/* {!isLoading && ( */}
         {/*   <div className="grid grid-cols-3 gap-4 sm:grid-cols-4"> */}
         {/*     {displayData?.map((k) => ( */}

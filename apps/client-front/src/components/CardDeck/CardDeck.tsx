@@ -202,7 +202,6 @@ export function CardDeck({
 
     onEvaluate(selectedCard);
   };
-  console.log("render");
 
   return (
     <>
