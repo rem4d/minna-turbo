@@ -69,7 +69,7 @@ export const useMiniAppSetup = () => {
     const fcIsAvail = requestFullscreen.isAvailable();
 
     if (fcIsAvail && !lp.platform.includes("desktop")) {
-      // @eslint-disable-next-line
+      // eslint-disable-next-line
       requestFullscreen();
     }
   }, [lp.platform]);

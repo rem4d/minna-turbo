@@ -33,9 +33,8 @@ export function Page({
 
   return (
     <div
-      id="page"
       className={twMerge(
-        "h-full overflow-x-hidden overflow-y-auto",
+        "bg-athens-gray h-full overflow-x-hidden overflow-y-auto",
         !maxOffset && "pt-(--tg-top)",
         maxOffset && "pt-(--page-offset-top-full)",
         // footer && "h-[calc(100%-var(--footer-height))]",

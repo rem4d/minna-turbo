@@ -193,58 +193,60 @@ export const SentencesPage: FC = () => {
     setConfirmModalOpen(false);
   };
 
-  if (isLoading) {
-    return (
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <SpinnerBig />
-      </div>
-    );
-  }
+  const loader = (
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <SpinnerBig />
+    </div>
+  );
 
   return (
     <Page back>
-      <div className="relative h-full overflow-hidden">
-        <div
-          className="text-scorpion/90 absolute top-2 left-1/2 mb-3 flex h-4 -translate-x-1/2 justify-center text-sm"
-          style={{
-            paddingTop: isMobile ? 16 : 0,
-          }}
-        >
-          {user ? (
-            <>
-              {t("your_level")} {convertLevel(user.level)}
-            </>
-          ) : (
-            <></>
-          )}
-        </div>
-        <SentenceNavButtons
-          disablePrevNav={disablePrevNav}
-          disableNextNav={disableNextNav}
-          handleNextClick={handleNextClick}
-          handlePrevClick={handlePrevClick}
-        />
-        <div className={isMobile ? "mt-16" : "mt-10"}>
-          <SentenceViewer sentence={sentence} dropdownItems={dropdownItems} />
+      {isLoading ? (
+        loader
+      ) : (
+        <div className="relative h-full overflow-hidden">
+          <div
+            className="text-scorpion/90 absolute top-2 left-1/2 mb-3 flex h-4 -translate-x-1/2 justify-center text-sm"
+            style={{
+              paddingTop: isMobile ? 16 : 0,
+            }}
+          >
+            {user ? (
+              <>
+                {t("your_level")} {convertLevel(user.level)}
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
+          <SentenceNavButtons
+            disablePrevNav={disablePrevNav}
+            disableNextNav={disableNextNav}
+            handleNextClick={handleNextClick}
+            handlePrevClick={handlePrevClick}
+          />
+          <div className={isMobile ? "mt-16" : "mt-10"}>
+            <SentenceViewer sentence={sentence} dropdownItems={dropdownItems} />
 
-          {/* no sentences message*/}
-          {showNoSentencesMessage && (
-            <div className="tems-center mt-8 flex flex-col items-center justify-center space-y-8 px-4">
-              <div className="text-scorpion/90 text-center text-sm">
-                {/* <Trans i18nKey="no_sentences" /> */}
-                <div className="mb-4">{t("no_sentences_title")}</div>
-                <div>{t("no_sentences_desc")}</div>
+            {/* no sentences message*/}
+            {showNoSentencesMessage && (
+              <div className="tems-center mt-8 flex flex-col items-center justify-center space-y-8 px-4">
+                <div className="text-scorpion/90 text-center text-sm">
+                  {/* <Trans i18nKey="no_sentences" /> */}
+                  <div className="mb-4">{t("no_sentences_title")}</div>
+                  <div>{t("no_sentences_desc")}</div>
+                </div>
+                <div
+                  className="w-fit cursor-pointer px-10 text-blue-500"
+                  onClick={() => onResetCacheClick?.()}
+                >
+                  {t("reset_cache")}
+                </div>
               </div>
-              <div
-                className="w-fit cursor-pointer px-10 text-blue-500"
-                onClick={() => onResetCacheClick?.()}
-              >
-                {t("reset_cache")}
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
       <Toast
         open={toastData.open}
         onOpenChange={(open) => setToastOpen((v) => ({ ...v, open: open }))}

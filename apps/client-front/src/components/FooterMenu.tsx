@@ -11,18 +11,18 @@ export function FooterMenu(): ReactElement {
   const homeMatch = useMatch(paths.home);
   const libraryMatch = useMatch(paths.library);
   const dictMatch = useMatch(paths.dict);
-  const allKanjiMatch = useMatch(paths.allKanji);
   const settingsMatch = useMatch(paths.settings);
-  const sentencesMatch = useMatch(paths.sentences);
-  const flashcardsMatch = useMatch(paths.flashcards);
+  // const allKanjiMatch = useMatch(paths.allKanji);
+  // const sentencesMatch = useMatch(paths.sentences);
+  // const flashcardsMatch = useMatch(paths.flashcards);
   const favouritesMatch = useMatch(paths.favouriteSentences);
   const { t } = useTranslation();
 
-  const hideFooter =
-    Boolean(dictMatch) ||
-    Boolean(sentencesMatch) ||
-    Boolean(flashcardsMatch) ||
-    Boolean(allKanjiMatch);
+  const hideFooter = false;
+  // Boolean(dictMatch) ||
+  // Boolean(sentencesMatch) ||
+  // Boolean(flashcardsMatch) ||
+  // Boolean(allKanjiMatch);
 
   if (hideFooter) {
     return <></>;
@@ -32,7 +32,7 @@ export function FooterMenu(): ReactElement {
     <div
       className={twJoin(
         "absolute bottom-0 h-[87px] w-full",
-        "border-mercury bg-wild-sand border-t",
+        "border-mercury bg-wild-sand z-10 border-t",
         // "border-mercury bg-wild-sand/85 border-t backdrop-blur-[20px]",
         "animate-jump flex items-center justify-between divide-x overflow-hidden",
         "animate-once",
