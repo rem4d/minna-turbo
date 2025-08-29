@@ -34,7 +34,9 @@ type SentenceOutput =
 type Member2Output =
   RouterOutputs["viewer"]["member"]["sentenceMembers2"][number];
 
+type KanjiOutput =
+  RouterOutputs["viewer"]["kanji"]["all"][number];
 // type AiMemberOutput = RouterOutputs["admin"]["member"]["aiMembers"][number];
 
 export { createTRPCContext, appRouter, createCaller };
-export type { AppRouter, SentenceOutput, Member2Output };
+export type { AppRouter, SentenceOutput, Member2Output, KanjiOutput };

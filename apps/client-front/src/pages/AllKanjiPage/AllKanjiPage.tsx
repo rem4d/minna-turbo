@@ -5,9 +5,11 @@ import KCard from "@/components/KCard";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import { api } from "@/utils/api";
+import { KanjiOutput } from "@rem4d/api";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
+import { CellComponentProps, Grid } from "react-window";
 import { twMerge } from "tailwind-merge";
 import { isHiragana, isKanji, isKatakana } from "wanakana";
 
@@ -18,11 +20,11 @@ export const AllKanjiPage: FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 400);
 
-  const { data, isLoading } = api.viewer.kanji.all.useQuery();
-  const selectedK = data?.find((d) => d.id === selectedKId);
+  const { data: list, isLoading } = api.viewer.kanji.all.useQuery();
+  const selectedK = list?.find((d) => d.id === selectedKId);
 
   const displayData = debouncedValue
-    ? data?.filter((d) => {
+    ? list?.filter((d) => {
         const value = debouncedValue.trim();
 
         if (isHiragana(value)) {
@@ -39,7 +41,7 @@ export const AllKanjiPage: FC = () => {
 
         return d.en?.includes(debouncedValue.toLowerCase());
       })
-    : data;
+    : list;
 
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
@@ -48,6 +50,9 @@ export const AllKanjiPage: FC = () => {
     setSelectedKId(id);
     setOpen(true);
   }, []);
+
+  const len = displayData?.length ?? 0;
+  const virtualizedRowCount = len / 4 + 1;
 
   return (
     <Page back useRouter to="/library">
@@ -68,26 +73,38 @@ export const AllKanjiPage: FC = () => {
         {isLoading && (
           <Skeleton
             className="aspect-square"
-            count={38}
+            count={displayData?.length ?? 0}
             borderRadius={6}
             containerClassName="grid grid-cols-3 sm:grid-cols-4 gap-4"
             inline
           />
         )}
         {!isLoading && (
-          <div className="grid grid-cols-3 gap-4 sm:grid-cols-4">
-            {displayData?.map((k) => (
-              <Card
-                key={k.id}
-                id={k.id}
-                kanji={k.kanji}
-                level={k.position}
-                en={k.en ?? ""}
-                onClick={onCardClick}
-              />
-            ))}
+          <div className="h-[calc(100vh-160px)] overflow-y-scroll">
+            <Grid
+              cellComponent={Card}
+              cellProps={{ list: displayData ?? [], onClick: onCardClick }}
+              columnCount={4}
+              columnWidth={100}
+              rowCount={virtualizedRowCount}
+              rowHeight={100}
+            />
           </div>
         )}
+        {/* {!isLoading && ( */}
+        {/*   <div className="grid grid-cols-3 gap-4 sm:grid-cols-4"> */}
+        {/*     {displayData?.map((k) => ( */}
+        {/*       <Card */}
+        {/*         key={k.id} */}
+        {/*         id={k.id} */}
+        {/*         kanji={k.kanji} */}
+        {/*         level={k.position} */}
+        {/*         en={k.en ?? ""} */}
+        {/*         onClick={onCardClick} */}
+        {/*       /> */}
+        {/*     ))} */}
+        {/*   </div> */}
+        {/* )} */}
       </div>
 
       <Drawer open={open} onOpenChange={setOpen} noContainer>
@@ -99,33 +116,43 @@ export const AllKanjiPage: FC = () => {
   );
 };
 
-interface CardProps {
-  kanji: string;
-  level: number;
-  id: number;
-  en: string;
-  onClick: (id: number) => void;
-}
+function Card({
+  list,
+  columnIndex,
+  rowIndex,
+  style,
+  onClick,
+}: CellComponentProps<{
+  list: KanjiOutput[];
+  onClick?: (id: number) => void;
+}>) {
+  const index = rowIndex * 4 + columnIndex;
 
-const Card: FC<CardProps> = ({ kanji, en, id, level, onClick }) => {
-  const means = en.split(";")[0];
+  const en = list[index]?.en;
+  const means = en?.split(";")[0];
+
+  const kanji = list[index]?.kanji;
+  const level = list[index]?.position;
+  const id = list[index]?.id;
+  if (!id) return null;
 
   return (
-    <div
-      className="relative flex aspect-square cursor-pointer flex-col justify-center overflow-hidden rounded-md border border-black/10 bg-white px-2 py-4 shadow-[3px_3px_0px_rgba(41,41,41,0.1)]"
-      onClick={() => onClick(id)}
-    >
-      <div className="text-rolling-stone/70 absolute top-2 left-2 text-xs">
-        {level}
-      </div>
-      <div className="flex flex-col space-y-1">
-        <div className="font-digi text-center text-3xl text-black">{kanji}</div>
-        <div className="truncate text-center text-xs whitespace-nowrap text-black">
-          {means}
+    <div style={style} onClick={() => onClick?.(id)}>
+      <div className="relative m-2 flex aspect-square cursor-pointer flex-col justify-center overflow-hidden rounded-md border border-black/10 bg-white px-4 py-4 shadow-[3px_3px_0px_rgba(41,41,41,0.1)]">
+        <div className="text-rolling-stone/70 absolute top-2 left-2 text-xs">
+          {level}
+        </div>
+        <div className="flex flex-col space-y-1">
+          <div className="font-digi text-center text-3xl text-black">
+            {kanji}
+          </div>
+          <div className="truncate text-center text-xs whitespace-nowrap text-black">
+            {means}
+          </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default AllKanjiPage;
