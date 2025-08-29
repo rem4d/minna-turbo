@@ -9,7 +9,7 @@ import {
 } from "motion/react";
 
 export default function StackNavigator() {
-  const { push, pop, len, direction, currentScreen, previousScreen } =
+  const { pop, len, direction, currentScreen, previousScreen } =
     useStackNavContext();
 
   const canGoBack = len > 1;
@@ -129,7 +129,7 @@ export default function StackNavigator() {
       opacity: 1,
     }),
     center: {
-      zIndex: 1,
+      // zIndex: 1,
       x: 0,
       opacity: 1,
     },
@@ -179,9 +179,9 @@ export default function StackNavigator() {
             stiffness: 300,
             duration: 0.3,
           }}
-          className="absolute top-0 right-0 bottom-0 left-0 z-10 flex h-full flex-col"
+          className="absolute top-0 right-0 bottom-0 left-0 z-0 flex h-full flex-col"
           style={{
-            zIndex: 1,
+            // zIndex: 1,
             opacity: isGestureActive ? opac : 1,
             x: isGestureActive ? dragX : 0,
             boxShadow: isGestureActive
