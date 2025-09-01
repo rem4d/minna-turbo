@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useStackNavContext } from "@/context/stackNavContext";
 import {
   animate,
@@ -8,7 +8,7 @@ import {
   useTransform,
 } from "motion/react";
 
-export default function StackNavigator() {
+export default React.memo(function StackNavigator() {
   const { pop, len, direction, currentScreen, previousScreen } =
     useStackNavContext();
 
@@ -20,6 +20,7 @@ export default function StackNavigator() {
   const dragX = useMotionValue(0);
   const opac = useMotionValue(1);
   const [show, setShow] = useState(true);
+  const [exitComplete, setExitComplete] = useState(false);
   const dragProgress = useTransform(dragX, [0, 300], [0, 1]);
 
   const previousScreenTransform = useTransform(
@@ -44,6 +45,7 @@ export default function StackNavigator() {
       timeoutId = setTimeout(() => {
         setShow(true);
         opac.set(1);
+        setExitComplete(false);
       }, 1);
     }
     return () => clearTimeout(timeoutId);
@@ -56,7 +58,6 @@ export default function StackNavigator() {
   const containerRef = useRef(null);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    // console.log(e); // ignore Drawer nodes here
     if (!canGoBack) return;
 
     const touch = e.touches[0];
@@ -72,7 +73,6 @@ export default function StackNavigator() {
 
   const handleTouchMove = useCallback(
     (e: React.TouchEvent<HTMLDivElement>) => {
-      console.log("move called", Date.now());
       if (!gestureStarted.current || !canGoBack) return;
 
       const touch = e.touches[0];
@@ -83,7 +83,6 @@ export default function StackNavigator() {
         // e.preventDefault();
 
         // Update the drag position in real-time
-        // console.log("Update the drag position in real-time");
         dragX.set(Math.min(deltaX, window.innerWidth * 0.8));
       }
     },
@@ -92,9 +91,6 @@ export default function StackNavigator() {
   );
 
   const handleTouchEnd = useCallback(() => {
-    // console.log("end called", Date.now());
-    // console.log(gestureStarted.current);
-    // console.log(canGoBack);
     if (!gestureStarted.current || !canGoBack) return;
 
     const currentDragX = dragX.get();
@@ -155,6 +151,10 @@ export default function StackNavigator() {
     },
   };
 
+  const onAnimationComplete = () => {
+    setExitComplete(true);
+  };
+
   return (
     <div
       ref={containerRef}
@@ -192,6 +192,7 @@ export default function StackNavigator() {
             stiffness: 300,
             duration: 0.3,
           }}
+          onAnimationComplete={onAnimationComplete}
           className="absolute top-0 right-0 bottom-0 left-0 z-0 flex h-full flex-col"
           style={{
             // zIndex: 1,
@@ -203,10 +204,10 @@ export default function StackNavigator() {
           }}
         >
           <div className="h-full w-full">
-            <currentScreen.component />
+            <currentScreen.component animationComplete={exitComplete} />
           </div>
         </motion.div>
       </AnimatePresence>
     </div>
   );
-}
+});

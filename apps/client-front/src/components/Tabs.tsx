@@ -1,3 +1,4 @@
+import React from "react";
 import { motion as m } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
@@ -7,7 +8,7 @@ interface TabsProps {
   onChange: (n: number) => void;
 }
 
-export default function Tabs({ current, onChange }: TabsProps) {
+export default React.memo(function Tabs({ current, onChange }: TabsProps) {
   const { t } = useTranslation();
   return (
     <div className="flex w-fit items-start overflow-hidden rounded-[30px] bg-black/10">
@@ -23,7 +24,7 @@ export default function Tabs({ current, onChange }: TabsProps) {
       />
     </div>
   );
-}
+});
 
 const TabItem = ({
   text,
