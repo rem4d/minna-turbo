@@ -152,17 +152,19 @@ export const PlaySoundContextProvider = ({ children }: PropsWithChildren) => {
     }
   }, []);
 
+  const contextValue = {
+    onLoad,
+    onPlayLatest,
+    onStop,
+    currentIndex,
+    isPlaying: reducerState.isPlaying,
+    isLoading: ttsLoading,
+    text: reducerState.currentText,
+  };
+
   return (
     <PlaySoundContext.Provider
-      value={{
-        onLoad,
-        onPlayLatest,
-        onStop,
-        currentIndex,
-        isPlaying: reducerState.isPlaying,
-        isLoading: ttsLoading,
-        text: reducerState.currentText,
-      }}
+      value={contextValue}
     >
       {children}
       <audio

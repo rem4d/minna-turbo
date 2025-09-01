@@ -39,12 +39,14 @@ export default function StackNavigator() {
   );
 
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
     if (!show) {
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setShow(true);
         opac.set(1);
       }, 1);
     }
+    return () => clearTimeout(timeoutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show]);
 
@@ -54,6 +56,7 @@ export default function StackNavigator() {
   const containerRef = useRef(null);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    // console.log(e); // ignore Drawer nodes here
     if (!canGoBack) return;
 
     const touch = e.touches[0];
@@ -68,7 +71,7 @@ export default function StackNavigator() {
   };
 
   const handleTouchMove = useCallback(
-    (e: TouchEvent) => {
+    (e: React.TouchEvent<HTMLDivElement>) => {
       console.log("move called", Date.now());
       if (!gestureStarted.current || !canGoBack) return;
 
@@ -84,13 +87,14 @@ export default function StackNavigator() {
         dragX.set(Math.min(deltaX, window.innerWidth * 0.8));
       }
     },
-    [canGoBack, gestureStarted, dragX],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [canGoBack, gestureStarted],
   );
 
   const handleTouchEnd = useCallback(() => {
-    console.log("end called", Date.now());
-    console.log(gestureStarted.current);
-    console.log(canGoBack);
+    // console.log("end called", Date.now());
+    // console.log(gestureStarted.current);
+    // console.log(canGoBack);
     if (!gestureStarted.current || !canGoBack) return;
 
     const currentDragX = dragX.get();
@@ -107,7 +111,7 @@ export default function StackNavigator() {
         // damping: 30,
         type: "tween",
         stiffness: 300,
-        // duration: 0.3,
+        duration: 0.3,
         onComplete: () => {
           opac.set(0);
           setShow(false);
@@ -151,21 +155,13 @@ export default function StackNavigator() {
     },
   };
 
-  useEffect(() => {
-    window.addEventListener("touchend", handleTouchEnd);
-    window.addEventListener("touchmove", handleTouchMove);
-
-    return () => {
-      window.removeEventListener("touchend", handleTouchEnd);
-      window.removeEventListener("touchmove", handleTouchMove);
-    };
-  }, [handleTouchEnd, handleTouchMove]);
-
   return (
     <div
       ref={containerRef}
       className="relative h-full w-full"
       onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Previous screen - always rendered when there's a back stack */}
       {canGoBack && previousScreen && (

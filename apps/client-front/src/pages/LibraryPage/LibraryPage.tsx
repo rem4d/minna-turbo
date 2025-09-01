@@ -1,4 +1,5 @@
-import { type FC } from "react";
+import type { FC } from "react";
+import { Profiler } from "react";
 import KanjiIcon from "@/assets/icons/kanji.svg?react";
 import { FooterMenu } from "@/components/FooterMenu";
 import { List, ListItem } from "@/components/List";
@@ -31,74 +32,79 @@ export const LibraryScreen: FC = () => {
 
   const { t } = useTranslation();
   const { push } = useStackNavContext();
+  const onRender = (id: string, phase: any) => {
+    console.log(id, phase);
+  };
   return (
     <>
-      <Page>
-        <div className="relative flex flex-col space-y-8 px-4 pb-(--footer-height)">
-          {!isLoading && (
-            <>
-              <SectionHeader>{t("library")}</SectionHeader>
-              <List title={t("kanji")}>
-                <ListItem
-                  title={t("see_all")}
-                  icon={<KanjiIcon className="size-[20px]" />}
-                  onClick={() => push(AllKanjiPage, "AllKanjiPage")}
-                  right="arrow"
-                />
-              </List>
-              <List title={t("recommended_vocabulary")}>
-                {list?.map((data, i) => (
+      <Profiler id="LibraryPage" onRender={onRender}>
+        <Page>
+          <div className="relative flex flex-col space-y-8 px-4 pb-(--footer-height)">
+            {!isLoading && (
+              <>
+                <SectionHeader>{t("library")}</SectionHeader>
+                <List title={t("kanji")}>
                   <ListItem
-                    key={`level-${data.level_from}`}
-                    title={`${t("level_uppercase")} ${i + 1}`}
-                    sub={`${data.cnt} ${t("word", { count: data.cnt ?? 0 })}`}
-                    to={`/library/dict/${i + 1}`}
-                    showBorder={i < list.length - 1}
+                    title={t("see_all")}
+                    icon={<KanjiIcon className="size-[20px]" />}
+                    onClick={() => push(AllKanjiPage, "AllKanjiPage")}
                     right="arrow"
                   />
-                ))}
-              </List>
-            </>
-          )}
+                </List>
+                <List title={t("recommended_vocabulary")}>
+                  {list?.map((data, i) => (
+                    <ListItem
+                      key={`level-${data.level_from}`}
+                      title={`${t("level_uppercase")} ${i + 1}`}
+                      sub={`${data.cnt} ${t("word", { count: data.cnt ?? 0 })}`}
+                      to={`/library/dict/${i + 1}`}
+                      showBorder={i < list.length - 1}
+                      right="arrow"
+                    />
+                  ))}
+                </List>
+              </>
+            )}
 
-          {isLoading && (
-            <div className="mt-13">
-              <div className="mb-6 flex flex-col space-y-1">
-                <Skeleton
-                  className="mb-2 ml-3"
-                  height="20px"
-                  width="30%"
-                  inline
-                />
-                <Skeleton
-                  count={1}
-                  height="60px"
-                  inline
-                  borderRadius={10}
-                  containerClassName="flex flex-col space-y-2"
-                />
+            {isLoading && (
+              <div className="mt-13">
+                <div className="mb-6 flex flex-col space-y-1">
+                  <Skeleton
+                    className="mb-2 ml-3"
+                    height="20px"
+                    width="30%"
+                    inline
+                  />
+                  <Skeleton
+                    count={1}
+                    height="60px"
+                    inline
+                    borderRadius={10}
+                    containerClassName="flex flex-col space-y-2"
+                  />
+                </div>
+
+                <div className="flex flex-col space-y-1">
+                  <Skeleton
+                    className="mb-2 ml-3"
+                    height="20px"
+                    width="30%"
+                    inline
+                  />
+
+                  <Skeleton
+                    count={6}
+                    borderRadius={10}
+                    height="60px"
+                    inline
+                    containerClassName="flex flex-col space-y-2"
+                  />
+                </div>
               </div>
-
-              <div className="flex flex-col space-y-1">
-                <Skeleton
-                  className="mb-2 ml-3"
-                  height="20px"
-                  width="30%"
-                  inline
-                />
-
-                <Skeleton
-                  count={6}
-                  borderRadius={10}
-                  height="60px"
-                  inline
-                  containerClassName="flex flex-col space-y-2"
-                />
-              </div>
-            </div>
-          )}
-        </div>
-      </Page>
+            )}
+          </div>
+        </Page>
+      </Profiler>
       <FooterMenu />
     </>
   );

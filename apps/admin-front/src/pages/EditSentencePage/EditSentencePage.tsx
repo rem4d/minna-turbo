@@ -119,7 +119,6 @@ For readings including comments use only hiragana.
   const aiMembersMutation = api.admin.member.aiMembers.useMutation({
     onSuccess(data) {
       setAIMembers(data.filter((m) => m.pos !== "particle"));
-      console.log(data);
       toast.success("Got response.");
     },
   });
