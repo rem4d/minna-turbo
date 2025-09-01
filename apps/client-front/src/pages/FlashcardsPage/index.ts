@@ -1,3 +1,3 @@
 import { lazy } from "react";
 
-export const FlashcardsPage = lazy(() => import("./FlashcardsPage"));
+export const FlashcardsPage2 = lazy(() => import("./FlashcardsPage"));

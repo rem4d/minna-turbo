@@ -12,7 +12,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
 
-import { FlashcardsPage } from "../FlashcardsPage";
+import { FlashcardsPage } from "../FlashcardsPage/FlashcardsPage";
 import { SentencesPage } from "../SentencesPage";
 
 export const IndexPage: FC = () => {
