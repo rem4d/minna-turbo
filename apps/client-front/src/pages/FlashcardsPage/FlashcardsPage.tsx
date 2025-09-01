@@ -22,11 +22,11 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 interface FlashcardsPageProps {
-  animationComplete: boolean;
+  animationComplete?: boolean;
 }
 
 export const FlashcardsPage: FC<FlashcardsPageProps> = React.memo(
-  ({ animationComplete }) => {
+  ({ animationComplete = false }) => {
     const [currentTab, setCurrentTab] = useState(0);
     const [settingsModalOpen, setSettingsModalOpen] = useState(false);
     const [isFinished, setFinished] = useState(false);
