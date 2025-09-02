@@ -46,7 +46,7 @@ export default React.memo(function StackNavigator() {
         setShow(true);
         opac.set(1);
         setExitComplete(false);
-      }, 1);
+      }, 0);
     }
     return () => clearTimeout(timeoutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -115,7 +115,7 @@ export default React.memo(function StackNavigator() {
             setIsGestureActive(false);
             pop();
             dragX.set(0);
-          }, 1);
+          }, 0);
         },
       });
     } else {
