@@ -179,7 +179,7 @@ export default React.memo(function StackNavigator() {
       )}
 
       {/* Current screen with gesture support */}
-      <AnimatePresence initial={false} custom={direction} mode="popLayout">
+      <AnimatePresence initial={false} custom={direction} mode="sync">
         <motion.div
           key={currentScreen.key}
           custom={direction}
@@ -193,7 +193,7 @@ export default React.memo(function StackNavigator() {
             duration: 0.3,
           }}
           onAnimationComplete={onAnimationComplete}
-          className="absolute top-0 right-0 bottom-0 left-0 z-0 flex h-full flex-col"
+          className="current absolute top-0 right-0 bottom-0 left-0 z-0 flex h-full flex-col"
           style={{
             // zIndex: 1,
             opacity: isGestureActive ? opac : 1,
