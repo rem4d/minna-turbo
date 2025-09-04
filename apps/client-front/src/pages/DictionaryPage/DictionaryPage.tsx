@@ -6,10 +6,11 @@ import { useTRPC } from "@/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
-import { useParams } from "react-router-dom";
 
 export const DictionaryPage: FC = () => {
-  const { level } = useParams();
+  // @TODO: add level param
+  // const { level } = useParams();
+  const level = "1";
   const { t } = useTranslation();
   const trpc = useTRPC();
 

@@ -1,7 +1,7 @@
 /// <reference types="react/experimental" />
 import type { PropsWithChildren } from "react";
 import { useEffect, unstable_ViewTransition as ViewTransition } from "react";
-import { useIsNavPending, useRouter } from "@/router/router";
+import { useRouter } from "@/router/router";
 import { backButton } from "@/utils/tgUtils";
 import { twMerge } from "tailwind-merge";
 
@@ -40,7 +40,6 @@ export function Page({
     enter = direction === 1 ? "slide-in" : "slide-in-back";
     exit = direction === 1 ? "slide-out" : "slide-out-back";
   }
-  console.log(animationStyle);
 
   return (
     <ViewTransition default="none" enter={enter} exit={exit}>

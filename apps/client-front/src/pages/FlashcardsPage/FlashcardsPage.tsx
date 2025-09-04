@@ -20,7 +20,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import Lottie from "lottie-react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 
 interface FlashcardsPageProps {
   animationComplete?: boolean;
@@ -348,9 +347,10 @@ const CongratsScreen = ({ onCloseClick, level }: CongratsScreenProps) => {
           </div>
         </div>
         <div>
-          <Link className="text-denim" to="/sentences">
-            {t("congrats_practice_sentences")}
-          </Link>
+          {/* TODO: add link to sentences page */}
+          {/* <Link className="text-denim" to="/sentences"> */}
+          {/*   {t("congrats_practice_sentences")} */}
+          {/* </Link> */}
         </div>
       </div>
     </div>

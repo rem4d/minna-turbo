@@ -5,12 +5,7 @@ import {
   ErrorBoundary as RoollbarErrorBoundary,
 } from "@rollbar/react";
 
-// Provider imports 'rollbar'
-// import { RouterProvider } from "react-router-dom";
-
 import "./utils/i18n";
-// import { router } from "./routes";
-
 import "./index.css";
 import "./transitions.css";
 
@@ -58,9 +53,11 @@ function App() {
           <Toast.Provider swipeDirection="down">
             <PlaySoundContextProvider>
               <SkeletonTheme baseColor="#dadada">
-                <Router>
-                  <Base />
-                </Router>
+                {hasLoadedTrans ? (
+                  <Router>
+                    <Base />
+                  </Router>
+                ) : null}
                 {/* {hasLoadedTrans ? <RouterProvider router={router} /> : null} */}
               </SkeletonTheme>
             </PlaySoundContextProvider>

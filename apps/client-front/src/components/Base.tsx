@@ -4,8 +4,6 @@ import { routes } from "@/router/routes";
 import { useTRPC } from "@/utils/api";
 import { useMutation } from "@tanstack/react-query";
 
-// import { Outlet } from "react-router-dom";
-
 export function Base() {
   const trpc = useTRPC();
   const userCreator = useMutation(trpc.viewer.user.create.mutationOptions());
