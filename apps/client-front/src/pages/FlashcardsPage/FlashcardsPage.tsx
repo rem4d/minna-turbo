@@ -16,7 +16,7 @@ import { useTRPC } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import { hapticFeedback } from "@/utils/tgUtils";
 import { shuffle } from "@rem4d/utils";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import Lottie from "lottie-react";
 import { useTranslation } from "react-i18next";
@@ -26,183 +26,176 @@ interface FlashcardsPageProps {
   animationComplete?: boolean;
 }
 
-export const FlashcardsPage: FC<FlashcardsPageProps> = React.memo(
-  ({ animationComplete = false }) => {
-    const [currentTab, setCurrentTab] = useState(0);
-    const [settingsModalOpen, setSettingsModalOpen] = useState(false);
-    const [isFinished, setFinished] = useState(false);
-    const [level, setLevel] = useState(0);
+export const FlashcardsPage: FC<FlashcardsPageProps> = () => {
+  const [currentTab, setCurrentTab] = useState(0);
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+  const [isFinished, setFinished] = useState(false);
+  const [level, setLevel] = useState(0);
 
-    const [showHelpModal, setShowHelpModal] = useLocalStorage(
-      "kic:show_help_modal",
-      true,
-    );
-    const [helpModalOpen, setHelpModalOpen] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useLocalStorage(
+    "kic:show_help_modal",
+    true,
+  );
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
 
-    const [storedRangeFrom] = useLocalStorage<number | null>(
-      "kic:range_from",
-      null,
-    );
-    const [storedRangeTo] = useLocalStorage<number | null>(
-      "kic:range_to",
-      null,
-    );
+  const [storedRangeFrom] = useLocalStorage<number | null>(
+    "kic:range_from",
+    null,
+  );
+  const [storedRangeTo] = useLocalStorage<number | null>("kic:range_to", null);
 
-    const trpc = useTRPC();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
 
-    const { data: user, isLoading: isUserInfoLoading } = useQuery(
-      trpc.viewer.user.info.queryOptions(undefined, {
-        throwOnError: true,
-        enabled: animationComplete,
-      }),
-    );
+  const { data: user, isLoading: isUserInfoLoading } = useQuery(
+    trpc.viewer.user.info.queryOptions(undefined, {
+      throwOnError: true,
+    }),
+  );
 
-    const {
-      data: list,
-      isSuccess,
-      isLoading: isKanjiListLoading,
-    } = useQuery(
-      trpc.viewer.kanji.all.queryOptions(undefined, {
-        enabled: animationComplete,
-      }),
-    );
+  const {
+    data: list,
+    isSuccess,
+    isLoading: isKanjiListLoading,
+  } = useQuery(trpc.viewer.kanji.all.queryOptions());
 
-    const isLoading = isUserInfoLoading || isKanjiListLoading;
+  const isLoading = isUserInfoLoading || isKanjiListLoading;
 
-    useEffect(() => {
-      let id: null | ReturnType<typeof setTimeout>;
+  useEffect(() => {
+    let id: null | ReturnType<typeof setTimeout>;
 
-      if (isSuccess && showHelpModal) {
-        id = setTimeout(() => {
-          setHelpModalOpen(true);
-        }, 500);
+    if (isSuccess && showHelpModal) {
+      id = setTimeout(() => {
+        setHelpModalOpen(true);
+      }, 500);
+    }
+
+    return () => {
+      if (id) {
+        clearTimeout(id);
       }
-
-      return () => {
-        if (id) {
-          clearTimeout(id);
-        }
-      };
-    }, [isSuccess, setHelpModalOpen, showHelpModal]);
-
-    const newList = useMemo(
-      () =>
-        user?.level
-          ? (list ?? [])
-              .filter(
-                (a) => a.position > user.level && a.position < user.level + 8,
-              )
-              .toSorted((a, b) => (a.position < b.position ? 1 : -1))
-          : [],
-      [user?.level, list],
-    );
-
-    const repeatList = useMemo(() => {
-      return storedRangeTo && storedRangeFrom
-        ? shuffle(
-            (list ?? []).filter(
-              (a) =>
-                a.position <= storedRangeTo && a.position >= storedRangeFrom,
-            ),
-          )
-        : [];
-    }, [storedRangeFrom, storedRangeTo, list]);
-
-    // const utils = api.useUtils();
-    const { t } = useTranslation();
-
-    const updateLevelMuatation = useMutation(
-      trpc.viewer.user.updateLevel.mutationOptions({
-        onSuccess() {
-          // void utils.viewer.user.info.reset();
-          // void utils.viewer.sentence.getRandomized.reset();
-        },
-      }),
-    );
-
-    const onTabChange = useCallback((n: number) => {
-      setCurrentTab(n);
-    }, []);
-
-    const onFinish = (newLevel: number) => {
-      setLevel(newLevel);
-      setFinished(true);
-      onChangeLevel(newLevel);
     };
+  }, [isSuccess, setHelpModalOpen, showHelpModal]);
 
-    const onChangeLevel = (newLevel: number) => {
-      // setSelectedLevel(newLevel);
-      void updateLevelMuatation.mutate(newLevel);
-      hapticFeedback("medium");
-    };
+  const newList = useMemo(
+    () =>
+      user?.level
+        ? (list ?? [])
+            .filter(
+              (a) => a.position > user.level && a.position < user.level + 8,
+            )
+            .toSorted((a, b) => (a.position < b.position ? 1 : -1))
+        : [],
+    [user?.level, list],
+  );
 
-    const onCongratsCloseClick = () => {
-      setFinished(false);
-    };
+  const repeatList = useMemo(() => {
+    return storedRangeTo && storedRangeFrom
+      ? shuffle(
+          (list ?? []).filter(
+            (a) => a.position <= storedRangeTo && a.position >= storedRangeFrom,
+          ),
+        )
+      : [];
+  }, [storedRangeFrom, storedRangeTo, list]);
 
-    const onModalOpenChange = () => {
-      setHelpModalOpen(!helpModalOpen);
-      setShowHelpModal(false);
-    };
-    return (
-      <Page back maxOffset className="GradientBg overflow-hidden select-none">
-        {isFinished ? (
-          <CongratsScreen
-            onCloseClick={onCongratsCloseClick}
-            level={convertLevel(level)}
-          />
-        ) : (
-          <>
-            <div className="relative flex h-full flex-col items-center space-y-6 px-6">
-              <div className="flex items-center space-x-2">
-                <Tabs current={currentTab} onChange={onTabChange} />
-                <div
-                  className="relative size-[44px]"
-                  onClick={() => setSettingsModalOpen(true)}
-                >
-                  <SettingsIcon className="stroke-rolling-stone absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-                </div>
+  const { t } = useTranslation();
+
+  const updateLevelMuatation = useMutation(
+    trpc.viewer.user.updateLevel.mutationOptions({
+      onSuccess() {
+        void queryClient.resetQueries({
+          queryKey: trpc.viewer.user.info.queryKey(),
+        });
+        void queryClient.resetQueries({
+          queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
+        });
+      },
+    }),
+  );
+
+  const onTabChange = useCallback((n: number) => {
+    setCurrentTab(n);
+  }, []);
+
+  const onFinish = (newLevel: number) => {
+    setLevel(newLevel);
+    setFinished(true);
+    onChangeLevel(newLevel);
+  };
+
+  const onChangeLevel = (newLevel: number) => {
+    // setSelectedLevel(newLevel);
+    void updateLevelMuatation.mutate(newLevel);
+    hapticFeedback("medium");
+  };
+
+  const onCongratsCloseClick = () => {
+    setFinished(false);
+  };
+
+  const onModalOpenChange = () => {
+    setHelpModalOpen(!helpModalOpen);
+    setShowHelpModal(false);
+  };
+  return (
+    <Page back maxOffset className="GradientBg overflow-hidden select-none">
+      {isFinished ? (
+        <CongratsScreen
+          onCloseClick={onCongratsCloseClick}
+          level={convertLevel(level)}
+        />
+      ) : (
+        <>
+          <div className="relative flex h-full flex-col items-center space-y-6 px-6">
+            <div className="flex items-center space-x-2">
+              <Tabs current={currentTab} onChange={onTabChange} />
+              <div
+                className="relative size-[44px]"
+                onClick={() => setSettingsModalOpen(true)}
+              >
+                <SettingsIcon className="stroke-rolling-stone absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
               </div>
-              {currentTab === 0 ? (
-                <NewScreen
-                  list={newList}
-                  isLoading={isLoading}
-                  onFinish={onFinish}
-                />
-              ) : (
-                <RepeatScreen list={repeatList} isLoading={isLoading} />
-              )}
             </div>
-
-            {user && (
-              <DrawerSettings
-                open={settingsModalOpen}
-                level={user.level}
-                onOpenChange={setSettingsModalOpen}
-                onChangeLevel={onChangeLevel}
-                showRepeatDeckOption
+            {currentTab === 0 ? (
+              <NewScreen
+                list={newList}
+                isLoading={isLoading}
+                onFinish={onFinish}
               />
+            ) : (
+              <RepeatScreen list={repeatList} isLoading={isLoading} />
             )}
-          </>
-        )}
+          </div>
 
-        <Drawer open={helpModalOpen} onOpenChange={onModalOpenChange}>
-          <div className="relative flex size-full flex-col space-y-2">
-            <p className="mt-2 self-center px-2 text-center text-sm text-black">
-              {t("help_modal.a")} <br />
-              {t("help_modal.b")}
-            </p>
-            <div className="relative bottom-0 self-center">
-              <div className="h-full max-w-[400px]">
-                <Lottie as="div" animationData={clickJson} />
-              </div>
+          {user && (
+            <DrawerSettings
+              open={settingsModalOpen}
+              level={user.level}
+              onOpenChange={setSettingsModalOpen}
+              onChangeLevel={onChangeLevel}
+              showRepeatDeckOption
+            />
+          )}
+        </>
+      )}
+
+      <Drawer open={helpModalOpen} onOpenChange={onModalOpenChange}>
+        <div className="relative flex size-full flex-col space-y-2">
+          <p className="mt-2 self-center px-2 text-center text-sm text-black">
+            {t("help_modal.a")} <br />
+            {t("help_modal.b")}
+          </p>
+          <div className="relative bottom-0 self-center">
+            <div className="h-full max-w-[400px]">
+              <Lottie as="div" animationData={clickJson} />
             </div>
           </div>
-        </Drawer>
-      </Page>
-    );
-  },
-);
+        </div>
+      </Drawer>
+    </Page>
+  );
+};
 
 interface NewScreenProps {
   isLoading: boolean;
@@ -216,7 +209,6 @@ const NewScreen: FC<NewScreenProps> = ({ isLoading, list, onFinish }) => {
 
   useEffect(() => {
     setCardListDisplay(list);
-    console.log("useEffect NewScreen");
   }, [list]);
 
   const onEvaluate = (card: Kanji) => {

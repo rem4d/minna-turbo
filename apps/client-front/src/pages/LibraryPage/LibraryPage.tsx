@@ -18,9 +18,6 @@ export const LibraryPage: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const onRender = (id: string, phase: any) => {
-    console.log(id, phase);
-  };
   return (
     <>
       <Page>

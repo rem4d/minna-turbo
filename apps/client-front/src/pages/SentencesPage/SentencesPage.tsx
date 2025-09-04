@@ -14,7 +14,7 @@ import { convertLevel } from "@/utils/convert";
 import { hapticFeedback, useLaunchParams } from "@/utils/tgUtils";
 import useUnmount from "@/utils/useUnmount";
 import { type SentenceOutput } from "@rem4d/api";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Trans, useTranslation } from "react-i18next";
 
@@ -33,6 +33,7 @@ export const SentencesPage: FC = () => {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const trpc = useTRPC();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (helpOpen === null) {
@@ -50,8 +51,6 @@ export const SentencesPage: FC = () => {
 
   const lp = useLaunchParams();
   const isMobile = !lp.platform.includes("desktop");
-
-  // const utils = trpc.useUtils();
 
   const getRandomizedQuery = trpc.viewer.sentence.getRandomized.queryOptions(
     undefined,
@@ -79,8 +78,12 @@ export const SentencesPage: FC = () => {
   const updateLevelMuatation = useMutation(
     trpc.viewer.user.updateLevel.mutationOptions({
       onSuccess() {
-        // void trpc.viewer.sentence.getRandomized.reset();
-        // void utils.viewer.user.info.reset();
+        void queryClient.resetQueries({
+          queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
+        });
+        void queryClient.resetQueries({
+          queryKey: trpc.viewer.user.info.queryKey(),
+        });
         setActiveIndex(0);
       },
     }),
@@ -89,15 +92,15 @@ export const SentencesPage: FC = () => {
   const resetCacheMutation = useMutation(
     trpc.viewer.sentence.resetCache.mutationOptions({
       onSuccess() {
-        // void utils.viewer.sentence.getRandomized.reset();
+        void queryClient.resetQueries({
+          queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
+        });
         setActiveIndex(0);
       },
     }),
   );
   const sentence = storedList[activeIndex];
   const { t } = useTranslation();
-
-  // const hasCharacter = !!sentence?.vox_speaker_id;
 
   useUnmount(() => {
     const ids = storedList.slice(0, activeIndex).map((l) => l.id);
@@ -125,13 +128,16 @@ export const SentencesPage: FC = () => {
     if (activeIndex === storedList.length - 1) {
       const ids = storedList.map((l) => l.id);
       void markAsSeenMutation.mutate({ ids });
-      // void utils.viewer.sentence.getRandomized.invalidate();
+      void queryClient.invalidateQueries({
+        queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
+      });
     }
   }, [
     activeIndex,
     storedList,
     markAsSeenMutation,
-    // utils.viewer.sentence.getRandomized,
+    trpc.viewer.sentence.getRandomized,
+    queryClient,
   ]);
 
   const handlePrevClick = () => {
