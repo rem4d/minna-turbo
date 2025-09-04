@@ -462,9 +462,6 @@ importers:
       react-markdown:
         specifier: ^10.1.0
         version: 10.1.0(@types/react@19.1.12)(react@0.0.0-experimental-3302d1f7-20250903)
-      react-router-dom:
-        specifier: 'catalog:'
-        version: 7.1.1(react-dom@0.0.0-experimental-3302d1f7-20250903(react@0.0.0-experimental-3302d1f7-20250903))(react@0.0.0-experimental-3302d1f7-20250903)
       react-window:
         specifier: ^2.0.0
         version: 2.0.0(react-dom@0.0.0-experimental-3302d1f7-20250903(react@0.0.0-experimental-3302d1f7-20250903))(react@0.0.0-experimental-3302d1f7-20250903)

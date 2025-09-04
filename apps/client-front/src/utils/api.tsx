@@ -10,7 +10,6 @@ import {
   loggerLink,
   splitLink,
 } from "@trpc/client";
-import { createTRPCReact } from "@trpc/react-query";
 import { createTRPCContext } from "@trpc/tanstack-react-query";
 
 /**
