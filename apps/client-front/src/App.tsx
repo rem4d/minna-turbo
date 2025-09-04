@@ -7,9 +7,10 @@ import {
 // Provider imports 'rollbar'
 import { RouterProvider } from "react-router-dom";
 
+import "./utils/i18n";
+
 import { router } from "./routes";
 
-import "./utils/i18n";
 import "./index.css";
 
 import { useTranslation } from "react-i18next";
