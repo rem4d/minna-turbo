@@ -83,7 +83,7 @@ export const AllKanjiPage: FC = () => {
   const colSize = gridWidth / colCount;
 
   return (
-    <Page back className="overflow-y-hidden">
+    <Page to="/library" back className="overflow-y-hidden">
       <div
         className={twMerge(
           "flex flex-col space-y-8 px-4 pb-4",
