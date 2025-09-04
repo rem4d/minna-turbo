@@ -4,9 +4,10 @@ import { FooterMenu } from "@/components/FooterMenu";
 import { List, ListItem } from "@/components/List";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
+import { useRouter } from "@/router/router";
+import { paths } from "@/router/routes";
 import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
-import { useNavigate } from "react-router-dom";
 
 export const LibraryPage: FC = () => {
   // const { data: list, isLoading } =
@@ -16,7 +17,7 @@ export const LibraryPage: FC = () => {
   const isLoading = false;
 
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const { navigate } = useRouter();
 
   return (
     <>
@@ -29,7 +30,7 @@ export const LibraryPage: FC = () => {
                 <ListItem
                   title={t("see_all")}
                   icon={<KanjiIcon className="size-[20px]" />}
-                  onClick={() => navigate("/library/all-kanji")}
+                  onClick={() => navigate(paths.allKanji)}
                   right="arrow"
                 />
               </List>

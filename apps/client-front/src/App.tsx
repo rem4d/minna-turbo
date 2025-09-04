@@ -12,6 +12,7 @@ import "./utils/i18n";
 // import { router } from "./routes";
 
 import "./index.css";
+import "./transitions.css";
 
 import { useTranslation } from "react-i18next";
 import { SkeletonTheme } from "react-loading-skeleton";

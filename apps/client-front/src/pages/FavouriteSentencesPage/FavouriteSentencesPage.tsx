@@ -74,7 +74,7 @@ export const FavouriteSentencesPage: FC = () => {
   // );
 
   return (
-    <Page back useRouter to="/settings">
+    <Page back to="/settings">
       <div className="relative flex h-full flex-col space-y-8 px-4 pb-(--footer-height)">
         <SectionHeader>{t("fav_sentences")}</SectionHeader>
         {isLoading ? (

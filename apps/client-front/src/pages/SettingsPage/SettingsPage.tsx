@@ -10,6 +10,7 @@ import { FooterMenu } from "@/components/FooterMenu";
 import { List, ListItem } from "@/components/List";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
+import { paths } from "@/router/routes";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 
@@ -58,7 +59,7 @@ export const SettingsPage: FC = () => {
             <ListItem
               title={t("fav_sentences")}
               icon={<StarIcon className="size-[20px]" />}
-              to="/settings/fav-sentences"
+              to={paths.favouriteSentences}
               right="arrow"
             />
           </List>

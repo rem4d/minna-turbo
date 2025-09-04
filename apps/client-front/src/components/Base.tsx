@@ -21,12 +21,11 @@ export function Base() {
   }, [userCreator]);
 
   const currentRoute = routes.find((route) => route.path === url);
-  console.log(currentRoute);
 
   return (
     <div className="bg-light-gray relative mx-auto h-screen min-h-[568px] max-w-[450px] min-w-[320px] overflow-hidden">
       {/* <Outlet /> */}
-      {currentRoute?.component ?? <div>404</div>}
+      {currentRoute?.element ?? <div>404</div>}
     </div>
   );
 }

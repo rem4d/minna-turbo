@@ -1,8 +1,8 @@
 import type { FC, ReactElement, ReactNode } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import RemoveIcon from "@/assets/icons/remove.svg?react";
+import { useRouter } from "@/router/router";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 interface ListProps {
@@ -42,7 +42,7 @@ export const ListItem: FC<ListItemProps> = ({
   onClick,
   right = null,
 }) => {
-  const navigate = useNavigate();
+  const { navigate } = useRouter();
   const { t } = useTranslation();
 
   const handleClick = () => {

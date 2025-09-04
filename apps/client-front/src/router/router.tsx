@@ -1,12 +1,14 @@
+import type { PropsWithChildren } from "react";
 import {
   createContext,
-  PropsWithChildren,
   use,
   useEffect,
   useLayoutEffect,
   useState,
   useTransition,
 } from "react";
+
+import { routes } from "./routes";
 
 interface RouterContextValue {
   url: string;
@@ -15,6 +17,7 @@ interface RouterContextValue {
   isPending: boolean;
   params: Record<string, string>;
   direction: number;
+  animationStyle: "slide" | "default";
 }
 
 const RouterContext = createContext<RouterContextValue>({
@@ -24,6 +27,7 @@ const RouterContext = createContext<RouterContextValue>({
   navigateBack: () => {},
   isPending: false,
   direction: 1,
+  animationStyle: "default",
 });
 
 export function useRouter() {
@@ -34,6 +38,15 @@ export function useIsNavPending() {
   return use(RouterContext).isPending;
 }
 
+export const useMatch = (path: string) => {
+  const url = use(RouterContext).url;
+  const currentRoute = routes.find((route) => route.path === url);
+  if (currentRoute) {
+    return currentRoute.path === path;
+  }
+  return false;
+};
+
 export function Router({ children }: PropsWithChildren) {
   const [routerState, setRouterState] = useState({
     pendingNav: () => {},
@@ -41,6 +54,9 @@ export function Router({ children }: PropsWithChildren) {
   });
   const [isPending, startTransition] = useTransition();
   const [direction, setDirection] = useState<number>(1);
+  const [animationStyle, setAnimationStyle] = useState<"slide" | "default">(
+    "default",
+  );
 
   function go(url: string) {
     setRouterState({
@@ -52,6 +68,11 @@ export function Router({ children }: PropsWithChildren) {
   }
   function navigate(url: string) {
     setDirection(1);
+    const currentRoute = routes.find((route) => route.path === url);
+    console.log(currentRoute);
+    if (currentRoute) {
+      setAnimationStyle(currentRoute.animationStyle);
+    }
     // Update router state in transition.
     startTransition(() => {
       go(url);
@@ -60,6 +81,7 @@ export function Router({ children }: PropsWithChildren) {
 
   function navigateBack(url: string) {
     setDirection(-1);
+    setAnimationStyle("slide");
     // Update router state in transition.
     startTransition(() => {
       go(url);
@@ -86,7 +108,6 @@ export function Router({ children }: PropsWithChildren) {
   }, []);
 
   const pendingNav = routerState.pendingNav;
-  console.log(routerState);
 
   useLayoutEffect(() => {
     pendingNav();
@@ -101,6 +122,7 @@ export function Router({ children }: PropsWithChildren) {
         isPending,
         params: {},
         direction,
+        animationStyle,
       }}
     >
       {children}

@@ -1,0 +1,60 @@
+
+::view-transition-new(.slide-in) {
+  animation-duration: 400ms;
+  animation-name: slideInLeft;
+  animation-timing-function: ease-in-out;
+}
+::view-transition-old(.slide-out) {
+  animation-duration: 400ms;
+  animation-name: slideOutLeft;
+  animation-timing-function: ease-in-out;
+}
+::view-transition-new(.slide-in-back) {
+  animation-duration: 400ms;
+  animation-name: slideInRight;
+  animation-timing-function: ease-in-out;
+}
+::view-transition-old(.slide-out-back) {
+  animation-duration: 400ms;
+  animation-name: slideOutRight;
+  animation-timing-function: ease-in-out;
+}
+::view-transition-group(.slide-out-back) {
+  z-index: 100;
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-30%);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(-30%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
