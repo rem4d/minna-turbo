@@ -3,7 +3,7 @@ import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "./routers/_app";
 import { appRouter } from "./routers/_app";
 
-import { createCallerFactory, createTRPCContext } from "./trpc";
+import { createCallerFactory, createContext } from "./trpc";
 
 /**
  * Create a server-side caller for the tRPC API
@@ -34,9 +34,8 @@ type SentenceOutput =
 type Member2Output =
   RouterOutputs["viewer"]["member"]["sentenceMembers2"][number];
 
-type KanjiOutput =
-  RouterOutputs["viewer"]["kanji"]["all"][number];
+type KanjiOutput = RouterOutputs["viewer"]["kanji"]["all"][number];
 // type AiMemberOutput = RouterOutputs["admin"]["member"]["aiMembers"][number];
 
-export { createTRPCContext, appRouter, createCaller };
+export { createContext as createTRPCContext, appRouter, createCaller };
 export type { AppRouter, SentenceOutput, Member2Output, KanjiOutput };

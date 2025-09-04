@@ -1,6 +1,5 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import type * as trpcExpress from "@trpc/server/adapters/express";
-// import superjson from "superjson";
 import { ZodError } from "zod";
 import { client as db } from "@rem4d/db";
 import redisClient from "./redisClient";
@@ -8,7 +7,7 @@ import { getUserFromHeader } from "./util/getUserFromHeader";
 
 export type RedisClientType = typeof redisClient;
 
-export const createTRPCContext = (
+export const createContext = (
   options: trpcExpress.CreateExpressContextOptions,
 ) => {
   const tgUser = getUserFromHeader(options.req.headers.authorization);
@@ -20,7 +19,9 @@ export const createTRPCContext = (
   };
 };
 
-const t = initTRPC.context<typeof createTRPCContext>().create({
+export type Context = Awaited<ReturnType<typeof createContext>>;
+
+const t = initTRPC.context<Context>().create({
   // transformer: superjson,
   errorFormatter: ({ shape, error }) => ({
     ...shape,
