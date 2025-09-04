@@ -5,8 +5,9 @@ import Drawer from "@/components/Drawer";
 import KCard from "@/components/KCard";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
-import { api } from "@/utils/api";
+import { useTRPC } from "@/utils/api";
 import { type KanjiOutput } from "@rem4d/api";
+import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
@@ -21,6 +22,8 @@ export const AllKanjiPage: FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const gridRef = useRef<HTMLDivElement>(null);
   const [gridWidth, setGridWidth] = useState(0);
+
+  const trpc = useTRPC();
 
   useEffect(() => {
     const elem = gridRef.current;
@@ -39,8 +42,11 @@ export const AllKanjiPage: FC = () => {
 
   const debouncedValue = useDebounce(searchValue, 400);
 
-  const { data: list, isLoading } = api.viewer.kanji.all.useQuery();
-  const selectedK = list?.find((d) => d.id === selectedKId);
+  const listQuery = useQuery(trpc.viewer.kanji.all.queryOptions());
+
+  const list = listQuery.data ?? [];
+
+  const selectedK = list.find((d) => d.id === selectedKId);
 
   const displayData = debouncedValue
     ? list?.filter((d) => {
@@ -81,10 +87,10 @@ export const AllKanjiPage: FC = () => {
       <div
         className={twMerge(
           "flex flex-col space-y-8 px-4 pb-4",
-          isLoading && "h-full overflow-hidden",
+          listQuery.isLoading && "h-full overflow-hidden",
         )}
       >
-        <SectionHeader className={isLoading ? "opacity-0" : ""}>
+        <SectionHeader className={listQuery.isLoading ? "opacity-0" : ""}>
           {t("all_kanji")}
         </SectionHeader>
         <SearchBar
@@ -92,7 +98,7 @@ export const AllKanjiPage: FC = () => {
           value={searchValue}
           placeholderText={t("find")}
         />
-        {isLoading && (
+        {listQuery.isLoading && (
           <Skeleton
             className="aspect-square"
             count={32}
@@ -102,7 +108,7 @@ export const AllKanjiPage: FC = () => {
           />
         )}
         <div className="no-scroll h-[calc(100vh-170px)] w-full" ref={gridRef}>
-          {!isLoading && (
+          {!listQuery.isLoading && (
             <Grid
               className="no-scroll flex flex-col items-center"
               cellComponent={Card}

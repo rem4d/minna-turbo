@@ -1,15 +1,15 @@
-// import { TRPCClientError } from "@trpc/client";
 import { createBrowserRouter, useRouteError } from "react-router-dom";
 
 import { Base } from "./components/Base";
 import { AllKanjiPage } from "./pages/AllKanjiPage";
-import { DictionaryPage } from "./pages/DictionaryPage";
-import { FavouriteSentencesPage } from "./pages/FavouriteSentencesPage";
-import { FlashcardsPage } from "./pages/FlashcardsPage/FlashcardsPage";
 import { IndexPage } from "./pages/IndexPage";
+// import { DictionaryPage } from "./pages/DictionaryPage";
+// import { FavouriteSentencesPage } from "./pages/FavouriteSentencesPage";
+// import { FlashcardsPage } from "./pages/FlashcardsPage/FlashcardsPage";
 import { LibraryPage } from "./pages/LibraryPage";
-import { SentencesPage } from "./pages/SentencesPage";
-import { SettingsPage } from "./pages/SettingsPage";
+
+// import { SentencesPage } from "./pages/SentencesPage";
+// import { SettingsPage } from "./pages/SettingsPage";
 
 export const paths = {
   home: "/",
@@ -58,30 +58,30 @@ export const router = createBrowserRouter([
         path: paths.library,
         element: <LibraryPage />,
       },
-      {
-        path: paths.settings,
-        element: <SettingsPage />,
-      },
+      // {
+      //   path: paths.settings,
+      //   element: <SettingsPage />,
+      // },
       {
         path: paths.allKanji,
         element: <AllKanjiPage />,
       },
-      {
-        path: paths.dict,
-        element: <DictionaryPage />,
-      },
-      {
-        path: paths.sentences,
-        element: <SentencesPage />,
-      },
-      {
-        path: paths.flashcards,
-        element: <FlashcardsPage />,
-      },
-      {
-        path: paths.favouriteSentences,
-        element: <FavouriteSentencesPage />,
-      },
+      // {
+      //   path: paths.dict,
+      //   element: <DictionaryPage />,
+      // },
+      // {
+      //   path: paths.sentences,
+      //   element: <SentencesPage />,
+      // },
+      // {
+      //   path: paths.flashcards,
+      //   element: <FlashcardsPage />,
+      // },
+      // {
+      //   path: paths.favouriteSentences,
+      //   element: <FavouriteSentencesPage />,
+      // },
     ],
   },
 ]);

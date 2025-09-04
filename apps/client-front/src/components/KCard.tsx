@@ -2,7 +2,8 @@ import type { Kanji } from "@rem4d/db";
 import { useLayoutEffect, useRef, useState } from "react";
 import { SpinnerBig } from "@/components/Spinner";
 import WordReadings from "@/components/WordReadings";
-import { api } from "@/utils/api";
+import { useTRPC } from "@/utils/api";
+import { useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { twMerge } from "tailwind-merge";
 
@@ -30,8 +31,15 @@ export function KCard({
     "kic:translation_language",
     null,
   );
-  const { data: examples, isLoading: examplesLoading } =
-    api.viewer.kanji.examples.useQuery({ k: k.kanji ?? "" }, { enabled: !!k });
+
+  const trpc = useTRPC();
+
+  const { data: examples, isLoading: examplesLoading } = useQuery(
+    trpc.viewer.kanji.examples.queryOptions(
+      { k: k.kanji ?? "" },
+      { enabled: !!k },
+    ),
+  );
 
   useLayoutEffect(() => {
     if (examplesRef.current) {

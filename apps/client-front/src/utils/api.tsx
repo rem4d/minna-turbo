@@ -1,15 +1,21 @@
 import type { AppRouter } from "@rem4d/api";
-import { useState } from "react";
+import React, { useState } from "react";
 import { retrieveLaunchParams } from "@/utils/tgUtils";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { httpBatchLink, httpLink, loggerLink, splitLink } from "@trpc/client";
-import { createTRPCReact } from "@trpc/react-query";
+import {
+  createTRPCClient,
+  httpBatchLink,
+  httpLink,
+  loggerLink,
+  splitLink,
+} from "@trpc/client";
+import { createTRPCContext } from "@trpc/tanstack-react-query";
 
 /**
  * A set of typesafe hooks for consuming your API.
  */
-export const api = createTRPCReact<AppRouter>();
+// export const api = createTRPCReact<AppRouter>();
 // export { type RouterInputs, type RouterOutputs } from "@rem4d/api";
 
 const queryClient = new QueryClient({
@@ -20,11 +26,14 @@ const queryClient = new QueryClient({
   },
 });
 
+export const trpc = createTRPCContext<AppRouter>();
+export const { useTRPC } = trpc;
+
 /**
  * A wrapper for your app that provides the TRPC context.
  * Use only in _app.tsx
  */
-export function TRPCProvider(props: { children: React.ReactNode }) {
+export function ApiProvider(props: { children: React.ReactNode }) {
   const { initDataRaw } = retrieveLaunchParams();
 
   const url = `${import.meta.env.VITE_API_SERVER}trpc/api`;
@@ -33,9 +42,8 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
   h.set("Authorization", `tma ${initDataRaw}`);
 
   const h_ = Object.fromEntries(h);
-
   const [trpcClient] = useState(() =>
-    api.createClient({
+    createTRPCClient<AppRouter>({
       links: [
         loggerLink({
           enabled: (opts) =>
@@ -62,28 +70,14 @@ export function TRPCProvider(props: { children: React.ReactNode }) {
             },
           }),
         }),
-        /*httpBatchLink({
-          // transformer: superjson,
-          url: `${import.meta.env.VITE_API_SERVER}trpc/api`,
-          headers() {
-            const headers = new Map<string, string>();
-            headers.set("x-trpc-source", "client");
-            headers.set("Authorization", `tma ${initDataRaw}`);
-
-            return Object.fromEntries(headers);
-          },
-        }),
-        */
       ],
     }),
   );
-
   return (
-    <api.Provider client={trpcClient} queryClient={queryClient}>
+    <trpc.TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         {props.children}
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
-    </api.Provider>
+    </trpc.TRPCProvider>
   );
 }

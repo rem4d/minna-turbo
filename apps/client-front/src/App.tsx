@@ -7,11 +7,9 @@ import {
 // Provider imports 'rollbar'
 import { RouterProvider } from "react-router-dom";
 
-import "./utils/i18n";
-
 import { router } from "./routes";
-import { TRPCProvider } from "./utils/api";
 
+import "./utils/i18n";
 import "./index.css";
 
 import { useTranslation } from "react-i18next";
@@ -19,6 +17,7 @@ import { SkeletonTheme } from "react-loading-skeleton";
 
 import ErrorFallbackComponent from "./components/ErrorFallbackComponent";
 import { PlaySoundContextProvider } from "./context/playSoundContext";
+import { ApiProvider } from "./utils/api";
 import { useLaunchParams, useMiniAppSetup } from "./utils/tgUtils";
 
 function App() {
@@ -51,7 +50,7 @@ function App() {
   return (
     <RollbarProvider config={rollbarConfig}>
       <RoollbarErrorBoundary fallbackUI={errorFallback}>
-        <TRPCProvider>
+        <ApiProvider>
           <Toast.Provider swipeDirection="down">
             <PlaySoundContextProvider>
               <SkeletonTheme baseColor="#dadada">
@@ -59,7 +58,7 @@ function App() {
               </SkeletonTheme>
             </PlaySoundContextProvider>
           </Toast.Provider>
-        </TRPCProvider>
+        </ApiProvider>
       </RoollbarErrorBoundary>
     </RollbarProvider>
   );

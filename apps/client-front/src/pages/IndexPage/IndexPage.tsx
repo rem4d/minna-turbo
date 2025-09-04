@@ -4,28 +4,12 @@ import BubbleIcon from "@/assets/images/bubble2.svg?react";
 import DeckIcon from "@/assets/images/deck2.svg?react";
 import { FooterMenu } from "@/components/FooterMenu";
 import { Page } from "@/components/Page";
-import StackNavigator from "@/components/StackNavigator";
-import {
-  StackNavContextProvider,
-  useStackNavContext,
-} from "@/context/stackNavContext";
 import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
 
-import { FlashcardsPage } from "../FlashcardsPage/FlashcardsPage";
-import { SentencesPage } from "../SentencesPage";
-
-export const IndexPage: FC = () => {
-  return (
-    <StackNavContextProvider initialScreen={IndexScreen}>
-      <StackNavigator />
-    </StackNavContextProvider>
-  );
-};
-
-const IndexScreen = React.memo(() => {
+export const IndexPage = React.memo(() => {
   const { t } = useTranslation();
-  const { push } = useStackNavContext();
+  const push = () => {};
   return (
     <>
       <Page>
@@ -36,7 +20,7 @@ const IndexScreen = React.memo(() => {
               desc={t("sentences_desc")}
               to="/sentences"
               color="yellow"
-              onClick={() => push(SentencesPage, "Sentences")}
+              onClick={() => push()}
               icon={
                 <div className="absolute -right-2 -bottom-2 z-0 w-[40%] opacity-40">
                   <BubbleIcon className="size-full" />
@@ -48,7 +32,7 @@ const IndexScreen = React.memo(() => {
               desc={t("flashcards_desc")}
               to="/flashcards"
               color="cyan"
-              onClick={() => push(FlashcardsPage, "Flashcards")}
+              onClick={() => push()}
               icon={
                 <div className="absolute right-2 -bottom-2 z-0 w-[70px] opacity-40">
                   <DeckIcon className="size-full" />
