@@ -1,7 +1,8 @@
 import type { SentenceOutput } from "@rem4d/api";
 import type { ReactElement } from "react";
 import { Character } from "@/components/Character";
-import { api } from "@/utils/api";
+import { useTRPC } from "@/utils/api";
+import { useQuery } from "@tanstack/react-query";
 import { twMerge } from "tailwind-merge";
 
 export interface Props {
@@ -16,8 +17,9 @@ export function SentenceText({
   showFurigana,
 }: Props): ReactElement {
   const hasCharacter = false; // !!sentence.vox_speaker_id;
+  const trpc = useTRPC();
 
-  const { data: user } = api.viewer.user.info.useQuery();
+  const { data: user } = useQuery(trpc.viewer.user.info.queryOptions());
 
   const onlyOneHasFurigana =
     sentence.ruby?.includes("<rt>") &&

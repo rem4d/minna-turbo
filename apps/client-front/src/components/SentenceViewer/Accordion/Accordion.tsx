@@ -2,8 +2,9 @@ import type { SentenceOutput } from "@rem4d/api";
 import { useEffect, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { AnimateHeight } from "@/components/AnimateHeight";
-import { api } from "@/utils/api";
+import { useTRPC } from "@/utils/api";
 import * as Accordion from "@radix-ui/react-accordion";
+import { useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
@@ -30,18 +31,22 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     "kic:translation_language",
     null,
   );
+  const trpc = useTRPC();
 
   const {
     data: members,
     isFetching: loadingMembers,
     isSuccess,
-  } = api.viewer.member.sentenceMembers2.useQuery(
-    { id: sentence.id },
-    {
-      enabled: !!sentence.text && openItems.includes("2"),
-      placeholderData: (prev) => prev,
-    },
+  } = useQuery(
+    trpc.viewer.member.sentenceMembers2.queryOptions(
+      { id: sentence.id },
+      {
+        enabled: !!sentence.text && openItems.includes("2"),
+        placeholderData: (prev) => prev,
+      },
+    ),
   );
+
   useEffect(() => {
     setScreen("glossary");
     setIsAskAiClicked(false);

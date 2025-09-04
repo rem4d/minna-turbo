@@ -5,11 +5,12 @@ import DeckIcon from "@/assets/images/deck2.svg?react";
 import { FooterMenu } from "@/components/FooterMenu";
 import { Page } from "@/components/Page";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 export const IndexPage = React.memo(() => {
   const { t } = useTranslation();
-  const push = () => {};
+  const navigate = useNavigate();
   return (
     <>
       <Page>
@@ -20,7 +21,7 @@ export const IndexPage = React.memo(() => {
               desc={t("sentences_desc")}
               to="/sentences"
               color="yellow"
-              onClick={() => push()}
+              onClick={() => navigate("/sentences")}
               icon={
                 <div className="absolute -right-2 -bottom-2 z-0 w-[40%] opacity-40">
                   <BubbleIcon className="size-full" />
@@ -32,7 +33,7 @@ export const IndexPage = React.memo(() => {
               desc={t("flashcards_desc")}
               to="/flashcards"
               color="cyan"
-              onClick={() => push()}
+              onClick={() => navigate("/flashcards")}
               icon={
                 <div className="absolute right-2 -bottom-2 z-0 w-[70px] opacity-40">
                   <DeckIcon className="size-full" />

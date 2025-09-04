@@ -5,11 +5,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   createTRPCClient,
+  createTRPCClientProxy,
   httpBatchLink,
   httpLink,
   loggerLink,
   splitLink,
 } from "@trpc/client";
+import { createTRPCReact } from "@trpc/react-query";
 import { createTRPCContext } from "@trpc/tanstack-react-query";
 
 /**
@@ -27,6 +29,7 @@ const queryClient = new QueryClient({
 });
 
 export const trpc = createTRPCContext<AppRouter>();
+// const trpc2  = createTRPCReact<AppRouter>();
 export const { useTRPC } = trpc;
 
 /**

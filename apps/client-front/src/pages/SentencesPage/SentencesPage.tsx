@@ -9,11 +9,12 @@ import { SentenceViewer } from "@/components/SentenceViewer";
 import SentenceNavButtons from "@/components/SentenceViewer/SentenceNavButtons";
 import { SpinnerBig } from "@/components/Spinner";
 import Toast from "@/components/Toast";
-import { api } from "@/utils/api";
+import { useTRPC } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import { hapticFeedback, useLaunchParams } from "@/utils/tgUtils";
 import useUnmount from "@/utils/useUnmount";
 import { type SentenceOutput } from "@rem4d/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Trans, useTranslation } from "react-i18next";
 
@@ -30,6 +31,8 @@ export const SentencesPage: FC = () => {
   );
   const [showNoSentencesMessage, setShowNoSentencesMessage] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const trpc = useTRPC();
 
   useEffect(() => {
     if (helpOpen === null) {
@@ -48,40 +51,49 @@ export const SentencesPage: FC = () => {
   const lp = useLaunchParams();
   const isMobile = !lp.platform.includes("desktop");
 
-  const utils = api.useUtils();
+  // const utils = trpc.useUtils();
 
-  const { data: list, isLoading } = api.viewer.sentence.getRandomized.useQuery(
+  const getRandomizedQuery = trpc.viewer.sentence.getRandomized.queryOptions(
     undefined,
     {
       throwOnError: true,
     },
   );
+  const { data: list, isLoading } = useQuery(getRandomizedQuery);
 
-  const markAsSeenMutation = api.viewer.sentence.markAsSeen.useMutation();
+  const markAsSeenMutation = useMutation(
+    trpc.viewer.sentence.markAsSeen.mutationOptions(),
+  );
 
-  const { data: user } = api.viewer.user.info.useQuery(undefined, {
-    throwOnError: true,
-    trpc: {
-      context: {
-        skipBatch: true,
+  const { data: user } = useQuery(
+    trpc.viewer.user.info.queryOptions(undefined, {
+      throwOnError: true,
+      trpc: {
+        context: {
+          skipBatch: true,
+        },
       },
-    },
-  });
+    }),
+  );
 
-  const updateLevelMuatation = api.viewer.user.updateLevel.useMutation({
-    onSuccess() {
-      void utils.viewer.sentence.getRandomized.reset();
-      void utils.viewer.user.info.reset();
-      setActiveIndex(0);
-    },
-  });
+  const updateLevelMuatation = useMutation(
+    trpc.viewer.user.updateLevel.mutationOptions({
+      onSuccess() {
+        // void trpc.viewer.sentence.getRandomized.reset();
+        // void utils.viewer.user.info.reset();
+        setActiveIndex(0);
+      },
+    }),
+  );
 
-  const resetCacheMutation = api.viewer.sentence.resetCache.useMutation({
-    onSuccess() {
-      void utils.viewer.sentence.getRandomized.reset();
-      setActiveIndex(0);
-    },
-  });
+  const resetCacheMutation = useMutation(
+    trpc.viewer.sentence.resetCache.mutationOptions({
+      onSuccess() {
+        // void utils.viewer.sentence.getRandomized.reset();
+        setActiveIndex(0);
+      },
+    }),
+  );
   const sentence = storedList[activeIndex];
   const { t } = useTranslation();
 
@@ -113,13 +125,13 @@ export const SentencesPage: FC = () => {
     if (activeIndex === storedList.length - 1) {
       const ids = storedList.map((l) => l.id);
       void markAsSeenMutation.mutate({ ids });
-      void utils.viewer.sentence.getRandomized.invalidate();
+      // void utils.viewer.sentence.getRandomized.invalidate();
     }
   }, [
     activeIndex,
     storedList,
     markAsSeenMutation,
-    utils.viewer.sentence.getRandomized,
+    // utils.viewer.sentence.getRandomized,
   ]);
 
   const handlePrevClick = () => {

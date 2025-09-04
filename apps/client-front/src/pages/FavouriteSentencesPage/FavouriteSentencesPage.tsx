@@ -8,7 +8,8 @@ import SectionHeader from "@/components/SectionHeader";
 import { SentenceViewer } from "@/components/SentenceViewer";
 import SentenceNavButtons from "@/components/SentenceViewer/SentenceNavButtons";
 import { SpinnerBig } from "@/components/Spinner";
-import { api } from "@/utils/api";
+import { useTRPC } from "@/utils/api";
+import { useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 
@@ -21,12 +22,14 @@ export const FavouriteSentencesPage: FC = () => {
   const [activeIndex, setActiveIndex] = useState(-1);
   const showId = false;
   const ids = favorites.map((f) => f.id);
-
-  const { data: sentences, isLoading } = api.viewer.sentence.getByIds.useQuery(
-    {
-      ids,
-    },
-    // { enabled: ids && ids.length > 0 },
+  const trpc = useTRPC();
+  const { data: sentences, isLoading } = useQuery(
+    trpc.viewer.sentence.getByIds.queryOptions(
+      {
+        ids,
+      },
+      { enabled: ids && ids.length > 0 },
+    ),
   );
 
   const sentence = sentences ? sentences[activeIndex] : undefined;

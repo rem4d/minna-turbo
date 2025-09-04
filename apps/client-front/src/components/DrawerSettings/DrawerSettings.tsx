@@ -3,9 +3,10 @@ import React, { useCallback, useState } from "react";
 import Button from "@/components/Button";
 import Drawer from "@/components/Drawer";
 import { List, ListItem } from "@/components/List";
-import { api } from "@/utils/api";
+import { useTRPC } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import { hapticFeedback } from "@/utils/tgUtils";
+import { useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-client";
@@ -39,12 +40,13 @@ export default function DrawerSettings({
     "kic:range_to",
     null,
   );
+  const trpc = useTRPC();
 
   const [selectedLevel, setSelectedLevel] = useState<number>(level);
   const [rangeFrom, setRangeFrom] = useState<number | null>(storedRangeFrom);
   const [rangeTo, setRangeTo] = useState<number | null>(storedRangeTo);
 
-  const { data: kanjis } = api.viewer.kanji.all.useQuery();
+  const { data: kanjis } = useQuery(trpc.viewer.kanji.all.queryOptions());
   const currentK = kanjis?.find((k) => k.position === selectedLevel);
   const kFrom = kanjis?.find((k) => k.position === rangeFrom);
   const kTo = kanjis?.find((k) => k.position === rangeTo);

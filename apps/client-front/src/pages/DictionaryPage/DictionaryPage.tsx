@@ -2,7 +2,8 @@ import type { FC } from "react";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import WordReadings from "@/components/WordReadings";
-import { api } from "@/utils/api";
+import { useTRPC } from "@/utils/api";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
 import { useParams } from "react-router-dom";
@@ -10,11 +11,13 @@ import { useParams } from "react-router-dom";
 export const DictionaryPage: FC = () => {
   const { level } = useParams();
   const { t } = useTranslation();
+  const trpc = useTRPC();
 
-  const { data: vocabList, isLoading } =
-    api.viewer.member.suggestedVocabularyByLevel.useQuery({
+  const { data: vocabList, isLoading } = useQuery(
+    trpc.viewer.member.suggestedVocabularyByLevel.queryOptions({
       level: Number(level),
-    });
+    }),
+  );
 
   if (!level) {
     return null;

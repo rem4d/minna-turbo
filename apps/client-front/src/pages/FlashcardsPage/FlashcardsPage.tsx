@@ -12,10 +12,11 @@ import DrawerSettings from "@/components/DrawerSettings/DrawerSettings";
 import { Page } from "@/components/Page";
 import { SpinnerBig } from "@/components/Spinner";
 import Tabs from "@/components/Tabs";
-import { api } from "@/utils/api";
+import { useTRPC } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import { hapticFeedback } from "@/utils/tgUtils";
 import { shuffle } from "@rem4d/utils";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import Lottie from "lottie-react";
 import { useTranslation } from "react-i18next";
@@ -47,19 +48,24 @@ export const FlashcardsPage: FC<FlashcardsPageProps> = React.memo(
       null,
     );
 
-    const { data: user, isLoading: isUserInfoLoading } =
-      api.viewer.user.info.useQuery(undefined, {
+    const trpc = useTRPC();
+
+    const { data: user, isLoading: isUserInfoLoading } = useQuery(
+      trpc.viewer.user.info.queryOptions(undefined, {
         throwOnError: true,
         enabled: animationComplete,
-      });
+      }),
+    );
 
     const {
       data: list,
       isSuccess,
       isLoading: isKanjiListLoading,
-    } = api.viewer.kanji.all.useQuery(undefined, {
-      enabled: animationComplete,
-    });
+    } = useQuery(
+      trpc.viewer.kanji.all.queryOptions(undefined, {
+        enabled: animationComplete,
+      }),
+    );
 
     const isLoading = isUserInfoLoading || isKanjiListLoading;
 
@@ -102,15 +108,17 @@ export const FlashcardsPage: FC<FlashcardsPageProps> = React.memo(
         : [];
     }, [storedRangeFrom, storedRangeTo, list]);
 
-    const utils = api.useUtils();
+    // const utils = api.useUtils();
     const { t } = useTranslation();
 
-    const updateLevelMuatation = api.viewer.user.updateLevel.useMutation({
-      onSuccess() {
-        void utils.viewer.user.info.reset();
-        void utils.viewer.sentence.getRandomized.reset();
-      },
-    });
+    const updateLevelMuatation = useMutation(
+      trpc.viewer.user.updateLevel.mutationOptions({
+        onSuccess() {
+          // void utils.viewer.user.info.reset();
+          // void utils.viewer.sentence.getRandomized.reset();
+        },
+      }),
+    );
 
     const onTabChange = useCallback((n: number) => {
       setCurrentTab(n);
