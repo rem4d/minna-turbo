@@ -4,13 +4,13 @@ import BubbleIcon from "@/assets/images/bubble2.svg?react";
 import DeckIcon from "@/assets/images/deck2.svg?react";
 import { FooterMenu } from "@/components/FooterMenu";
 import { Page } from "@/components/Page";
+import { useRouter } from "@/router/router";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 export const IndexPage = React.memo(() => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const { navigate } = useRouter();
   return (
     <>
       <Page>

@@ -4,20 +4,22 @@ import {
   Provider as RollbarProvider,
   ErrorBoundary as RoollbarErrorBoundary,
 } from "@rollbar/react";
+
 // Provider imports 'rollbar'
-import { RouterProvider } from "react-router-dom";
+// import { RouterProvider } from "react-router-dom";
 
 import "./utils/i18n";
-
-import { router } from "./routes";
+// import { router } from "./routes";
 
 import "./index.css";
 
 import { useTranslation } from "react-i18next";
 import { SkeletonTheme } from "react-loading-skeleton";
 
+import { Base } from "./components/Base";
 import ErrorFallbackComponent from "./components/ErrorFallbackComponent";
 import { PlaySoundContextProvider } from "./context/playSoundContext";
+import { Router } from "./router/router";
 import { ApiProvider } from "./utils/api";
 import { useLaunchParams, useMiniAppSetup } from "./utils/tgUtils";
 
@@ -55,7 +57,10 @@ function App() {
           <Toast.Provider swipeDirection="down">
             <PlaySoundContextProvider>
               <SkeletonTheme baseColor="#dadada">
-                {hasLoadedTrans ? <RouterProvider router={router} /> : null}
+                <Router>
+                  <Base />
+                </Router>
+                {/* {hasLoadedTrans ? <RouterProvider router={router} /> : null} */}
               </SkeletonTheme>
             </PlaySoundContextProvider>
           </Toast.Provider>

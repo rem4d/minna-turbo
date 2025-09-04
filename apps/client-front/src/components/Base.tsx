@@ -1,11 +1,15 @@
 import { useEffect, useRef } from "react";
+import { useRouter } from "@/router/router";
+import { routes } from "@/router/routes";
 import { useTRPC } from "@/utils/api";
 import { useMutation } from "@tanstack/react-query";
-import { Outlet } from "react-router-dom";
+
+// import { Outlet } from "react-router-dom";
 
 export function Base() {
   const trpc = useTRPC();
   const userCreator = useMutation(trpc.viewer.user.create.mutationOptions());
+  const { url } = useRouter();
 
   const initialized = useRef(false);
 
@@ -16,9 +20,13 @@ export function Base() {
     }
   }, [userCreator]);
 
+  const currentRoute = routes.find((route) => route.path === url);
+  console.log(currentRoute);
+
   return (
     <div className="bg-light-gray relative mx-auto h-screen min-h-[568px] max-w-[450px] min-w-[320px] overflow-hidden">
-      <Outlet />
+      {/* <Outlet /> */}
+      {currentRoute?.component ?? <div>404</div>}
     </div>
   );
 }
