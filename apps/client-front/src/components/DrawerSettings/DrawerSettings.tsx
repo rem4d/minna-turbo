@@ -1,17 +1,13 @@
 import React, { useCallback, useState } from "react";
-import Button from "@/components/Button";
 import Drawer from "@/components/Drawer";
-import { List, ListItem } from "@/components/List";
-import { useTRPC } from "@/utils/api";
-import { convertLevel } from "@/utils/convert";
 import { hapticFeedback } from "@/utils/tgUtils";
-import { useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { AnimatePresence } from "motion/react";
 import * as motion from "motion/react-client";
 import { useTranslation } from "react-i18next";
 
 import ChooseLastKanjiScreen from "./ChooseLastKanjiScreen";
+import IdleScreen from "./IdleScreen";
 import RepeatDeckScreen from "./RepeatDeckScreen";
 
 interface Props {
@@ -29,9 +25,9 @@ export default React.memo(function DrawerSettings({
   level,
   showRepeatDeckOption = false,
 }: Props) {
-  const [view, setView] = useState<
-    "idle" | "choose_last_kanji" | "choose_repeat_deck"
-  >("idle");
+  const [view, setView] = useState<"idle" | "last_kanji" | "repeat_deck">(
+    "idle",
+  );
 
   const [storedRangeFrom, setStoredRangeFrom] = useLocalStorage<number | null>(
     "kic:range_from",
@@ -41,18 +37,10 @@ export default React.memo(function DrawerSettings({
     "kic:range_to",
     null,
   );
-  const trpc = useTRPC();
 
   const [selectedLevel, setSelectedLevel] = useState<number>(level);
   const [rangeFrom, setRangeFrom] = useState<number | null>(storedRangeFrom);
   const [rangeTo, setRangeTo] = useState<number | null>(storedRangeTo);
-
-  const kanjisQuery = useQuery(trpc.viewer.kanji.all.queryOptions());
-
-  const kanjis = kanjisQuery.data ?? [];
-  const currentK = kanjis.find((k) => k.position === selectedLevel);
-  const kFrom = kanjis.find((k) => k.position === rangeFrom);
-  const kTo = kanjis.find((k) => k.position === rangeTo);
 
   const { t } = useTranslation();
 
@@ -117,77 +105,36 @@ export default React.memo(function DrawerSettings({
       open={open}
       onOpenChange={onOpenChange}
       onBackClick={onBackClick}
-      title={view === "choose_last_kanji" ? t("choose_the_last_kanji") : ""}
-      back={view === "choose_last_kanji" || view === "choose_repeat_deck"}
+      title={view === "last_kanji" ? t("choose_the_last_kanji") : ""}
+      back={view === "last_kanji" || view === "repeat_deck"}
     >
       <motion.div
         className="bg-super-silver relative flex flex-col"
         initial="idle"
         animate={
-          view === "choose_last_kanji" || view === "choose_repeat_deck"
-            ? "choose"
-            : "idle"
+          view === "last_kanji" || view === "repeat_deck" ? "choose" : "idle"
         }
         variants={parentVariant}
       >
         <AnimatePresence mode="wait">
           {view === "idle" && (
-            <motion.div
-              key="c1"
-              className="max-h-50vh flex h-full flex-col justify-between px-4 pb-6"
-            >
-              <div className="flex w-full flex-col space-y-4">
-                <List title={t("the_last_kanji")}>
-                  <ListItem
-                    icon={
-                      currentK && (
-                        <div className="text-[36px]">{currentK.kanji}</div>
-                      )
-                    }
-                    right="change"
-                    onRightIconClick={() => setView("choose_last_kanji")}
-                    sub={`${convertLevel(currentK?.position)} ${t("level")}`}
-                  />
-                </List>
-                {showRepeatDeckOption && (
-                  <List title={t("repeat_deck")}>
-                    <ListItem
-                      icon={
-                        <div className="text-[16px] whitespace-nowrap">
-                          {kFrom && kTo
-                            ? `${kFrom?.kanji}...${kTo?.kanji}`
-                            : t("not_assigned")}
-                        </div>
-                      }
-                      sub={
-                        kFrom && kTo
-                          ? `(${kTo.position - kFrom.position + 1})`
-                          : undefined
-                      }
-                      right={
-                        <button
-                          className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent"
-                          onClick={() => setView("choose_repeat_deck")}
-                        >
-                          {t("change")}
-                        </button>
-                      }
-                    />
-                  </List>
-                )}
-              </div>
-              <Button className="w-full" onClick={onSubmit}>
-                {t("save")}
-              </Button>
-            </motion.div>
+            <IdleScreen
+              showRepeatDeckOption={showRepeatDeckOption}
+              selectedLevel={selectedLevel}
+              rangeTo={rangeTo}
+              rangeFrom={rangeFrom}
+              onChooseLastKanjiClick={() => setView("last_kanji")}
+              onSelectRepeatDeckClick={() => setView("repeat_deck")}
+              onSubmit={onSubmit}
+            />
           )}
-          {view === "choose_last_kanji" && (
+          {view === "last_kanji" && (
             <ChooseLastKanjiScreen
               onLevelSelect={onLevelSelect}
               selectedLevel={selectedLevel}
             />
           )}
-          {showRepeatDeckOption && view === "choose_repeat_deck" && (
+          {showRepeatDeckOption && view === "repeat_deck" && (
             <RepeatDeckScreen
               rangeTo={rangeTo}
               rangeFrom={rangeFrom}
