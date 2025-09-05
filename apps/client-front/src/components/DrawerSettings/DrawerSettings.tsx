@@ -116,10 +116,19 @@ export default React.memo(function DrawerSettings({
     });
   };
 
+  const _onOpenChange = (open: boolean) => {
+    onOpenChange(open);
+    startTransition(() => {
+      if (open === false) {
+        setView("idle");
+      }
+    });
+  };
+
   return (
     <Drawer
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={_onOpenChange}
       onBackClick={onBackClick}
       title={view === "last_kanji" ? t("choose_the_last_kanji") : ""}
       back={view === "last_kanji" || view === "repeat_deck"}
