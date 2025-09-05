@@ -3,8 +3,13 @@ import { useRouter } from "@/router/router";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 
 export default React.memo(function StackNavigator() {
-  const { canGoBack, currentScreen, previousScreen, navigateBack } =
-    useRouter();
+  const {
+    canGoBack,
+    currentScreen,
+    previousScreen,
+    navigateBack,
+    animationStyle,
+  } = useRouter();
 
   const dragX = useMotionValue(0);
   const dragProgress = useTransform(dragX, [0, 300], [0, 1]);
@@ -15,15 +20,7 @@ export default React.memo(function StackNavigator() {
     ["translateX(-30%)", "translateX(0%)"],
   );
 
-  // const currentScreenShadow = useTransform(
-  //   dragProgress,
-  //   [0, 0.5, 1],
-  //   [
-  //     "0 0 0 rgba(0,0,0,0)",
-  //     "-10px 0 30px rgba(0,0,0,0.1)",
-  //     "-20px 0 40px rgba(0,0,0,0.2)",
-  //   ],
-  // );
+  const currentOverlayOpacity = useTransform(dragProgress, [0, 1], [0.4, 0]);
 
   // Refs for gesture tracking
   const touchStartX = useRef(0);
@@ -115,6 +112,15 @@ export default React.memo(function StackNavigator() {
           }}
         >
           <div className="h-full w-full">
+            {animationStyle === "slide" && (
+              <motion.div
+                className="absolute h-full w-full bg-black"
+                style={{
+                  opacity: currentOverlayOpacity,
+                  zIndex: 15,
+                }}
+              />
+            )}
             <previousScreen.element />
           </div>
         </motion.div>

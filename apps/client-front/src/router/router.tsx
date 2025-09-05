@@ -109,8 +109,6 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
 
     // Update router state in transition.
     startTransition(() => {
-      console.log("navigateBack", url);
-      console.log(screens);
       go(url);
       setScreens(screens.toSpliced(screens.length - 1, 1));
     });
@@ -118,8 +116,6 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
 
   useEffect(() => {
     function handlePopState() {
-      // This should not animate because restoration has to be synchronous.
-      // Even though it's a transition.
       setScreens((prev) => prev.toSpliced(prev.length - 1, 1));
       startTransition(() => {
         setRouterState({
@@ -141,8 +137,6 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
   useLayoutEffect(() => {
     pendingNav();
   }, [pendingNav]);
-
-  console.log(screens);
 
   const currentScreen = screens[screens.length - 1];
   const previousScreen = screens[screens.length - 2];
