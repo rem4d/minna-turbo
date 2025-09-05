@@ -25,7 +25,11 @@ export default function RepeatDeckScreen({
     typeof rangeFrom === "number" && typeof rangeTo === "number";
 
   return (
-    <motion.div key="c3" className="auto-rows-1fr mt-0 grid grid-cols-9 pb-2">
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      className="auto-rows-1fr mt-0 grid grid-cols-9 pb-2"
+    >
       {kanjis?.map((k) => (
         <KCell
           key={k.id}
