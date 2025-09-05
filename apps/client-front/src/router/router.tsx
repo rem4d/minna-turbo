@@ -15,11 +15,11 @@ interface RouterContextValue {
   isPending: boolean;
   params: Record<string, string>;
   direction: number;
-  animationStyle: "slide" | "default";
-}
-
-interface NavigateOptions {
-  animationStyle?: "slide" | "default";
+  animationStyle: "slide" | "default" | "freeze";
+  screens: Screen[];
+  currentScreen: Screen | null;
+  previousScreen: Screen | null;
+  canGoBack: boolean;
 }
 
 const RouterContext = createContext<RouterContextValue>({
@@ -30,26 +30,34 @@ const RouterContext = createContext<RouterContextValue>({
   isPending: false,
   direction: 1,
   animationStyle: "default",
+  screens: [],
+  currentScreen: null,
+  previousScreen: null,
+  canGoBack: false,
 });
 
 export function useRouter() {
   return use(RouterContext);
 }
 
-export function useIsNavPending() {
-  return use(RouterContext).isPending;
-}
-
-export function Router({ children }: PropsWithChildren) {
+export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
   const [routerState, setRouterState] = useState({
     pendingNav: () => {},
     url: document.location.pathname,
   });
   const [isPending, startTransition] = useTransition();
   const [direction, setDirection] = useState<number>(1);
-  const [animationStyle, setAnimationStyle] = useState<"slide" | "default">(
-    "default",
-  );
+  const [animationStyle, setAnimationStyle] =
+    useState<RouterContextValue["animationStyle"]>("default");
+  const [screens, setScreens] = useState<Screen[]>([
+    {
+      id: "initial",
+      url: routes[0].path,
+      element: routes[0].element,
+      key: Date.now(),
+      name: "initial",
+    },
+  ]);
 
   const go = (url: string) => {
     setRouterState({
@@ -65,18 +73,34 @@ export function Router({ children }: PropsWithChildren) {
     setDirection(1);
     setAnimationStyle(as);
 
+    const found = routes.find((route) => route.path === url);
+
     // Update router state in transition.
     startTransition(() => {
       go(url);
+      if (found) {
+        setScreens((prev) => [
+          ...prev,
+          {
+            id: `screen-${Date.now()}`,
+            url,
+            element: found.element,
+            name: found.name,
+            key: Date.now(),
+          },
+        ]);
+      }
     });
   };
 
   const navigateBack = (url: string) => {
     setDirection(-1);
     setAnimationStyle("slide");
+
     // Update router state in transition.
     startTransition(() => {
       go(url);
+      setScreens((prev) => prev.toSpliced(prev.length - 1, 1));
     });
   };
 
@@ -84,6 +108,7 @@ export function Router({ children }: PropsWithChildren) {
     function handlePopState() {
       // This should not animate because restoration has to be synchronous.
       // Even though it's a transition.
+      setScreens((prev) => prev.toSpliced(prev.length - 1, 1));
       startTransition(() => {
         setRouterState({
           url: document.location.pathname + document.location.search,
@@ -105,6 +130,10 @@ export function Router({ children }: PropsWithChildren) {
     pendingNav();
   }, [pendingNav]);
 
+  const currentScreen = screens[screens.length - 1];
+  const previousScreen = screens[screens.length - 2];
+  const canGoBack = screens.length > 1;
+
   return (
     <RouterContext
       value={{
@@ -115,9 +144,35 @@ export function Router({ children }: PropsWithChildren) {
         params: {},
         direction,
         animationStyle,
+        screens,
+        currentScreen,
+        previousScreen,
+        canGoBack,
       }}
     >
       {children}
     </RouterContext>
   );
+}
+
+export interface Route {
+  path: string;
+  element: React.ElementType;
+  name?: string;
+}
+
+interface NavigateOptions {
+  animationStyle?: "slide" | "default";
+}
+
+interface RouterProps {
+  routes: Route[];
+}
+
+interface Screen {
+  id: string;
+  url: string;
+  element: React.ElementType;
+  key: number;
+  name?: string;
 }

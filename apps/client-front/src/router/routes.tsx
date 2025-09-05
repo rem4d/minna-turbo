@@ -1,4 +1,3 @@
-import type { ReactElement } from "react";
 import { AllKanjiPage } from "@/pages/AllKanjiPage";
 import { DictionaryPage } from "@/pages/DictionaryPage";
 import { FavouriteSentencesPage } from "@/pages/FavouriteSentencesPage";
@@ -7,6 +6,8 @@ import { IndexPage } from "@/pages/IndexPage";
 import { LibraryPage } from "@/pages/LibraryPage";
 import { SentencesPage } from "@/pages/SentencesPage";
 import { SettingsPage } from "@/pages/SettingsPage";
+
+import type { Route } from "./router";
 
 export const paths = {
   home: "/",
@@ -19,51 +20,40 @@ export const paths = {
   favouriteSentences: "/favorites",
 };
 
-interface Route {
-  path: string;
-  element: ReactElement;
-  animationStyle: "slide" | "default";
-}
-
 export const routes: Route[] = [
   {
     path: paths.home,
-    element: <IndexPage />,
-    animationStyle: "default",
+    element: IndexPage,
+    name: "index page",
   },
   {
     path: paths.flashcards,
-    element: <FlashcardsPage />,
-    animationStyle: "slide",
+    element: FlashcardsPage,
+    name: "flashcards",
   },
   {
     path: paths.sentences,
-    element: <SentencesPage />,
-    animationStyle: "slide",
+    element: SentencesPage,
+    name: "sentences",
   },
   {
     path: paths.library,
-    element: <LibraryPage />,
-    animationStyle: "default",
+    element: LibraryPage,
   },
   {
     path: paths.settings,
-    element: <SettingsPage />,
-    animationStyle: "default",
+    element: SettingsPage,
   },
   {
     path: paths.allKanji,
-    element: <AllKanjiPage />,
-    animationStyle: "slide",
+    element: AllKanjiPage,
   },
   {
     path: paths.dict,
-    element: <DictionaryPage />,
-    animationStyle: "default",
+    element: DictionaryPage,
   },
   {
     path: paths.favouriteSentences,
-    element: <FavouriteSentencesPage />,
-    animationStyle: "slide",
+    element: FavouriteSentencesPage,
   },
 ];

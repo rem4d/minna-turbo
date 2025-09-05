@@ -1,26 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useStackNavContext } from "@/context/stackNavContext";
-import {
-  animate,
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useTransform,
-} from "motion/react";
+import { useRouter } from "@/router/router";
+import { animate, motion, useMotionValue, useTransform } from "motion/react";
 
 export default React.memo(function StackNavigator() {
-  const { pop, len, direction, currentScreen, previousScreen } =
-    useStackNavContext();
-
-  const canGoBack = len > 1;
+  const { canGoBack, currentScreen, previousScreen, screens, navigateBack } =
+    useRouter();
 
   const [isGestureActive, setIsGestureActive] = useState(false);
 
   // Motion values for interactive gesture
   const dragX = useMotionValue(0);
   const opac = useMotionValue(1);
-  const [show, setShow] = useState(true);
-  const [exitComplete, setExitComplete] = useState(false);
   const dragProgress = useTransform(dragX, [0, 300], [0, 1]);
 
   const previousScreenTransform = useTransform(
@@ -38,19 +28,6 @@ export default React.memo(function StackNavigator() {
       "-20px 0 40px rgba(0,0,0,0.2)",
     ],
   );
-
-  useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout>;
-    if (!show) {
-      timeoutId = setTimeout(() => {
-        setShow(true);
-        opac.set(1);
-        setExitComplete(false);
-      }, 0);
-    }
-    return () => clearTimeout(timeoutId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [show]);
 
   // Refs for gesture tracking
   const touchStartX = useRef(0);
@@ -80,8 +57,6 @@ export default React.memo(function StackNavigator() {
 
       // Only allow rightward swipes
       if (deltaX > 0) {
-        // e.preventDefault();
-
         // Update the drag position in real-time
         dragX.set(Math.min(deltaX, window.innerWidth * 0.8));
       }
@@ -102,19 +77,17 @@ export default React.memo(function StackNavigator() {
     if (currentDragX > threshold || velocity > 500) {
       // Complete the gesture - animate to full width then pop
       animate(dragX, window.innerWidth, {
-        // type: "spring",
-        // stiffness: 400,
-        // damping: 30,
         type: "tween",
         stiffness: 300,
         duration: 0.3,
         onComplete: () => {
+          navigateBack(previousScreen?.url ?? "/settings");
+          setIsGestureActive(false);
+          dragX.set(0);
           opac.set(0);
-          setShow(false);
+
           setTimeout(() => {
-            setIsGestureActive(false);
-            pop();
-            dragX.set(0);
+            // pop();
           }, 0);
         },
       });
@@ -128,32 +101,8 @@ export default React.memo(function StackNavigator() {
         },
       });
     }
-  }, [dragX, gestureStarted, canGoBack, opac, pop]);
-
-  // Animation variants for screen transitions
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? "100%" : "-100%",
-      opacity: 1,
-    }),
-    center: {
-      zIndex: 1, // comment it as temp workaround, have to fix Drawer z index
-      x: 0,
-      opacity: 1,
-    },
-    exit: (direction: number) => {
-      return {
-        zIndex: 0,
-        x: direction < 0 ? "100%" : "-30%",
-        opacity: 1,
-        // opacity: direction < 0 ? 1 : 0.8,
-      };
-    },
-  };
-
-  const onAnimationComplete = () => {
-    setExitComplete(true);
-  };
+  }, [dragX, gestureStarted, canGoBack, opac]);
+  console.log(screens);
 
   return (
     <div
@@ -163,7 +112,6 @@ export default React.memo(function StackNavigator() {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Previous screen - always rendered when there's a back stack */}
       {canGoBack && previousScreen && (
         <motion.div
           className="previous absolute top-0 right-0 bottom-0 left-0 z-0 flex h-full flex-col"
@@ -173,41 +121,27 @@ export default React.memo(function StackNavigator() {
           }}
         >
           <div className="h-full w-full">
-            <previousScreen.component />
+            <previousScreen.element />
           </div>
         </motion.div>
       )}
 
-      {/* Current screen with gesture support */}
-      <AnimatePresence initial={false} custom={direction} mode="sync">
+      {currentScreen && (
         <motion.div
-          key={currentScreen.key}
-          custom={direction}
-          variants={slideVariants}
-          initial={show ? "enter" : undefined}
-          animate={show ? "center" : undefined}
-          exit={show ? "exit" : undefined}
-          transition={{
-            type: "tween",
-            stiffness: 300,
-            duration: 0.3,
-          }}
-          onAnimationComplete={onAnimationComplete}
           className="current absolute top-0 right-0 bottom-0 left-0 z-0 flex h-full flex-col"
           style={{
-            // zIndex: 1,
-            opacity: isGestureActive ? opac : 1,
+            // opacity: isGestureActive ? opac : 1,
             x: isGestureActive ? dragX : 0,
             boxShadow: isGestureActive
-              ? currentScreenShadow
+              ? currentScreenShadow.get()
               : "0 0 0 rgba(0,0,0,0)",
           }}
         >
           <div className="h-full w-full">
-            <currentScreen.component animationComplete={exitComplete} />
+            <currentScreen.element />
           </div>
         </motion.div>
-      </AnimatePresence>
+      )}
     </div>
   );
 });

@@ -16,6 +16,7 @@ import { Base } from "./components/Base";
 import ErrorFallbackComponent from "./components/ErrorFallbackComponent";
 import { PlaySoundContextProvider } from "./context/playSoundContext";
 import { Router } from "./router/router";
+import { routes } from "./router/routes";
 import { ApiProvider } from "./utils/api";
 import { useLaunchParams, useMiniAppSetup } from "./utils/tgUtils";
 
@@ -54,7 +55,7 @@ function App() {
             <PlaySoundContextProvider>
               <SkeletonTheme baseColor="#dadada">
                 {hasLoadedTrans ? (
-                  <Router>
+                  <Router routes={routes}>
                     <Base />
                   </Router>
                 ) : null}

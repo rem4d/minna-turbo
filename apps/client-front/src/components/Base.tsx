@@ -1,13 +1,12 @@
 import { useEffect, useRef } from "react";
-import { useRouter } from "@/router/router";
-import { routes } from "@/router/routes";
 import { useTRPC } from "@/utils/api";
 import { useMutation } from "@tanstack/react-query";
+
+import StackNavigator from "./StackNavigator";
 
 export function Base() {
   const trpc = useTRPC();
   const userCreator = useMutation(trpc.viewer.user.create.mutationOptions());
-  const { url } = useRouter();
 
   const initialized = useRef(false);
 
@@ -18,11 +17,12 @@ export function Base() {
     }
   }, [userCreator]);
 
-  const currentRoute = routes.find((route) => route.path === url);
+  // const currentRoute = routes.find((route) => route.path === url);
 
   return (
     <div className="bg-light-gray relative mx-auto h-screen min-h-[568px] max-w-[450px] min-w-[320px] overflow-hidden">
-      {currentRoute?.element ?? <div>404</div>}
+      {/* {currentRoute?.element ? <currentRoute.element /> : <div>404</div>} */}
+      <StackNavigator />
     </div>
   );
 }
