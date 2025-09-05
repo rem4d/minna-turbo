@@ -22,7 +22,6 @@ export function Base() {
 
   return (
     <div className="bg-light-gray relative mx-auto h-screen min-h-[568px] max-w-[450px] min-w-[320px] overflow-hidden">
-      {/* <Outlet /> */}
       {currentRoute?.element ?? <div>404</div>}
     </div>
   );

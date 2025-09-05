@@ -9,9 +9,11 @@ import { hapticFeedback } from "@/utils/tgUtils";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { AnimatePresence } from "motion/react";
-import * as m from "motion/react-client";
+import * as motion from "motion/react-client";
 import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
+
+import ChooseLastKanjiScreen from "./ChooseLastKanjiScreen";
 
 interface Props {
   open: boolean;
@@ -21,7 +23,7 @@ interface Props {
   showRepeatDeckOption?: boolean;
 }
 
-export default function DrawerSettings({
+export default React.memo(function DrawerSettings({
   open,
   onOpenChange,
   onChangeLevel,
@@ -46,10 +48,12 @@ export default function DrawerSettings({
   const [rangeFrom, setRangeFrom] = useState<number | null>(storedRangeFrom);
   const [rangeTo, setRangeTo] = useState<number | null>(storedRangeTo);
 
-  const { data: kanjis } = useQuery(trpc.viewer.kanji.all.queryOptions());
-  const currentK = kanjis?.find((k) => k.position === selectedLevel);
-  const kFrom = kanjis?.find((k) => k.position === rangeFrom);
-  const kTo = kanjis?.find((k) => k.position === rangeTo);
+  const kanjisQuery = useQuery(trpc.viewer.kanji.all.queryOptions());
+
+  const kanjis = kanjisQuery.data ?? [];
+  const currentK = kanjis.find((k) => k.position === selectedLevel);
+  const kFrom = kanjis.find((k) => k.position === rangeFrom);
+  const kTo = kanjis.find((k) => k.position === rangeTo);
 
   const { t } = useTranslation();
 
@@ -120,7 +124,7 @@ export default function DrawerSettings({
       title={view === "choose_last_kanji" ? t("choose_the_last_kanji") : ""}
       back={view === "choose_last_kanji" || view === "choose_repeat_deck"}
     >
-      <m.div
+      <motion.div
         className="bg-super-silver relative flex flex-col"
         initial="idle"
         animate={
@@ -132,7 +136,7 @@ export default function DrawerSettings({
       >
         <AnimatePresence mode="wait">
           {view === "idle" && (
-            <m.div
+            <motion.div
               key="c1"
               className="max-h-50vh flex h-full flex-col justify-between px-4 pb-6"
             >
@@ -179,26 +183,17 @@ export default function DrawerSettings({
               <Button className="w-full" onClick={onSubmit}>
                 {t("save")}
               </Button>
-            </m.div>
+            </motion.div>
           )}
           {view === "choose_last_kanji" && (
-            <m.div
-              key="c2"
-              className="auto-rows-1fr mt-0 grid grid-cols-9 pb-2"
-            >
-              {kanjis?.map((k) => (
-                <KCard
-                  key={k.id}
-                  position={k.position}
-                  onClick={onLevelSelect}
-                  kanji={k.kanji}
-                  selected={k.position === selectedLevel}
-                />
-              ))}
-            </m.div>
+            <ChooseLastKanjiScreen
+              onLevelSelect={onLevelSelect}
+              kanjis={kanjis}
+              selectedLevel={selectedLevel}
+            />
           )}
           {showRepeatDeckOption && view === "choose_repeat_deck" && (
-            <m.div
+            <motion.div
               key="c3"
               className="auto-rows-1fr mt-0 grid grid-cols-9 pb-2"
             >
@@ -217,13 +212,13 @@ export default function DrawerSettings({
                   }
                 />
               ))}
-            </m.div>
+            </motion.div>
           )}
         </AnimatePresence>
-      </m.div>
+      </motion.div>
     </Drawer>
   );
-}
+});
 
 interface KCardProps {
   position: number;
@@ -244,7 +239,7 @@ const KCard: FC<KCardProps> = React.memo(
     onClick,
   }) => {
     return (
-      <m.div
+      <motion.div
         initial={{ scale: 1 }}
         whileTap={{ scale: 1.1 }}
         onClick={() => onClick(position)}
@@ -258,7 +253,7 @@ const KCard: FC<KCardProps> = React.memo(
         <div className="font-hiragino cursor-pointer text-center text-[28px] font-bold select-none">
           {kanji}
         </div>
-      </m.div>
+      </motion.div>
     );
   },
 );

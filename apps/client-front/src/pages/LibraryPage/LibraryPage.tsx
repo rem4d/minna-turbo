@@ -30,7 +30,9 @@ export const LibraryPage: FC = () => {
                 <ListItem
                   title={t("see_all")}
                   icon={<KanjiIcon className="size-[20px]" />}
-                  onClick={() => navigate(paths.allKanji)}
+                  onClick={() =>
+                    navigate(paths.allKanji, { animationStyle: "slide" })
+                  }
                   right="arrow"
                 />
               </List>

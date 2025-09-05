@@ -21,7 +21,9 @@ export const IndexPage = React.memo(() => {
               desc={t("sentences_desc")}
               to="/sentences"
               color="yellow"
-              onClick={() => navigate("/sentences")}
+              onClick={() =>
+                navigate("/sentences", { animationStyle: "slide" })
+              }
               icon={
                 <div className="absolute -right-2 -bottom-2 z-0 w-[40%] opacity-40">
                   <BubbleIcon className="size-full" />
@@ -33,7 +35,9 @@ export const IndexPage = React.memo(() => {
               desc={t("flashcards_desc")}
               to="/flashcards"
               color="cyan"
-              onClick={() => navigate("/flashcards")}
+              onClick={() =>
+                navigate("/flashcards", { animationStyle: "slide" })
+              }
               icon={
                 <div className="absolute right-2 -bottom-2 z-0 w-[70px] opacity-40">
                   <DeckIcon className="size-full" />

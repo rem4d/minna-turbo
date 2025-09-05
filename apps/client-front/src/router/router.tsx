@@ -8,16 +8,18 @@ import {
   useTransition,
 } from "react";
 
-import { routes } from "./routes";
-
 interface RouterContextValue {
   url: string;
-  navigate: (url: string) => void;
+  navigate: (url: string, options?: NavigateOptions) => void;
   navigateBack: (url: string) => void;
   isPending: boolean;
   params: Record<string, string>;
   direction: number;
   animationStyle: "slide" | "default";
+}
+
+interface NavigateOptions {
+  animationStyle?: "slide" | "default";
 }
 
 const RouterContext = createContext<RouterContextValue>({
@@ -38,15 +40,6 @@ export function useIsNavPending() {
   return use(RouterContext).isPending;
 }
 
-export const useMatch = (path: string) => {
-  const url = use(RouterContext).url;
-  const currentRoute = routes.find((route) => route.path === url);
-  if (currentRoute) {
-    return currentRoute.path === path;
-  }
-  return false;
-};
-
 export function Router({ children }: PropsWithChildren) {
   const [routerState, setRouterState] = useState({
     pendingNav: () => {},
@@ -58,35 +51,34 @@ export function Router({ children }: PropsWithChildren) {
     "default",
   );
 
-  function go(url: string) {
+  const go = (url: string) => {
     setRouterState({
       url,
       pendingNav() {
         window.history.pushState({}, "", url);
       },
     });
-  }
-  function navigate(url: string) {
+  };
+
+  const navigate = (url: string, options?: NavigateOptions) => {
+    const as = options?.animationStyle ?? "default";
     setDirection(1);
-    const currentRoute = routes.find((route) => route.path === url);
-    console.log(currentRoute);
-    if (currentRoute) {
-      setAnimationStyle(currentRoute.animationStyle);
-    }
+    setAnimationStyle(as);
+
     // Update router state in transition.
     startTransition(() => {
       go(url);
     });
-  }
+  };
 
-  function navigateBack(url: string) {
+  const navigateBack = (url: string) => {
     setDirection(-1);
     setAnimationStyle("slide");
     // Update router state in transition.
     startTransition(() => {
       go(url);
     });
-  }
+  };
 
   useEffect(() => {
     function handlePopState() {
