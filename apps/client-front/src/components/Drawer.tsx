@@ -30,6 +30,7 @@ export default function _Drawer({
       open={open}
       onOpenChange={() => onOpenChange(!open)}
       {...props}
+      autoFocus={false}
     >
       <Drawer.Portal>
         <Drawer.Overlay className="absolute inset-0 z-20 bg-black/40" />
