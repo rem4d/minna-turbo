@@ -15,15 +15,15 @@ export default React.memo(function StackNavigator() {
     ["translateX(-30%)", "translateX(0%)"],
   );
 
-  const currentScreenShadow = useTransform(
-    dragProgress,
-    [0, 0.5, 1],
-    [
-      "0 0 0 rgba(0,0,0,0)",
-      "-10px 0 30px rgba(0,0,0,0.1)",
-      "-20px 0 40px rgba(0,0,0,0.2)",
-    ],
-  );
+  // const currentScreenShadow = useTransform(
+  //   dragProgress,
+  //   [0, 0.5, 1],
+  //   [
+  //     "0 0 0 rgba(0,0,0,0)",
+  //     "-10px 0 30px rgba(0,0,0,0.1)",
+  //     "-20px 0 40px rgba(0,0,0,0.2)",
+  //   ],
+  // );
 
   // Refs for gesture tracking
   const touchStartX = useRef(0);

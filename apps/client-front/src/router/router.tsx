@@ -13,7 +13,7 @@ type AnimationStyle = "slide" | "default" | "freeze";
 interface RouterContextValue {
   url: string;
   navigate: (url: string, options?: NavigateOptions) => void;
-  navigateBack: (url: string, ooptions?: NavigateOptions) => void;
+  navigateBack: (url: string, options?: NavigateOptions) => void;
   isPending: boolean;
   params: Record<string, string>;
   direction: number;
@@ -55,15 +55,16 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
   const [direction, setDirection] = useState<number>(1);
   const [animationStyle, setAnimationStyle] =
     useState<AnimationStyle>("default");
-  const [screens, setScreens] = useState<Screen[]>([
-    {
-      id: "initial",
-      url: routes[0].path,
-      element: routes[0].element,
-      key: Date.now(),
-      name: "initial",
-    },
-  ]);
+
+  const initScreen = {
+    id: "initial",
+    url: routes[0].path,
+    element: routes[0].element,
+    key: Date.now(),
+    name: "initial",
+  };
+
+  const [screens, setScreens] = useState<Screen[]>([initScreen]);
 
   const go = (url: string) => {
     setRouterState({
@@ -108,8 +109,10 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
 
     // Update router state in transition.
     startTransition(() => {
+      console.log("navigateBack", url);
+      console.log(screens);
       go(url);
-      setScreens((prev) => prev.toSpliced(prev.length - 1, 1));
+      setScreens(screens.toSpliced(screens.length - 1, 1));
     });
   };
 
@@ -138,6 +141,8 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
   useLayoutEffect(() => {
     pendingNav();
   }, [pendingNav]);
+
+  console.log(screens);
 
   const currentScreen = screens[screens.length - 1];
   const previousScreen = screens[screens.length - 2];

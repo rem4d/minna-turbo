@@ -25,7 +25,7 @@ export function Page({
     if (back) {
       backButton.show();
       return backButton.onClick(() => {
-        void navigateBack(to);
+        void navigateBack(to, { animationStyle: "slide" });
       });
     } else {
       backButton.hide();
