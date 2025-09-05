@@ -35,14 +35,20 @@ export function Page({
 
   let enter = "default";
   let exit = "default";
+  const props = {};
 
   if (animationStyle === "slide") {
     enter = direction === 1 ? "slide-in" : "slide-in-back";
     exit = direction === 1 ? "slide-out" : "slide-out-back";
+  } else if (animationStyle === "freeze") {
+    enter = "freeze-in";
+    // exit = "freeze-out";
+
+    // props = { update: "none" };
   }
 
   return (
-    <ViewTransition default="none" enter={enter} exit={exit}>
+    <ViewTransition default="none" enter={enter} exit={exit} {...props}>
       <div
         className={twMerge(
           "bg-athens-gray h-full overflow-x-hidden overflow-y-auto",

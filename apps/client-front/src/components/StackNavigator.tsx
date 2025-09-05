@@ -1,16 +1,20 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useRouter } from "@/router/router";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 
 export default React.memo(function StackNavigator() {
-  const { canGoBack, currentScreen, previousScreen, screens, navigateBack } =
+  const { canGoBack, currentScreen, previousScreen, navigateBack } =
     useRouter();
 
   const [isGestureActive, setIsGestureActive] = useState(false);
 
-  // Motion values for interactive gesture
   const dragX = useMotionValue(0);
-  const opac = useMotionValue(1);
   const dragProgress = useTransform(dragX, [0, 300], [0, 1]);
 
   const previousScreenTransform = useTransform(
@@ -81,14 +85,15 @@ export default React.memo(function StackNavigator() {
         stiffness: 300,
         duration: 0.3,
         onComplete: () => {
-          navigateBack(previousScreen?.url ?? "/settings");
-          setIsGestureActive(false);
-          dragX.set(0);
-          opac.set(0);
+          navigateBack(previousScreen?.url ?? "/settings", {
+            animationStyle: "freeze",
+          });
+          //
 
           setTimeout(() => {
-            // pop();
-          }, 0);
+            dragX.set(0);
+            setIsGestureActive(false);
+          }, 1000);
         },
       });
     } else {
@@ -101,8 +106,13 @@ export default React.memo(function StackNavigator() {
         },
       });
     }
-  }, [dragX, gestureStarted, canGoBack, opac]);
-  console.log(screens);
+  }, [dragX, gestureStarted, canGoBack]);
+
+  useLayoutEffect(() => {
+    if (!canGoBack) {
+      setIsGestureActive(false);
+    }
+  }, [canGoBack]);
 
   return (
     <div
@@ -114,7 +124,8 @@ export default React.memo(function StackNavigator() {
     >
       {canGoBack && previousScreen && (
         <motion.div
-          className="previous absolute top-0 right-0 bottom-0 left-0 z-0 flex h-full flex-col"
+          key="prev"
+          className="previous absolute top-0 right-0 bottom-0 left-0 flex h-full flex-col"
           style={{
             zIndex: 0,
             transform: previousScreenTransform,
@@ -128,10 +139,12 @@ export default React.memo(function StackNavigator() {
 
       {currentScreen && (
         <motion.div
-          className="current absolute top-0 right-0 bottom-0 left-0 z-0 flex h-full flex-col"
+          key="current"
+          className="current absolute top-0 right-0 bottom-0 left-0 flex h-full flex-col"
           style={{
-            // opacity: isGestureActive ? opac : 1,
-            x: isGestureActive ? dragX : 0,
+            zIndex: 1,
+            // x: dragX,
+            x: canGoBack ? dragX : 0,
             boxShadow: isGestureActive
               ? currentScreenShadow.get()
               : "0 0 0 rgba(0,0,0,0)",

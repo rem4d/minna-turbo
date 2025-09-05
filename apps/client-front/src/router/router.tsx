@@ -8,14 +8,16 @@ import {
   useTransition,
 } from "react";
 
+type AnimationStyle = "slide" | "default" | "freeze";
+
 interface RouterContextValue {
   url: string;
   navigate: (url: string, options?: NavigateOptions) => void;
-  navigateBack: (url: string) => void;
+  navigateBack: (url: string, ooptions?: NavigateOptions) => void;
   isPending: boolean;
   params: Record<string, string>;
   direction: number;
-  animationStyle: "slide" | "default" | "freeze";
+  animationStyle: AnimationStyle;
   screens: Screen[];
   currentScreen: Screen | null;
   previousScreen: Screen | null;
@@ -40,6 +42,10 @@ export function useRouter() {
   return use(RouterContext);
 }
 
+export function useIsNavPending() {
+  return use(RouterContext).isPending;
+}
+
 export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
   const [routerState, setRouterState] = useState({
     pendingNav: () => {},
@@ -48,7 +54,7 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
   const [isPending, startTransition] = useTransition();
   const [direction, setDirection] = useState<number>(1);
   const [animationStyle, setAnimationStyle] =
-    useState<RouterContextValue["animationStyle"]>("default");
+    useState<AnimationStyle>("default");
   const [screens, setScreens] = useState<Screen[]>([
     {
       id: "initial",
@@ -93,9 +99,9 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
     });
   };
 
-  const navigateBack = (url: string) => {
+  const navigateBack = (url: string, options?: NavigateOptions) => {
     setDirection(-1);
-    setAnimationStyle("slide");
+    setAnimationStyle(options?.animationStyle ?? "slide");
 
     // Update router state in transition.
     startTransition(() => {
@@ -133,6 +139,7 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
   const currentScreen = screens[screens.length - 1];
   const previousScreen = screens[screens.length - 2];
   const canGoBack = screens.length > 1;
+  console.log(screens);
 
   return (
     <RouterContext
@@ -162,7 +169,7 @@ export interface Route {
 }
 
 interface NavigateOptions {
-  animationStyle?: "slide" | "default";
+  animationStyle?: AnimationStyle;
 }
 
 interface RouterProps {
