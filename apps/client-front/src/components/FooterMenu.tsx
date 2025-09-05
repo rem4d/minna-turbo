@@ -17,7 +17,7 @@ export function FooterMenu(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <ViewTransition update="none">
+    <ViewTransition enter="disabled" exit="disabled" update="none">
       <div
         className={twJoin(
           "absolute bottom-0 h-[87px] w-full",
@@ -64,7 +64,7 @@ text-[11px] font-unbounded font-normal text-gray-chateau
 `;
   const { navigate } = useRouter();
   const onClick = () => {
-    navigate(to);
+    navigate(to, { replace: true });
   };
   return (
     <div

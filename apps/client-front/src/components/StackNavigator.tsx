@@ -1,18 +1,10 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "@/router/router";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 
 export default React.memo(function StackNavigator() {
   const { canGoBack, currentScreen, previousScreen, navigateBack } =
     useRouter();
-
-  const [isGestureActive, setIsGestureActive] = useState(false);
 
   const dragX = useMotionValue(0);
   const dragProgress = useTransform(dragX, [0, 300], [0, 1]);
@@ -47,7 +39,6 @@ export default React.memo(function StackNavigator() {
     // Only start gesture from left edge (first 20px)
     if (touch.clientX <= 20) {
       gestureStarted.current = true;
-      setIsGestureActive(true);
       dragX.set(0);
     }
   };
@@ -88,12 +79,6 @@ export default React.memo(function StackNavigator() {
           navigateBack(previousScreen?.url ?? "/settings", {
             animationStyle: "freeze",
           });
-          //
-
-          setTimeout(() => {
-            dragX.set(0);
-            setIsGestureActive(false);
-          }, 1000);
         },
       });
     } else {
@@ -101,17 +86,15 @@ export default React.memo(function StackNavigator() {
       animate(dragX, 0, {
         type: "tween",
         stiffness: 300,
-        onComplete: () => {
-          setIsGestureActive(false);
-        },
       });
     }
   }, [dragX, gestureStarted, canGoBack]);
 
   useLayoutEffect(() => {
     if (!canGoBack) {
-      setIsGestureActive(false);
+      dragX.set(0);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canGoBack]);
 
   return (
@@ -143,11 +126,10 @@ export default React.memo(function StackNavigator() {
           className="current absolute top-0 right-0 bottom-0 left-0 flex h-full flex-col"
           style={{
             zIndex: 1,
-            // x: dragX,
             x: canGoBack ? dragX : 0,
-            boxShadow: isGestureActive
-              ? currentScreenShadow.get()
-              : "0 0 0 rgba(0,0,0,0)",
+            // boxShadow: canGoBack
+            //   ? currentScreenShadow.get()
+            //   : "0 0 0 rgba(0,0,0,0)",
           }}
         >
           <div className="h-full w-full">

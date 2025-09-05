@@ -25,7 +25,8 @@
 ::view-transition-new(.freeze-in) {
   animation-name: noFade;
 }
-::view-transition-group(.freeze) {
+::view-transition-group(.disabled) {
+  animation-duration: 0ms !important;
 }
 
 @keyframes slideOutLeft {

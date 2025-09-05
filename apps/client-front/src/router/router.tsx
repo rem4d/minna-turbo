@@ -85,16 +85,19 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
     startTransition(() => {
       go(url);
       if (found) {
-        setScreens((prev) => [
-          ...prev,
-          {
-            id: `screen-${Date.now()}`,
-            url,
-            element: found.element,
-            name: found.name,
-            key: Date.now(),
-          },
-        ]);
+        const newScreen = {
+          id: `screen-${Date.now()}`,
+          url,
+          element: found.element,
+          name: found.name,
+          key: Date.now(),
+        };
+
+        if (options?.replace) {
+          setScreens([newScreen]);
+        } else {
+          setScreens((prev) => [...prev, newScreen]);
+        }
       }
     });
   };
@@ -139,7 +142,6 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
   const currentScreen = screens[screens.length - 1];
   const previousScreen = screens[screens.length - 2];
   const canGoBack = screens.length > 1;
-  console.log(screens);
 
   return (
     <RouterContext
@@ -170,6 +172,7 @@ export interface Route {
 
 interface NavigateOptions {
   animationStyle?: AnimationStyle;
+  replace?: boolean;
 }
 
 interface RouterProps {
