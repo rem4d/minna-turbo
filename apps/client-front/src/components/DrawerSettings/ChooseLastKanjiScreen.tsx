@@ -19,7 +19,7 @@ export default React.memo(function ChooseLastKanjiScreen({
   const kanjis = kanjisQuery.data ?? [];
 
   return (
-    <motion.div key="c2" className="auto-rows-1fr mt-0 grid grid-cols-9 pb-2">
+    <motion.div className="auto-rows-1fr mt-0 grid grid-cols-9 pb-2">
       {kanjis?.map((k) => (
         <KCell
           key={k.id}

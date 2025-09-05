@@ -1,7 +1,7 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Drawer from "@/components/Drawer";
 import { hapticFeedback } from "@/utils/tgUtils";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage, usePrevious } from "@uidotdev/usehooks";
 import { AnimatePresence } from "motion/react";
 import * as motion from "motion/react-client";
 import { useTranslation } from "react-i18next";
@@ -42,24 +42,21 @@ export default React.memo(function DrawerSettings({
   const [rangeFrom, setRangeFrom] = useState<number | null>(storedRangeFrom);
   const [rangeTo, setRangeTo] = useState<number | null>(storedRangeTo);
 
+  const previousLevel = usePrevious(selectedLevel);
+
+  useEffect(() => {
+    if (previousLevel > selectedLevel) {
+      setRangeFrom(null);
+      setRangeTo(null);
+    }
+  }, [previousLevel, selectedLevel]);
+
   const { t } = useTranslation();
 
-  const onLevelSelect = useCallback(
-    (position: number) => {
-      setSelectedLevel(position);
-      hapticFeedback("light");
-
-      if (position < selectedLevel) {
-        setRangeFrom(null);
-        setRangeTo(null);
-      }
-
-      if (selectedLevel === position) {
-        // setView("idle");
-      }
-    },
-    [selectedLevel],
-  );
+  const onLevelSelect = useCallback((position: number) => {
+    setSelectedLevel(position);
+    hapticFeedback("light");
+  }, []);
 
   const onSubmit = () => {
     if (selectedLevel !== level) {
@@ -67,7 +64,6 @@ export default React.memo(function DrawerSettings({
     }
 
     onOpenChange(false);
-
     setStoredRangeFrom(rangeFrom);
     setStoredRangeTo(rangeTo);
   };
@@ -93,6 +89,7 @@ export default React.memo(function DrawerSettings({
     },
     [rangeTo, rangeFrom],
   );
+
   const onBackClick = () => {
     setView("idle");
     if (rangeFrom && rangeTo === null) {
@@ -112,7 +109,9 @@ export default React.memo(function DrawerSettings({
         className="bg-super-silver relative flex flex-col"
         initial="idle"
         animate={
-          view === "last_kanji" || view === "repeat_deck" ? "choose" : "idle"
+          view === "last_kanji" || view === "repeat_deck"
+            ? "fullScreen"
+            : "halfScreen"
         }
         variants={parentVariant}
       >
@@ -150,13 +149,13 @@ export default React.memo(function DrawerSettings({
 
 const duration = 0.3;
 const parentVariant = {
-  idle: {
+  halfScreen: {
     height: "50vh",
     transition: {
       duration,
     },
   },
-  choose: {
+  fullScreen: {
     height: "90vh",
     transition: {
       duration,

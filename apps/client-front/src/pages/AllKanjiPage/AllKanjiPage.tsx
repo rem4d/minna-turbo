@@ -1,10 +1,11 @@
 import type { FC } from "react";
 import type { CellComponentProps } from "react-window";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Drawer from "@/components/Drawer";
 import KCard from "@/components/KCard";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
+import useObserveRect from "@/hooks/useObserveRect";
 import { useTRPC } from "@/utils/api";
 import { type KanjiOutput } from "@rem4d/api";
 import { useQuery } from "@tanstack/react-query";
@@ -21,24 +22,9 @@ export const AllKanjiPage: FC = () => {
   const [selectedKId, setSelectedKId] = useState<number | null>(null);
   const [searchValue, setSearchValue] = useState("");
   const gridRef = useRef<HTMLDivElement>(null);
-  const [gridWidth, setGridWidth] = useState(0);
+  const { width: gridWidth } = useObserveRect(gridRef);
 
   const trpc = useTRPC();
-
-  useEffect(() => {
-    const elem = gridRef.current;
-    if (!elem) return;
-
-    const observer = new ResizeObserver((entries) => {
-      const w = entries[0].contentRect.width;
-      setGridWidth(w);
-    });
-    observer.observe(elem);
-
-    return () => {
-      observer.unobserve(elem);
-    };
-  }, []);
 
   const debouncedValue = useDebounce(searchValue, 400);
 
@@ -112,7 +98,11 @@ export const AllKanjiPage: FC = () => {
             <Grid
               className="no-scroll flex flex-col items-center"
               cellComponent={Card}
-              cellProps={{ list: displayData ?? [], onClick: onCardClick }}
+              cellProps={{
+                list: displayData ?? [],
+                onClick: onCardClick,
+                colCount,
+              }}
               columnCount={colCount}
               columnWidth={colSize}
               rowCount={virtualizedRowCount}
@@ -136,12 +126,14 @@ function Card({
   columnIndex,
   rowIndex,
   style,
+  colCount,
   onClick,
 }: CellComponentProps<{
   list: KanjiOutput[];
+  colCount: number;
   onClick?: (id: number) => void;
 }>) {
-  const index = rowIndex * 4 + columnIndex;
+  const index = rowIndex * colCount + columnIndex;
 
   const en = list[index]?.en;
   const means = en?.split(";")[0];
