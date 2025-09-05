@@ -13,21 +13,8 @@ export function FooterMenu(): ReactElement {
   const libraryMatch = useMatch(paths.library);
   const dictMatch = useMatch(paths.dict);
   const settingsMatch = useMatch(paths.settings);
-  // const allKanjiMatch = useMatch(paths.allKanji);
-  // const sentencesMatch = useMatch(paths.sentences);
-  // const flashcardsMatch = useMatch(paths.flashcards);
   const favouritesMatch = useMatch(paths.favouriteSentences);
   const { t } = useTranslation();
-
-  const hideFooter = false;
-  // Boolean(dictMatch) ||
-  // Boolean(sentencesMatch) ||
-  // Boolean(flashcardsMatch) ||
-  // Boolean(allKanjiMatch);
-
-  if (hideFooter) {
-    return <></>;
-  }
 
   return (
     <ViewTransition update="none">

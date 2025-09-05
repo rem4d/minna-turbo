@@ -1,4 +1,3 @@
-import type { FC } from "react";
 import React, { useCallback, useState } from "react";
 import Button from "@/components/Button";
 import Drawer from "@/components/Drawer";
@@ -11,9 +10,9 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { AnimatePresence } from "motion/react";
 import * as motion from "motion/react-client";
 import { useTranslation } from "react-i18next";
-import { twMerge } from "tailwind-merge";
 
 import ChooseLastKanjiScreen from "./ChooseLastKanjiScreen";
+import RepeatDeckScreen from "./RepeatDeckScreen";
 
 interface Props {
   open: boolean;
@@ -113,9 +112,6 @@ export default React.memo(function DrawerSettings({
     }
   };
 
-  const rangeSelected =
-    typeof rangeFrom === "number" && typeof rangeTo === "number";
-
   return (
     <Drawer
       open={open}
@@ -188,75 +184,22 @@ export default React.memo(function DrawerSettings({
           {view === "choose_last_kanji" && (
             <ChooseLastKanjiScreen
               onLevelSelect={onLevelSelect}
-              kanjis={kanjis}
               selectedLevel={selectedLevel}
             />
           )}
           {showRepeatDeckOption && view === "choose_repeat_deck" && (
-            <motion.div
-              key="c3"
-              className="auto-rows-1fr mt-0 grid grid-cols-9 pb-2"
-            >
-              {kanjis?.map((k) => (
-                <KCard
-                  key={k.id}
-                  position={k.position}
-                  onClick={onRangeSelectClick}
-                  kanji={k.kanji}
-                  disabled={k.position > selectedLevel}
-                  selected={k.position === rangeFrom || k.position === rangeTo}
-                  inRange={
-                    rangeSelected &&
-                    k.position > rangeFrom &&
-                    k.position < rangeTo
-                  }
-                />
-              ))}
-            </motion.div>
+            <RepeatDeckScreen
+              rangeTo={rangeTo}
+              rangeFrom={rangeFrom}
+              selectedLevel={selectedLevel}
+              onRangeSelectClick={onRangeSelectClick}
+            />
           )}
         </AnimatePresence>
       </motion.div>
     </Drawer>
   );
 });
-
-interface KCardProps {
-  position: number;
-  kanji: string;
-  selected: boolean;
-  inRange?: boolean;
-  disabled?: boolean;
-  onClick: (position: number) => void;
-}
-
-const KCard: FC<KCardProps> = React.memo(
-  ({
-    position,
-    kanji,
-    selected,
-    inRange = false,
-    disabled = false,
-    onClick,
-  }) => {
-    return (
-      <motion.div
-        initial={{ scale: 1 }}
-        whileTap={{ scale: 1.1 }}
-        onClick={() => onClick(position)}
-        className={twMerge(
-          "relative flex aspect-square h-full w-full flex-col justify-center text-black",
-          selected && "bg-outer-space rounded-md text-white",
-          inRange && "bg-geyser",
-          disabled && "pointer-events-none opacity-40",
-        )}
-      >
-        <div className="font-hiragino cursor-pointer text-center text-[28px] font-bold select-none">
-          {kanji}
-        </div>
-      </motion.div>
-    );
-  },
-);
 
 const duration = 0.3;
 const parentVariant = {
