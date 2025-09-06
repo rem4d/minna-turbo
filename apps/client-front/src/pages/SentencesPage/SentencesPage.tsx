@@ -11,7 +11,7 @@ import { SpinnerBig } from "@/components/Spinner";
 import Toast from "@/components/Toast";
 import { useTRPC } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
-import { hapticFeedback, useLaunchParams } from "@/utils/tgUtils";
+import { hapticFeedback, useIsMobile } from "@/utils/tgUtils";
 import useUnmount from "@/utils/useUnmount";
 import { type SentenceOutput } from "@rem4d/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -49,8 +49,7 @@ export const SentencesPage: FC = () => {
     [] as SentenceOutput[],
   );
 
-  const lp = useLaunchParams();
-  const isMobile = !lp.platform.includes("desktop");
+  const _isMobile = useIsMobile();
 
   const getRandomizedQuery = trpc.viewer.sentence.getRandomized.queryOptions(
     undefined,
@@ -226,7 +225,7 @@ export const SentencesPage: FC = () => {
           <div
             className="text-scorpion/90 absolute top-2 left-1/2 mb-3 flex h-4 -translate-x-1/2 justify-center text-sm"
             style={{
-              paddingTop: isMobile ? 16 : 0,
+              paddingTop: _isMobile ? 16 : 0,
             }}
           >
             {user ? (
@@ -243,7 +242,7 @@ export const SentencesPage: FC = () => {
             handleNextClick={handleNextClick}
             handlePrevClick={handlePrevClick}
           />
-          <div className={isMobile ? "mt-16" : "mt-10"}>
+          <div className={_isMobile ? "mt-16" : "mt-10"}>
             <SentenceViewer sentence={sentence} dropdownItems={dropdownItems} />
 
             {/* no sentences message*/}

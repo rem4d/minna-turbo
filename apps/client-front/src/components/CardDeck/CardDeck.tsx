@@ -3,7 +3,7 @@ import type { FC } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow-circle.svg?react";
 import { getPosition } from "@/utils/event";
-import { useLaunchParams } from "@/utils/tgUtils";
+import { useIsMobile } from "@/utils/tgUtils";
 import { clamp } from "@rem4d/utils";
 import { twMerge } from "tailwind-merge";
 
@@ -40,8 +40,7 @@ export function CardDeck({
     setLineProgress(0);
   }, [total]);
 
-  const lp = useLaunchParams();
-  const isMobile = !lp.platform.includes("desktop");
+  const _isMobile = useIsMobile();
 
   // animation progress(-1 ~ 1)
   const [progress, setProgress] = useState(0);
@@ -246,7 +245,7 @@ export function CardDeck({
                   isActive={isActiveCard}
                   isInteracting={false}
                   index={cardList.length - 1 - index}
-                  isMobile={isMobile}
+                  isMobile={_isMobile}
                   useEye={useEye}
                 />
               </div>
@@ -255,7 +254,7 @@ export function CardDeck({
         </div>
       </div>
       <Arrows
-        isMobile={isMobile}
+        isMobile={_isMobile}
         disablePrevNav={disablePrevNav}
         disableNextNav={disableNextNav}
         handleNextClick={handleNextClick}

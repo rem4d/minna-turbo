@@ -1,6 +1,6 @@
 import type { AppRouter } from "@rem4d/api";
 import React, { useState } from "react";
-import { retrieveLaunchParams } from "@/utils/tgUtils";
+import { initDataRaw } from "@/utils/tgUtils";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
@@ -26,7 +26,6 @@ const queryClient = new QueryClient({
 });
 
 export const trpc = createTRPCContext<AppRouter>();
-// const trpc2  = createTRPCReact<AppRouter>();
 export const { useTRPC } = trpc;
 
 /**
@@ -34,12 +33,12 @@ export const { useTRPC } = trpc;
  * Use only in _app.tsx
  */
 export function ApiProvider(props: { children: React.ReactNode }) {
-  const { initDataRaw } = retrieveLaunchParams();
+  const dataRaw = initDataRaw();
 
   const url = `${import.meta.env.VITE_API_SERVER}trpc/api`;
   const h = new Map<string, string>();
   h.set("x-trpc-source", "client");
-  h.set("Authorization", `tma ${initDataRaw}`);
+  h.set("Authorization", `tma ${dataRaw}`);
 
   const h_ = Object.fromEntries(h);
   const [trpcClient] = useState(() =>

@@ -18,17 +18,11 @@ import { PlaySoundContextProvider } from "./context/playSoundContext";
 import { Router } from "./router/router";
 import { routes } from "./router/routes";
 import { ApiProvider } from "./utils/api";
-import { useLaunchParams, useMiniAppSetup } from "./utils/tgUtils";
+import { useMiniAppSetup, userLanguage } from "./utils/tgUtils";
 
 function App() {
-  const lp = useLaunchParams() as unknown as {
-    platform: string;
-    initData: {
-      user: { languageCode: string };
-    };
-  };
   const { i18n } = useTranslation();
-  const userLang = lp?.initData?.user?.languageCode === "ru" ? "ru" : "en";
+  const userLang = userLanguage() === "ru" ? "ru" : "en";
   const [hasLoadedTrans, setHasLoadedTrans] = useState(false);
 
   useLayoutEffect(() => {

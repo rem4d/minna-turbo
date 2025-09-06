@@ -1,57 +1,57 @@
+import type { LaunchParams } from "@telegram-apps/sdk-react";
 import { useEffect } from "react";
 import {
   miniApp,
   requestFullscreen,
   backButton as sdkBackButton,
   hapticFeedback as sdkHapticFeedback,
-  retrieveLaunchParams as sdkRetrieveLaunchParams,
-  useLaunchParams as sdkUseLaunchParams,
+  initDataRaw as SDKInitDataRaw,
+  retrieveLaunchParams as SDKRetrieveLaunchParams,
   swipeBehavior,
   viewport,
 } from "@telegram-apps/sdk-react";
 
+import {
+  mockInitData,
+  mockInitDataString,
+  mockThemeParams,
+} from "./tgMockData";
+
 const noSdk = import.meta.env.VITE_NO_SDK === "true";
 
-interface TgLaunchParams {
-  platform: string;
-  startParam: string;
-  fullscreen: boolean;
-  initDataRaw: string;
-}
-
-export const retrieveLaunchParams = (): TgLaunchParams => {
+export const initDataRaw = () => {
   if (noSdk) {
-    return {
-      platform: "ios",
-      startParam: "",
-      fullscreen: true,
-      initDataRaw,
-    };
+    return mockInitDataString;
   }
-  const lp = sdkRetrieveLaunchParams() as TgLaunchParams;
-  return lp;
+  return SDKInitDataRaw();
 };
 
-export const useLaunchParams = () => {
+export const useIsMobile = () => {
+  const lp = retrieveLaunchParams();
+  return !lp.tgWebAppPlatform.includes("desktop");
+};
+
+export const userLanguage = () => {
+  const lp = retrieveLaunchParams();
+  const lang = lp.tgWebAppData?.user?.language_code;
+  return lang;
+};
+
+export const retrieveLaunchParams = (): LaunchParams => {
   if (noSdk) {
     return {
-      platform: "ios",
-      initData: {
-        user: { languageCode: "en" },
-      },
+      tgWebAppPlatform: "ios",
+      tgWebAppData: mockInitData,
+      tgWebAppThemeParams: mockThemeParams,
+      tgWebAppVersion: "8.4",
+      tgWebAppStartParam: "",
     };
   }
-  const lp = sdkUseLaunchParams() as unknown as {
-    platform: string;
-    initData: {
-      user: { languageCode: string };
-    };
-  };
-  return lp;
+  return SDKRetrieveLaunchParams();
 };
 
 export const useMiniAppSetup = () => {
-  const lp = useLaunchParams();
+  const lp = retrieveLaunchParams();
 
   useEffect(() => {
     if (noSdk) {
@@ -68,11 +68,10 @@ export const useMiniAppSetup = () => {
 
     const fcIsAvail = requestFullscreen.isAvailable();
 
-    if (fcIsAvail && !lp.platform.includes("desktop")) {
-      // eslint-disable-next-line
+    if (fcIsAvail && !lp.tgWebAppPlatform.includes("desktop")) {
       requestFullscreen();
     }
-  }, [lp.platform]);
+  }, [lp.tgWebAppPlatform]);
 };
 
 export const backButton = {
@@ -105,23 +104,23 @@ export const hapticFeedback = (feedback: "medium" | "heavy" | "light") => {
   }
 };
 
-const initDataRaw = new URLSearchParams([
-  [
-    "user",
-    JSON.stringify({
-      id: 99281932,
-      first_name: "Andrew",
-      last_name: "Rogue",
-      username: "rogue",
-      language_code: "en",
-      is_premium: true,
-      allows_write_to_pm: true,
-    }),
-  ],
-  ["hash", "89d6079ad6762351f38c6dbbc41bb53048019256a9443988af7a48bcad16ba31"],
-  ["auth_date", "1716922846"],
-  ["start_param", "debug"],
-  ["chat_type", "sender"],
-  ["chat_instance", "8428209589180549439"],
-  ["signature", "6fbdaab833d39f54518bd5c3eb3f511d035e68cb"],
-]).toString();
+// const initDataRaw = new URLSearchParams([
+//   [
+//     "user",
+//     JSON.stringify({
+//       id: 99281932,
+//       first_name: "Andrew",
+//       last_name: "Rogue",
+//       username: "rogue",
+//       language_code: "en",
+//       is_premium: true,
+//       allows_write_to_pm: true,
+//     }),
+//   ],
+//   ["hash", "89d6079ad6762351f38c6dbbc41bb53048019256a9443988af7a48bcad16ba31"],
+//   ["auth_date", "1716922846"],
+//   ["start_param", "debug"],
+//   ["chat_type", "sender"],
+//   ["chat_instance", "8428209589180549439"],
+//   ["signature", "6fbdaab833d39f54518bd5c3eb3f511d035e68cb"],
+// ]).toString();
