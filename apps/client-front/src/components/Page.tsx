@@ -22,33 +22,34 @@ export function Page({
   const { direction, navigateBack, animationStyle } = useRouter();
 
   useEffect(() => {
-    if (back) {
+    let offClick: ReturnType<typeof backButton.onClick>;
+
+    if (back && backButton.isAvailable()) {
       backButton.show();
-      return backButton.onClick(() => {
+      offClick = backButton.onClick(() => {
         void navigateBack(to, { animationStyle: "slide" });
       });
     } else {
       backButton.hide();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    return () => {
+      offClick?.();
+    };
   }, [back]);
 
   let enter = "default";
   let exit = "default";
-  const props = {};
 
   if (animationStyle === "slide") {
     enter = direction === 1 ? "slide-in" : "slide-in-back";
     exit = direction === 1 ? "slide-out" : "slide-out-back";
   } else if (animationStyle === "freeze") {
     enter = "freeze-in";
-    // exit = "freeze-out";
-
-    // props = { update: "none" };
   }
 
   return (
-    <ViewTransition default="none" enter={enter} exit={exit} {...props}>
+    <ViewTransition default="none" enter={enter} exit={exit}>
       <div
         className={twMerge(
           "bg-athens-gray h-full overflow-x-hidden overflow-y-auto",

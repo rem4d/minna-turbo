@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import {
   miniApp,
   requestFullscreen,
-  backButton as sdkBackButton,
+  backButton as SDKBackButton,
   hapticFeedback as sdkHapticFeedback,
   initDataRaw as SDKInitDataRaw,
   retrieveLaunchParams as SDKRetrieveLaunchParams,
@@ -75,23 +75,28 @@ export const useMiniAppSetup = () => {
 };
 
 export const backButton = {
+  isAvailable() {
+    if (noSdk) {
+      return false;
+    }
+    return SDKBackButton.mount.isAvailable();
+  },
   show() {
     if (noSdk) {
       return;
     }
-    sdkBackButton.show();
+    SDKBackButton.show();
   },
   hide() {
     if (noSdk) {
       return;
     }
-    sdkBackButton.hide();
+    SDKBackButton.hide();
   },
   onClick(cb: () => void) {
-    if (noSdk) {
-      return;
+    if (!noSdk) {
+      return SDKBackButton.onClick(cb);
     }
-    sdkBackButton.onClick(cb);
   },
 };
 
