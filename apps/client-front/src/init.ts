@@ -24,7 +24,7 @@ export async function init(options: {
 }): Promise<void> {
   if (import.meta.env.VITE_NO_SDK === "true") {
     console.log("No_sdk test environment loaded.");
-    return;
+    return Promise.resolve();
   }
 
   // Set @telegram-apps/sdk-react debug mode and initialize it.

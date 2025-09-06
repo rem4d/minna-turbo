@@ -69,7 +69,7 @@ export const useMiniAppSetup = () => {
     const fcIsAvail = requestFullscreen.isAvailable();
 
     if (fcIsAvail && !lp.tgWebAppPlatform.includes("desktop")) {
-      requestFullscreen();
+      void requestFullscreen();
     }
   }, [lp.tgWebAppPlatform]);
 };

@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
+import React, { useCallback, useLayoutEffect, useRef } from "react";
 import { useRouter } from "@/router/router";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 
@@ -85,6 +85,7 @@ export default React.memo(function StackNavigator() {
         stiffness: 300,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dragX, gestureStarted, canGoBack]);
 
   useLayoutEffect(() => {
