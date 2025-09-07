@@ -142,14 +142,14 @@ function Card({
   const level = list[index]?.position;
   const id = list[index]?.id;
 
-  // eslint-disable-next-line
-  const handleClick = () => onClick?.(id);
-
   if (!id) return null;
 
   return (
-    <div className="" style={style} onClick={handleClick}>
-      <div className="relative m-2 flex aspect-square cursor-pointer flex-col justify-center overflow-hidden rounded-md border border-black/10 bg-white px-1 py-2 shadow-[3px_3px_0px_rgba(41,41,41,0.1)]">
+    <div className="" style={style}>
+      <div
+        className="relative m-2 flex aspect-square cursor-pointer flex-col justify-center overflow-hidden rounded-md border border-black/10 bg-white px-1 py-2 shadow-[3px_3px_0px_rgba(41,41,41,0.1)]"
+        onClick={() => onClick?.(id)}
+      >
         <div className="text-rolling-stone/70 absolute top-2 left-2 text-xs">
           {level}
         </div>
