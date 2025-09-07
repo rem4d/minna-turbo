@@ -25,8 +25,20 @@
 ::view-transition-new(.freeze-in) {
   animation-name: noFade;
 }
+/* ::view-transition-group(.disabled) { */
+/*   animation-duration: 0ms !important; */
+/* } */
 ::view-transition-group(.disabled) {
-  animation-duration: 0ms !important;
+  animation: none;
+}
+::view-transition-new(.fade) {
+  animation-duration: 300ms !important;
+}
+::view-transition-old(.fade) {
+  animation-duration: 300ms !important;
+}
+::view-transition-group(.title) {
+  animation:none;
 }
 
 @keyframes slideOutLeft {

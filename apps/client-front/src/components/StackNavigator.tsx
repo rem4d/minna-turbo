@@ -1,6 +1,16 @@
-import React, { useCallback, useLayoutEffect, useRef } from "react";
+import React, {
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  unstable_ViewTransition as ViewTransition,
+} from "react";
+import { IsHiddenScreenContext } from "@/context/isHiddenScreenContext";
 import { useRouter } from "@/router/router";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
+
+export interface StackedScreenProps {
+  removeSharedTransition?: boolean;
+}
 
 export default React.memo(function StackNavigator() {
   const {
@@ -16,8 +26,8 @@ export default React.memo(function StackNavigator() {
 
   const previousScreenTransform = useTransform(
     dragProgress,
-    [0, 1],
-    ["translateX(-30%)", "translateX(0%)"],
+    [0, 0.005, 1],
+    ["translateX(0)", "translateX(-30%)", "translateX(0%)"],
   );
 
   const currentOverlayOpacity = useTransform(dragProgress, [0, 1], [0.4, 0]);
@@ -74,7 +84,7 @@ export default React.memo(function StackNavigator() {
         duration: 0.3,
         onComplete: () => {
           navigateBack(previousScreen?.url ?? "/settings", {
-            animationStyle: "freeze",
+            animationStyle: "disabled",
           });
         },
       });
@@ -95,6 +105,24 @@ export default React.memo(function StackNavigator() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canGoBack]);
 
+  // const props: { enter?: string; exit?: string } = {};
+
+  // switch (animationStyle) {
+  //   case "slide":
+  //     props.enter = direction === 1 ? "slide-in" : "slide-in-back";
+  //     props.exit = direction === 1 ? "slide-out" : "slide-out-back";
+  //     break;
+  //   case "freeze":
+  //     props.enter = "freeze-in";
+  //     break;
+  //   case "remove":
+  //     break;
+  //   default:
+  //     props.enter = "fade";
+  //     props.exit = "fade";
+  //     break;
+  // }
+
   return (
     <div
       ref={containerRef}
@@ -113,7 +141,7 @@ export default React.memo(function StackNavigator() {
           }}
         >
           <div className="h-full w-full">
-            {animationStyle === "slide" && (
+            {animationStyle === "nav-back" && (
               <motion.div
                 className="absolute h-full w-full bg-black"
                 style={{
@@ -122,7 +150,9 @@ export default React.memo(function StackNavigator() {
                 }}
               />
             )}
-            <previousScreen.element />
+            <IsHiddenScreenContext value={true}>
+              <previousScreen.element />
+            </IsHiddenScreenContext>
           </div>
         </motion.div>
       )}
@@ -134,13 +164,14 @@ export default React.memo(function StackNavigator() {
           style={{
             zIndex: 1,
             x: canGoBack ? dragX : 0,
-            // boxShadow: canGoBack
-            //   ? currentScreenShadow.get()
-            //   : "0 0 0 rgba(0,0,0,0)",
           }}
         >
           <div className="h-full w-full">
-            <currentScreen.element />
+            <IsHiddenScreenContext value={false}>
+              <ViewTransition>
+                <currentScreen.element />
+              </ViewTransition>
+            </IsHiddenScreenContext>
           </div>
         </motion.div>
       )}

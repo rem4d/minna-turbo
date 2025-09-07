@@ -18,8 +18,7 @@ export default function useObserveRect(
     return () => {
       observer.unobserve(elem);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ref]);
 
   return { width };
 }

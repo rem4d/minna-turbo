@@ -22,7 +22,7 @@ export const IndexPage = React.memo(() => {
               to="/sentences"
               color="yellow"
               onClick={() =>
-                navigate("/sentences", { animationStyle: "slide" })
+                navigate("/sentences", { animationStyle: "nav-forward" })
               }
               icon={
                 <div className="absolute -right-2 -bottom-2 z-0 w-[40%] opacity-40">
@@ -36,7 +36,7 @@ export const IndexPage = React.memo(() => {
               to="/flashcards"
               color="cyan"
               onClick={() =>
-                navigate("/flashcards", { animationStyle: "slide" })
+                navigate("/flashcards", { animationStyle: "nav-forward" })
               }
               icon={
                 <div className="absolute right-2 -bottom-2 z-0 w-[70px] opacity-40">

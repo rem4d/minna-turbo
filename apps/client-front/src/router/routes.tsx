@@ -6,6 +6,7 @@ import { IndexPage } from "@/pages/IndexPage";
 import { LibraryPage } from "@/pages/LibraryPage";
 import { SentencesPage } from "@/pages/SentencesPage";
 import { SettingsPage } from "@/pages/SettingsPage";
+import { SingleKanjiPage } from "@/pages/SingleKanjiPage";
 
 import type { Route } from "./router";
 
@@ -14,10 +15,11 @@ export const paths = {
   library: "/library",
   allKanji: "/all-kanji",
   settings: "/settings",
-  dict: "/dict/:level",
+  dict: "/dict/:level", // temporary unavailable
   sentences: "/sentences",
   flashcards: "/flashcards",
   favouriteSentences: "/favorites",
+  singleKanji: "/kanji",
 };
 
 export const routes: Route[] = [
@@ -39,21 +41,31 @@ export const routes: Route[] = [
   {
     path: paths.library,
     element: LibraryPage,
+    name: "library",
   },
   {
     path: paths.settings,
     element: SettingsPage,
+    name: "settings",
   },
   {
     path: paths.allKanji,
     element: AllKanjiPage,
+    name: "all kanji",
   },
   {
     path: paths.dict,
     element: DictionaryPage,
+    name: "dict",
   },
   {
     path: paths.favouriteSentences,
     element: FavouriteSentencesPage,
+    name: "fav",
+  },
+  {
+    path: paths.singleKanji,
+    element: SingleKanjiPage,
+    name: "single kanji",
   },
 ];
