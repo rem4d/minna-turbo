@@ -91,6 +91,7 @@ export const AllKanjiPage: FC = () => {
     estimateSize: () => colSize,
     gap: 20,
   });
+  const filtered = displayData.slice(0, 40);
 
   return (
     <Page backTo="/library" className="overflow-y-hidden">
@@ -121,6 +122,11 @@ export const AllKanjiPage: FC = () => {
           ref={containerRef}
           className="no-scroll flex h-full max-h-[calc(100vh-140px)] w-full overflow-scroll"
         >
+          {/* <div className="flex flex-col space-y-8"> */}
+          {/*   {filtered.map((d) => ( */}
+          {/*     <PreviewCard key={d.id} d={d} onClick={onCardClick} /> */}
+          {/*   ))} */}
+          {/* </div> */}
           <div
             style={{
               height: `${rowVirtualizer.getTotalSize()}px`,
