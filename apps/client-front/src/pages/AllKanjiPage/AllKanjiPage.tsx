@@ -82,6 +82,7 @@ export const AllKanjiPage: FC = () => {
     gap: 20,
     overscan: 1,
     initialOffset: () => listOffset,
+    initialRect: { height: 300, width: 300 },
   });
 
   const columnVirtualizer = useVirtualizer({
@@ -90,8 +91,8 @@ export const AllKanjiPage: FC = () => {
     getScrollElement: () => containerRef.current,
     estimateSize: () => colSize,
     gap: 20,
+    initialRect: { height: 300, width: 300 },
   });
-  const filtered = displayData.slice(0, 40);
 
   return (
     <Page backTo="/library" className="overflow-y-hidden">
