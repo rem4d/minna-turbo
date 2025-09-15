@@ -21,6 +21,7 @@ import SearchBar from "./SearchBar";
 export const AllKanjiPage: FC = () => {
   const [selectedKId, setSelectedKId] = useState<number | null>(null);
   const [searchValue, setSearchValue] = useState("");
+  console.log(1);
   const gridRef = useRef<HTMLDivElement>(null);
   const { width: gridWidth } = useObserveRect(gridRef);
 
