@@ -279,9 +279,27 @@ animation-delay: -0.15s;
 	}
 }
 
-
-
 .GradientBg {
   /* background: linear-gradient(0deg, #E9E4EF 0%,  #F2E8DF 50%, #F1E9DD 100%); */
   background: linear-gradient(0deg, #F1E9DD 0%, #F2E8DF 50%, #E9E4EF 100%);
+}
+
+.fallback {
+  background-image: linear-gradient(90deg, #e6e6e6 25%, #ccc 50%, #e6e6e6 75%);
+  background-size: 500px 100%;
+  border-radius: 0.5rem;
+
+  animation: shimmer 1.5s infinite;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -500px 0;
+  }
+
+  100% {
+    background-position: 500px 0;
+  }
 }

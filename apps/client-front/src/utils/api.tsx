@@ -21,6 +21,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 60 * 24, // 24 hours
+      experimental_prefetchInRender: true,
     },
   },
 });
