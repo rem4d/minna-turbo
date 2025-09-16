@@ -20,7 +20,7 @@ export function Page({
   backAnimationStyle = "nav-back",
 }: PropsWithChildren<PageProps>) {
   const { navigateBack, animationStyle: routerAnimationStyle } = useRouter();
-  const showNav = true;
+  const showNav = import.meta.env.DEV;
 
   const back = Boolean(backTo);
 
