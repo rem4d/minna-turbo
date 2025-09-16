@@ -23,6 +23,7 @@ export function Page({
   const showNav = import.meta.env.DEV;
 
   const back = Boolean(backTo);
+  console.log("");
 
   useEffect(() => {
     let offClick: ReturnType<typeof backButton.onClick>;
