@@ -21,11 +21,7 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import Lottie from "lottie-react";
 import { useTranslation } from "react-i18next";
 
-interface FlashcardsPageProps {
-  animationComplete?: boolean;
-}
-
-export const FlashcardsPage: FC<FlashcardsPageProps> = () => {
+export const FlashcardsPage = () => {
   const [currentTab, setCurrentTab] = useState(0);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [isFinished, setFinished] = useState(false);
@@ -138,6 +134,9 @@ export const FlashcardsPage: FC<FlashcardsPageProps> = () => {
     setShowHelpModal(false);
   };
 
+  const onSettingsClick = () => {
+    setSettingsModalOpen(true);
+  };
   return (
     <Page
       backTo="/"
@@ -155,8 +154,8 @@ export const FlashcardsPage: FC<FlashcardsPageProps> = () => {
             <div className="flex items-center space-x-2">
               <Tabs current={currentTab} onChange={onTabChange} />
               <div
-                className="relative size-[44px]"
-                onClick={() => setSettingsModalOpen(true)}
+                className="relative z-10 size-[44px]"
+                onClick={onSettingsClick}
               >
                 <SettingsIcon className="stroke-rolling-stone absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
               </div>

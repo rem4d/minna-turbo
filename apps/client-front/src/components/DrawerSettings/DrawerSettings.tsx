@@ -1,9 +1,4 @@
-import React, {
-  startTransition,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Drawer from "@/components/Drawer";
 import { hapticFeedback } from "@/utils/tgUtils";
 import { useLocalStorage, usePrevious } from "@uidotdev/usehooks";
@@ -46,7 +41,7 @@ export default React.memo(function DrawerSettings({
   const [selectedLevel, setSelectedLevel] = useState<number>(level);
   const [rangeFrom, setRangeFrom] = useState<number | null>(storedRangeFrom);
   const [rangeTo, setRangeTo] = useState<number | null>(storedRangeTo);
-  const [transitionDone, setTransitionDone] = useState(false);
+  // const [transitionDone, setTransitionDone] = useState(false);
 
   const previousLevel = usePrevious(selectedLevel);
 
@@ -98,31 +93,32 @@ export default React.memo(function DrawerSettings({
 
   const onBackClick = () => {
     setView("idle");
-    setTransitionDone(false);
+    // setTransitionDone(false);
     if (rangeFrom && rangeTo === null) {
       setRangeFrom(null);
     }
   };
   const onChooseLastKanjiClick = () => {
     setView("last_kanji");
-    startTransition(() => {
-      setTransitionDone(true);
-    });
+    // startTransition(() => {
+    //   setTransitionDone(true);
+    // });
   };
   const onSelectRepeatDeckClick = () => {
     setView("repeat_deck");
-    startTransition(() => {
-      setTransitionDone(true);
-    });
+    // startTransition(() => {
+    //   setTransitionDone(true);
+    // });
   };
 
   const _onOpenChange = (open: boolean) => {
     onOpenChange(open);
-    startTransition(() => {
-      if (open === false) {
-        setView("idle");
-      }
-    });
+    setView("idle");
+    // startTransition(() => {
+    //   if (open === false) {
+    //     setView("idle");
+    //   }
+    // });
   };
 
   return (
@@ -155,20 +151,23 @@ export default React.memo(function DrawerSettings({
               onSubmit={onSubmit}
             />
           )}
-          {transitionDone && view === "last_kanji" && (
-            <ChooseLastKanjiScreen
-              onLevelSelect={onLevelSelect}
-              selectedLevel={selectedLevel}
-            />
-          )}
-          {showRepeatDeckOption && transitionDone && view === "repeat_deck" && (
-            <RepeatDeckScreen
-              rangeTo={rangeTo}
-              rangeFrom={rangeFrom}
-              selectedLevel={selectedLevel}
-              onRangeSelectClick={onRangeSelectClick}
-            />
-          )}
+          {
+            /* transitionDone &&  */ view === "last_kanji" && (
+              <ChooseLastKanjiScreen
+                onLevelSelect={onLevelSelect}
+                selectedLevel={selectedLevel}
+              />
+            )
+          }
+          {showRepeatDeckOption &&
+            /* transitionDone && */ view === "repeat_deck" && (
+              <RepeatDeckScreen
+                rangeTo={rangeTo}
+                rangeFrom={rangeFrom}
+                selectedLevel={selectedLevel}
+                onRangeSelectClick={onRangeSelectClick}
+              />
+            )}
         </AnimatePresence>
       </motion.div>
     </Drawer>

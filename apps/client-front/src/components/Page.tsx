@@ -65,7 +65,7 @@ export function Page({
   return (
     <Container {...props}>
       {showNav && (
-        <div className="absolute z-50 flex h-[40px] w-full items-center bg-black/0">
+        <div className="absolute z-20 inline h-[40px] w-[40px] items-center bg-black/0">
           {back && (
             <div
               className="flex size-[40px] rotate-90 items-center justify-center"
