@@ -52,31 +52,6 @@ export function useIsNavPending() {
   return use(RouterContext).isPending;
 }
 
-const getInitialScreen = (routes: Route[]): Screen[] => {
-  const pathname = window.location.pathname;
-  const initialRoute = routes.find((route) => route.path === pathname);
-  if (initialRoute) {
-    return [
-      {
-        id: "initial",
-        url: initialRoute.path,
-        element: initialRoute.element,
-        key: Date.now(),
-        name: initialRoute.name,
-      },
-    ];
-  }
-  return [
-    {
-      id: "initial",
-      url: routes[0].path,
-      element: routes[0].element,
-      key: Date.now(),
-      name: "initial",
-    },
-  ];
-};
-
 export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
   const [routerState, setRouterState] = useState({
     pendingNav: () => {},
@@ -219,3 +194,28 @@ interface Screen {
   key: number;
   name?: string;
 }
+
+const getInitialScreen = (routes: Route[]): Screen[] => {
+  const pathname = window.location.pathname;
+  const initialRoute = routes.find((route) => route.path === pathname);
+  if (initialRoute) {
+    return [
+      {
+        id: "initial",
+        url: initialRoute.path,
+        element: initialRoute.element,
+        key: Date.now(),
+        name: initialRoute.name,
+      },
+    ];
+  }
+  return [
+    {
+      id: "initial",
+      url: routes[0].path,
+      element: routes[0].element,
+      key: Date.now(),
+      name: "initial",
+    },
+  ];
+};

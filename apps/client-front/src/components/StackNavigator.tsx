@@ -8,11 +8,7 @@ import { IsHiddenScreenContext } from "@/context/isHiddenScreenContext";
 import { useRouter } from "@/router/router";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 
-export interface StackedScreenProps {
-  removeSharedTransition?: boolean;
-}
-
-export default React.memo(function StackNavigator() {
+export default function StackNavigator() {
   const {
     canGoBack,
     currentScreen,
@@ -32,7 +28,6 @@ export default React.memo(function StackNavigator() {
 
   const currentOverlayOpacity = useTransform(dragProgress, [0, 1], [0.4, 0]);
 
-  // Refs for gesture tracking
   const touchStartX = useRef(0);
   const gestureStarted = useRef(false);
   const containerRef = useRef(null);
@@ -63,8 +58,7 @@ export default React.memo(function StackNavigator() {
         dragX.set(Math.min(deltaX, window.innerWidth * 0.8));
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [canGoBack, gestureStarted],
+    [canGoBack, gestureStarted, dragX],
   );
 
   const handleTouchEnd = useCallback(() => {
@@ -89,7 +83,6 @@ export default React.memo(function StackNavigator() {
         },
       });
     } else {
-      // Cancel the gesture - spring back to 0
       animate(dragX, 0, {
         type: "tween",
         stiffness: 300,
@@ -102,26 +95,7 @@ export default React.memo(function StackNavigator() {
     if (!canGoBack) {
       dragX.set(0);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canGoBack]);
-
-  // const props: { enter?: string; exit?: string } = {};
-
-  // switch (animationStyle) {
-  //   case "slide":
-  //     props.enter = direction === 1 ? "slide-in" : "slide-in-back";
-  //     props.exit = direction === 1 ? "slide-out" : "slide-out-back";
-  //     break;
-  //   case "freeze":
-  //     props.enter = "freeze-in";
-  //     break;
-  //   case "remove":
-  //     break;
-  //   default:
-  //     props.enter = "fade";
-  //     props.exit = "fade";
-  //     break;
-  // }
+  }, [canGoBack, dragX]);
 
   return (
     <div
@@ -177,4 +151,4 @@ export default React.memo(function StackNavigator() {
       )}
     </div>
   );
-});
+}

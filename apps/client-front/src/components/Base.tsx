@@ -17,11 +17,8 @@ export function Base() {
     }
   }, [userCreator]);
 
-  // const currentRoute = routes.find((route) => route.path === url);
-
   return (
     <div className="bg-light-gray relative mx-auto h-screen min-h-[568px] max-w-[450px] min-w-[320px] overflow-hidden">
-      {/* {currentRoute?.element ? <currentRoute.element /> : <div>404</div>} */}
       <StackNavigator />
     </div>
   );

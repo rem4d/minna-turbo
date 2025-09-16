@@ -12,7 +12,6 @@ const useUnmount = (fn: () => any): void => {
   // update the ref each render so if it change the newest callback will be invoked
   fnRef.current = fn;
 
-  // eslint-disable-next-line
   useEffectOnce(() => () => fnRef.current());
 };
 

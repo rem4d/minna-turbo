@@ -82,7 +82,7 @@ export const AllKanjiPage: FC = () => {
     gap: 20,
     overscan: 1,
     initialOffset: () => listOffset,
-    initialRect: { height: 300, width: 300 },
+    initialRect: { height: 700, width: 350 },
   });
 
   const columnVirtualizer = useVirtualizer({
@@ -91,7 +91,7 @@ export const AllKanjiPage: FC = () => {
     getScrollElement: () => containerRef.current,
     estimateSize: () => colSize,
     gap: 20,
-    initialRect: { height: 300, width: 300 },
+    initialRect: { height: 0, width: 300 },
   });
 
   return (
