@@ -23,7 +23,6 @@ export function Page({
   const showNav = import.meta.env.DEV;
 
   const back = Boolean(backTo);
-  console.log("");
 
   useEffect(() => {
     let offClick: ReturnType<typeof backButton.onClick>;
@@ -31,7 +30,7 @@ export function Page({
     if (back && backButton.isAvailable()) {
       backButton.show();
       offClick = backButton.onClick(() => {
-        void navigateBack(backTo!);
+        void navigateBack(backTo!, { animationStyle: backAnimationStyle });
       });
     } else {
       backButton.hide();
