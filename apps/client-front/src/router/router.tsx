@@ -197,7 +197,6 @@ const getInitialScreens = (routes: Route[]): Screen[] => {
     const currentScreen = {
       url: initialRoute.path,
       element: initialRoute.element,
-      key: Date.now(),
       name: initialRoute.name,
     };
     return [currentScreen];
@@ -206,7 +205,6 @@ const getInitialScreens = (routes: Route[]): Screen[] => {
     {
       url: routes[0].path,
       element: routes[0].element,
-      key: Date.now(),
       name: routes[0].name,
     },
   ];

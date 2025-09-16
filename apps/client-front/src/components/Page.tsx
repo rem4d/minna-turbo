@@ -20,6 +20,7 @@ export function Page({
   backAnimationStyle = "nav-back",
 }: PropsWithChildren<PageProps>) {
   const { navigateBack, animationStyle: routerAnimationStyle } = useRouter();
+  const showNav = true;
 
   const back = Boolean(backTo);
 
@@ -63,18 +64,20 @@ export function Page({
 
   return (
     <Container {...props}>
-      <div className="absolute z-50 flex h-[40px] w-full items-center bg-black/0">
-        {back && (
-          <div
-            className="flex size-[40px] rotate-90 items-center justify-center"
-            onClick={() =>
-              navigateBack(backTo!, { animationStyle: backAnimationStyle })
-            }
-          >
-            <IconBack />
-          </div>
-        )}
-      </div>
+      {showNav && (
+        <div className="absolute z-50 flex h-[40px] w-full items-center bg-black/0">
+          {back && (
+            <div
+              className="flex size-[40px] rotate-90 items-center justify-center"
+              onClick={() =>
+                navigateBack(backTo!, { animationStyle: backAnimationStyle })
+              }
+            >
+              <IconBack />
+            </div>
+          )}
+        </div>
+      )}
       <div
         className={twMerge(
           "bg-athens-gray h-full overflow-x-hidden overflow-y-auto",
