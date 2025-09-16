@@ -95,7 +95,11 @@ export const AllKanjiPage: FC = () => {
   });
 
   return (
-    <Page backTo="/library" className="overflow-y-hidden">
+    <Page
+      backTo="/library"
+      className="overflow-y-hidden"
+      backAnimationStyle="nav-back"
+    >
       <div
         className={twMerge(
           "flex flex-col space-y-8 px-4 pb-4",

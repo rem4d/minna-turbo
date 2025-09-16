@@ -21,7 +21,6 @@ interface RouterContextValue {
   navigate: (url: string, options?: NavigateOptions) => void;
   navigateBack: (url: string, options?: NavigateOptions) => void;
   isPending: boolean;
-  params: Record<string, string>;
   direction: number;
   animationStyle: AnimationStyle;
   screens: Screen[];
@@ -32,7 +31,6 @@ interface RouterContextValue {
 
 const RouterContext = createContext<RouterContextValue>({
   url: "/",
-  params: {},
   navigate: () => {},
   navigateBack: () => {},
   isPending: false,
@@ -63,7 +61,7 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
     useState<AnimationStyle>("default");
 
   const [screens, setScreens] = useState<Screen[]>(() =>
-    getInitialScreen(routes),
+    getInitialScreens(routes),
   );
 
   const go = (url: string) => {
@@ -76,16 +74,14 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
   };
 
   const navigate = (url: string, options?: NavigateOptions) => {
-    const as = options?.animationStyle ?? "nav-forward";
+    const as = options?.animationStyle ?? "default";
     setDirection(1);
     setAnimationStyle(as);
 
     const found = routes.find((route) => {
-      // TODO: temporary fix
-      if (url.startsWith("/kanji/") && route.path === "/kanji") {
-        return true;
-      }
-      return route.path === url;
+      return route.approximate
+        ? url.startsWith(route.path)
+        : route.path === url;
     });
 
     // Update router state in transition.
@@ -94,11 +90,9 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
       go(url);
       if (found) {
         const newScreen = {
-          id: `screen-${Date.now()}`,
           url,
           element: found.element,
           name: found.name,
-          key: Date.now(),
         };
 
         if (options?.replace) {
@@ -111,8 +105,8 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
   };
 
   const navigateBack = (url: string, options?: NavigateOptions) => {
+    const as = options?.animationStyle ?? "default";
     setDirection(-1);
-    const as = options?.animationStyle ?? "nav-back";
     setAnimationStyle(as);
 
     // Update router state in transition.
@@ -150,6 +144,7 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
   const currentScreen = screens[screens.length - 1];
   const previousScreen = screens[screens.length - 2];
   const canGoBack = screens.length > 1;
+  // console.log("ROUTER screens:", screens);
 
   return (
     <RouterContext
@@ -158,7 +153,6 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
         navigate,
         navigateBack,
         isPending,
-        params: {},
         direction,
         animationStyle,
         screens,
@@ -176,6 +170,8 @@ export interface Route {
   path: string;
   element: React.ElementType;
   name?: string;
+  parentPath?: string;
+  approximate?: boolean;
 }
 
 interface NavigateOptions {
@@ -188,34 +184,30 @@ interface RouterProps {
 }
 
 interface Screen {
-  id: string;
   url: string;
   element: React.ElementType;
-  key: number;
   name?: string;
 }
 
-const getInitialScreen = (routes: Route[]): Screen[] => {
+const getInitialScreens = (routes: Route[]): Screen[] => {
   const pathname = window.location.pathname;
   const initialRoute = routes.find((route) => route.path === pathname);
+
   if (initialRoute) {
-    return [
-      {
-        id: "initial",
-        url: initialRoute.path,
-        element: initialRoute.element,
-        key: Date.now(),
-        name: initialRoute.name,
-      },
-    ];
+    const currentScreen = {
+      url: initialRoute.path,
+      element: initialRoute.element,
+      key: Date.now(),
+      name: initialRoute.name,
+    };
+    return [currentScreen];
   }
   return [
     {
-      id: "initial",
       url: routes[0].path,
       element: routes[0].element,
       key: Date.now(),
-      name: "initial",
+      name: routes[0].name,
     },
   ];
 };

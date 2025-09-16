@@ -52,6 +52,7 @@ export const routes: Route[] = [
     path: paths.allKanji,
     element: AllKanjiPage,
     name: "all kanji",
+    parentPath: paths.library,
   },
   {
     path: paths.dict,
@@ -67,5 +68,7 @@ export const routes: Route[] = [
     path: paths.singleKanji,
     element: SingleKanjiPage,
     name: "single kanji",
+    parentPath: paths.allKanji,
+    approximate: true,
   },
 ];

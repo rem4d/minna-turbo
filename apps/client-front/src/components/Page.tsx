@@ -9,7 +9,7 @@ interface PageProps {
   className?: string;
   maxOffset?: boolean;
   backTo?: string;
-  animationStyle?: "slide" | "remove";
+  backAnimationStyle?: "nav-back" | "remove";
 }
 
 export function Page({
@@ -17,6 +17,7 @@ export function Page({
   className = "",
   maxOffset = false,
   backTo,
+  backAnimationStyle = "nav-back",
 }: PropsWithChildren<PageProps>) {
   const { navigateBack, animationStyle: routerAnimationStyle } = useRouter();
 
@@ -54,6 +55,7 @@ export function Page({
     default: "default",
     disabled: "disabled",
   };
+
   const props = routerAnimationStyle === "remove" ? {} : vtProps;
 
   const Container =
@@ -65,7 +67,9 @@ export function Page({
         {back && (
           <div
             className="flex size-[40px] rotate-90 items-center justify-center"
-            onClick={() => navigateBack(backTo!, { animationStyle: "remove" })}
+            onClick={() =>
+              navigateBack(backTo!, { animationStyle: backAnimationStyle })
+            }
           >
             <IconBack />
           </div>

@@ -37,7 +37,11 @@ export default function SingleKanjiPage() {
   const means = currentMeaning?.split(/[;/,]/)[0];
 
   return (
-    <Page backTo={paths.allKanji} className="overflow-y-hidden">
+    <Page
+      backTo={paths.allKanji}
+      className="overflow-y-hidden"
+      backAnimationStyle="remove"
+    >
       <SectionHeader></SectionHeader>
       <div>
         <div className="grid grid-cols-2 gap-4">

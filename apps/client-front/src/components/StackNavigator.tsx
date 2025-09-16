@@ -15,7 +15,9 @@ export default function StackNavigator() {
     previousScreen,
     navigateBack,
     animationStyle,
+    isPending,
   } = useRouter();
+  const isNavigationDone = !isPending;
 
   const dragX = useMotionValue(0);
   const dragProgress = useTransform(dragX, [0, 300], [0, 1]);
@@ -89,13 +91,13 @@ export default function StackNavigator() {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dragX, gestureStarted, canGoBack]);
+  }, [dragX, gestureStarted, canGoBack, previousScreen?.url]);
 
   useLayoutEffect(() => {
-    if (!canGoBack) {
+    if (isNavigationDone) {
       dragX.set(0);
     }
-  }, [canGoBack, dragX]);
+  }, [isNavigationDone, dragX]);
 
   return (
     <div
