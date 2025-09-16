@@ -9,14 +9,8 @@ import { useRouter } from "@/router/router";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 
 export default function StackNavigator() {
-  const {
-    canGoBack,
-    currentScreen,
-    previousScreen,
-    navigateBack,
-    animationStyle,
-    isPending,
-  } = useRouter();
+  const { canGoBack, currentScreen, previousScreen, navigateBack, isPending } =
+    useRouter();
   const isNavigationDone = !isPending;
 
   const dragX = useMotionValue(0);
@@ -28,7 +22,7 @@ export default function StackNavigator() {
     ["translateX(0)", "translateX(-30%)", "translateX(0%)"],
   );
 
-  const currentOverlayOpacity = useTransform(dragProgress, [0, 1], [0.4, 0]);
+  const currentOverlayOpacity = useTransform(dragProgress, [0, 1], [0.2, 0]);
 
   const touchStartX = useRef(0);
   const gestureStarted = useRef(false);
@@ -117,15 +111,13 @@ export default function StackNavigator() {
           }}
         >
           <div className="h-full w-full">
-            {animationStyle === "nav-back" && (
-              <motion.div
-                className="absolute h-full w-full bg-black"
-                style={{
-                  opacity: currentOverlayOpacity,
-                  zIndex: 15,
-                }}
-              />
-            )}
+            <motion.div
+              className="absolute h-full w-full bg-black"
+              style={{
+                opacity: currentOverlayOpacity,
+                zIndex: 15,
+              }}
+            />
             <IsHiddenScreenContext value={true}>
               <previousScreen.element />
             </IsHiddenScreenContext>

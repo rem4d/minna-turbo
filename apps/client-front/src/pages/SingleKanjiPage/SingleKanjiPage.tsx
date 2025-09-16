@@ -27,6 +27,7 @@ export default function SingleKanjiPage() {
 
   const kanji = found.kanji;
   const level = found.position;
+
   const onClick = () => {};
   const id = found.id;
 
@@ -34,7 +35,8 @@ export default function SingleKanjiPage() {
     transLang === "ru" ? found.ru : found.en,
   ).toLowerCase();
 
-  const means = currentMeaning?.split(/[;/,]/)[0];
+  const { kun, on_ } = found;
+  // const means = currentMeaning?.split(/[;/,]/)[0];
 
   return (
     <Page
@@ -42,8 +44,9 @@ export default function SingleKanjiPage() {
       className="overflow-y-hidden"
       backAnimationStyle="remove"
     >
-      <SectionHeader></SectionHeader>
-      <div>
+      <div className="flex flex-col px-4 pt-4">
+        <SectionHeader></SectionHeader>
+
         <div className="grid grid-cols-2 gap-4">
           <div className="">
             <Thumbnail
@@ -51,12 +54,24 @@ export default function SingleKanjiPage() {
               level={level}
               onClick={onClick}
               id={id}
-              means={means}
+              means={""}
               large
             />
           </div>
-          <div>
-            lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          <div className="flex flex-col items-start space-y-2">
+            <div className="font-inter mb-4 text-xl font-semibold text-black">
+              {currentMeaning}
+            </div>
+            {kun && kun.length > 0 && (
+              <span className="font-digi rounded-[18px] border bg-white px-2 py-1 text-lg leading-5 text-black">
+                {kun.join("、")}
+              </span>
+            )}
+            {on_ && on_.length > 0 && (
+              <span className="font-digi rounded-[18px] border bg-white px-2 py-1 text-lg leading-5 text-black">
+                {on_.join("、")}
+              </span>
+            )}
           </div>
         </div>
       </div>
