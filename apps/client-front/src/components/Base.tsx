@@ -1,14 +1,20 @@
 import { useEffect, useRef } from "react";
 import { useTRPC } from "@/utils/api";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import StackNavigator from "./StackNavigator";
 
 export function Base() {
   const trpc = useTRPC();
   const userCreator = useMutation(trpc.viewer.user.create.mutationOptions());
+  const queryClient = useQueryClient();
 
   const initialized = useRef(false);
+
+  useEffect(() => {
+    queryClient.prefetchQuery(trpc.viewer.kanji.all.queryOptions());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!initialized.current) {
