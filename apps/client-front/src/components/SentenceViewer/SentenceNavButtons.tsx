@@ -14,7 +14,7 @@ export default function SentenceNavButtons({
   handleNextClick,
 }: Props) {
   return (
-    <div className="absolute top-1/2 flex w-full -translate-y-1/2 justify-between px-2">
+    <div className="absolute top-[40%] flex w-full -translate-y-1/2 justify-between px-2">
       <div
         className={twMerge(
           "relative flex size-[30px] cursor-pointer items-center justify-center",

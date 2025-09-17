@@ -2,7 +2,6 @@ import type { SentenceOutput } from "@rem4d/api";
 import { useEffect, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { AnimateHeight } from "@/components/AnimateHeight";
-import PreviewCard from "@/components/PreviewCard";
 import { useGlobalStore } from "@/store";
 import { useTRPC } from "@/utils/api";
 import * as Accordion from "@radix-ui/react-accordion";
@@ -56,8 +55,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     trpc.viewer.member.sentenceKanjis.queryOptions(
       { id: sentence.id },
       {
-        // enabled: !!sentence.text && openItems.includes("2"),
-        enabled: !!sentence.text,
+        enabled: !!sentence.text && openItems.includes("2"),
       },
     ),
   );
@@ -97,14 +95,6 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
       }
     }
   };
-  const k = kanjisInTheSentence?.[0];
-  console.log(kanjisInTheSentence);
-
-  return (
-    <div className="size-[90px]">
-      {k ? <PreviewCard d={k} hideMeaning /> : null}
-    </div>
-  );
 
   return (
     <Accordion.Root
