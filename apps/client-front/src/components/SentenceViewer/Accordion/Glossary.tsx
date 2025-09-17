@@ -1,12 +1,15 @@
+import type { Member2Output } from "@rem4d/api";
 import React from "react";
 import Button from "@/components/Button";
-import { type Member2Output } from "@rem4d/api";
+import PreviewCard from "@/components/PreviewCard";
+import { type KanjiInTheSentenceOutput } from "@rem4d/api";
 import { twMerge } from "tailwind-merge";
 
 import { LoadingMembersPlaceholder } from "./LoadingMembersPlaceholder";
 
 const GlossaryContent: React.FC<{
   members: Member2Output[] | undefined;
+  kanjisInTheSentence: KanjiInTheSentenceOutput[] | undefined;
   loadingMembers: boolean;
   isSuccess: boolean;
   askAiClicked: boolean;
@@ -15,6 +18,7 @@ const GlossaryContent: React.FC<{
   transLang: "ru" | "en" | null;
 }> = ({
   members,
+  kanjisInTheSentence,
   loadingMembers,
   isSuccess,
   askAiClicked,
@@ -46,6 +50,14 @@ const GlossaryContent: React.FC<{
                 {transLang === "ru" ? m.ru : m.en}
               </div>
             </React.Fragment>
+          ))}
+        </div>
+        <p className="text-md mt-6 mb-3 font-medium">Kanjis</p>
+        <div className="mt-2 grid grid-cols-4 gap-4">
+          {kanjisInTheSentence?.map((k) => (
+            <div key={k.id} className="">
+              <PreviewCard d={k} />
+            </div>
           ))}
         </div>
       </div>

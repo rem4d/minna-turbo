@@ -47,6 +47,15 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     ),
   );
 
+  const { data: kanjisInTheSentence } = useQuery(
+    trpc.viewer.member.sentenceKanjis.queryOptions(
+      { id: sentence.id },
+      {
+        enabled: !!sentence.text && openItems.includes("2"),
+      },
+    ),
+  );
+
   useEffect(() => {
     setScreen("glossary");
     setIsAskAiClicked(false);
@@ -130,6 +139,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
             {screen === "glossary" && (
               <GlossaryContent
                 members={members}
+                kanjisInTheSentence={kanjisInTheSentence}
                 loadingMembers={loadingMembers}
                 isSuccess={isSuccess}
                 askAiClicked={isAskAiClicked}

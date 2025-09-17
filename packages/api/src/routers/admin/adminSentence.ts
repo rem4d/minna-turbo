@@ -109,7 +109,7 @@ export const adminSentenceRouter = router({
       .eq("id", input)
       .single();
     if (error) {
-      throw new Error("No sentence found.");
+      throw new Error(error.message);
     }
     return data;
   }),

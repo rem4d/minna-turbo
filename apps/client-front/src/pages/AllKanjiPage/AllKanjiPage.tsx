@@ -1,11 +1,9 @@
 import type { FC } from "react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Page } from "@/components/Page";
+import PreviewCard from "@/components/PreviewCard";
 import SectionHeader from "@/components/SectionHeader";
-import Thumbnail from "@/components/Thumbnail";
-import { useRouter } from "@/router/router";
 import { useTRPC } from "@/utils/api";
-import { type KanjiOutput } from "@rem4d/api";
 import { useQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useDebounce, useSessionStorage } from "@uidotdev/usehooks";
@@ -169,35 +167,5 @@ export const AllKanjiPage: FC = () => {
     </Page>
   );
 };
-
-const PreviewCard = React.memo(function PreviewCardFn({
-  d,
-  onClick,
-}: {
-  d: KanjiOutput;
-  onClick?: () => void;
-}) {
-  const { navigate } = useRouter();
-  const _onClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    navigate("/kanji/" + d.id, { animationStyle: "remove" });
-    onClick?.();
-  };
-
-  if (!d) {
-    return null;
-  }
-
-  return (
-    <div onClick={_onClick}>
-      <Thumbnail
-        title={d.kanji}
-        level={d.position}
-        id={d.id}
-        means={d.en ?? ""}
-      />
-    </div>
-  );
-});
 
 export default AllKanjiPage;

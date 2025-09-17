@@ -72,19 +72,22 @@ For readings including comments use only hiragana.
   const { data: sentence } = api.admin.sentence.getById.useQuery(Number(id), {
     enabled: !!id,
   });
+  console.log(sentence);
 
-  const { data: members } = api.admin.member.sentenceMembers.useQuery(
-    { id: sentence?.id ?? 0 },
-    {
-      enabled: !!sentence?.id,
-    },
-  );
   const { data: members2 } = api.admin.member.sentenceMembers2.useQuery(
     { id: sentence?.id ?? 0 },
     {
       enabled: !!sentence?.id,
     },
   );
+
+  const { data: kanjisInTheSentence } = api.admin.member.sentenceKajis.useQuery(
+    { id: sentence?.id ?? 0 },
+    {
+      enabled: !!sentence?.id,
+    },
+  );
+
   const utils = api.useUtils();
 
   const submitVoiceMutation = useSubmitVoiceMutation({
@@ -490,41 +493,6 @@ For readings including comments use only hiragana.
             </Flex>
           </Grid>
 
-          <Heading size="5">Members</Heading>
-          <Grid columns="3" my="8" className="">
-            <Grid
-              columns="4"
-              gridColumn="span 2"
-              className="font-klee text-xl"
-              gap="4"
-            >
-              {members?.map((m) => (
-                <Flex key={m.members.basic_form} direction="column">
-                  <Text
-                    size="6"
-                    onClick={() => onMemberClick(m.members.basic_form)}
-                    className="cursor-pointer whitespace-nowrap"
-                    dangerouslySetInnerHTML={{
-                      __html: m.members.ruby ?? "",
-                    }}
-                  />
-                  <Text className="select-none" size="2">
-                    {m.members.en}
-                  </Text>
-                  <Box>
-                    <Badge color="sky" size="1">
-                      {m.members.pos}
-                    </Badge>
-                    {m.members.pos_detail_1 === "suffix" && (
-                      <Badge color="red" size="1">
-                        suffix
-                      </Badge>
-                    )}
-                  </Box>
-                </Flex>
-              ))}
-            </Grid>
-          </Grid>
           {members2 && members2.length > 0 && (
             <Box>
               <Heading size="5">Members2</Heading>
@@ -572,6 +540,16 @@ For readings including comments use only hiragana.
               </Grid>
             </Box>
           )}
+          <Heading size="5">Kanjis in the sentence</Heading>
+          <Box>
+            <Flex my="8" className="">
+              {kanjisInTheSentence?.map((m) => (
+                <Text size="6" key={m.id}>
+                  {m.kanji}
+                </Text>
+              ))}
+            </Flex>
+          </Box>
 
           <div>
             <Button

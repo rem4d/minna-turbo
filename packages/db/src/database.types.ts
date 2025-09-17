@@ -190,6 +190,39 @@ export type Database = {
         }
         Relationships: []
       }
+      sentence_kanji: {
+        Row: {
+          kanji_id: number
+          position: number | null
+          sentence_id: number
+        }
+        Insert: {
+          kanji_id?: number
+          position?: number | null
+          sentence_id?: number
+        }
+        Update: {
+          kanji_id?: number
+          position?: number | null
+          sentence_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sentence_kanji_kanji_id_fkey"
+            columns: ["kanji_id"]
+            isOneToOne: false
+            referencedRelation: "kanji"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sentence_kanji_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sentence_member: {
         Row: {
           member_id: number

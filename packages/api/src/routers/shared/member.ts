@@ -49,4 +49,20 @@ export const memberRouter = router({
 
       return data;
     }),
+  sentenceKanjis: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const { data, error } = await ctx.db
+        .from("sentence_kanji")
+        .select("position,...kanji(*)")
+        .eq("sentence_id", Number(input.id))
+        .order("position", { ascending: true });
+
+      if (error) {
+        console.log(error);
+        throw new Error("Unexpected error.");
+      }
+
+      return data;
+    }),
 });
