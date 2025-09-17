@@ -35,7 +35,8 @@
     "tailwindcss": "catalog:",
     "vaul": "^1.1.2",
     "vite-plugin-node-polyfills": "catalog:",
-    "wanakana": "catalog:"
+    "wanakana": "catalog:",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@rem4d/eslint-config": "workspace:*",

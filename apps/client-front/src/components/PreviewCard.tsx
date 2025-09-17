@@ -1,16 +1,20 @@
 import React from "react";
 import { useRouter } from "@/router/router";
-import { KanjiOutput } from "@rem4d/api";
+import { type KanjiOutput } from "@rem4d/api";
 
 import Thumbnail from "./Thumbnail";
+
+interface PreviewCardProps {
+  d: KanjiOutput;
+  onClick?: () => void;
+  hideMeaning?: boolean;
+}
 
 const PreviewCard = React.memo(function PreviewCardFn({
   d,
   onClick,
-}: {
-  d: KanjiOutput;
-  onClick?: () => void;
-}) {
+  hideMeaning = false,
+}: PreviewCardProps) {
   const { navigate } = useRouter();
   const _onClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -29,6 +33,7 @@ const PreviewCard = React.memo(function PreviewCardFn({
         level={d.position}
         id={d.id}
         means={d.en ?? ""}
+        hideMeaning={hideMeaning}
       />
     </div>
   );

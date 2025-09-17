@@ -11,6 +11,7 @@ interface ThumbnailProps {
   id: number;
   means: string;
   large?: boolean;
+  hideMeaning?: boolean;
 }
 
 export default function Thumbnail({
@@ -19,6 +20,7 @@ export default function Thumbnail({
   id,
   means,
   large = false,
+  hideMeaning = false,
 }: PropsWithChildren<ThumbnailProps>) {
   const removeName = use(IsHiddenScreenContext);
   const containerProps = !removeName ? { name: `thumb-${id}` } : {};
@@ -30,7 +32,7 @@ export default function Thumbnail({
           "relative flex aspect-square cursor-pointer flex-col justify-center overflow-hidden rounded-md border border-black/10 bg-white px-1 py-2 shadow-[3px_3px_0px_rgba(41,41,41,0.1)]",
         )}
       >
-        {!large && (
+        {!hideMeaning && (
           <div className="text-rolling-stone/70 absolute top-2 left-2 text-xs">
             {level}
           </div>
@@ -44,15 +46,16 @@ export default function Thumbnail({
           >
             {title}
           </div>
-          {/* <ThumbnailName id={id} kanji={kanji} large={large} /> */}
-          <div
-            className={twMerge(
-              "truncate text-center text-xs whitespace-nowrap text-black",
-              large && "relative bottom-1.5 text-[1.3rem]",
-            )}
-          >
-            {means}
-          </div>
+          {!hideMeaning && (
+            <div
+              className={twMerge(
+                "truncate text-center text-xs whitespace-nowrap text-black",
+                large && "relative bottom-1.5 text-[1.3rem]",
+              )}
+            >
+              {means}
+            </div>
+          )}
         </div>
       </div>
     </ViewTransition>

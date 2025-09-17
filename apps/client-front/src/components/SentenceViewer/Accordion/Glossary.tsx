@@ -56,7 +56,7 @@ const GlossaryContent: React.FC<{
         <div className="mt-2 grid grid-cols-4 gap-4">
           {kanjisInTheSentence?.map((k) => (
             <div key={k.id} className="">
-              <PreviewCard d={k} />
+              <PreviewCard d={k} hideMeaning />
             </div>
           ))}
         </div>

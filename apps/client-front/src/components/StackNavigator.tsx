@@ -73,7 +73,7 @@ export default function StackNavigator() {
         stiffness: 300,
         duration: 0.3,
         onComplete: () => {
-          navigateBack(previousScreen?.url ?? "/settings", {
+          navigateBack({
             animationStyle: "disabled",
           });
         },

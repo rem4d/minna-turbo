@@ -2,6 +2,8 @@ import type { SentenceOutput } from "@rem4d/api";
 import { useEffect, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { AnimateHeight } from "@/components/AnimateHeight";
+import PreviewCard from "@/components/PreviewCard";
+import { useGlobalStore } from "@/store";
 import { useTRPC } from "@/utils/api";
 import * as Accordion from "@radix-ui/react-accordion";
 import { useQuery } from "@tanstack/react-query";
@@ -18,11 +20,14 @@ interface AccordionProps {
   sentence: SentenceOutput;
 }
 export default function AccordionComponent({ sentence }: AccordionProps) {
-  const [openItems, setOpenItems] = useState([] as string[]);
   const [isAskAiClicked, setIsAskAiClicked] = useState(false);
   const [screen, setScreen] = useState<"ai" | "glossary">("glossary");
   const [chunks, setChunks] = useState("");
   const [isAiLoading, setIsAiLoading] = useState(false);
+
+  const openItems = useGlobalStore((state) => state.openItems);
+  const setOpenItems = useGlobalStore((state) => state.setOpenItems);
+  const closeItem = useGlobalStore((state) => state.closeItem);
 
   const { t } = useTranslation();
   const [title, setTitle] = useState(t("glossary"));
@@ -51,7 +56,8 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     trpc.viewer.member.sentenceKanjis.queryOptions(
       { id: sentence.id },
       {
-        enabled: !!sentence.text && openItems.includes("2"),
+        // enabled: !!sentence.text && openItems.includes("2"),
+        enabled: !!sentence.text,
       },
     ),
   );
@@ -65,7 +71,8 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
 
   useEffect(() => {
     if (openItems.includes("1")) {
-      setOpenItems((prev) => prev.filter((item) => item !== "1"));
+      closeItem("1");
+      // setOpenItems((prev) => prev.filter((item) => item !== "1"));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sentence.id]);
@@ -90,6 +97,14 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
       }
     }
   };
+  const k = kanjisInTheSentence?.[0];
+  console.log(kanjisInTheSentence);
+
+  return (
+    <div className="size-[90px]">
+      {k ? <PreviewCard d={k} hideMeaning /> : null}
+    </div>
+  );
 
   return (
     <Accordion.Root

@@ -30,7 +30,7 @@ export function Page({
     if (back && backButton.isAvailable()) {
       backButton.show();
       offClick = backButton.onClick(() => {
-        void navigateBack(backTo!, { animationStyle: backAnimationStyle });
+        void navigateBack({ animationStyle: backAnimationStyle });
       });
     } else {
       backButton.hide();
@@ -70,7 +70,7 @@ export function Page({
             <div
               className="flex size-[40px] rotate-90 items-center justify-center"
               onClick={() =>
-                navigateBack(backTo!, { animationStyle: backAnimationStyle })
+                navigateBack({ animationStyle: backAnimationStyle })
               }
             >
               <IconBack />

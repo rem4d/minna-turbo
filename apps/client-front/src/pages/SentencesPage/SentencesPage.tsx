@@ -9,6 +9,7 @@ import { SentenceViewer } from "@/components/SentenceViewer";
 import SentenceNavButtons from "@/components/SentenceViewer/SentenceNavButtons";
 import { SpinnerBig } from "@/components/Spinner";
 import Toast from "@/components/Toast";
+import { useGlobalStore } from "@/store";
 import { useTRPC } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import { hapticFeedback, useIsMobile } from "@/utils/tgUtils";
@@ -19,7 +20,11 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { Trans, useTranslation } from "react-i18next";
 
 export const SentencesPage: FC = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const activeIndex = useGlobalStore((state) => state.index);
+  const increaseActiveIndex = useGlobalStore((state) => state.increase);
+  const decreaseActiveIndex = useGlobalStore((state) => state.decrease);
+  const resetActiveIndex = useGlobalStore((state) => state.reset);
+
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [toastData, setToastOpen] = useState({
     open: false,
@@ -83,7 +88,7 @@ export const SentencesPage: FC = () => {
         void queryClient.resetQueries({
           queryKey: trpc.viewer.user.info.queryKey(),
         });
-        setActiveIndex(0);
+        resetActiveIndex();
       },
     }),
   );
@@ -94,7 +99,7 @@ export const SentencesPage: FC = () => {
         void queryClient.resetQueries({
           queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
         });
-        setActiveIndex(0);
+        resetActiveIndex();
       },
     }),
   );
@@ -141,12 +146,12 @@ export const SentencesPage: FC = () => {
 
   const handlePrevClick = () => {
     hapticFeedback("light");
-    setActiveIndex(activeIndex - 1);
+    decreaseActiveIndex();
   };
 
   const handleNextClick = () => {
     hapticFeedback("light");
-    setActiveIndex(activeIndex + 1);
+    increaseActiveIndex();
   };
 
   const favIndex = sentence

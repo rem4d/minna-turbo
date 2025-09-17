@@ -19,7 +19,7 @@ type AnimationStyle =
 interface RouterContextValue {
   url: string;
   navigate: (url: string, options?: NavigateOptions) => void;
-  navigateBack: (url: string, options?: NavigateOptions) => void;
+  navigateBack: (options?: NavigateOptions) => void;
   isPending: boolean;
   direction: number;
   animationStyle: AnimationStyle;
@@ -104,15 +104,16 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
     });
   };
 
-  const navigateBack = (url: string, options?: NavigateOptions) => {
+  const navigateBack = (options?: NavigateOptions) => {
     const as = options?.animationStyle ?? "default";
     setDirection(-1);
     setAnimationStyle(as);
+    const prevUrl = screens[screens.length - 2]?.url ?? "/";
 
     // Update router state in transition.
     startTransition(() => {
       addTransitionType(as);
-      go(url);
+      go(prevUrl);
       setScreens(screens.toSpliced(screens.length - 1, 1));
     });
   };
