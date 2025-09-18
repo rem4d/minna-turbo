@@ -2,7 +2,7 @@ import type { SentenceOutput } from "@rem4d/api";
 import { useEffect, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { AnimateHeight } from "@/components/AnimateHeight";
-import { useGlobalStore } from "@/store";
+import { useAppStore } from "@/store";
 import { useTRPC } from "@/utils/api";
 import * as Accordion from "@radix-ui/react-accordion";
 import { useQuery } from "@tanstack/react-query";
@@ -24,9 +24,9 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
   const [chunks, setChunks] = useState("");
   const [isAiLoading, setIsAiLoading] = useState(false);
 
-  const openItems = useGlobalStore((state) => state.openItems);
-  const setOpenItems = useGlobalStore((state) => state.setOpenItems);
-  const closeItem = useGlobalStore((state) => state.closeItem);
+  const openItems = useAppStore((state) => state.openItems);
+  const setOpenItems = useAppStore((state) => state.setOpenItems);
+  const closeItem = useAppStore((state) => state.closeItem);
 
   const { t } = useTranslation();
   const [title, setTitle] = useState(t("glossary"));

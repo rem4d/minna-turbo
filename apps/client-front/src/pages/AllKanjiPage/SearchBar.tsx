@@ -9,7 +9,7 @@ interface Props {
   onChange?: (v: string) => void;
 }
 export default function SearchBar({ onChange, value, placeholderText }: Props) {
-  const [inFocus, setInFocus] = useState(false);
+  const [inFocus, setInFocus] = useState(() => value !== "");
   const { t } = useTranslation();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +21,9 @@ export default function SearchBar({ onChange, value, placeholderText }: Props) {
   };
 
   const onBlur = () => {
-    setInFocus(false);
+    if (value === "") {
+      setInFocus(false);
+    }
   };
 
   const onCancelClick = () => {
@@ -32,8 +34,8 @@ export default function SearchBar({ onChange, value, placeholderText }: Props) {
   return (
     <div className="mb-2 flex items-center">
       <motion.div
-        className="relative flex items-center space-x-2 rounded-lg bg-black/10 p-2"
-        initial={{ width: "100%" }}
+        className="relative flex w-full items-center space-x-2 rounded-lg bg-black/10 p-2"
+        initial={false}
         animate={{ width: inFocus ? "76%" : "100%" }}
         transition={{
           ease: "linear",

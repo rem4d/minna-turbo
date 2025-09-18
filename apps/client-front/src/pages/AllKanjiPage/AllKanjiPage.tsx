@@ -1,8 +1,9 @@
 import type { FC } from "react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { Page } from "@/components/Page";
 import PreviewCard from "@/components/PreviewCard";
 import SectionHeader from "@/components/SectionHeader";
+import { useAppStore } from "@/store";
 import { useTRPC } from "@/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -15,7 +16,9 @@ import { isHiragana, isKanji, isKatakana } from "wanakana";
 import SearchBar from "./SearchBar";
 
 export const AllKanjiPage: FC = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const searchValue = useAppStore((state) => state.text);
+  const setSearchValue = useAppStore((state) => state.setText);
+
   const [listOffset, setListOffset] = useSessionStorage<number>(
     "listOffset",
     0,

@@ -9,7 +9,7 @@ import { SentenceViewer } from "@/components/SentenceViewer";
 import SentenceNavButtons from "@/components/SentenceViewer/SentenceNavButtons";
 import { SpinnerBig } from "@/components/Spinner";
 import Toast from "@/components/Toast";
-import { useGlobalStore } from "@/store";
+import { useAppStore } from "@/store";
 import { useTRPC } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import { hapticFeedback, useIsMobile } from "@/utils/tgUtils";
@@ -20,10 +20,10 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { Trans, useTranslation } from "react-i18next";
 
 export const SentencesPage: FC = () => {
-  const activeIndex = useGlobalStore((state) => state.index);
-  const increaseActiveIndex = useGlobalStore((state) => state.increase);
-  const decreaseActiveIndex = useGlobalStore((state) => state.decrease);
-  const resetActiveIndex = useGlobalStore((state) => state.reset);
+  const activeIndex = useAppStore((state) => state.index);
+  const increaseActiveIndex = useAppStore((state) => state.increase);
+  const decreaseActiveIndex = useAppStore((state) => state.decrease);
+  const resetActiveIndex = useAppStore((state) => state.reset);
 
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [toastData, setToastOpen] = useState({
