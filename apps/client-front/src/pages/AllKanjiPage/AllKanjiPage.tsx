@@ -6,20 +6,22 @@ import SectionHeader from "@/components/SectionHeader";
 import ViewTransition from "@/components/ViewTransition";
 import { useAppStore } from "@/store";
 import { useTRPC } from "@/utils/api";
+import getSearchReadings from "@/utils/getSearchReadings";
 import { useQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useSessionStorage } from "@uidotdev/usehooks";
+import { useDebounce, useSessionStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
 import { twMerge } from "tailwind-merge";
-import { isHiragana, isKanji, isKatakana } from "wanakana";
 
 import SearchBar from "./SearchBar";
 
 export const AllKanjiPage: FC = () => {
   const searchValue = useAppStore((state) => state.text);
   const setSearchValue = useAppStore((state) => state.setText);
-  const defferedSearchValue = useDeferredValue(searchValue);
+  const debounced = useDebounce(searchValue, 400);
+
+  const defferedSearchValue = useDeferredValue(debounced);
 
   const [listOffset, setListOffset] = useSessionStorage<number>(
     "listOffset",
@@ -55,25 +57,18 @@ export const AllKanjiPage: FC = () => {
 
   const list = listQuery.data ?? [];
 
-  const displayData = defferedSearchValue
-    ? list?.filter((d) => {
-        const value = defferedSearchValue.trim();
-
-        if (isHiragana(value)) {
-          return d.kun?.join(";").includes(defferedSearchValue);
-        }
-
-        if (isKatakana(value)) {
-          return d.on_?.join(";").includes(defferedSearchValue);
-        }
-
-        if (isKanji(value)) {
-          return d.kanji === defferedSearchValue.trim();
-        }
-
-        return d.en?.includes(defferedSearchValue.toLowerCase());
-      })
-    : list;
+  const displayData = React.useMemo(() => {
+    if (defferedSearchValue) {
+      return list?.filter((d) => {
+        const value = defferedSearchValue.trim().toLowerCase();
+        const containsWord = getSearchReadings(d).some((v) =>
+          v.startsWith(value),
+        );
+        return value === d.kanji || containsWord;
+      });
+    }
+    return list;
+  }, [defferedSearchValue, list]);
 
   const { t } = useTranslation();
 

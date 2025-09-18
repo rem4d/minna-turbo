@@ -8,6 +8,7 @@ import WordReadings from "@/components/WordReadings";
 import { useRouter } from "@/router/router";
 import { paths } from "@/router/routes";
 import { useTRPC } from "@/utils/api";
+// import getSearchReadings from "@/utils/getSearchReadings";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
@@ -47,6 +48,9 @@ export default function SingleKanjiPage() {
   ).toLowerCase();
 
   const { kun, on_ } = found;
+  // const re = getSearchReadings(found);
+  // console.log(re);
+
   return (
     <Page
       backTo={paths.allKanji}
