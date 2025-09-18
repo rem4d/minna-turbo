@@ -12,7 +12,7 @@ export function Base() {
   const initialized = useRef(false);
 
   useEffect(() => {
-    queryClient.prefetchQuery(trpc.viewer.kanji.all.queryOptions());
+    void queryClient.prefetchQuery(trpc.viewer.kanji.all.queryOptions());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
