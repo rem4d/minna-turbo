@@ -1,13 +1,14 @@
 import type { FC } from "react";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useDeferredValue, useEffect, useRef } from "react";
 import { Page } from "@/components/Page";
 import PreviewCard from "@/components/PreviewCard";
 import SectionHeader from "@/components/SectionHeader";
+import ViewTransition from "@/components/ViewTransition";
 import { useAppStore } from "@/store";
 import { useTRPC } from "@/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useDebounce, useSessionStorage } from "@uidotdev/usehooks";
+import { useSessionStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 import Skeleton from "react-loading-skeleton";
 import { twMerge } from "tailwind-merge";
@@ -18,6 +19,7 @@ import SearchBar from "./SearchBar";
 export const AllKanjiPage: FC = () => {
   const searchValue = useAppStore((state) => state.text);
   const setSearchValue = useAppStore((state) => state.setText);
+  const defferedSearchValue = useDeferredValue(searchValue);
 
   const [listOffset, setListOffset] = useSessionStorage<number>(
     "listOffset",
@@ -28,6 +30,12 @@ export const AllKanjiPage: FC = () => {
     0,
   );
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (searchValue !== "") {
+      containerRef.current?.scrollTo(0, 0);
+    }
+  }, [searchValue, setListOffset]);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -43,47 +51,50 @@ export const AllKanjiPage: FC = () => {
 
   const trpc = useTRPC();
 
-  const debouncedValue = useDebounce(searchValue, 400);
   const listQuery = useQuery(trpc.viewer.kanji.all.queryOptions());
 
   const list = listQuery.data ?? [];
 
-  const displayData = debouncedValue
+  const displayData = defferedSearchValue
     ? list?.filter((d) => {
-        const value = debouncedValue.trim();
+        const value = defferedSearchValue.trim();
 
         if (isHiragana(value)) {
-          return d.kun?.join(";").includes(debouncedValue);
+          return d.kun?.join(";").includes(defferedSearchValue);
         }
 
         if (isKatakana(value)) {
-          return d.on_?.join(";").includes(debouncedValue);
+          return d.on_?.join(";").includes(defferedSearchValue);
         }
 
         if (isKanji(value)) {
-          return d.kanji === debouncedValue.trim();
+          return d.kanji === defferedSearchValue.trim();
         }
 
-        return d.en?.includes(debouncedValue.toLowerCase());
+        return d.en?.includes(defferedSearchValue.toLowerCase());
       })
     : list;
 
   const { t } = useTranslation();
 
-  const len = displayData?.length ?? 0;
+  const len = displayData.length;
 
   const colCount = containerWidth > 350 ? 4 : 3;
+
   const colSize =
     containerWidth > 0 ? (containerWidth - (colCount - 1) * 21) / colCount : 90;
 
+  const rowCount = Math.ceil(len / colCount);
+
   const rowVirtualizer = useVirtualizer({
-    count: len / colCount + 1,
+    count: rowCount,
     getScrollElement: () => containerRef.current,
     estimateSize: () => colSize,
     gap: 20,
     overscan: 1,
     initialOffset: () => listOffset,
     initialRect: { height: 700, width: 350 },
+    paddingEnd: 12,
   });
 
   const columnVirtualizer = useVirtualizer({
@@ -124,13 +135,20 @@ export const AllKanjiPage: FC = () => {
             inline
           />
         )}
+        {len === 0 ? (
+          <div className="text-black/60">{t("search_no_results")}</div>
+        ) : null}
         <div
           ref={containerRef}
           className="no-scroll flex h-full max-h-[calc(100vh-140px)] w-full overflow-scroll"
         >
           {/* <div className="flex flex-col space-y-8"> */}
-          {/*   {filtered.map((d) => ( */}
-          {/*     <PreviewCard key={d.id} d={d} onClick={onCardClick} /> */}
+          {/*   {displayData.map((d) => ( */}
+          {/*     <ViewTransition key={d.id}> */}
+          {/*       <div className="size-[90px]" key={d.id}> */}
+          {/*         <PreviewCard d={d} onClick={onCardClick} /> */}
+          {/*       </div> */}
+          {/*     </ViewTransition> */}
           {/*   ))} */}
           {/* </div> */}
           <div
@@ -152,14 +170,18 @@ export const AllKanjiPage: FC = () => {
                       transform: `translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`,
                     }}
                   >
-                    <PreviewCard
-                      d={
-                        displayData[
-                          virtualRow.index * colCount + virtualColumn.index
-                        ]
-                      }
-                      onClick={onCardClick}
-                    />
+                    <ViewTransition
+                      key={`vt-${displayData[virtualRow.index * colCount + virtualColumn.index]?.id}`}
+                    >
+                      <PreviewCard
+                        d={
+                          displayData[
+                            virtualRow.index * colCount + virtualColumn.index
+                          ]
+                        }
+                        onClick={onCardClick}
+                      />
+                    </ViewTransition>
                   </div>
                 ))}
               </React.Fragment>

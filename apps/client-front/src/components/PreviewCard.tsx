@@ -21,22 +21,32 @@ const PreviewCard = React.memo(function PreviewCardFn({
     navigate("/kanji/" + d.id, { animationStyle: "remove" });
     onClick?.();
   };
-
-  if (!d) {
-    return null;
-  }
+  const data = d; // ?? mock;
+  if (!d) return null;
 
   return (
     <div onClick={_onClick}>
       <Thumbnail
-        title={d.kanji}
-        level={d.position}
-        id={d.id}
-        means={d.en ?? ""}
+        title={data.kanji}
+        level={data.position}
+        id={data.id}
+        means={data.en ?? ""}
         hideMeaning={hideMeaning}
       />
     </div>
   );
 });
+
+// const mock: KanjiOutput = {
+//   en: "a",
+//   id: Date.now(),
+//   kanji: "あ",
+//   means: "",
+//   position: 1,
+//   on_: null,
+//   kun: null,
+//   ru: "",
+//   updated_at: "",
+// };
 
 export default PreviewCard;

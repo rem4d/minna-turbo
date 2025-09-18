@@ -17,13 +17,12 @@ interface ThumbnailProps {
 export default function Thumbnail({
   title,
   level,
-  id,
   means,
   large = false,
   hideMeaning = false,
 }: PropsWithChildren<ThumbnailProps>) {
   const removeName = use(IsHiddenScreenContext);
-  const containerProps = !removeName ? { name: `thumb-${id}` } : {};
+  const containerProps = !removeName ? { name: `thumb-${level}-${title}` } : {};
 
   return (
     <ViewTransition {...containerProps}>
