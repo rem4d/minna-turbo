@@ -194,19 +194,12 @@ const getInitialScreens = (routes: Route[]): Screen[] => {
   const pathname = window.location.pathname;
   const initialRoute = routes.find((route) => route.path === pathname);
 
-  if (initialRoute) {
-    const currentScreen = {
-      url: initialRoute.path,
-      element: initialRoute.element,
-      name: initialRoute.name,
-    };
-    return [currentScreen];
-  }
-  return [
-    {
-      url: routes[0].path,
-      element: routes[0].element,
-      name: routes[0].name,
-    },
-  ];
+  const active = initialRoute ?? routes[0];
+
+  const screen = {
+    url: active.path,
+    element: active.element,
+    name: active.name,
+  };
+  return [screen];
 };
