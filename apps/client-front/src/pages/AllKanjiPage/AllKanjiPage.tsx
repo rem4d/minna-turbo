@@ -21,7 +21,7 @@ export const AllKanjiPage: FC = () => {
   const setSearchValue = useAppStore((state) => state.setText);
   const debounced = useDebounce(searchValue, 200);
 
-  const defferedSearchValue = debounced; //useDeferredValue(debounced);
+  const searchValueDeferred = debounced; //useDeferredValue(debounced);
 
   const [listOffset, setListOffset] = useSessionStorage<number>(
     "listOffset",
@@ -57,9 +57,9 @@ export const AllKanjiPage: FC = () => {
 
   const list = listQuery.data ?? [];
 
-  const displayData = defferedSearchValue
+  const displayData = searchValueDeferred
     ? list?.filter((d) => {
-        const value = defferedSearchValue.trim().toLowerCase();
+        const value = searchValueDeferred.trim().toLowerCase();
         const containsWord = getSearchReadings(d).some((v) =>
           v.startsWith(value),
         );
