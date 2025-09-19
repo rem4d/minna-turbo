@@ -1,6 +1,7 @@
 import React from "react";
 import { useRouter } from "@/router/router";
 import { type KanjiOutput } from "@rem4d/api";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 import Thumbnail from "./Thumbnail";
 
@@ -21,8 +22,16 @@ const PreviewCard = React.memo(function PreviewCardFn({
     navigate("/kanji/" + d.id, { animationStyle: "remove" });
     onClick?.();
   };
+
+  const [transLang] = useLocalStorage<"ru" | "en" | null>(
+    "kic:translation_language",
+    null,
+  );
+
   const data = d; // ?? mock;
   if (!d) return null;
+  const means_ = transLang === "ru" ? data.ru : data.en;
+  const means = means_?.split(/[,;]/)?.[0] ?? "";
 
   return (
     <div onClick={_onClick}>
@@ -30,7 +39,7 @@ const PreviewCard = React.memo(function PreviewCardFn({
         title={data.kanji}
         level={data.position}
         id={data.id}
-        means={data.en ?? ""}
+        means={means.toLowerCase()}
         hideMeaning={hideMeaning}
       />
     </div>

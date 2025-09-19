@@ -68,7 +68,6 @@ export const AllKanjiPage: FC = () => {
     : list;
 
   const { t } = useTranslation();
-  console.log("1");
 
   const len = displayData.length;
 
