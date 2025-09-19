@@ -113,11 +113,6 @@ export const AllKanjiPage: FC = () => {
         <SectionHeader className={listQuery.isLoading ? "opacity-0" : ""}>
           {t("all_kanji")}
         </SectionHeader>
-        <SearchBar
-          onChange={setSearchValue}
-          value={searchValue}
-          placeholderText={t("find")}
-        />
         {listQuery.isLoading && (
           <Skeleton
             className="aspect-square"
@@ -127,13 +122,18 @@ export const AllKanjiPage: FC = () => {
             inline
           />
         )}
-        {len === 0 ? (
-          <div className="text-black/60">{t("search_no_results")}</div>
-        ) : null}
         <div
           ref={containerRef}
-          className="no-scroll flex h-full max-h-[calc(100vh-140px)] w-full overflow-scroll"
+          className="no-scroll flex h-full max-h-[calc(100vh-140px)] w-full flex-col overflow-scroll"
         >
+          <SearchBar
+            onChange={setSearchValue}
+            value={searchValue}
+            placeholderText={t("find")}
+          />
+          {len === 0 ? (
+            <div className="text-black/60">{t("search_no_results")}</div>
+          ) : null}
           {/* <div className="flex flex-col space-y-8"> */}
           {/*   {displayData.map((d) => ( */}
           {/*     <ViewTransition key={d.id}> */}
