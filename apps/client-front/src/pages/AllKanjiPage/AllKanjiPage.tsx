@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import React, { useCallback, useDeferredValue, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { Page } from "@/components/Page";
 import PreviewCard from "@/components/PreviewCard";
 import SectionHeader from "@/components/SectionHeader";
@@ -19,9 +19,9 @@ import SearchBar from "./SearchBar";
 export const AllKanjiPage: FC = () => {
   const searchValue = useAppStore((state) => state.text);
   const setSearchValue = useAppStore((state) => state.setText);
-  const debounced = useDebounce(searchValue, 400);
+  const debounced = useDebounce(searchValue, 200);
 
-  const defferedSearchValue = useDeferredValue(debounced);
+  const defferedSearchValue = debounced; //useDeferredValue(debounced);
 
   const [listOffset, setListOffset] = useSessionStorage<number>(
     "listOffset",
@@ -167,6 +167,8 @@ export const AllKanjiPage: FC = () => {
                   >
                     <ViewTransition
                       key={`vt-${displayData[virtualRow.index * colCount + virtualColumn.index]?.id}`}
+                      update="none"
+                      default="none"
                     >
                       <PreviewCard
                         d={
