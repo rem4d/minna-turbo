@@ -1,4 +1,5 @@
 import React from "react";
+import { STORAGE_LANG } from "@/config/const";
 import { useRouter } from "@/router/router";
 import { type KanjiOutput } from "@rem4d/api";
 import { useLocalStorage } from "@uidotdev/usehooks";
@@ -23,10 +24,7 @@ const PreviewCard = React.memo(function PreviewCardFn({
     onClick?.();
   };
 
-  const [transLang] = useLocalStorage<"ru" | "en" | null>(
-    "kic:translation_language",
-    null,
-  );
+  const [transLang] = useLocalStorage<"ru" | "en" | null>(STORAGE_LANG, null);
 
   const data = d; // ?? mock;
   if (!d) return null;

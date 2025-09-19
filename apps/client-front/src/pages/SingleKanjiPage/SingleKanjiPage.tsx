@@ -1,20 +1,24 @@
 import type { ExampleOutput } from "@rem4d/api";
 import type { UseQueryResult } from "@tanstack/react-query";
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
+import SentenceNavButtons from "@/components/SentenceViewer/SentenceNavButtons";
 import Thumbnail from "@/components/Thumbnail";
 import WordReadings from "@/components/WordReadings";
+import { STORAGE_LANG } from "@/config/const";
 import { useRouter } from "@/router/router";
 import { paths } from "@/router/routes";
 import { useTRPC } from "@/utils/api";
-// import getSearchReadings from "@/utils/getSearchReadings";
+import { hapticFeedback } from "@/utils/tgUtils";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { twMerge } from "tailwind-merge";
 
 export default function SingleKanjiPage() {
   const { url } = useRouter();
   const kanjiId = url.split("/").pop();
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const trpc = useTRPC();
   const listQuery = useQuery(trpc.viewer.kanji.all.queryOptions());
@@ -29,10 +33,8 @@ export default function SingleKanjiPage() {
     ),
   );
 
-  const [transLang] = useLocalStorage<"ru" | "en" | null>(
-    "kic:translation_language",
-    null,
-  );
+  const [transLang] = useLocalStorage<"ru" | "en" | null>(STORAGE_LANG, null);
+
   if (!found) {
     return null;
   }
@@ -48,8 +50,18 @@ export default function SingleKanjiPage() {
   ).toLowerCase();
 
   const { kun, on_ } = found;
-  // const re = getSearchReadings(found);
-  // console.log(re);
+
+  const handlePrevClick = () => {
+    hapticFeedback("light");
+    setActiveIndex((i) => i - 1);
+  };
+
+  const handleNextClick = () => {
+    hapticFeedback("light");
+    setActiveIndex((i) => i + 1);
+  };
+  const disablePrevNav = activeIndex === 0;
+  const disableNextNav = false;
 
   return (
     <Page
@@ -97,6 +109,17 @@ export default function SingleKanjiPage() {
             <Examples query={examplesQuery} />
           </Suspense>
         </div>
+
+        <SentenceNavButtons
+          disablePrevNav={disablePrevNav}
+          disableNextNav={disableNextNav}
+          handleNextClick={handleNextClick}
+          handlePrevClick={handlePrevClick}
+          className={twMerge(
+            // false && "top-1/2",
+            "bottom-[calc(var(--tg-bottom)+25px)]",
+          )}
+        />
       </div>
     </Page>
   );
@@ -115,18 +138,18 @@ function ExamplesFallback() {
   );
 }
 
-function _InfoFallback() {
-  return (
-    <div className="grid grid-cols-2 gap-4">
-      <div className="fallback aspect-square" />
-      <div className="flex flex-col space-y-2">
-        <div className="fallback h-[28px] w-[80%]" />
-        <div className="fallback h-[28px] w-[60%]" />
-        <div className="fallback h-[28px] w-[60%]" />
-      </div>
-    </div>
-  );
-}
+// function _InfoFallback() {
+//   return (
+//     <div className="grid grid-cols-2 gap-4">
+//       <div className="fallback aspect-square" />
+//       <div className="flex flex-col space-y-2">
+//         <div className="fallback h-[28px] w-[80%]" />
+//         <div className="fallback h-[28px] w-[60%]" />
+//         <div className="fallback h-[28px] w-[60%]" />
+//       </div>
+//     </div>
+//   );
+// }
 
 // function Info({
 //   query,

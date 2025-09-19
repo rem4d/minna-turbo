@@ -246,6 +246,7 @@ export const SentencesPage: FC = () => {
             disableNextNav={disableNextNav}
             handleNextClick={handleNextClick}
             handlePrevClick={handlePrevClick}
+            className="top-[40%]"
           />
           <div className={_isMobile ? "mt-16" : "mt-10"}>
             <SentenceViewer sentence={sentence} dropdownItems={dropdownItems} />

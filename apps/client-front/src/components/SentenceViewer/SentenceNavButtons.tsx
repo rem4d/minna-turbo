@@ -6,15 +6,22 @@ interface Props {
   disableNextNav: boolean;
   handlePrevClick: () => void;
   handleNextClick: () => void;
+  className?: string;
 }
 export default function SentenceNavButtons({
   disablePrevNav,
   disableNextNav,
   handlePrevClick,
   handleNextClick,
+  className = "",
 }: Props) {
   return (
-    <div className="absolute top-[40%] flex w-full -translate-y-1/2 justify-between px-2">
+    <div
+      className={twMerge(
+        "absolute flex w-full -translate-y-1/2 justify-between px-2",
+        className,
+      )}
+    >
       <div
         className={twMerge(
           "relative flex size-[30px] cursor-pointer items-center justify-center",

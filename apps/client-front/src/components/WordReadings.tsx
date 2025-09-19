@@ -1,5 +1,6 @@
 import { Fragment, useCallback } from "react";
 import PlaySound from "@/components/PlaySound";
+import { STORAGE_LANG } from "@/config/const";
 import { usePlaySoundContext } from "@/context/playSoundContext";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { twMerge } from "tailwind-merge";
@@ -32,10 +33,7 @@ export default function WordReadings({
     text: contextText,
   } = usePlaySoundContext();
 
-  const [transLang] = useLocalStorage<"ru" | "en" | null>(
-    "kic:translation_language",
-    null,
-  );
+  const [transLang] = useLocalStorage<"ru" | "en" | null>(STORAGE_LANG, null);
 
   const onLoadSpeech = useCallback(
     (text: string, index: number | undefined) => {

@@ -10,6 +10,7 @@ import { FooterMenu } from "@/components/FooterMenu";
 import { List, ListItem } from "@/components/List";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
+import { STORAGE_LANG } from "@/config/const";
 import { paths } from "@/router/routes";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
@@ -19,7 +20,7 @@ export const SettingsPage: FC = () => {
   const { i18n } = useTranslation();
 
   const [transLang, setTransLang] = useLocalStorage<"ru" | "en" | null>(
-    "kic:translation_language",
+    STORAGE_LANG,
     null,
   );
 

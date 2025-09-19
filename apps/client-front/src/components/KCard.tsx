@@ -2,6 +2,7 @@ import type { Kanji } from "@rem4d/db";
 import { useLayoutEffect, useRef, useState } from "react";
 import { SpinnerBig } from "@/components/Spinner";
 import WordReadings from "@/components/WordReadings";
+import { STORAGE_LANG } from "@/config/const";
 import { useTRPC } from "@/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
@@ -27,10 +28,7 @@ export function KCard({
   const [hasScroll, setHasScroll] = useState(false);
   const [eyeOpen, setEyeOpen] = useState(false);
 
-  const [transLang] = useLocalStorage<"ru" | "en" | null>(
-    "kic:translation_language",
-    null,
-  );
+  const [transLang] = useLocalStorage<"ru" | "en" | null>(STORAGE_LANG, null);
 
   const trpc = useTRPC();
 
