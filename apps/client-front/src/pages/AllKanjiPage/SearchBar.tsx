@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SearchIcon from "@/assets/icons/search.svg?react";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,14 @@ interface Props {
 export default function SearchBar({ onChange, value, placeholderText }: Props) {
   const [inFocus, setInFocus] = useState(() => value !== "");
   const { t } = useTranslation();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (inputRef.current && value !== "") {
+      inputRef.current.focus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange?.(event.target.value);
@@ -45,6 +53,7 @@ export default function SearchBar({ onChange, value, placeholderText }: Props) {
         <SearchIcon className="stroke-rolling-stone size-[20px] shrink-0" />
 
         <input
+          ref={inputRef}
           className="w-full outline-none"
           type="text"
           placeholder={placeholderText}
