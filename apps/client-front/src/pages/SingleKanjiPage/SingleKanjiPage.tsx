@@ -1,6 +1,6 @@
 import type { ExampleOutput } from "@rem4d/api";
 import type { UseQueryResult } from "@tanstack/react-query";
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useLayoutEffect, useState } from "react";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import SentenceNavButtons from "@/components/SentenceViewer/SentenceNavButtons";
@@ -16,24 +16,36 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { twMerge } from "tailwind-merge";
 
 export default function SingleKanjiPage() {
-  const { url } = useRouter();
-  const kanjiId = url.split("/").pop();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [transLang] = useLocalStorage<"ru" | "en" | null>(STORAGE_LANG, null);
 
   const trpc = useTRPC();
   const listQuery = useQuery(trpc.viewer.kanji.all.queryOptions());
+
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
+
+  const { url } = useRouter();
+  const kanjiId = url.split("/").pop();
+
   const list = listQuery.data ?? [];
 
-  const found = list.find((d) => d.id === Number(kanjiId));
+  useLayoutEffect(() => {
+    if (activeIndex === -1) {
+      const foundIndex = list.findIndex((d) => d.id === Number(kanjiId));
+      setActiveIndex(foundIndex);
+    }
+  }, [list]);
+
+  const found =
+    activeIndex === -1
+      ? list.find((d) => d.id === Number(kanjiId))
+      : list[activeIndex];
 
   const examplesQuery = useQuery(
     trpc.viewer.kanji.examples.queryOptions(
       { k: found?.kanji ?? "" },
-      { enabled: Boolean(kanjiId) },
+      { enabled: Boolean(found) },
     ),
   );
-
-  const [transLang] = useLocalStorage<"ru" | "en" | null>(STORAGE_LANG, null);
 
   if (!found) {
     return null;
@@ -61,7 +73,7 @@ export default function SingleKanjiPage() {
     setActiveIndex((i) => i + 1);
   };
   const disablePrevNav = activeIndex === 0;
-  const disableNextNav = false;
+  const disableNextNav = activeIndex === list.length - 1;
 
   return (
     <Page

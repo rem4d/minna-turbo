@@ -77,7 +77,7 @@ export function ApiProvider(props: { children: React.ReactNode }) {
     <trpc.TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         {props.children}
-        <ReactQueryDevtools />
+        {/* <ReactQueryDevtools buttonPosition="top-right" /> */}
       </QueryClientProvider>
     </trpc.TRPCProvider>
   );
