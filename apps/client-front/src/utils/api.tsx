@@ -2,7 +2,7 @@ import type { AppRouter } from "@rem4d/api";
 import React, { useState } from "react";
 import { initDataRaw } from "@/utils/tgUtils";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   createTRPCClient,
   httpBatchLink,
@@ -77,6 +77,7 @@ export function ApiProvider(props: { children: React.ReactNode }) {
     <trpc.TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         {props.children}
+        <ReactQueryDevtools />
       </QueryClientProvider>
     </trpc.TRPCProvider>
   );

@@ -47,7 +47,7 @@ export function Page({
   vtProps.enter = {
     "nav-forward": "slide-in",
     "nav-back": "slide-in-back",
-    deeault: "default",
+    default: "default",
     disabled: "disabled",
   };
   vtProps.exit = {

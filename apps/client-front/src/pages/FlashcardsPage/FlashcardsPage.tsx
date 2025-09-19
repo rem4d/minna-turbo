@@ -1,6 +1,6 @@
 import type { Kanji } from "@rem4d/db";
 import type { FC } from "react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import AgainIcon from "@/assets/icons/again.svg?react";
 import CrossIcon from "@/assets/icons/cross.svg?react";
 import FireworksIcon from "@/assets/icons/fireworks.svg?react";

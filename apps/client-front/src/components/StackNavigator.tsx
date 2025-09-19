@@ -136,7 +136,7 @@ export default function StackNavigator() {
         >
           <div className="h-full w-full">
             <IsHiddenScreenContext value={false}>
-              <ViewTransition>
+              <ViewTransition update="none">
                 <currentScreen.element />
               </ViewTransition>
             </IsHiddenScreenContext>
