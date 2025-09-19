@@ -57,18 +57,15 @@ export const AllKanjiPage: FC = () => {
 
   const list = listQuery.data ?? [];
 
-  const displayData = React.useMemo(() => {
-    if (defferedSearchValue) {
-      return list?.filter((d) => {
+  const displayData = defferedSearchValue
+    ? list?.filter((d) => {
         const value = defferedSearchValue.trim().toLowerCase();
         const containsWord = getSearchReadings(d).some((v) =>
           v.startsWith(value),
         );
         return value === d.kanji || containsWord;
-      });
-    }
-    return list;
-  }, [defferedSearchValue, list]);
+      })
+    : list;
 
   const { t } = useTranslation();
 
