@@ -81,12 +81,13 @@ For readings including comments use only hiragana.
     },
   );
 
-  const { data: kanjisInTheSentence } = api.admin.member.sentenceKajis.useQuery(
-    { id: sentence?.id ?? 0 },
-    {
-      enabled: !!sentence?.id,
-    },
-  );
+  const { data: kanjisInTheSentence } =
+    api.admin.member.sentenceKanjis.useQuery(
+      { id: sentence?.id ?? 0 },
+      {
+        enabled: !!sentence?.id,
+      },
+    );
 
   const utils = api.useUtils();
 
@@ -271,9 +272,15 @@ For readings including comments use only hiragana.
                 <DataList.Item align="center">
                   <DataList.Label minWidth="88px">Status</DataList.Label>
                   <DataList.Value>
-                    <Badge color="jade" variant="soft" radius="full">
-                      Checked
-                    </Badge>
+                    {sentence.status === "member2_checked" ? (
+                      <Badge color="jade" variant="soft" radius="full">
+                        Checked
+                      </Badge>
+                    ) : (
+                      <Badge color="red" variant="soft" radius="full">
+                        Not checked
+                      </Badge>
+                    )}
                   </DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
@@ -325,10 +332,6 @@ For readings including comments use only hiragana.
                   <DataList.Value>
                     {sentence.unknown_kanji_number}
                   </DataList.Value>
-                </DataList.Item>
-                <DataList.Item>
-                  <DataList.Label minWidth="88px">Status</DataList.Label>
-                  <DataList.Value>{sentence.status}</DataList.Value>
                 </DataList.Item>
               </DataList.Root>
             </Flex>

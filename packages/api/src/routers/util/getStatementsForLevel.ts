@@ -17,26 +17,30 @@ export const getStatementsForLevel = async ({
   db: SupabaseClient<Database>;
   redis: RedisClientType;
 }) => {
-  const cached = await redis.get(`${level}-${shift}`);
-
-  if (cached) {
-    const arr = JSON.parse(cached) as {
-      additional: Sentence[];
-      sentences: Sentence[];
-    };
-    return arr;
-  }
+  // const cached = await redis.get(`${level}-${shift}`);
+  //
+  // if (cached) {
+  //   const arr = JSON.parse(cached) as {
+  //     additional: Sentence[];
+  //     sentences: Sentence[];
+  //   };
+  //   return arr;
+  // }
 
   const { data: sentences, error } = await db
     .from("sentences")
     .select(
-      "id,text,ruby,level,text_with_furigana,en,ru,vox_file_path,vox_speaker_id",
+      "id,text,ruby,level,text_with_furigana,en,ru,vox_file_path,vox_speaker_id,sentence_gloss()",
     )
+    // .eq("level", level)
     .lte("level", level)
     .gt("level", clamp(level - shift, 0, level))
     .not("ru", "is", null)
     .not("en", "is", null)
     .eq("status", "member2_checked")
+    .eq("source", "source1")
+    .not("tmp", "is", null)
+    .not("sentence_gloss", "is", null)
     .lte("unknown_kanji_number", numberOfUnknownKanji);
 
   if (error) {
@@ -94,6 +98,7 @@ export const getStatementsForLevel = async ({
           status: "",
           translation: null,
           updated_at: "",
+          tmp: null,
         });
       }
     } else {

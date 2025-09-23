@@ -10,8 +10,9 @@ export const sentenceRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const shift = 50;
+      const shift = 0;
       const numberOfUnknownKanji = 3;
+      console.log("find for level: ", input.level);
       const { sentences, additional } = await getStatementsForLevel({
         level: input.level,
         shift,

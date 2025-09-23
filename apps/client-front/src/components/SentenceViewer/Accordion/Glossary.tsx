@@ -1,4 +1,4 @@
-import type { Member2Output } from "@rem4d/api";
+import type { GlossOutput, Member2Output } from "@rem4d/api";
 import React from "react";
 import Button from "@/components/Button";
 import PreviewCard from "@/components/PreviewCard";
@@ -11,6 +11,7 @@ import { LoadingMembersPlaceholder } from "./LoadingMembersPlaceholder";
 const GlossaryContent: React.FC<{
   members: Member2Output[] | undefined;
   kanjisInTheSentence: KanjiInTheSentenceOutput[] | undefined;
+  grammarGlosses: GlossOutput[] | undefined;
   loadingMembers: boolean;
   isSuccess: boolean;
   askAiClicked: boolean;
@@ -19,6 +20,7 @@ const GlossaryContent: React.FC<{
   transLang: "ru" | "en" | null;
 }> = ({
   members,
+  grammarGlosses,
   kanjisInTheSentence,
   loadingMembers,
   isSuccess,
@@ -64,6 +66,20 @@ const GlossaryContent: React.FC<{
                 {kanjisInTheSentence?.map((k) => (
                   <div key={k.id} className="">
                     <PreviewCard d={k} hideMeaning />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {!loadingMembers && (
+            <div>
+              <p className="text-md mt-6 mb-3 font-medium">Grammar glosses</p>
+              <div className="my-2 flex flex-col gap-2">
+                {grammarGlosses?.map((k) => (
+                  <div className="flex space-x-4" key={k.gloss_id}>
+                    <div className="whitespace-nowrap">{k.kana}</div>
+                    <div className="">{k.comment}</div>
+                    <div />
                   </div>
                 ))}
               </div>

@@ -18,7 +18,7 @@ export const adminMemberRouter = router({
       }
 
       await ctx.db
-        .from("sentence_member")
+        .from("sentence_member2")
         .delete()
         .eq("sentence_id", sentenceId);
 
@@ -26,7 +26,7 @@ export const adminMemberRouter = router({
       console.log(insertBulk);
 
       const { error: error2 } = await ctx.db
-        .from("sentence_member")
+        .from("sentence_member2")
         .upsert(insertBulk);
 
       if (error2) {
@@ -166,7 +166,7 @@ export const adminMemberRouter = router({
       const memberId = input.id;
 
       const { data, error } = await ctx.db
-        .from("sentence_member")
+        .from("sentence_member2")
         .select("id:sentence_id,...sentences(text,text_with_furigana,en,ru)")
         .eq("member_id", memberId);
 

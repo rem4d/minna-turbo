@@ -56,7 +56,7 @@ export const adminSentenceRouter = router({
       const filterText = input.text;
       const qb = ctx.db
         .from("sentences")
-        .select("*, members(*)")
+        .select("*, members2(*)")
         .lt("level", 500);
 
       if (filterText) {
@@ -78,7 +78,7 @@ export const adminSentenceRouter = router({
 
       for (const sentence of data) {
         const memberIds = await findSingleSentenceMembers(sentence);
-        const existingIds = sentence.members.map((m) => m.id);
+        const existingIds = sentence.members2.map((m) => m.id);
 
         if (
           memberIds.toSorted().toString() !== existingIds.toSorted().toString()

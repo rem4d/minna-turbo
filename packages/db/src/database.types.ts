@@ -14,46 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
-      example: {
+      glosses: {
         Row: {
-          id: string
-          kana: string
-          kanji_id: number | null
-          means: string
-          position: number | null
-          postfix: string | null
-          prefix: string | null
-          sentence: string
+          comment: string | null
+          created_at: string
+          examples: string | null
+          id: number
+          is_hidden: boolean
+          kana: string | null
+          kanji_form: string | null
+          references: string | null
+          romaji: string | null
         }
         Insert: {
-          id?: string
-          kana?: string
-          kanji_id?: number | null
-          means?: string
-          position?: number | null
-          postfix?: string | null
-          prefix?: string | null
-          sentence?: string
+          comment?: string | null
+          created_at?: string
+          examples?: string | null
+          id?: number
+          is_hidden?: boolean
+          kana?: string | null
+          kanji_form?: string | null
+          references?: string | null
+          romaji?: string | null
         }
         Update: {
-          id?: string
-          kana?: string
-          kanji_id?: number | null
-          means?: string
-          position?: number | null
-          postfix?: string | null
-          prefix?: string | null
-          sentence?: string
+          comment?: string | null
+          created_at?: string
+          examples?: string | null
+          id?: number
+          is_hidden?: boolean
+          kana?: string | null
+          kanji_form?: string | null
+          references?: string | null
+          romaji?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "example_kanji_id_fkey"
-            columns: ["kanji_id"]
-            isOneToOne: false
-            referencedRelation: "kanji"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       kanji: {
         Row: {
@@ -190,6 +185,36 @@ export type Database = {
         }
         Relationships: []
       }
+      sentence_gloss: {
+        Row: {
+          gloss_id: number
+          sentence_id: number
+        }
+        Insert: {
+          gloss_id: number
+          sentence_id?: number
+        }
+        Update: {
+          gloss_id?: number
+          sentence_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sentence_gloss_gloss_id_fkey"
+            columns: ["gloss_id"]
+            isOneToOne: false
+            referencedRelation: "glosses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sentence_gloss_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sentence_kanji: {
         Row: {
           kanji_id: number
@@ -216,39 +241,6 @@ export type Database = {
           },
           {
             foreignKeyName: "sentence_kanji_sentence_id_fkey"
-            columns: ["sentence_id"]
-            isOneToOne: false
-            referencedRelation: "sentences"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      sentence_member: {
-        Row: {
-          member_id: number
-          position: number
-          sentence_id: number
-        }
-        Insert: {
-          member_id?: number
-          position?: number
-          sentence_id?: number
-        }
-        Update: {
-          member_id?: number
-          position?: number
-          sentence_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "sentence_member_member_id_fkey"
-            columns: ["member_id"]
-            isOneToOne: false
-            referencedRelation: "members"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "sentence_member_sentence_id_fkey"
             columns: ["sentence_id"]
             isOneToOne: false
             referencedRelation: "sentences"
@@ -301,6 +293,7 @@ export type Database = {
           status: string
           text: string
           text_with_furigana: string | null
+          tmp: string | null
           translation: string | null
           unknown_kanji_number: number | null
           updated_at: string | null
@@ -318,6 +311,7 @@ export type Database = {
           status?: string
           text?: string
           text_with_furigana?: string | null
+          tmp?: string | null
           translation?: string | null
           unknown_kanji_number?: number | null
           updated_at?: string | null
@@ -335,6 +329,7 @@ export type Database = {
           status?: string
           text?: string
           text_with_furigana?: string | null
+          tmp?: string | null
           translation?: string | null
           unknown_kanji_number?: number | null
           updated_at?: string | null
@@ -378,36 +373,7 @@ export type Database = {
       }
     }
     Views: {
-      suggested_vocabularies: {
-        Row: {
-          basic_form: string | null
-          cnt: number | null
-          en: string | null
-          level: number | null
-          member_id: number | null
-          pos: string | null
-          reading: string | null
-          ru: string | null
-          ruby: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "sentence_member2_member_id_fkey"
-            columns: ["member_id"]
-            isOneToOne: false
-            referencedRelation: "members2"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      suggested_vocabularies_list: {
-        Row: {
-          cnt: number | null
-          level_from: number | null
-          level_to: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       additional_sentences: {
@@ -427,6 +393,7 @@ export type Database = {
           status: string
           text: string
           text_with_furigana: string | null
+          tmp: string | null
           translation: string | null
           unknown_kanji_number: number | null
           updated_at: string | null
