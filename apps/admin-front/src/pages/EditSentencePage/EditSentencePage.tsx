@@ -323,7 +323,10 @@ For readings including comments use only hiragana.
                 </DataList.Item>
                 <DataList.Item>
                   <DataList.Label minWidth="88px">Source</DataList.Label>
-                  <DataList.Value>{sentence.source}</DataList.Value>
+                  <DataList.Value>
+                    {sentence.source}{" "}
+                    {sentence.source === "source1" && sentence.tmp}
+                  </DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
                   <DataList.Label minWidth="88px">

@@ -1,11 +1,6 @@
 import SentenceSearchResult from "@/components/shared/SentenceSearchResult";
 import { api } from "@/utils/api";
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ExternalLinkIcon,
-  MagnifyingGlassIcon,
-} from "@radix-ui/react-icons";
+import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 import {
   Box,
   DropdownMenu,
@@ -17,6 +12,8 @@ import {
   Table,
   TextField,
   Spinner,
+  TextArea,
+  Button,
 } from "@radix-ui/themes";
 import { useCallback, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -24,6 +21,7 @@ import { twMerge } from "tailwind-merge";
 export default function GlossesPage() {
   const [pageNumber, setPageNumber] = useState(1);
   const [currentGlossId, setCurrentGlossId] = useState<number | null>(null);
+  const [textareaValue, setTextareaValue] = useState("");
 
   const MAX_PER_PAGE = 10;
   const { data: glossesData, isLoading: glossesLoading } =
@@ -35,7 +33,29 @@ export default function GlossesPage() {
   const findSentencesMutation =
     api.admin.gloss.getSentencesByGloss.useMutation();
 
+  const utils = api.useUtils();
   const { data: total } = api.admin.gloss.glossesTotal.useQuery();
+
+  const text =
+    "ジェイムズが日本で働くことになったとき、私は日本語があまり分からなかったし、日本の事は少ししか知らなかったので、とても心配でした。";
+
+  const allGlossesMutation = api.admin.gloss.getAllGlosses.useMutation({
+    onSuccess(data) {
+      console.log(data?.length);
+      let prompt =
+        "Given the list of glosses. Each gloss is put into square braces and the comment is put in parentheses.\n\n";
+      if (data) {
+        prompt += data.slice(0, 10).reduce((acc, curr) => {
+          return acc + `[${curr.kana}] (${curr.comment})\n`;
+        }, "");
+      }
+      prompt += `\nWhat glosses from the list  are used in the following japanese sentence?\n
+${text}
+Do not change glosses. Leave glosses as they are including square braces and parentheses.
+`;
+      setTextareaValue(prompt);
+    },
+  });
 
   const onFindSentencesClick = useCallback(
     (glossId: number) => {
@@ -54,6 +74,28 @@ export default function GlossesPage() {
   );
   const foundSentences = findSentencesMutation.data ?? [];
   const sentencesLoading = findSentencesMutation.isPending;
+
+  const setHiddenMutation = api.admin.gloss.setHidden.useMutation({
+    onSuccess() {
+      void utils.admin.gloss.getGlosses.invalidate();
+    },
+  });
+  const askAiMutation = api.admin.gloss.askAi.useMutation();
+  const onSetHiddenClick = useCallback(
+    (id: number) => {
+      setHiddenMutation.mutate(id);
+    },
+    [setHiddenMutation],
+  );
+
+  const onGeneratePromptClick = () => {
+    allGlossesMutation.mutate();
+  };
+  const onAskAiToMakeGlossesClick = () => {
+    askAiMutation.mutate({
+      prompt: textareaValue,
+    });
+  };
 
   return (
     <section>
@@ -142,6 +184,12 @@ export default function GlossesPage() {
                         >
                           Find sentences
                         </DropdownMenu.Item>
+                        <DropdownMenu.Separator />
+                        <DropdownMenu.Item
+                          onClick={() => onSetHiddenClick(gloss.id)}
+                        >
+                          Set hidden
+                        </DropdownMenu.Item>
                       </DropdownMenu.Content>
                     </DropdownMenu.Root>
                   </Table.Cell>
@@ -171,6 +219,12 @@ export default function GlossesPage() {
           </Flex>
         </Grid>
       )}
+
+      <Box className="mt-8">
+        <Button onClick={onAskAiToMakeGlossesClick}>Ask Ai</Button>
+        <Button onClick={onGeneratePromptClick}>Generate glosses</Button>
+        <TextArea mt="6" mb="6" rows={7} value={textareaValue} />
+      </Box>
     </section>
   );
 }
