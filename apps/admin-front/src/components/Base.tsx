@@ -5,7 +5,7 @@ export function Base() {
   const homeMatch = useMatch("/");
   const statsMatch = useMatch("/stats");
   const createMatch = useMatch("/create");
-  const rusifyMatch = useMatch("/rusify");
+  const glossesMatch = useMatch("/glosses");
   const dictionaryMatch = useMatch("/dictionary");
   const filterListMatch = useMatch("/filter");
 
@@ -42,10 +42,10 @@ export function Base() {
           Filter list
         </TabNav.Link>
         <TabNav.Link
-          onClick={() => navigate("/rusify")}
-          active={Boolean(rusifyMatch)}
+          onClick={() => navigate("/glosses")}
+          active={Boolean(glossesMatch)}
         >
-          Rusificator
+          Glosses
         </TabNav.Link>
       </TabNav.Root>
       <Outlet />

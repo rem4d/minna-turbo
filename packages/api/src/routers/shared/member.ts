@@ -41,7 +41,7 @@ export const memberRouter = router({
     .query(async ({ input, ctx }) => {
       const { data, error } = await ctx.db
         .from("sentence_gloss")
-        .select("*,...grammar_glosses(kana,references,romaji,comment)")
+        .select("*,...glosses(kana,references,romaji,comment)")
         .eq("sentence_id", Number(input.id));
 
       if (error) {

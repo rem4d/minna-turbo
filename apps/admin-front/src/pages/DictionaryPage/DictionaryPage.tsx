@@ -22,6 +22,7 @@ import {
 import { twMerge } from "tailwind-merge";
 import { useCallback, useEffect, useRef, useState, type FC } from "react";
 import { openUrl } from "@/utils";
+import SentenceSearchResult from "@/components/shared/SentenceSearchResult";
 
 export const DictionaryPage: FC = () => {
   const [isEditingMeaning, setIsEditingMeaning] = useState(false);
@@ -388,42 +389,13 @@ export const DictionaryPage: FC = () => {
             </Flex>
           )}
           {correspondingSentences.map((s, index) => (
-            <Box key={s.id}>
-              <Flex align="start" gap="2">
-                <Text size="2" color="gray">
-                  {index + 1}.
-                </Text>
-                <Flex direction="column" gap="2">
-                  <Flex gap="2" align="center">
-                    <span className="relative">
-                      <Text
-                        size="2"
-                        className="text-white/60"
-                        dangerouslySetInnerHTML={{
-                          __html: s.text_with_furigana ?? "",
-                        }}
-                      />
-                      <div
-                        className="cursor-pointer absolute -right-4 top-2"
-                        onClick={() => openUrl(`/edit/${s.id}`)}
-                      >
-                        <ExternalLinkIcon
-                          style={{ color: "gray" }}
-                          width="15"
-                          height="15"
-                        />
-                      </div>
-                    </span>
-                  </Flex>
-                  <Text className="text-white/90" size="2">
-                    {s.ru}
-                  </Text>
-                  <Text className="text-white/20" size="2">
-                    {s.en}
-                  </Text>
-                </Flex>
-              </Flex>
-            </Box>
+            <SentenceSearchResult
+              id={s.id}
+              index={index}
+              html={s.text_with_furigana}
+              ru={s.ru}
+              en={s.en}
+            />
           ))}
         </Flex>
       </Grid>
