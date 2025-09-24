@@ -61,7 +61,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
   );
 
   const { data: glosses } = useQuery(
-    trpc.viewer.member.sentenceGlosses.queryOptions(
+    trpc.viewer.sentence.glosses.queryOptions(
       { id: sentence.id },
       {
         enabled: !!sentence.text && openItems.includes("2"),

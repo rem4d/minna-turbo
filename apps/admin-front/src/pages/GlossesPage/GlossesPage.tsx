@@ -36,8 +36,8 @@ export default function GlossesPage() {
   const utils = api.useUtils();
   const { data: total } = api.admin.gloss.glossesTotal.useQuery();
 
-  const text =
-    "ジェイムズが日本で働くことになったとき、私は日本語があまり分からなかったし、日本の事は少ししか知らなかったので、とても心配でした。";
+  // const text = "飛行機は込むから3ヶ月前に予約しておいた方がいいですよ。";
+  const text = "黒田さん、その電話の横の資料を三部ずつ急いでコピーしておいて。";
 
   const allGlossesMutation = api.admin.gloss.getAllGlosses.useMutation({
     onSuccess(data) {
@@ -45,13 +45,19 @@ export default function GlossesPage() {
       let prompt =
         "Given the list of glosses. Each gloss is put into square braces and the comment is put in parentheses.\n\n";
       if (data) {
-        prompt += data.slice(0, 10).reduce((acc, curr) => {
+        prompt += data.reduce((acc, curr) => {
           return acc + `[${curr.kana}] (${curr.comment})\n`;
         }, "");
       }
       prompt += `\nWhat glosses from the list  are used in the following japanese sentence?\n
 ${text}
-Do not change glosses. Leave glosses as they are including square braces and parentheses.
+Do not change glosses. Leave glosses as they are including square braces and parentheses. Response json array:
+[
+  {
+    kana: ..., // content in square braces
+    comment: ..., // content in parentheses
+  }
+]
 `;
       setTextareaValue(prompt);
     },

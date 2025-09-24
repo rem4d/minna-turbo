@@ -99,6 +99,7 @@ export const getStatementsForLevel = async ({
           translation: null,
           updated_at: "",
           tmp: null,
+          tmp_gloss: null,
         });
       }
     } else {

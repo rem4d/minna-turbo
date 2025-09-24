@@ -41,3 +41,4 @@ apps/server/public/**
 out
 *.secret
 *.rdb
+*.txt

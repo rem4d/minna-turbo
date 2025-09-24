@@ -8,6 +8,7 @@ import { createCallerFactory, createContext } from "./trpc";
 /**
  * Create a server-side caller for the tRPC API
  * @example
+ /*
  * const trpc = createCaller(createContext);
  * const res = await trpc.post.all();
  *       ^? Post[]
@@ -38,7 +39,7 @@ type KanjiOutput = RouterOutputs["viewer"]["kanji"]["all"][number];
 type ExampleOutput = RouterOutputs["viewer"]["kanji"]["examples"][number];
 type KanjiInTheSentenceOutput =
   RouterOutputs["viewer"]["member"]["sentenceKanjis"][number];
-type GlossOutput = RouterOutputs["viewer"]["member"]["sentenceGlosses"][number];
+type GlossOutput = RouterOutputs["viewer"]["sentence"]["glosses"][number];
 
 export { createContext as createTRPCContext, appRouter, createCaller };
 export type {

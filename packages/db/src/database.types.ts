@@ -294,6 +294,7 @@ export type Database = {
           text: string
           text_with_furigana: string | null
           tmp: string | null
+          tmp_gloss: string | null
           translation: string | null
           unknown_kanji_number: number | null
           updated_at: string | null
@@ -312,6 +313,7 @@ export type Database = {
           text?: string
           text_with_furigana?: string | null
           tmp?: string | null
+          tmp_gloss?: string | null
           translation?: string | null
           unknown_kanji_number?: number | null
           updated_at?: string | null
@@ -330,6 +332,7 @@ export type Database = {
           text?: string
           text_with_furigana?: string | null
           tmp?: string | null
+          tmp_gloss?: string | null
           translation?: string | null
           unknown_kanji_number?: number | null
           updated_at?: string | null
@@ -394,6 +397,7 @@ export type Database = {
           text: string
           text_with_furigana: string | null
           tmp: string | null
+          tmp_gloss: string | null
           translation: string | null
           unknown_kanji_number: number | null
           updated_at: string | null

@@ -76,7 +76,7 @@ export const adminGlossRouter = router({
     .input(z.object({ prompt: z.string() }))
     .mutation(async ({ input }) => {
       const uri = "https://api.mistral.ai/v1/chat/completions";
-      console.log(input.prompt);
+      // console.log(input.prompt);
       const response = await fetch(uri, {
         method: "POST",
         headers: {
@@ -92,7 +92,7 @@ export const adminGlossRouter = router({
               content: input.prompt,
             },
           ],
-          // response_format: { type: "json_object" },
+          response_format: { type: "json_object" },
         }),
       });
 
@@ -103,6 +103,7 @@ export const adminGlossRouter = router({
         throw new Error(text);
       }
 
+      console.log("GOT DATA");
       try {
         const data = (await response.json()) as unknown as {
           choices: { message: { content: string } }[];
@@ -112,7 +113,7 @@ export const adminGlossRouter = router({
         const content = data.choices[0]?.message.content ?? "";
         const res = JSON.parse(content);
         console.log(res);
-        return [];
+        return res;
       } catch (err) {
         console.log(err);
         return [];

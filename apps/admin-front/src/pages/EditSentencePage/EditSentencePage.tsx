@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import type { FC } from "react";
 import toast from "react-hot-toast";
 import { openUrl } from "../../utils";
@@ -89,19 +89,19 @@ For readings including comments use only hiragana.
       },
     );
 
+  const { data: glosses } = api.admin.sentence.glosses.useQuery(
+    { id: sentence?.id ?? 0 },
+    {
+      enabled: !!sentence?.id,
+    },
+  );
+
   const utils = api.useUtils();
 
   const submitVoiceMutation = useSubmitVoiceMutation({
     onSuccess() {
       toast.success("Successfully assigned speaker.");
       void utils.admin.sentence.getById.invalidate();
-    },
-  });
-
-  const reassignMembersMutation = api.admin.member.reassignMembers.useMutation({
-    onSuccess() {
-      toast.success("Successfully reassigned.");
-      void utils.admin.member.sentenceMembers.invalidate();
     },
   });
 
@@ -214,11 +214,6 @@ For readings including comments use only hiragana.
       void removeSpeakerMutation.mutate({ sentenceId: sentence.id });
     }
   };
-  const handleReassignMembers = () => {
-    if (sentence) {
-      reassignMembersMutation.mutate({ id: sentence.id });
-    }
-  };
 
   const onSubmitSpeaker = ({
     speaker,
@@ -272,7 +267,8 @@ For readings including comments use only hiragana.
                 <DataList.Item align="center">
                   <DataList.Label minWidth="88px">Status</DataList.Label>
                   <DataList.Value>
-                    {sentence.status === "member2_checked" ? (
+                    {sentence.status === "member2_checked" ||
+                    sentence.status === "gloss_checked" ? (
                       <Badge color="jade" variant="soft" radius="full">
                         Checked
                       </Badge>
@@ -501,7 +497,7 @@ For readings including comments use only hiragana.
 
           {members2 && members2.length > 0 && (
             <Box>
-              <Heading size="5">Members2</Heading>
+              <Heading size="5">Members</Heading>
               <Grid columns="3" my="8" className="">
                 <Grid
                   columns="4"
@@ -556,16 +552,26 @@ For readings including comments use only hiragana.
               ))}
             </Flex>
           </Box>
+          <Heading size="5">Grammar glosses</Heading>
+          <Box className="w-2/3">
+            <Grid columns="5" my="8" gap="2" className="">
+              {glosses?.map((m) => (
+                <Fragment key={m.gloss_id}>
+                  <Text size="3">{m.romaji}</Text>
+                  <Text size="3">{m.kana}</Text>
+                  <Text size="3">{m.comment}</Text>
+                  <Text size="2" color="gray">
+                    {m.kanji_form}
+                  </Text>
+                  <Text size="2" color="gray">
+                    {m.references}
+                  </Text>
+                </Fragment>
+              ))}
+            </Grid>
+          </Box>
 
           <div>
-            <Button
-              disabled={reassignMembersMutation.isPending}
-              color="cyan"
-              size="3"
-              onClick={handleReassignMembers}
-            >
-              Reassign members
-            </Button>
             <Button
               disabled={updateMutation.isPending}
               color="lime"

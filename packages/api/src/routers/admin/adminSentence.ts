@@ -121,9 +121,9 @@ export const adminSentenceRouter = router({
       const { data, error } = await ctx.db
         .from("sentences")
         .select()
-        .eq("source", "source1")
+        .neq("source", "source1")
         .gt("level", 48)
-        .lt("level", 98)
+        .lt("level", 500)
         .lt("unknown_kanji_number", numberOfUnknownKanji)
         .order("level", { ascending: true })
         .range(
