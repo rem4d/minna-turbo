@@ -22,57 +22,24 @@ import Speakers from "@/components/Speakers";
 import { Player } from "@/components/Player";
 import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
 import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
-// import { AiMemberOutput } from "@rem4d/api";
+import useAiMembers from "@/hooks/mistral/useAiMembers";
 
-interface AIMember {
-  original: string;
-  pos: string;
-  dict_form: string;
-  en: string;
-  ru: string;
-  reading: string;
-}
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
   const [rubyHtml, setRubyHtml] = useState("");
   const [textWithFuriganaHtml, setTextWithFuriganaHtml] = useState("");
   const [translation, setTranslation] = useState("");
-  const [aiMembers, setAIMembers] = useState<AIMember[]>([] as AIMember[]);
   const [en, setEn] = useState("");
   const [ru, setRu] = useState("");
-  const [aiPrompt, setAiPrompt] = useState("");
-
-  useEffect(() => {
-    setAiPrompt(`Given the sentence "${input}"
-Split it to parts of speech and put them into JSON array.
-
-Each item in the array should have: original form (original), part of speech (pos), dictionary polite form (dict_form), english translation of \"dict_form\" (en), russian translation of \"dict_form\"" (ru), reading of \"dict_form\" in hiragana (reading).
-
-Do not include punctuation.
-
-Output using the following JSON format:
-
-[
-	{
-		"original": "行かなければならない",
-		"pos": "verb",
-		"dict_form": "行く",
-		"en": "go",
-		"ru": "идти",
-		"reading":"いく"
-	}
-]
-For readings including comments use only hiragana.
-`);
-  }, [input]);
 
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const aiMembers = useAiMembers(input);
+
   const { data: sentence } = api.admin.sentence.getById.useQuery(Number(id), {
     enabled: !!id,
   });
-  console.log(sentence);
 
   const { data: members2 } = api.admin.member.sentenceMembers2.useQuery(
     { id: sentence?.id ?? 0 },
@@ -89,7 +56,7 @@ For readings including comments use only hiragana.
       },
     );
 
-  const { data: glosses } = api.admin.sentence.glosses.useQuery(
+  const { data: glosses } = api.admin.sentence.aiGlosses.useQuery(
     { id: sentence?.id ?? 0 },
     {
       enabled: !!sentence?.id,
@@ -120,18 +87,8 @@ For readings including comments use only hiragana.
       },
     });
 
-  const aiMembersMutation = api.admin.member.aiMembers.useMutation({
-    onSuccess(data) {
-      setAIMembers(data.filter((m) => m.pos !== "particle"));
-      toast.success("Got response.");
-    },
-  });
-
   const onGetAIMembersClick = () => {
-    setAIMembers([]);
-    aiMembersMutation.mutate({
-      prompt: aiPrompt,
-    });
+    aiMembers.onGetAIMembers();
   };
 
   useEffect(() => {
@@ -267,16 +224,9 @@ For readings including comments use only hiragana.
                 <DataList.Item align="center">
                   <DataList.Label minWidth="88px">Status</DataList.Label>
                   <DataList.Value>
-                    {sentence.status === "member2_checked" ||
-                    sentence.status === "gloss_checked" ? (
-                      <Badge color="jade" variant="soft" radius="full">
-                        Checked
-                      </Badge>
-                    ) : (
-                      <Badge color="red" variant="soft" radius="full">
-                        Not checked
-                      </Badge>
-                    )}
+                    <Badge color="yellow" variant="soft" radius="full">
+                      {sentence.status}
+                    </Badge>
                   </DataList.Value>
                 </DataList.Item>
                 <DataList.Item>
@@ -365,15 +315,15 @@ For readings including comments use only hiragana.
                   mt="6"
                   mb="6"
                   rows={17}
-                  value={aiPrompt}
-                  onChange={(e) => setAiPrompt(e.target.value)}
+                  value={aiMembers.aiPrompt}
+                  onChange={(e) => aiMembers.setAiPrompt(e.target.value)}
                   placeholder="Paste some text..."
                 />
                 <Button onClick={onGetAIMembersClick}>Get members</Button>
-                {aiMembersMutation.isPending && <Text>Loading...</Text>}
-                {aiMembers.length > 0 && (
+                {aiMembers.isPending && <Text>Loading...</Text>}
+                {aiMembers.members.length > 0 && (
                   <Box>
-                    <Text size="2">{aiMembers.length} members.</Text>
+                    <Text size="2">{aiMembers.members.length} members.</Text>
                   </Box>
                 )}
                 <Flex
@@ -383,7 +333,7 @@ For readings including comments use only hiragana.
                   overflow="scroll"
                   maxHeight="500px"
                 >
-                  {aiMembers.map((m, i) => (
+                  {aiMembers.members.map((m, i) => (
                     <Flex
                       key={`${m.en}${i}`}
                       gapY="2"
@@ -422,7 +372,7 @@ For readings including comments use only hiragana.
                   className="font-klee text-xl"
                   gap="4"
                 >
-                  {aiMembers?.map((m) => (
+                  {aiMembers?.members.map((m) => (
                     <Flex key={m.dict_form} direction="column">
                       <Text
                         size="6"
@@ -553,18 +503,17 @@ For readings including comments use only hiragana.
             </Flex>
           </Box>
           <Heading size="5">Grammar glosses</Heading>
-          <Box className="w-2/3">
-            <Grid columns="5" my="8" gap="2" className="">
-              {glosses?.map((m) => (
-                <Fragment key={m.gloss_id}>
-                  <Text size="3">{m.romaji}</Text>
-                  <Text size="3">{m.kana}</Text>
-                  <Text size="3">{m.comment}</Text>
+          <Box className="w-[70%]">
+            <Grid columns="4" my="8" gap="2" className="">
+              {glosses?.map((a) => (
+                <Fragment key={a.id}>
                   <Text size="2" color="gray">
-                    {m.kanji_form}
+                    {a.aigloss_id}
                   </Text>
+                  <Text size="3">{a.kana}</Text>
+                  <Text size="3">{a.comment}</Text>
                   <Text size="2" color="gray">
-                    {m.references}
+                    {a.number ?? "N/A"}
                   </Text>
                 </Fragment>
               ))}

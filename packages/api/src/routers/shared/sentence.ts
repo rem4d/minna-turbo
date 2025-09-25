@@ -31,10 +31,24 @@ export const sentenceRouter = router({
         .eq("sentence_id", Number(input.id));
 
       if (error) {
-        console.log(error);
-        throw new Error("Unexpected error.");
+        throw new Error(error.message);
       }
 
       return data;
+    }),
+  aiGlosses: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const { data, error } = await ctx.db
+        .from("sentence_aigloss")
+        .select("*,...aiglosses(id,kana,comment,number,is_hidden)")
+        .eq("sentence_id", Number(input.id));
+
+      if (error) {
+        throw new Error(error.message);
+      }
+      const data_ = data.filter((d) => !d.is_hidden);
+
+      return data_;
     }),
 });

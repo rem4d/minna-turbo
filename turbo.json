@@ -31,7 +31,8 @@
       "dependsOn": ["^build", "^check-types"]
     },
     "test": {
-      "dependsOn": ["^test"]
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/vitest.config.ts"],
+      "dependsOn": ["transit", "@repo/vitest-config#build"]
     }
   },
   "globalEnv": [

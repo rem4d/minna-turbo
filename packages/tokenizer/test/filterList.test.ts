@@ -3,9 +3,9 @@ import { expect, test } from "vitest";
 import * as basicData from "./filterList.mockData";
 
 test("Tokenize test.", async () => {
-  const text = "かれらは廊下の目立たない部分へ行った。";
-  const tokens = await tokenize(text);
-  console.log(tokens);
+  // const text = "かれらは廊下の目立たない部分へ行った。";
+  // const tokens = await tokenize(text);
+  // console.log(tokens);
 });
 
 /*
