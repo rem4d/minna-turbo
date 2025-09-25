@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      aiglosses: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: number
+          is_hidden: boolean | null
+          kana: string | null
+          number: number | null
+          tmp: string | null
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: number
+          is_hidden?: boolean | null
+          kana?: string | null
+          number?: number | null
+          tmp?: string | null
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: number
+          is_hidden?: boolean | null
+          kana?: string | null
+          number?: number | null
+          tmp?: string | null
+        }
+        Relationships: []
+      }
       glosses: {
         Row: {
           comment: string | null
@@ -185,13 +215,43 @@ export type Database = {
         }
         Relationships: []
       }
+      sentence_aigloss: {
+        Row: {
+          aigloss_id: number
+          sentence_id: number
+        }
+        Insert: {
+          aigloss_id?: number
+          sentence_id?: number
+        }
+        Update: {
+          aigloss_id?: number
+          sentence_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sentence_aigloss_aigloss_id_fkey"
+            columns: ["aigloss_id"]
+            isOneToOne: false
+            referencedRelation: "aiglosses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sentence_aigloss_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sentence_gloss: {
         Row: {
           gloss_id: number
           sentence_id: number
         }
         Insert: {
-          gloss_id: number
+          gloss_id?: number
           sentence_id?: number
         }
         Update: {
