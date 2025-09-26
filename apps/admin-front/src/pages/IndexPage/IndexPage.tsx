@@ -1,7 +1,6 @@
 import { Box, Button, Flex, Table, Text } from "@radix-ui/themes";
 import { useState, type FC } from "react";
 import { api } from "../../utils/api";
-import { Player } from "@/components/Player";
 
 export const IndexPage: FC = () => {
   const [pageNumber, setPageNumber] = useState(0);

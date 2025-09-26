@@ -120,12 +120,14 @@ export const adminSentenceRouter = router({
 
       const { data, error } = await ctx.db
         .from("sentences")
-        .select()
-        .neq("source", "source1")
-        .gt("level", 48)
-        .lt("level", 500)
-        .lt("unknown_kanji_number", numberOfUnknownKanji)
-        .order("level", { ascending: true })
+        .select("*, sentence_aigloss()")
+        .eq("source", "djg")
+        .not("sentence_aigloss", "is", null)
+
+        // .gt("level", 48)
+        // .lt("level", 500)
+        // .lt("unknown_kanji_number", numberOfUnknownKanji)
+        // .order("level", { ascending: true })
         .range(
           input.page * input.maxPerPage,
           (input.page + 1) * input.maxPerPage,
