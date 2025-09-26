@@ -13,6 +13,7 @@ export const sentenceRouter = router({
       const shift = 0;
       const numberOfUnknownKanji = 3;
       console.log("find for level: ", input.level);
+
       const { sentences, additional } = await getStatementsForLevel({
         level: input.level,
         shift,
@@ -42,6 +43,21 @@ export const sentenceRouter = router({
       const { data, error } = await ctx.db
         .from("sentence_aigloss")
         .select("*,...aiglosses(id,kana,comment,number,is_hidden)")
+        .eq("sentence_id", Number(input.id));
+
+      if (error) {
+        throw new Error(error.message);
+      }
+      const data_ = data.filter((d) => !d.is_hidden);
+
+      return data_;
+    }),
+  gptGlosses: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const { data, error } = await ctx.db
+        .from("gpt_gloss_sentence")
+        .select("*,...gpt_glosses(id,kana,comment,number,is_hidden)")
         .eq("sentence_id", Number(input.id));
 
       if (error) {

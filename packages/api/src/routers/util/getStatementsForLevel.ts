@@ -40,7 +40,7 @@ export const getStatementsForLevel = async ({
     .eq("status", "member2_checked")
     .eq("source", "source1")
     .not("tmp", "is", null)
-    .not("sentence_gloss", "is", null)
+    // .not("sentence_gloss", "is", null)
     .lte("unknown_kanji_number", numberOfUnknownKanji);
 
   if (error) {

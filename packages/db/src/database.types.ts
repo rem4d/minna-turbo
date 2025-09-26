@@ -80,6 +80,66 @@ export type Database = {
         }
         Relationships: []
       }
+      gpt_gloss_sentence: {
+        Row: {
+          gloss_id: number
+          sentence_id: number
+        }
+        Insert: {
+          gloss_id?: number
+          sentence_id?: number
+        }
+        Update: {
+          gloss_id?: number
+          sentence_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gpt_gloss_sentence_gloss_id_fkey"
+            columns: ["gloss_id"]
+            isOneToOne: false
+            referencedRelation: "gpt_glosses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gpt_gloss_sentence_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gpt_glosses: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: number
+          is_hidden: boolean | null
+          kana: string | null
+          number: number | null
+          tmp: string | null
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: number
+          is_hidden?: boolean | null
+          kana?: string | null
+          number?: number | null
+          tmp?: string | null
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: number
+          is_hidden?: boolean | null
+          kana?: string | null
+          number?: number | null
+          tmp?: string | null
+        }
+        Relationships: []
+      }
       kanji: {
         Row: {
           en: string | null
@@ -217,21 +277,21 @@ export type Database = {
       }
       sentence_aigloss: {
         Row: {
-          aigloss_id: number
+          gloss_id: number
           sentence_id: number
         }
         Insert: {
-          aigloss_id?: number
+          gloss_id?: number
           sentence_id?: number
         }
         Update: {
-          aigloss_id?: number
+          gloss_id?: number
           sentence_id?: number
         }
         Relationships: [
           {
             foreignKeyName: "sentence_aigloss_aigloss_id_fkey"
-            columns: ["aigloss_id"]
+            columns: ["gloss_id"]
             isOneToOne: false
             referencedRelation: "aiglosses"
             referencedColumns: ["id"]
@@ -436,7 +496,14 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      stat_list_0: {
+        Row: {
+          cnt: number | null
+          kanji: string | null
+          position: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       additional_sentences: {

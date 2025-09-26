@@ -116,13 +116,13 @@ export const adminSentenceRouter = router({
   list: publicProcedure
     .input(z.object({ maxPerPage: z.number().gt(0), page: z.number() }))
     .query(async ({ ctx, input }) => {
-      const numberOfUnknownKanji = 3;
+      // const numberOfUnknownKanji = 3;
 
       const { data, error } = await ctx.db
         .from("sentences")
-        .select("*, sentence_aigloss()")
+        .select("*, gpt_gloss_sentence()")
         .eq("source", "djg")
-        .not("sentence_aigloss", "is", null)
+        .not("gpt_gloss_sentence", "is", null)
 
         // .gt("level", 48)
         // .lt("level", 500)
@@ -132,6 +132,7 @@ export const adminSentenceRouter = router({
           input.page * input.maxPerPage,
           (input.page + 1) * input.maxPerPage,
         );
+
       if (error) {
         throw new Error(error.message);
       }

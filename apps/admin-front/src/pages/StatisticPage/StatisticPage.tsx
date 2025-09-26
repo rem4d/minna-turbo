@@ -17,11 +17,17 @@ export const StatisticPage = () => {
 
   const { data: list, isLoading } = api.admin.stat.getStat.useQuery();
 
-  const getSenForLevel = api.admin.sentence.getSentencesForLevel.useMutation();
+  const getSenForLevel = api.admin.stat.getSentencesForLevel.useMutation({
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  });
 
-  const onLevelClick = useCallback((_n: number) => {
+  const onLevelClick = useCallback((_n: number | null) => {
     setSelectedLevel(_n);
-    getSenForLevel.mutate({ level: _n });
+    if (_n) {
+      getSenForLevel.mutate({ level: _n });
+    }
   }, []);
 
   const mapSourceColor = useCallback((source: string | null) => {
@@ -50,7 +56,7 @@ export const StatisticPage = () => {
       <ScrollArea scrollbars="vertical" style={{ height: 400, width: "100%" }}>
         <Grid columns="10" gap="4">
           {list?.map((l) => (
-            <Box key={l.kanji + l.lvl + "r"}>
+            <Box key={`${l.kanji}-${l.position ?? "N/A"}`}>
               <Card>
                 <Flex mb="2" gap="2" align="center">
                   <Text className="whitespace-nowrap" size="4">
@@ -59,9 +65,9 @@ export const StatisticPage = () => {
                   <Badge
                     color="cyan"
                     className="cursor-pointer"
-                    onClick={() => onLevelClick(l.lvl)}
+                    onClick={() => onLevelClick(l.position)}
                   >
-                    {l.lvl}
+                    {l.position}
                   </Badge>
                 </Flex>
                 <Badge color="gray">( {l.cnt} )</Badge>
@@ -71,7 +77,7 @@ export const StatisticPage = () => {
         </Grid>
       </ScrollArea>
       {getSenForLevel.isPending && <div>Loading...</div>}
-      {getSenForLevel.data && (
+      {getSenForLevel.data?.sentences && (
         <Box>
           <Heading my="8">Gen statements for level {selectedLevel}</Heading>
           <Flex>
@@ -98,28 +104,28 @@ export const StatisticPage = () => {
                 ))}
               </Flex>
             </Card>
-            <Card mt="6">
-              <Text>{getSenForLevel.data.additional.length}</Text>
-              <Flex direction="column" className="no-scroll overflow-x-scroll">
-                {getSenForLevel.data.additional.map((s) => (
-                  <div key={`${s.id}s-r`}>
-                    <Flex align="center">
-                      <Text
-                        size="2"
-                        className="whitespace-nowrap"
-                        dangerouslySetInnerHTML={{
-                          __html: s.text_with_furigana ?? "",
-                        }}
-                      />
-                      <Badge color={"cyan"}>{s.level}</Badge>
-                      <Badge color={mapSourceColor(s.source)}>
-                        {s.source?.substring(0, 2)}
-                      </Badge>
-                    </Flex>
-                  </div>
-                ))}
-              </Flex>
-            </Card>
+            {/* <Card mt="6"> */}
+            {/*   <Text>{getSenForLevel.data.additional.length}</Text> */}
+            {/*   <Flex direction="column" className="no-scroll overflow-x-scroll"> */}
+            {/*     {getSenForLevel.data.additional.map((s) => ( */}
+            {/*       <div key={`${s.id}s-r`}> */}
+            {/*         <Flex align="center"> */}
+            {/*           <Text */}
+            {/*             size="2" */}
+            {/*             className="whitespace-nowrap" */}
+            {/*             dangerouslySetInnerHTML={{ */}
+            {/*               __html: s.text_with_furigana ?? "", */}
+            {/*             }} */}
+            {/*           /> */}
+            {/*           <Badge color={"cyan"}>{s.level}</Badge> */}
+            {/*           <Badge color={mapSourceColor(s.source)}> */}
+            {/*             {s.source?.substring(0, 2)} */}
+            {/*           </Badge> */}
+            {/*         </Flex> */}
+            {/*       </div> */}
+            {/*     ))} */}
+            {/*   </Flex> */}
+            {/* </Card> */}
           </Flex>
         </Box>
       )}

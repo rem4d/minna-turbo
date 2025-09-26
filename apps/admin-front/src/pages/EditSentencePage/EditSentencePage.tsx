@@ -56,7 +56,14 @@ export const EditSentencePage: FC = () => {
       },
     );
 
-  const { data: glosses } = api.admin.sentence.aiGlosses.useQuery(
+  const { data: mistralGlosses } = api.admin.sentence.aiGlosses.useQuery(
+    { id: sentence?.id ?? 0 },
+    {
+      enabled: !!sentence?.id,
+    },
+  );
+
+  const { data: gptGlosses } = api.admin.sentence.gptGlosses.useQuery(
     { id: sentence?.id ?? 0 },
     {
       enabled: !!sentence?.id,
@@ -502,23 +509,44 @@ export const EditSentencePage: FC = () => {
               ))}
             </Flex>
           </Box>
-          <Heading size="5">Grammar glosses</Heading>
-          <Box className="w-[70%]">
-            <Grid columns="4" my="8" gap="2" className="">
-              {glosses?.map((a) => (
-                <Fragment key={a.id}>
-                  <Text size="2" color="gray">
-                    {a.aigloss_id}
-                  </Text>
-                  <Text size="3">{a.kana}</Text>
-                  <Text size="3">{a.comment}</Text>
-                  <Text size="2" color="gray">
-                    {a.number ?? "N/A"}
-                  </Text>
-                </Fragment>
-              ))}
-            </Grid>
-          </Box>
+          <section>
+            <Heading size="5">mistral grammar</Heading>
+            <Box className="w-[70%]">
+              <Grid columns="4" my="8" gap="2" className="">
+                {mistralGlosses?.map((a) => (
+                  <Fragment key={a.id}>
+                    <Text size="2" color="gray">
+                      {a.gloss_id}
+                    </Text>
+                    <Text size="3">{a.kana}</Text>
+                    <Text size="3">{a.comment}</Text>
+                    <Text size="2" color="gray">
+                      {a.number ?? "N/A"}
+                    </Text>
+                  </Fragment>
+                ))}
+              </Grid>
+            </Box>
+          </section>
+          <section>
+            <Heading size="5">gpt grammar</Heading>
+            <Box className="w-[70%]">
+              <Grid columns="4" my="8" gap="2" className="">
+                {gptGlosses?.map((a) => (
+                  <Fragment key={a.id}>
+                    <Text size="2" color="gray">
+                      {a.gloss_id}
+                    </Text>
+                    <Text size="3">{a.kana}</Text>
+                    <Text size="3">{a.comment}</Text>
+                    <Text size="2" color="gray">
+                      {a.number ?? "N/A"}
+                    </Text>
+                  </Fragment>
+                ))}
+              </Grid>
+            </Box>
+          </section>
 
           <div>
             <Button

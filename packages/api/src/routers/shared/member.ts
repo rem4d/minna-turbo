@@ -10,6 +10,7 @@ export const memberRouter = router({
         .select("*, ...members2(basic_form, original, pos, en, ru, reading)")
         .eq("sentence_id", Number(input.id))
         .eq("members2.is_hidden", false)
+        .neq("members2.pos", "particle")
         .order("position", { ascending: true })
         .not("members2", "is", null);
 
