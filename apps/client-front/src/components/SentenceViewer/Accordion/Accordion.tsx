@@ -60,15 +60,6 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     ),
   );
 
-  const { data: glosses } = useQuery(
-    trpc.viewer.sentence.glosses.queryOptions(
-      { id: sentence.id },
-      {
-        enabled: !!sentence.text && openItems.includes("2"),
-      },
-    ),
-  );
-
   console.log(glosses);
   useEffect(() => {
     setScreen("glossary");
@@ -155,7 +146,6 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
               <GlossaryContent
                 members={members}
                 kanjisInTheSentence={kanjisInTheSentence}
-                grammarGlosses={glosses}
                 loadingMembers={loadingMembers}
                 isSuccess={isSuccess}
                 askAiClicked={isAskAiClicked}

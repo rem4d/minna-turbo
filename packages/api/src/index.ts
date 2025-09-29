@@ -39,12 +39,11 @@ type KanjiOutput = RouterOutputs["viewer"]["kanji"]["all"][number];
 type ExampleOutput = RouterOutputs["viewer"]["kanji"]["examples"][number];
 type KanjiInTheSentenceOutput =
   RouterOutputs["viewer"]["member"]["sentenceKanjis"][number];
-type GlossOutput = RouterOutputs["viewer"]["sentence"]["glosses"][number];
+// type GlossOutput = RouterOutputs["viewer"]["sentence"]["glosses"][number];
 
 export { createContext as createTRPCContext, appRouter, createCaller };
 export type {
   AppRouter,
-  GlossOutput,
   SentenceOutput,
   Member2Output,
   KanjiOutput,

@@ -23,25 +23,25 @@ export const sentenceRouter = router({
       });
       return { sentences, additional };
     }),
-  glosses: publicProcedure
-    .input(z.object({ id: z.number() }))
-    .query(async ({ input, ctx }) => {
-      const { data, error } = await ctx.db
-        .from("sentence_gloss")
-        .select("*,...glosses(kana,kanji_form,references,romaji,comment)")
-        .eq("sentence_id", Number(input.id));
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return data;
-    }),
+  // glosses: publicProcedure
+  //   .input(z.object({ id: z.number() }))
+  //   .query(async ({ input, ctx }) => {
+  //     const { data, error } = await ctx.db
+  //       .from("gloss_sentence")
+  //       .select("*,...glosses(id, kana,romaji,comment)")
+  //       .eq("sentence_id", Number(input.id));
+  //
+  //     if (error) {
+  //       throw new Error(error.message);
+  //     }
+  //
+  //     return data;
+  //   }),
   aiGlosses: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input, ctx }) => {
       const { data, error } = await ctx.db
-        .from("sentence_aigloss")
+        .from("aigloss_sentence")
         .select("*,...aiglosses(id,kana,comment,number,is_hidden)")
         .eq("sentence_id", Number(input.id));
 

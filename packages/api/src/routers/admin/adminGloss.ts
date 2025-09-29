@@ -8,9 +8,9 @@ export const adminGlossRouter = router({
       const { page, limit } = input;
       const { data, error } = await ctx.db
         .from("glosses")
-        .select("*,sentence_gloss()")
+        .select("*,gloss_sentence()")
         .eq("is_hidden", false)
-        .not("sentence_gloss", "is", null)
+        .not("gloss_sentence", "is", null)
         .range((page - 1) * limit, page * limit);
 
       if (error) {
@@ -34,8 +34,8 @@ export const adminGlossRouter = router({
   glossesTotal: publicProcedure.query(async ({ ctx }) => {
     const { count: total, error } = await ctx.db
       .from("glosses")
-      .select("*,sentence_gloss()", { count: "exact" })
-      .not("sentence_gloss", "is", null)
+      .select("*,gloss_sentence()", { count: "exact" })
+      .not("gloss_sentence", "is", null)
       .eq("is_hidden", false);
 
     if (error) {
@@ -50,7 +50,7 @@ export const adminGlossRouter = router({
       const glossId = input.glossId;
 
       const { data, error } = await ctx.db
-        .from("sentence_gloss")
+        .from("gloss_sentence")
         .select("id:sentence_id,...sentences(text,text_with_furigana,en,ru)")
         .eq("gloss_id", glossId);
 

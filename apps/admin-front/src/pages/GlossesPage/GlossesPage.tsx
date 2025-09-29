@@ -78,6 +78,11 @@ export default function GlossesPage() {
 
   return (
     <section>
+      {!glossesLoading && glossesData?.length === 0 && (
+        <Box>
+          <Text>No glosses found.</Text>
+        </Box>
+      )}
       <Grid columns="60% auto" gap="4">
         <Flex gap="2" align="center">
           <Flex gap="2">
@@ -104,7 +109,7 @@ export default function GlossesPage() {
         </Flex>
       </Grid>
       {glossesLoading && <Spinner />}
-      {!glossesLoading && (
+      {!glossesLoading && glossesData && glossesData.length > 0 && (
         <Grid columns="60% auto" gap="4">
           <Table.Root size="2" variant="ghost">
             <Table.Header>

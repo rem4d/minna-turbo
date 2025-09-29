@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      aigloss_sentence: {
+        Row: {
+          gloss_id: number
+          sentence_id: number
+        }
+        Insert: {
+          gloss_id?: number
+          sentence_id?: number
+        }
+        Update: {
+          gloss_id?: number
+          sentence_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sentence_aigloss_aigloss_id_fkey"
+            columns: ["gloss_id"]
+            isOneToOne: false
+            referencedRelation: "aiglosses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sentence_aigloss_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       aiglosses: {
         Row: {
           comment: string | null
@@ -44,7 +74,7 @@ export type Database = {
         }
         Relationships: []
       }
-      glosses: {
+      conglosses: {
         Row: {
           comment: string | null
           created_at: string
@@ -77,6 +107,69 @@ export type Database = {
           kanji_form?: string | null
           references?: string | null
           romaji?: string | null
+        }
+        Relationships: []
+      }
+      gloss_sentence: {
+        Row: {
+          gloss_id: number
+          position: number
+          sentence_id: number
+        }
+        Insert: {
+          gloss_id?: number
+          position?: number
+          sentence_id?: number
+        }
+        Update: {
+          gloss_id?: number
+          position?: number
+          sentence_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gloss_sentence_gloss_id_fkey"
+            columns: ["gloss_id"]
+            isOneToOne: false
+            referencedRelation: "glosses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gloss_sentence_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      glosses: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: number
+          is_hidden: boolean | null
+          kana: string | null
+          number: number | null
+          tmp: string | null
+        }
+        Insert: {
+          comment?: string | null
+          created_at: string
+          id?: number
+          is_hidden?: boolean | null
+          kana?: string | null
+          number?: number | null
+          tmp?: string | null
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: number
+          is_hidden?: boolean | null
+          kana?: string | null
+          number?: number | null
+          tmp?: string | null
         }
         Relationships: []
       }
@@ -274,66 +367,6 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
-      }
-      sentence_aigloss: {
-        Row: {
-          gloss_id: number
-          sentence_id: number
-        }
-        Insert: {
-          gloss_id?: number
-          sentence_id?: number
-        }
-        Update: {
-          gloss_id?: number
-          sentence_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "sentence_aigloss_aigloss_id_fkey"
-            columns: ["gloss_id"]
-            isOneToOne: false
-            referencedRelation: "aiglosses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "sentence_aigloss_sentence_id_fkey"
-            columns: ["sentence_id"]
-            isOneToOne: false
-            referencedRelation: "sentences"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      sentence_gloss: {
-        Row: {
-          gloss_id: number
-          sentence_id: number
-        }
-        Insert: {
-          gloss_id?: number
-          sentence_id?: number
-        }
-        Update: {
-          gloss_id?: number
-          sentence_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "sentence_gloss_gloss_id_fkey"
-            columns: ["gloss_id"]
-            isOneToOne: false
-            referencedRelation: "glosses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "sentence_gloss_sentence_id_fkey"
-            columns: ["sentence_id"]
-            isOneToOne: false
-            referencedRelation: "sentences"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       sentence_kanji: {
         Row: {
