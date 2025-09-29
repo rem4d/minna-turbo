@@ -110,6 +110,36 @@ export type Database = {
         }
         Relationships: []
       }
+      gloss_aigloss: {
+        Row: {
+          aigloss_id: number
+          gloss_id: number
+        }
+        Insert: {
+          aigloss_id?: number
+          gloss_id?: number
+        }
+        Update: {
+          aigloss_id?: number
+          gloss_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gloss_aigloss_aigloss_id_fkey"
+            columns: ["aigloss_id"]
+            isOneToOne: false
+            referencedRelation: "aiglosses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gloss_aigloss_gloss_id_fkey"
+            columns: ["gloss_id"]
+            isOneToOne: false
+            referencedRelation: "glosses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gloss_sentence: {
         Row: {
           gloss_id: number
@@ -585,11 +615,23 @@ export type Database = {
           vox_speaker_id: number
         }[]
       }
+      get_ai_glosses_by_gloss_id: {
+        Args: { glossid: number }
+        Returns: {
+          cnt: number
+          comment: string
+          gloss_id: number
+          id: number
+          kana: string
+          number: number
+        }[]
+      }
       get_ai_glosses_by_kana: {
         Args: { regex: string }
         Returns: {
           cnt: number
           comment: string
+          gloss_id: number
           id: number
           kana: string
           number: number

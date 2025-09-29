@@ -1,5 +1,5 @@
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
-import { Box, Flex, Text } from "@radix-ui/themes";
+import { Badge, Box, Flex, Text } from "@radix-ui/themes";
 import { openUrl } from "@/utils";
 
 interface SentenceSearchResultProps {
@@ -8,6 +8,7 @@ interface SentenceSearchResultProps {
   html: string | null;
   ru: string | null;
   en: string | null;
+  source: string | null;
 }
 
 export default function SentenceSearchResult({
@@ -16,6 +17,7 @@ export default function SentenceSearchResult({
   html,
   ru,
   en,
+  source,
 }: SentenceSearchResultProps) {
   return (
     <Box>
@@ -43,12 +45,13 @@ export default function SentenceSearchResult({
                   height="15"
                 />
               </div>
+              {source && <Badge>{source.substring(0, 3)}</Badge>}
             </span>
           </Flex>
           <Text className="text-white/90" size="2">
             {ru}
           </Text>
-          <Text className="text-white/20" size="2">
+          <Text className="text-white/90" size="2">
             {en}
           </Text>
         </Flex>

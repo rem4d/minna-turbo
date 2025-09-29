@@ -1,4 +1,3 @@
-import GlossTable from "@/components/shared/GlossTable";
 import SentenceSearchResult from "@/components/shared/SentenceSearchResult";
 import { api } from "@/utils/api";
 import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
@@ -14,12 +13,24 @@ import {
 } from "@radix-ui/themes";
 import { useCallback, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import AITable from "./AITable";
+import GlossTable from "./GlossTable";
+import toast from "react-hot-toast";
+
+type AiGlossOutput = {
+  id: number;
+  kana: string | null;
+  comment: string | null;
+  number: number | null;
+  cnt?: number | null;
+};
 
 export default function GlossesPage() {
   const [pageNumber, setPageNumber] = useState(1);
   const [currentGlossId, setCurrentGlossId] = useState<number | null>(null);
   const [currentAIGlossId, setCurrentAIGlossId] = useState<number | null>(null);
   const [regexFieldValue, setRegexFieldValue] = useState("");
+  const [aiGlosses, setAiGlosses] = useState<AiGlossOutput[]>([]);
 
   const MAX_PER_PAGE = 10;
   const { data: glossesData, isLoading: glossesLoading } =
@@ -29,8 +40,32 @@ export default function GlossesPage() {
     });
 
   const findAiSentences = api.admin.gloss.ai_getSentencesByGloss.useMutation();
+  const findByRegexMutation = api.admin.gloss.findByRegex.useMutation({
+    onSuccess(data) {
+      setAiGlosses(data);
+    },
+  });
+  const createMutation = api.admin.gloss.createGloss.useMutation({
+    onSuccess() {
+      void utils.admin.gloss.getGlosses.invalidate();
+    },
+  });
 
-  const findByRegexMutation = api.admin.gloss.findByRegex.useMutation();
+  const connectGlosses = api.admin.gloss.connectGlosses.useMutation({
+    onSuccess() {
+      toast.success("Success.");
+      // void utils.admin.gloss.findByRegex.invalidate();
+    },
+  });
+
+  const findByGlossIdMutation = api.admin.gloss.findByGlossId.useMutation({
+    onSuccess(data) {
+      setAiGlosses(data);
+    },
+  });
+
+  const aiGlossesPending =
+    findByRegexMutation.isPending || findByGlossIdMutation.isPending;
 
   const utils = api.useUtils();
   const { data: total } = api.admin.gloss.glossesTotal.useQuery();
@@ -40,16 +75,10 @@ export default function GlossesPage() {
 
   const setHiddenMutation = api.admin.gloss.setHidden.useMutation({
     onSuccess() {
-      void utils.admin.gloss.getGlosses.invalidate();
+      toast.success("Success.");
+      // void utils.admin.gloss.findByRegex.invalidate();
     },
   });
-
-  const onSetHiddenClick = useCallback(
-    (id: number) => {
-      setHiddenMutation.mutate(id);
-    },
-    [setHiddenMutation],
-  );
 
   const onAiGlossClick = (id: number) => {
     setCurrentAIGlossId(id);
@@ -62,10 +91,30 @@ export default function GlossesPage() {
     setCurrentGlossId(id);
     const found = glossesData?.find((g) => g.id === id);
     setRegexFieldValue(found?.kana ?? "");
+    void findByGlossIdMutation.mutate({ glossId: id });
   };
 
   const onFindSimilarAis = () => {
     findByRegexMutation.mutate({ regex: regexFieldValue });
+  };
+
+  const onCreateGlossClick = (id: number) => {
+    createMutation.mutate({ id });
+    console.log("Create gloss with id: ", id);
+  };
+
+  const onConnectWithSelectedClick = (id: number) => {
+    if (!currentGlossId) {
+      console.log("No selected gloss id.");
+      toast.error("No selected gloss id.");
+      return;
+    }
+    connectGlosses.mutate({ glossId: currentGlossId, aiGlossId: id });
+    console.log("Connect with selected gloss: ", id);
+  };
+
+  const onSetHiddenClick = (id: number) => {
+    setHiddenMutation.mutate(id);
   };
 
   return (
@@ -79,7 +128,7 @@ export default function GlossesPage() {
       {glossesLoading && <Spinner />}
       {!glossesLoading && glossesData && glossesData.length > 0 && (
         <>
-          <Grid columns="2" gap="4">
+          <Grid mb="8" columns="2" gap="4">
             <Flex gap="2" align="center" justify="start">
               <Flex gap="2">
                 <IconButton
@@ -113,12 +162,11 @@ export default function GlossesPage() {
             </Flex>
 
             <Box>
-              {findByRegexMutation.isPending && <Spinner />}
-              {!findByRegexMutation.isPending && findByRegexMutation.data && (
+              {aiGlossesPending && <Spinner />}
+              {!aiGlossesPending && (
                 <Flex direction="column" gap="1">
                   <Text size="1">
-                    <Text size="2">{findByRegexMutation.data.length}</Text> AI
-                    glosses found.
+                    <Text size="2">{aiGlosses.length}</Text> AI glosses found.
                   </Text>
                 </Flex>
               )}
@@ -127,19 +175,17 @@ export default function GlossesPage() {
               glossesData={glossesData}
               currentGlossId={currentGlossId}
               onTableGlossClick={onTableGlossClick}
-              hasRomaji
-              hasKanjiForm
             />
-            <Flex direction="column" gap="4">
-              {!findByRegexMutation.isPending && (
-                <GlossTable
-                  glossesData={findByRegexMutation.data}
-                  currentGlossId={currentAIGlossId}
-                  onTableGlossClick={onAiGlossClick}
-                  hasCnt
-                />
-              )}
-            </Flex>
+            {!aiGlossesPending && (
+              <AITable
+                glossesData={aiGlosses}
+                currentGlossId={currentAIGlossId}
+                onTableGlossClick={onAiGlossClick}
+                onCreateGlossClick={onCreateGlossClick}
+                onConnectWithSelected={onConnectWithSelectedClick}
+                onSetHiddenClick={onSetHiddenClick}
+              />
+            )}
           </Grid>
         </>
       )}
@@ -160,6 +206,7 @@ export default function GlossesPage() {
             html={s.text_with_furigana}
             ru={s.ru}
             en={s.en}
+            source={s.source}
           />
         ))}
       </Flex>

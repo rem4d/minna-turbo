@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { toRomaji } from "wanakana";
 import { publicProcedure, router } from "../../trpc";
 
 export const adminGlossRouter = router({
@@ -65,7 +66,9 @@ export const adminGlossRouter = router({
 
       const { data, error } = await ctx.db
         .from("aigloss_sentence")
-        .select("id:sentence_id,...sentences(text,text_with_furigana,en,ru)")
+        .select(
+          "id:sentence_id,...sentences(text,text_with_furigana,en,ru,source)",
+        )
         .eq("gloss_id", glossId);
 
       if (error) {
@@ -76,15 +79,15 @@ export const adminGlossRouter = router({
   setHidden: publicProcedure
     .input(z.number())
     .mutation(async ({ ctx, input }) => {
-      const { error } = await ctx.db
-        .from("glosses")
+      const { data, error } = await ctx.db
+        .from("aiglosses")
         .update({ is_hidden: true })
         .eq("id", input);
 
       if (error) {
         throw new Error(error.message);
       }
-      return true;
+      return data;
     }),
   findByRegex: publicProcedure
     .input(z.object({ regex: z.string() }))
@@ -99,5 +102,85 @@ export const adminGlossRouter = router({
       }
 
       return data;
+    }),
+  findByGlossId: publicProcedure
+    .input(z.object({ glossId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const { data, error } = await ctx.db.rpc("get_ai_glosses_by_gloss_id", {
+        glossid: input.glossId,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return data;
+    }),
+  createGloss: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const { data: aiGloss, error } = await ctx.db
+        .from("aiglosses")
+        .select("*")
+        .eq("id", input.id)
+        .single();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (!aiGloss) {
+        throw new Error("No gloss found.");
+      }
+      if (!aiGloss.kana) {
+        throw new Error("No kana found.");
+      }
+
+      const { data: newGloss, error: errorInsert } = await ctx.db
+        .from("glosses")
+        .insert({
+          comment: aiGloss.comment,
+          kana: aiGloss.kana,
+          number: aiGloss.number,
+          romaji: toRomaji(aiGloss.kana),
+        })
+        .select()
+        .single();
+
+      if (errorInsert) {
+        throw new Error(errorInsert.message);
+      }
+      if (!newGloss) {
+        throw new Error("No gloss found.");
+      }
+
+      const { error: errorInsertRelation } = await ctx.db
+        .from("gloss_aigloss")
+        .insert({
+          gloss_id: newGloss.id,
+          aigloss_id: aiGloss.id,
+        });
+
+      if (errorInsertRelation) {
+        throw new Error(errorInsertRelation.message);
+      }
+
+      return true;
+    }),
+  connectGlosses: publicProcedure
+    .input(z.object({ glossId: z.number(), aiGlossId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const { error: errorInsertRelation } = await ctx.db
+        .from("gloss_aigloss")
+        .insert({
+          gloss_id: input.glossId,
+          aigloss_id: input.aiGlossId,
+        });
+
+      if (errorInsertRelation) {
+        throw new Error(errorInsertRelation.message);
+      }
+
+      return true;
     }),
 });
