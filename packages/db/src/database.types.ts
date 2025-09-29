@@ -148,27 +148,33 @@ export type Database = {
           comment: string | null
           created_at: string
           id: number
-          is_hidden: boolean | null
+          is_hidden: boolean
           kana: string | null
+          kanji_form: string | null
           number: number | null
+          romaji: string
           tmp: string | null
         }
         Insert: {
           comment?: string | null
-          created_at: string
+          created_at?: string
           id?: number
-          is_hidden?: boolean | null
+          is_hidden?: boolean
           kana?: string | null
+          kanji_form?: string | null
           number?: number | null
+          romaji: string
           tmp?: string | null
         }
         Update: {
           comment?: string | null
           created_at?: string
           id?: number
-          is_hidden?: boolean | null
+          is_hidden?: boolean
           kana?: string | null
+          kanji_form?: string | null
           number?: number | null
+          romaji?: string
           tmp?: string | null
         }
         Relationships: []
@@ -577,6 +583,16 @@ export type Database = {
           text_with_furigana: string
           vox_file_path: string
           vox_speaker_id: number
+        }[]
+      }
+      get_ai_glosses_by_kana: {
+        Args: { regex: string }
+        Returns: {
+          cnt: number
+          comment: string
+          id: number
+          kana: string
+          number: number
         }[]
       }
       kanji_examples: {
