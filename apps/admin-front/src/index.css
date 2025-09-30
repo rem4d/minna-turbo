@@ -6,6 +6,9 @@
 
 @theme {
   --color-almost-white: #fefefe;
+  --color-example: red;
+  --color-accent: var(--accent-9);
+
   --font-hiragino: Hiragino;
   --font-digi: Digi;
 }

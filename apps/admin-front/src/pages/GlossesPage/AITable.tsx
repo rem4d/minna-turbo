@@ -59,9 +59,9 @@ export default function AITable({
           <Table.Row
             key={gloss.id}
             className={twMerge(
-              " cursor-pointer hover:bg-blue-100/10",
-              gloss.id === currentGlossId && "bg-gray-800",
+              "cursor-pointer hover:bg-gray-500/10",
               gloss.gloss_id && "bg-green-600/10",
+              gloss.id === currentGlossId && "bg-[var(--accent-9)]/40",
             )}
             onClick={() => onTableGlossClick?.(gloss.id)}
           >

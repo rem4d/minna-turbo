@@ -12,7 +12,6 @@ import {
   Button,
 } from "@radix-ui/themes";
 import { useCallback, useState } from "react";
-import { twMerge } from "tailwind-merge";
 import AITable from "./AITable";
 import GlossTable from "./GlossTable";
 import toast from "react-hot-toast";

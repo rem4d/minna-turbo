@@ -30,7 +30,6 @@ export default function SentenceSearchResult({
             <span className="relative">
               <Text
                 size="2"
-                className="text-white/60"
                 dangerouslySetInnerHTML={{
                   __html: html ?? "",
                 }}
@@ -48,12 +47,8 @@ export default function SentenceSearchResult({
               {source && <Badge>{source.substring(0, 3)}</Badge>}
             </span>
           </Flex>
-          <Text className="text-white/90" size="2">
-            {ru}
-          </Text>
-          <Text className="text-white/90" size="2">
-            {en}
-          </Text>
+          <Text size="2">{ru}</Text>
+          <Text size="2">{en}</Text>
         </Flex>
       </Flex>
     </Box>
