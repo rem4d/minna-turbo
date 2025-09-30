@@ -11,6 +11,7 @@ export const adminGlossRouter = router({
         .from("glosses")
         .select("*,gloss_sentence()")
         .eq("is_hidden", false)
+        .order("created_at")
         .range((page - 1) * limit, page * limit);
 
       if (error) {
@@ -69,7 +70,10 @@ export const adminGlossRouter = router({
         .select(
           "id:sentence_id,...sentences(text,text_with_furigana,en,ru,source)",
         )
-        .eq("gloss_id", glossId);
+        .eq("gloss_id", glossId)
+        .limit(100);
+
+      // .order("source");
 
       if (error) {
         throw new Error(error.message);

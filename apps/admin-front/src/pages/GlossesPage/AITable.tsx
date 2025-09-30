@@ -7,6 +7,7 @@ interface GlossData {
   comment?: string | null;
   cnt?: number | null;
   gloss_id?: number | null;
+  number?: number | null;
 }
 
 interface AITableProps {
@@ -44,11 +45,16 @@ export default function AITable({
           <Table.ColumnHeaderCell className="whitespace-nowrap">
             <Text color="gray">comment</Text>
           </Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell className="whitespace-nowrap">
+            <Text color="gray">number</Text>
+          </Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>
             <Text color="gray">sentences</Text>
           </Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>
-            <Text color="gray">gloss id</Text>
+            <Text color="gray" className="whitespace-nowrap">
+              gloss id
+            </Text>
           </Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell></Table.ColumnHeaderCell>
         </Table.Row>
@@ -61,6 +67,7 @@ export default function AITable({
             className={twMerge(
               "cursor-pointer hover:bg-gray-500/10",
               gloss.gloss_id && "bg-green-600/10",
+              gloss.number === 0 && "bg-red-600/10",
               gloss.id === currentGlossId && "bg-[var(--accent-9)]/40",
             )}
             onClick={() => onTableGlossClick?.(gloss.id)}
@@ -75,6 +82,9 @@ export default function AITable({
             </Table.Cell>
             <Table.Cell>
               <Text size="1">{gloss.comment}</Text>
+            </Table.Cell>
+            <Table.Cell>
+              <Text size="1">{gloss.number}</Text>
             </Table.Cell>
             <Table.Cell>
               <Text size="1" color="gray">
