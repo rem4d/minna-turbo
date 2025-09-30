@@ -32,7 +32,7 @@ export default function GlossesPage() {
   const [regexFieldValue, setRegexFieldValue] = useState("");
   const [aiGlosses, setAiGlosses] = useState<AiGlossOutput[]>([]);
 
-  const MAX_PER_PAGE = 10;
+  const MAX_PER_PAGE = 20;
   const { data: glossesData, isLoading: glossesLoading } =
     api.admin.gloss.getGlosses.useQuery({
       limit: MAX_PER_PAGE,
@@ -48,13 +48,14 @@ export default function GlossesPage() {
   const createMutation = api.admin.gloss.createGloss.useMutation({
     onSuccess() {
       void utils.admin.gloss.getGlosses.invalidate();
+      toast.success("Successfully created.");
     },
   });
 
   const connectGlosses = api.admin.gloss.connectGlosses.useMutation({
     onSuccess() {
-      toast.success("Success.");
-      // void utils.admin.gloss.findByRegex.invalidate();
+      toast.success("Successfully connected.");
+      findByRegexMutation.mutate({ regex: regexFieldValue });
     },
   });
 
@@ -76,7 +77,7 @@ export default function GlossesPage() {
   const setHiddenMutation = api.admin.gloss.setHidden.useMutation({
     onSuccess() {
       toast.success("Success.");
-      // void utils.admin.gloss.findByRegex.invalidate();
+      findByRegexMutation.mutate({ regex: regexFieldValue });
     },
   });
 
@@ -105,7 +106,6 @@ export default function GlossesPage() {
 
   const onConnectWithSelectedClick = (id: number) => {
     if (!currentGlossId) {
-      console.log("No selected gloss id.");
       toast.error("No selected gloss id.");
       return;
     }
@@ -127,7 +127,7 @@ export default function GlossesPage() {
 
       {glossesLoading && <Spinner />}
       {!glossesLoading && glossesData && glossesData.length > 0 && (
-        <>
+        <Box className="max-h-[700px] h-[700px] relative overflow-y-scroll overflow-x-hidden">
           <Grid mb="8" columns="2" gap="4">
             <Flex gap="2" align="center" justify="start">
               <Flex gap="2">
@@ -187,7 +187,7 @@ export default function GlossesPage() {
               />
             )}
           </Grid>
-        </>
+        </Box>
       )}
       <Flex direction="column" gap="4">
         {sentencesLoading && <Spinner />}

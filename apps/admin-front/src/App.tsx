@@ -8,11 +8,14 @@ import "@radix-ui/themes/styles.css";
 import "./index.css";
 
 import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 function App() {
+  const [theme] = useLocalStorage<"dark" | "light">("theme", "light");
+
   return (
     <TRPCProvider>
-      <Theme accentColor="cyan" appearance="dark">
+      <Theme accentColor="cyan" appearance={theme}>
         <RouterProvider router={router} />
         <Toaster
           position="top-right"
