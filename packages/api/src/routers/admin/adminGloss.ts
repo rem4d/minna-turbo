@@ -4,15 +4,22 @@ import { publicProcedure, router } from "../../trpc";
 
 export const adminGlossRouter = router({
   getGlosses: publicProcedure
-    .input(z.object({ limit: z.number().gt(0), page: z.number() }))
+    .input(
+      z.object({
+        limit: z.number().gt(0),
+        page: z.number(),
+        kana: z.string().optional(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
-      const { page, limit } = input;
+      const { page, limit, kana } = input;
       const { data, error } = await ctx.db
         .from("glosses")
         .select("*,gloss_sentence()")
         .eq("is_hidden", false)
         .order("created_at")
-        .range((page - 1) * limit, page * limit);
+        .range((page - 1) * limit, page * limit)
+        .like("romaji", kana ? `%${kana}%` : "*");
 
       if (error) {
         throw new Error(error.message);
@@ -183,6 +190,34 @@ export const adminGlossRouter = router({
 
       if (errorInsertRelation) {
         throw new Error(errorInsertRelation.message);
+      }
+
+      return true;
+    }),
+  findByFilter: publicProcedure
+    .input(z.object({ kana: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { data, error } = await ctx.db
+        .from("glosses")
+        .select("*")
+        .like("kana", `%${input.kana}%`);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return data;
+    }),
+  checkNumber: publicProcedure
+    .input(z.object({ sentenceId: z.number(), glossId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const { data: sentence, error } = await ctx.db
+        .from("sentences")
+        .select("*")
+        .eq("sentence_id", input.sentenceId);
+
+      if (error) {
+        throw new Error(error.message);
       }
 
       return true;

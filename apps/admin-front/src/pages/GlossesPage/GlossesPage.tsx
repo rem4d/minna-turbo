@@ -11,10 +11,12 @@ import {
   Spinner,
   Button,
 } from "@radix-ui/themes";
-import { useCallback, useState } from "react";
+import * as ScrollArea from "@radix-ui/react-scroll-area";
+import { PropsWithChildren, useState } from "react";
 import AITable from "./AITable";
 import GlossTable from "./GlossTable";
 import toast from "react-hot-toast";
+import { useDebounce } from "@uidotdev/usehooks";
 
 type AiGlossOutput = {
   id: number;
@@ -30,12 +32,15 @@ export default function GlossesPage() {
   const [currentAIGlossId, setCurrentAIGlossId] = useState<number | null>(null);
   const [regexFieldValue, setRegexFieldValue] = useState("");
   const [aiGlosses, setAiGlosses] = useState<AiGlossOutput[]>([]);
+  const [glossesFilterValue, setGlossesFilterValue] = useState("");
+  const debouncedValue = useDebounce(glossesFilterValue, 500);
 
   const MAX_PER_PAGE = 20;
   const { data: glossesData, isLoading: glossesLoading } =
     api.admin.gloss.getGlosses.useQuery({
       limit: MAX_PER_PAGE,
       page: pageNumber,
+      kana: debouncedValue,
     });
 
   const findAiSentences = api.admin.gloss.ai_getSentencesByGloss.useMutation();
@@ -89,9 +94,10 @@ export default function GlossesPage() {
 
   const onTableGlossClick = (id: number) => {
     setCurrentGlossId(id);
+    setCurrentAIGlossId(null);
     const found = glossesData?.find((g) => g.id === id);
-    setRegexFieldValue(found?.kana ?? "");
-    void findByGlossIdMutation.mutate({ glossId: id });
+    setRegexFieldValue(found?.kana?.slice(1) ?? "");
+    // void findByGlossIdMutation.mutate({ glossId: id });
   };
 
   const onFindSimilarAis = () => {
@@ -118,76 +124,82 @@ export default function GlossesPage() {
 
   return (
     <section>
-      {!glossesLoading && glossesData?.length === 0 && (
+      <Grid mb="8" columns="2" gap="4">
         <Box>
-          <Text>No glosses found.</Text>
-        </Box>
-      )}
+          <Flex gap="2" align="center" justify="start">
+            <Flex gap="2">
+              <IconButton
+                onClick={() => setPageNumber(pageNumber - 1)}
+                disabled={pageNumber === 1}
+              >
+                <ArrowLeftIcon width="18" height="18" />
+              </IconButton>
+              <IconButton
+                onClick={() => setPageNumber(pageNumber + 1)}
+                disabled={glossesData && glossesData.length < MAX_PER_PAGE}
+              >
+                <ArrowRightIcon width="18" height="18" />
+              </IconButton>
 
-      {glossesLoading && <Spinner />}
-      {!glossesLoading && glossesData && glossesData.length > 0 && (
-        <Box className="max-h-[700px] h-[700px] relative overflow-y-scroll overflow-x-hidden">
-          <Grid mb="8" columns="2" gap="4">
-            <Flex gap="2" align="center" justify="start">
-              <Flex gap="2">
-                <IconButton
-                  onClick={() => setPageNumber(pageNumber - 1)}
-                  disabled={pageNumber === 1}
-                >
-                  <ArrowLeftIcon width="18" height="18" />
-                </IconButton>
-                <IconButton
-                  onClick={() => setPageNumber(pageNumber + 1)}
-                  disabled={glossesData && glossesData.length < MAX_PER_PAGE}
-                >
-                  <ArrowRightIcon width="18" height="18" />
-                </IconButton>
-
-                <Flex align="center" gap="2"></Flex>
-              </Flex>
-              <Flex>
-                <Text size="1" color="gray">
-                  {pageNumber * MAX_PER_PAGE} /{total}
-                </Text>
-              </Flex>
-              <Flex gap="2">
-                <TextField.Root
-                  onChange={(e) => setRegexFieldValue(e.target.value)}
-                  value={regexFieldValue}
-                  placeholder="Regex"
-                />
-                <Button onClick={onFindSimilarAis}>Search</Button>
-              </Flex>
+              <Flex align="center" gap="2"></Flex>
             </Flex>
-
-            <Box>
-              {aiGlossesPending && <Spinner />}
-              {!aiGlossesPending && (
-                <Flex direction="column" gap="1">
-                  <Text size="1">
-                    <Text size="2">{aiGlosses.length}</Text> AI glosses found.
-                  </Text>
-                </Flex>
-              )}
-            </Box>
+            <Flex>
+              <Text size="1" color="gray">
+                {pageNumber * MAX_PER_PAGE} /{total}
+              </Text>
+            </Flex>
+            <TextField.Root
+              onChange={(e) => setGlossesFilterValue(e.target.value)}
+              value={glossesFilterValue}
+              placeholder="Search..."
+            />
+          </Flex>
+          {glossesLoading && <Spinner />}
+          {!glossesLoading && glossesData?.length === 0 && (
+            <Text>No glosses found.</Text>
+          )}
+        </Box>
+        <Box>
+          <Flex gap="2">
+            <TextField.Root
+              onChange={(e) => setRegexFieldValue(e.target.value)}
+              value={regexFieldValue}
+              placeholder="Search..."
+            />
+            <Button onClick={onFindSimilarAis}>Search</Button>
+          </Flex>
+          {aiGlossesPending && <Spinner />}
+          {!aiGlossesPending && (
+            <Flex direction="column" gap="1">
+              <Text size="1">
+                <Text size="2">{aiGlosses.length}</Text> AI glosses found.
+              </Text>
+            </Flex>
+          )}
+        </Box>
+        <ScrollAreaFn>
+          {!glossesLoading && glossesData && glossesData.length > 0 && (
             <GlossTable
               glossesData={glossesData}
               currentGlossId={currentGlossId}
               onTableGlossClick={onTableGlossClick}
             />
-            {!aiGlossesPending && (
-              <AITable
-                glossesData={aiGlosses}
-                currentGlossId={currentAIGlossId}
-                onTableGlossClick={onAiGlossClick}
-                onCreateGlossClick={onCreateGlossClick}
-                onConnectWithSelected={onConnectWithSelectedClick}
-                onSetHiddenClick={onSetHiddenClick}
-              />
-            )}
-          </Grid>
-        </Box>
-      )}
+          )}
+        </ScrollAreaFn>
+        <ScrollAreaFn>
+          {!aiGlossesPending && (
+            <AITable
+              glossesData={aiGlosses}
+              currentGlossId={currentAIGlossId}
+              currentLeftTableGlossId={currentGlossId}
+              onTableGlossClick={onAiGlossClick}
+              onCreateGlossClick={onCreateGlossClick}
+              onConnectWithSelected={onConnectWithSelectedClick}
+              onSetHiddenClick={onSetHiddenClick}
+            />
+          )}
+        </ScrollAreaFn>
+      </Grid>
       <Flex direction="column" gap="4">
         {sentencesLoading && <Spinner />}
         {foundSentences && !sentencesLoading && (
@@ -212,3 +224,26 @@ export default function GlossesPage() {
     </section>
   );
 }
+
+const ScrollAreaFn = ({ children }: PropsWithChildren) => {
+  return (
+    <ScrollArea.Root className="w-full h-[600px] relative overflow-hidden">
+      <ScrollArea.Viewport className="size-full">
+        {children}
+      </ScrollArea.Viewport>
+      <ScrollArea.Scrollbar
+        className="ScrollAreaScrollbar"
+        orientation="vertical"
+      >
+        <ScrollArea.Thumb className="ScrollAreaThumb" />
+      </ScrollArea.Scrollbar>
+      <ScrollArea.Scrollbar
+        className="ScrollAreaScrollbar"
+        orientation="horizontal"
+      >
+        <ScrollArea.Thumb className="ScrollAreaThumb" />
+      </ScrollArea.Scrollbar>
+      <ScrollArea.Corner className="ScrollAreaCorner" />
+    </ScrollArea.Root>
+  );
+};

@@ -23,6 +23,7 @@ import { Player } from "@/components/Player";
 import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
 import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
 import useAiMembers from "@/hooks/mistral/useAiMembers";
+import GrammarGlosses from "./GrammarGlosses";
 
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
@@ -35,7 +36,7 @@ export const EditSentencePage: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const aiMembers = useAiMembers(input);
+  // const aiMembers = useAiMembers(input);
 
   const { data: sentence } = api.admin.sentence.getById.useQuery(Number(id), {
     enabled: !!id,
@@ -55,13 +56,6 @@ export const EditSentencePage: FC = () => {
         enabled: !!sentence?.id,
       },
     );
-
-  const { data: mistralGlosses } = api.admin.sentence.aiGlosses.useQuery(
-    { id: sentence?.id ?? 0 },
-    {
-      enabled: !!sentence?.id,
-    },
-  );
 
   const { data: gptGlosses } = api.admin.sentence.gptGlosses.useQuery(
     { id: sentence?.id ?? 0 },
@@ -93,10 +87,6 @@ export const EditSentencePage: FC = () => {
         void utils.admin.sentence.getById.invalidate();
       },
     });
-
-  const onGetAIMembersClick = () => {
-    aiMembers.onGetAIMembers();
-  };
 
   useEffect(() => {
     if (analyzeData) {
@@ -140,10 +130,6 @@ export const EditSentencePage: FC = () => {
   const onTrim = () => {
     setInput((i) => i.replace(new RegExp(" ", "g"), ""));
   };
-
-  const onMemberClick = useCallback((bs: string) => {
-    openUrl(`https://jisho.org/search/${bs}`);
-  }, []);
 
   const handleUpdateData = () => {
     if (typeof id !== "string") {
@@ -195,6 +181,7 @@ export const EditSentencePage: FC = () => {
       });
     }
   };
+
   return (
     <Box>
       <Flex align="center" mr="5">
@@ -316,98 +303,7 @@ export const EditSentencePage: FC = () => {
                   onChange={(e) => setRu(e.target.value)}
                 />
               </Box>
-              <Box>
-                <Heading size="5">AI members</Heading>
-                <TextArea
-                  mt="6"
-                  mb="6"
-                  rows={17}
-                  value={aiMembers.aiPrompt}
-                  onChange={(e) => aiMembers.setAiPrompt(e.target.value)}
-                  placeholder="Paste some text..."
-                />
-                <Button onClick={onGetAIMembersClick}>Get members</Button>
-                {aiMembers.isPending && <Text>Loading...</Text>}
-                {aiMembers.members.length > 0 && (
-                  <Box>
-                    <Text size="2">{aiMembers.members.length} members.</Text>
-                  </Box>
-                )}
-                <Flex
-                  mt="4"
-                  direction="column"
-                  gapY="2"
-                  overflow="scroll"
-                  maxHeight="500px"
-                >
-                  {aiMembers.members.map((m, i) => (
-                    <Flex
-                      key={`${m.en}${i}`}
-                      gapY="2"
-                      direction="column"
-                      maxWidth="300px"
-                    >
-                      <Text size="1">
-                        <pre>{JSON.stringify(m, undefined, 2)}</pre>
-                      </Text>
-                      {/* <Flex> */}
-                      {/*   <Badge>En</Badge> */}
-                      {/*   <Text>{m.en}</Text> */}
-                      {/* </Flex> */}
-                      {/* <Flex> */}
-                      {/*   <Badge>Ru</Badge> */}
-                      {/*   <Text>{m.ru}</Text> */}
-                      {/* </Flex> */}
-                      {/* <Flex> */}
-                      {/*   <Badge>Pos</Badge> */}
-                      {/*   <Text>{m.pos}</Text> */}
-                      {/* </Flex> */}
-                      {/* <Flex> */}
-                      {/*   <Badge>Dict form</Badge> */}
-                      {/*   <Text>{m.dict_form}</Text> */}
-                      {/* </Flex> */}
-                      {/* <Flex> */}
-                      {/*   <Badge>Reading</Badge> */}
-                      {/*   <Text>{m.reading}</Text> */}
-                      {/* </Flex> */}
-                    </Flex>
-                  ))}
-                </Flex>
-                <Grid
-                  columns="4"
-                  gridColumn="span 2"
-                  className="font-klee text-xl"
-                  gap="4"
-                >
-                  {aiMembers?.members.map((m) => (
-                    <Flex key={m.dict_form} direction="column">
-                      <Text
-                        size="6"
-                        className="cursor-pointer whitespace-nowrap"
-                        onClick={() => onMemberClick(m.dict_form)}
-                      >
-                        {m.pos === "auxiliary verb" ? m.original : m.dict_form}
-                        {m.pos === "auxiliary verb" && (
-                          <Badge color="red" size="1">
-                            {m.dict_form}
-                          </Badge>
-                        )}
-                      </Text>
-                      <Text className="select-none" size="2">
-                        {m.ru}
-                      </Text>
-                      <Text className="select-none" size="2">
-                        {m.en}
-                      </Text>
-                      <Box>
-                        <Badge color="sky" size="1">
-                          {m.pos}
-                        </Badge>
-                      </Box>
-                    </Flex>
-                  ))}
-                </Grid>
-              </Box>
+              <GrammarGlosses sentenceId={sentence?.id} />
             </Flex>
           </Grid>
           <Grid className="" mt="6" columns="2" gap="2">
@@ -509,25 +405,6 @@ export const EditSentencePage: FC = () => {
               ))}
             </Flex>
           </Box>
-          <section>
-            <Heading size="5">mistral grammar</Heading>
-            <Box className="w-[70%]">
-              <Grid columns="4" my="8" gap="2" className="">
-                {mistralGlosses?.map((a) => (
-                  <Fragment key={a.id}>
-                    <Text size="2" color="gray">
-                      {a.gloss_id}
-                    </Text>
-                    <Text size="3">{a.kana}</Text>
-                    <Text size="3">{a.comment}</Text>
-                    <Text size="2" color="gray">
-                      {a.number ?? "N/A"}
-                    </Text>
-                  </Fragment>
-                ))}
-              </Grid>
-            </Box>
-          </section>
           <section>
             <Heading size="5">gpt grammar</Heading>
             <Box className="w-[70%]">

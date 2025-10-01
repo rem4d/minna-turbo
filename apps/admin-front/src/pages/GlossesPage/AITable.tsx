@@ -13,6 +13,7 @@ interface GlossData {
 interface AITableProps {
   glossesData?: GlossData[] | null;
   currentGlossId: number | null;
+  currentLeftTableGlossId: number | null;
   onTableGlossClick?: (id: number) => void;
   onCreateGlossClick: (id: number) => void;
   onConnectWithSelected: (id: number) => void;
@@ -21,6 +22,7 @@ interface AITableProps {
 
 export default function AITable({
   currentGlossId,
+  currentLeftTableGlossId,
   glossesData,
   onTableGlossClick,
   onCreateGlossClick,
@@ -68,6 +70,8 @@ export default function AITable({
               "cursor-pointer hover:bg-gray-500/10",
               gloss.gloss_id && "bg-green-600/10",
               gloss.number === 0 && "bg-red-600/10",
+              gloss.gloss_id === currentLeftTableGlossId &&
+                "bg-[var(--accent-9)]/20",
               gloss.id === currentGlossId && "bg-[var(--accent-9)]/40",
             )}
             onClick={() => onTableGlossClick?.(gloss.id)}
