@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { toRomaji } from "wanakana";
 import { publicProcedure, router } from "../../trpc";
+import { callAiForExceptionNumber } from "@rem4d/gloss";
 
 export const adminGlossRouter = router({
   getGlosses: publicProcedure
@@ -214,12 +215,35 @@ export const adminGlossRouter = router({
       const { data: sentence, error } = await ctx.db
         .from("sentences")
         .select("*")
-        .eq("sentence_id", input.sentenceId);
+        .eq("id", input.sentenceId)
+        .single();
 
       if (error) {
         throw new Error(error.message);
       }
 
-      return true;
+      if (!sentence || !sentence?.text) {
+        throw new Error("No sentence found.");
+      }
+
+      const { data: found, error: errorGloss } = await ctx.db
+        .from("aiglosses")
+        .select("*")
+        .eq("id", input.glossId)
+        .single();
+
+      if (errorGloss) {
+        throw new Error(errorGloss.message);
+      }
+      if (!found || !found.kana) {
+        throw new Error("No gloss found.");
+      }
+
+      const response = await callAiForExceptionNumber({
+        gloss: found.kana,
+        sentenceText: sentence.text,
+      });
+
+      return response;
     }),
 });
