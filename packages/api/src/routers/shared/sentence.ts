@@ -67,4 +67,19 @@ export const sentenceRouter = router({
 
       return data_;
     }),
+  normalGlosses: publicProcedure
+    .input(z.object({ sentenceId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const { data, error } = await ctx.db
+        .rpc("glosses_by_sentence_id", {
+          sentence_id_arg: input.sentenceId,
+        })
+        .select("*");
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return data;
+    }),
 });

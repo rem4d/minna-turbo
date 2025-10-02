@@ -96,8 +96,8 @@ export default function GlossesPage() {
     setCurrentGlossId(id);
     setCurrentAIGlossId(null);
     const found = glossesData?.find((g) => g.id === id);
-    setRegexFieldValue(found?.kana?.slice(1) ?? "");
-    // void findByGlossIdMutation.mutate({ glossId: id });
+    // setRegexFieldValue(found?.kana?.slice(1) ?? "");
+    void findByGlossIdMutation.mutate({ glossId: id });
   };
 
   const onFindSimilarAis = () => {
@@ -212,6 +212,7 @@ export default function GlossesPage() {
         {foundSentences.map((s, index) => (
           <SentenceSearchResult
             key={s.id}
+            text={s.text}
             id={s.id}
             index={index}
             html={s.text_with_furigana}

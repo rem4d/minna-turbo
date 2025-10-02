@@ -44,7 +44,7 @@ The following japanese sentence contains some of the grammar glosses from the li
 
 ${sentenceText}
 
-Response json object with key "closest" containing the closest gloss number.
+Response json object with key "closest" containing the closest gloss number. If multiple match, return multiple numbers.
 If nothing matches from the list, then answer with "NO MATCH" and comment explaining the reason it didn't match. `;
   return prompt;
 };

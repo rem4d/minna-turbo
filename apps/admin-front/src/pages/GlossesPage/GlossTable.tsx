@@ -1,16 +1,9 @@
 import { Text, Table } from "@radix-ui/themes";
+import { AdminGlossOutput } from "@rem4d/api";
 import { twMerge } from "tailwind-merge";
 
-interface GlossData {
-  id: number;
-  romaji?: string | null;
-  kana?: string | null;
-  comment?: string | null;
-  kanji_form?: string | null;
-}
-
 interface GlossTableProps {
-  glossesData?: GlossData[] | null;
+  glossesData?: AdminGlossOutput[] | null;
   currentGlossId: number | null;
   onTableGlossClick?: (id: number) => void;
 }
@@ -37,8 +30,12 @@ export default function GlossTable({
           <Table.ColumnHeaderCell className="whitespace-nowrap">
             <Text color="gray">comment</Text>
           </Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell className="whitespace-nowrap">
+            <Text color="gray">number</Text>
+          </Table.ColumnHeaderCell>
+
           <Table.ColumnHeaderCell>
-            <Text color="gray">kanji</Text>
+            <Text color="gray">con.</Text>
           </Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell></Table.ColumnHeaderCell>
         </Table.Row>
@@ -69,8 +66,11 @@ export default function GlossTable({
               <Text size="1">{gloss.comment}</Text>
             </Table.Cell>
             <Table.Cell>
+              <Text size="1">{gloss.number}</Text>
+            </Table.Cell>
+            <Table.Cell>
               <Text size="1" color="gray">
-                {gloss.kanji_form}
+                {gloss.connected?.length}
               </Text>
             </Table.Cell>
             <Table.Cell>

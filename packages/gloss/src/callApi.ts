@@ -10,9 +10,11 @@ const uri = "https://api.mistral.ai/v1/chat/completions";
 
 // const model = "openai/gpt-5-chat-latest";
 
-export default async function callApi<T>(prompt: string) {
-  // console.log("Call API... ");
-  // console.log(prompt);
+export default async function callApi<T>(prompt: string, showLog = false) {
+  if (showLog) {
+    console.log("Call API... ");
+    console.log(prompt);
+  }
 
   const response = await fetch(uri, {
     method: "POST",
@@ -40,10 +42,12 @@ export default async function callApi<T>(prompt: string) {
   }
 
   try {
-    const data = (await response.json()) as unknown as {
+    const data = (await response.json()) as {
       choices: { message: { content: string } }[];
     };
-    // console.log(JSON.stringify(data, undefined, 2));
+    if (showLog) {
+      console.log(JSON.stringify(data, undefined, 2));
+    }
 
     const content = data.choices[0]?.message.content ?? "";
 

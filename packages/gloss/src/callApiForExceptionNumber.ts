@@ -1,26 +1,29 @@
 import callApi from "./callApi";
 import { getExceptionNumberPrompt } from "./prompts1";
 
-type ExceptionNumberResponseType = {
+interface ExceptionNumberResponseType {
   closest: number | string | number[];
   comment?: string | null;
-};
+}
 
-type ReturnType = {
+export interface FnResponseType {
   success: boolean;
   closest: number[];
   comment?: string | null;
-};
+}
 
 export const callAiForExceptionNumber = async ({
   gloss,
   sentenceText,
+  showLog = false,
 }: {
   gloss: string;
   sentenceText: string;
-}): Promise<ReturnType> => {
+  showLog?: boolean;
+}): Promise<FnResponseType> => {
   const result = await callApi<ExceptionNumberResponseType>(
     getExceptionNumberPrompt(gloss, sentenceText),
+    showLog,
   );
 
   if (!result) {
@@ -41,7 +44,11 @@ export const callAiForExceptionNumber = async ({
   }
 
   if (Array.isArray(result.closest)) {
-    return result.closest;
+    return {
+      success: true,
+      closest: result.closest,
+      comment: null,
+    };
   }
 
   if (result.closest === "NO MATCH") {

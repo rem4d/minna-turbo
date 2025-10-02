@@ -16,7 +16,7 @@ export const adminGlossRouter = router({
       const { page, limit, kana } = input;
       const { data, error } = await ctx.db
         .from("glosses")
-        .select("*,gloss_sentence()")
+        .select("*,connected:gloss_aigloss(*)")
         .eq("is_hidden", false)
         .order("created_at")
         .range((page - 1) * limit, page * limit)
@@ -242,8 +242,65 @@ export const adminGlossRouter = router({
       const response = await callAiForExceptionNumber({
         gloss: found.kana,
         sentenceText: sentence.text,
+        showLog: true,
       });
 
-      return response;
+      return {
+        closest: response.closest,
+        comment: response.comment,
+        success: response.success,
+      };
+    }),
+  updateNumber: publicProcedure
+    .input(
+      z.object({
+        sentenceId: z.number(),
+        glossId: z.number(),
+        number: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { data: currentGloss, error } = await ctx.db
+        .from("aiglosses")
+        .select()
+        .eq("id", input.glossId)
+        .single();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+      if (!currentGloss || !currentGloss.kana) {
+        throw new Error("No gloss found.");
+      }
+
+      // find existing gloss by number
+      const { data: glossUpdateTo, error: error2 } = await ctx.db
+        .from("aiglosses")
+        .select()
+        .eq("number", input.number)
+        .eq("kana", currentGloss.kana)
+        .single();
+
+      if (error2) {
+        throw new Error(error2.message);
+      }
+      if (!glossUpdateTo) {
+        throw new Error("No gloss found.");
+      }
+
+      // update current raltion setting found gloss id
+      const { error: errorUpdate } = await ctx.db
+        .from("aigloss_sentence")
+        .update({
+          gloss_id: glossUpdateTo.id,
+        })
+        .eq("gloss_id", currentGloss.id)
+        .eq("sentence_id", input.sentenceId);
+
+      if (errorUpdate) {
+        throw new Error(errorUpdate.message);
+      }
+
+      return true;
     }),
 });

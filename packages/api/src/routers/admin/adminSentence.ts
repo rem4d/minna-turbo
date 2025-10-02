@@ -120,9 +120,10 @@ export const adminSentenceRouter = router({
 
       const { data, error } = await ctx.db
         .from("sentences")
-        .select("*, gpt_gloss_sentence()")
-        .eq("source", "djg")
-        .not("gpt_gloss_sentence", "is", null)
+        .select("*, aigloss_sentence(), sentence_member2()")
+        .eq("source", "neocities")
+        .not("aigloss_sentence", "is", null)
+        .not("sentence_member2", "is", null)
 
         // .gt("level", 48)
         // .lt("level", 500)

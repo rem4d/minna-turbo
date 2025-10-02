@@ -1,5 +1,15 @@
-import { expect, describe, test } from "vitest";
-import { processSentenceGlosses } from "../src//process";
+import { expect, describe, test, vi, beforeEach } from "vitest";
+import { processSentenceGlosses } from "../src/process";
+
+vi.mock("../src/callApiForExceptionNumber", async () => {
+  return {
+    callAiForExceptionNumber: vi.fn(() => ({
+      closest: [1],
+      comment: null,
+      success: true,
+    })),
+  };
+});
 
 describe("process: no exceptions in db", () => {
   // check NO exceptions (number must be null)
@@ -32,10 +42,6 @@ describe("process: no exceptions in db", () => {
         },
       ],
       aiGlosses,
-      callAiForExceptionNumber: async () =>
-        new Promise((resolve) =>
-          resolve({ closest: [1], comment: null, success: true }),
-        ),
     });
     expect(result.newGlosses.length).toEqual(0);
     expect(result.newRelations.length).toEqual(2);
@@ -88,10 +94,6 @@ describe("process: have zero or one exception in db", () => {
           },
         ],
         aiGlosses,
-        callAiForExceptionNumber: async () =>
-          new Promise((resolve) =>
-            resolve({ closest: [1], comment: null, success: true }),
-          ),
       });
       expect(result.newGlosses.length).toEqual(0);
       expect(result.newRelations.length).toEqual(2);
@@ -121,10 +123,6 @@ describe("process: have zero or one exception in db", () => {
           },
         ],
         aiGlosses,
-        callAiForExceptionNumber: async () =>
-          new Promise((resolve) =>
-            resolve({ closest: [1], comment: null, success: true }),
-          ),
       });
       expect(result.newGlosses.length).toEqual(1);
       expect(result.newRelations.length).toEqual(2);
@@ -147,10 +145,6 @@ describe("process: have zero or one exception in db", () => {
       sentence,
       dbGlosses: [],
       aiGlosses,
-      callAiForExceptionNumber: async () =>
-        new Promise((resolve) =>
-          resolve({ closest: [1], comment: null, success: true }),
-        ),
     });
 
     expect(result.newGlosses.length).toEqual(2);
@@ -170,10 +164,6 @@ describe("process: have zero or one exception in db", () => {
         },
       ],
       aiGlosses,
-      callAiForExceptionNumber: async () =>
-        new Promise((resolve) =>
-          resolve({ closest: [1], comment: null, success: true }),
-        ),
     });
 
     expect(result.newGlosses.length).toEqual(1);

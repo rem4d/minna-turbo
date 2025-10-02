@@ -70,7 +70,8 @@ export default function AITable({
               "cursor-pointer hover:bg-gray-500/10",
               gloss.gloss_id && "bg-green-600/10",
               gloss.number === 0 && "bg-red-600/10",
-              gloss.gloss_id === currentLeftTableGlossId &&
+              currentLeftTableGlossId &&
+                gloss.gloss_id === currentLeftTableGlossId &&
                 "bg-[var(--accent-9)]/20",
               gloss.id === currentGlossId && "bg-[var(--accent-9)]/40",
             )}

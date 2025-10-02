@@ -11,8 +11,10 @@ import {
   DataList,
   Badge,
 } from "@radix-ui/themes";
+import toast from "react-hot-toast";
 
 export default function GrammarGlosses({ sentenceId }) {
+  const [currentGlossId, setCurrentGlossId] = useState<number | null>(null);
   const [response, setResponse] = useState<{
     success: boolean;
     closest: number[];
@@ -26,19 +28,51 @@ export default function GrammarGlosses({ sentenceId }) {
     },
   );
 
+  const { data: normalGlosses } = api.admin.sentence.normalGlosses.useQuery(
+    { sentenceId: sentenceId ?? 0 },
+    {
+      enabled: !!sentenceId,
+    },
+  );
+
+  const utils = api.useUtils();
+
   const checkNumberMutation = api.admin.gloss.checkNumber.useMutation({
     onSuccess(data) {
       setResponse(data);
     },
+    onError() {
+      toast.error("Unexpected error while checking number.");
+    },
+  });
+  const updateNumberMutation = api.admin.gloss.updateNumber.useMutation({
+    onSuccess() {
+      toast.success("Successfully updated.");
+      void utils.admin.sentence.aiGlosses.invalidate();
+    },
+    onError() {
+      toast.error("Unexpected error while updating number.");
+    },
   });
 
   const onCallNumberCheck = (glossId: number) => {
+    setCurrentGlossId(glossId);
     checkNumberMutation.mutate({
       sentenceId: sentenceId,
       glossId: glossId,
     });
   };
-  const onAcceptNewResponse = () => {};
+  const onAcceptNewResponse = () => {
+    if (response && response.closest && currentGlossId) {
+      updateNumberMutation.mutate({
+        sentenceId: sentenceId,
+        glossId: currentGlossId,
+        number: response.closest[0],
+      });
+    } else {
+      toast.error("Unexpected error");
+    }
+  };
 
   return (
     <Box>
@@ -60,7 +94,8 @@ export default function GrammarGlosses({ sentenceId }) {
 
                   {a.number !== null && (
                     <>
-                      {checkNumberMutation.isPending && <Spinner />}
+                      {checkNumberMutation.isPending &&
+                        currentGlossId === a.id && <Spinner />}
                       {!checkNumberMutation.isPending && (
                         <Button
                           variant="ghost"
@@ -109,6 +144,28 @@ export default function GrammarGlosses({ sentenceId }) {
             </Button>
           </Box>
         )}
+      </Box>
+
+      <Heading size="5">Normal glosses</Heading>
+      <Box>
+        <Grid columns="4" my="8" gap="2" className="">
+          {normalGlosses?.map((a) => (
+            <React.Fragment key={a.id}>
+              <Text size="2" color="gray">
+                {a.id}
+              </Text>
+              <Text size="3">{a.kana}</Text>
+              <Text size="3">{a.comment}</Text>
+              <Flex>
+                <Flex align="center" gap="4">
+                  <Text color="gray" size="2">
+                    {a.number ?? "N/A"}
+                  </Text>
+                </Flex>
+              </Flex>
+            </React.Fragment>
+          ))}
+        </Grid>
       </Box>
     </Box>
   );

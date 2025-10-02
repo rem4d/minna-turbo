@@ -9,6 +9,7 @@ interface SentenceSearchResultProps {
   ru: string | null;
   en: string | null;
   source: string | null;
+  text?: string | null;
 }
 
 export default function SentenceSearchResult({
@@ -18,6 +19,7 @@ export default function SentenceSearchResult({
   ru,
   en,
   source,
+  text,
 }: SentenceSearchResultProps) {
   return (
     <Box>
@@ -34,6 +36,7 @@ export default function SentenceSearchResult({
                   __html: html ?? "",
                 }}
               />
+              {/* <Text size="2">{text}</Text> */}
               <div
                 className="cursor-pointer absolute -right-4 top-2"
                 onClick={() => openUrl(`/edit/${id}`)}

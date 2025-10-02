@@ -637,6 +637,15 @@ export type Database = {
           number: number
         }[]
       }
+      glosses_by_sentence_id: {
+        Args: { sentence_id_arg: number }
+        Returns: {
+          comment: string
+          id: number
+          kana: string
+          number: number
+        }[]
+      }
       kanji_examples: {
         Args: { kanji_input: string }
         Returns: {

@@ -13,6 +13,13 @@ export const exceptionList = [
   "〜そうだ",
   "〜から",
   "〜こと",
+  "〜し",
+  "〜して",
+  "〜になる",
+  "〜く",
+  "〜が",
+  "〜より",
+  "〜なんだ",
 ] as const;
 
 export type ExceptionType = (typeof exceptionList)[number];
@@ -97,6 +104,8 @@ Example: 小田さんはまだ小身ものである。
 Example: 良い席が取れるように早く来た。
 2. indicates resemblance, manner, or "as if"
 Example: 丸でわたし自身がしたように。
+3. tell someone to do something
+Example: 先生は学生に宿題をするように言った。
 `,
   "〜も": `
 1. a particle which indicates that a proposition about the preceding element X is also true when another similar proposition is true (too; also)
@@ -121,15 +130,47 @@ Example: 私は友達に電話してからうちを出た。
 Example: 春子は十七だからまだお酒を飲めない。
 `,
   "〜こと": `
-1. a thing which is intangible (thing; what) or a nominalizer or both
-3. ことがある - There WAS a time when ~ (someone has done something; someone has had an experience doing something; there was a time when something)
-4. ことがある - There ARE times when ~ (there is a time when something)
-5. ことが出来る - Doing something is possible (can; be able to)
-6. ことになる - An event takes place as if spontaneously (it will be decided that ~; come about ~; be arranged that ~; turn out that ~)
-7. ことにする - A volitional decision to do something (decide to)
-8. ことは〜が - Speaking of proposition X, X is certainly true (indeed one does something alright, (but ~); indeed ~ (but ~); do ~ (but ~))
+1. 〜こと as a nominalizer, or intangible thing, or a general sense
+2. ことがある - There WAS a time when ~ (someone has done something; someone has had an experience doing something; there was a time when something)
+3. ことがある - There ARE times when ~ (there is a time when something)
+4. ことが出来る - Doing something is possible (can; be able to)
+5. ことになる - An event takes place as if spontaneously (it will be decided that ~; come about ~; be arranged that ~; turn out that ~)
+6. ことにする - A volitional decision to do something (decide to)
+7. ことは〜が - Speaking of proposition X, X is certainly true (indeed one does something alright, (but ~); indeed ~ (but ~); do ~ (but ~))
 Example: 私のアパートは駅に近くて便利なことは便利ですが，家貸がとても高いです。
 `,
+  "〜し": `
+1. indicates action in polite form.
+2. conjunctive particle, used to list multiple actions, reasons, or qualities.
+`,
+  "〜して": `
+1. verb in te-form
+2. indicates reason or means (e.g.　〜どうして)
+`,
+  "〜になる": `
+1. 〜になる - becomes or turns into
+2. 〜ことになる - be decided that
+3. 〜になると  - when comes
+4. 〜お〜になる - polite description of outgroup person's action
+5. 〜そうになる - on the verge of
+6. 〜ようになる - reach the point where
+`,
+  "〜く": `
+1. adverbial form of i-adjective
+2. part of a verb
+`,
+  "〜が": `
+1. a particle that indicates the subject
+2. a disjunctive coordinate conjunction that combines two sentences
+`,
+  "〜より": `
+1. a particle which indicates that s.t. / s.o. is being compared to s.t. / s.o. (than; rather ~ than ~; more ~ than ~)
+2. a particle which indicates a set point in terms of space or time (in ~ of; inside; outside; before; after)
+  `,
+  "〜なんだ": `
+1. explanatory ending
+2. "what"
+  `,
 };
 
 // type predicate

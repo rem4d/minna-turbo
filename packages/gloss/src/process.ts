@@ -1,3 +1,4 @@
+import { callAiForExceptionNumber } from "./callApiForExceptionNumber";
 import { isValidGloss } from "./const/exceptions";
 import type {
   AIGloss,
@@ -7,27 +8,18 @@ import type {
   Relation,
 } from "./types";
 
-type ReturnType = {
-  success: boolean;
-  closest: number[];
-  comment?: string | null;
-};
-
-export type ProcessArgs = {
+export interface ProcessArgs {
   sentence: { id: number; text: string };
   dbGlosses: DBGloss[];
   aiGlosses: AIGloss[];
-  callAiForExceptionNumber: (args: {
-    gloss: string;
-    sentenceText: string;
-  }) => Promise<ReturnType>;
-};
+  showLog?: boolean;
+}
 
 export const processSentenceGlosses = async ({
   sentence,
   dbGlosses,
   aiGlosses,
-  callAiForExceptionNumber,
+  showLog = false,
 }: ProcessArgs) => {
   const newGlosses: DBGlossCreateInput[] = [];
   const newRelations: Relation[] = [];
@@ -40,20 +32,33 @@ export const processSentenceGlosses = async ({
     }
 
     if (isValidGloss(gloss)) {
-      const { closest, success } = await callAiForExceptionNumber({
+      const {
+        closest,
+        comment: aiComment,
+        success,
+      } = await callAiForExceptionNumber({
         gloss,
         sentenceText: sentence.text,
+        showLog,
       });
 
       if (!success || closest.length === 0) {
         errorMessages.push({
           gloss,
-          message: `No exception number found for ${gloss}, [${sentence.id}] "${sentence.text}"`,
+          // message: `No exception number found for ${gloss}, [${sentence.id}] "${sentence.text}"`,
+          message: aiComment ?? "",
         });
         continue;
       }
 
       for (const number of closest) {
+        if (isNaN(number)) {
+          errorMessages.push({
+            gloss,
+            message: "",
+          });
+          continue;
+        }
         const r = checkSingleGloss({
           number,
           dbGlosses,
