@@ -3,7 +3,7 @@ import { publicProcedure, router } from "../../trpc";
 import { findSentencesMembers } from "../util/findSentenceMembers";
 
 export const adminMemberRouter = router({
-  reassignMembers: publicProcedure
+  ai_getMembers: publicProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input, ctx }) => {
       const sentenceId = input.id;
@@ -237,36 +237,3 @@ export const adminMemberRouter = router({
       }
     }),
 });
-
-// {
-//   "original": "北口",
-//   "pos": "noun",
-//   "dict_form": "北口",
-//   "en": "north entrance",
-//   "ru": "северный вход",
-//   "reading": "きたぐち"
-// }
-// {
-//   "original": "後から",
-//   "pos": "adverb",
-//   "dict_form": "後から",
-//   "en": "afterwards",
-//   "ru": "потом",
-//   "reading": "あとから"
-// }
-// {
-//   "original": "思い付き",
-//   "pos": "noun",
-//   "dict_form": "思い付き",
-//   "en": "idea",
-//   "ru": "идея",
-//   "reading": "おもいつき"
-// }
-// {
-//   "original": "だった",
-//   "pos": "verb",
-//   "dict_form": "だ",
-//   "en": "was",
-//   "ru": "был",
-//   "reading": "だ"
-// }

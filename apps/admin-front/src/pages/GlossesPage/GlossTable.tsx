@@ -20,22 +20,41 @@ export default function GlossTable({
     <Table.Root size="2" variant="ghost">
       <Table.Header>
         <Table.Row>
-          <Table.ColumnHeaderCell>id</Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>
-            <Text color="gray">romaji</Text>
+            <Text color="gray" size="1">
+              id
+            </Text>
           </Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>
-            <Text color="gray">kana</Text>
+            <Text color="gray" size="1">
+              romaji
+            </Text>
+          </Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>
+            <Text color="gray" size="1">
+              kana
+            </Text>
           </Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell className="whitespace-nowrap">
-            <Text color="gray">comment</Text>
+            <Text color="gray" size="1">
+              comment
+            </Text>
           </Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell className="whitespace-nowrap">
-            <Text color="gray">number</Text>
+            <Text color="gray" size="1">
+              num
+            </Text>
           </Table.ColumnHeaderCell>
 
           <Table.ColumnHeaderCell>
-            <Text color="gray">con.</Text>
+            <Text color="gray" size="1">
+              cnt
+            </Text>
+          </Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>
+            <Text color="gray" size="1">
+              ref
+            </Text>
           </Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell></Table.ColumnHeaderCell>
         </Table.Row>
@@ -71,6 +90,11 @@ export default function GlossTable({
             <Table.Cell>
               <Text size="1" color="gray">
                 {gloss.connected?.length}
+              </Text>
+            </Table.Cell>
+            <Table.Cell>
+              <Text size="1" color="gray">
+                {gloss.ref}
               </Text>
             </Table.Cell>
             <Table.Cell>

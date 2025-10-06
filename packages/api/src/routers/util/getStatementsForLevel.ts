@@ -100,6 +100,7 @@ export const getStatementsForLevel = async ({
           updated_at: "",
           tmp: null,
           tmp_gloss: null,
+          comment: null,
         });
       }
     } else {

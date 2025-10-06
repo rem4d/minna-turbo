@@ -1,4 +1,5 @@
 import { Text, Table, DropdownMenu, IconButton } from "@radix-ui/themes";
+import React from "react";
 import { twMerge } from "tailwind-merge";
 
 interface GlossData {
@@ -20,7 +21,7 @@ interface AITableProps {
   onSetHiddenClick: (id: number) => void;
 }
 
-export default function AITable({
+export default React.memo(function AITable({
   currentGlossId,
   currentLeftTableGlossId,
   glossesData,
@@ -40,21 +41,33 @@ export default function AITable({
     <Table.Root size="2" variant="ghost">
       <Table.Header>
         <Table.Row>
-          <Table.ColumnHeaderCell>id</Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>
-            <Text color="gray">kana</Text>
+            <Text color="gray" size="1">
+              id
+            </Text>
+          </Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>
+            <Text color="gray" size="1">
+              kana
+            </Text>
           </Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell className="whitespace-nowrap">
-            <Text color="gray">comment</Text>
+            <Text color="gray" size="1">
+              comment
+            </Text>
           </Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell className="whitespace-nowrap">
-            <Text color="gray">number</Text>
+            <Text color="gray" size="1">
+              number
+            </Text>
           </Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>
-            <Text color="gray">sentences</Text>
+            <Text color="gray" size="1">
+              sentences
+            </Text>
           </Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>
-            <Text color="gray" className="whitespace-nowrap">
+            <Text color="gray" size="1" className="whitespace-nowrap">
               gloss id
             </Text>
           </Table.ColumnHeaderCell>
@@ -133,4 +146,4 @@ export default function AITable({
       </Table.Body>
     </Table.Root>
   );
-}
+});

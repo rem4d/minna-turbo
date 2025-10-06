@@ -56,6 +56,7 @@ export const IndexPage: FC = () => {
             <Table.ColumnHeaderCell>en</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>ru</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>source</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>cnt</Table.ColumnHeaderCell>
             {/* <Table.ColumnHeaderCell>voice</Table.ColumnHeaderCell> */}
             <Table.ColumnHeaderCell>level</Table.ColumnHeaderCell>
             {/* <Table.ColumnHeaderCell>unknown_kanji_n</Table.ColumnHeaderCell> */}
@@ -87,6 +88,7 @@ export const IndexPage: FC = () => {
               <Table.Cell width="290px">{elem.en}</Table.Cell>
               <Table.Cell width="290px">{elem.ru}</Table.Cell>
               <Table.Cell>{elem.source}</Table.Cell>
+              <Table.Cell>{elem.aigloss_sentence[0]?.count}</Table.Cell>
               {/* <Table.Cell> */}
               {/*   {elem.vox_speaker_id && elem.vox_file_path && ( */}
               {/*     <Box px="2"> */}

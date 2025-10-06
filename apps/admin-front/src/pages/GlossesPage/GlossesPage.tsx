@@ -17,6 +17,7 @@ import AITable from "./AITable";
 import GlossTable from "./GlossTable";
 import toast from "react-hot-toast";
 import { useDebounce } from "@uidotdev/usehooks";
+import { AdminSentenceOutput } from "@rem4d/api";
 
 type AiGlossOutput = {
   id: number;
@@ -34,6 +35,7 @@ export default function GlossesPage() {
   const [aiGlosses, setAiGlosses] = useState<AiGlossOutput[]>([]);
   const [glossesFilterValue, setGlossesFilterValue] = useState("");
   const debouncedValue = useDebounce(glossesFilterValue, 500);
+  const [sentences, setSentences] = useState<AdminSentenceOutput[]>([]);
 
   const MAX_PER_PAGE = 20;
   const { data: glossesData, isLoading: glossesLoading } =
@@ -43,7 +45,18 @@ export default function GlossesPage() {
       kana: debouncedValue,
     });
 
-  const findAiSentences = api.admin.gloss.ai_getSentencesByGloss.useMutation();
+  const findAiSentences = api.admin.gloss.ai_getSentencesByGloss.useMutation({
+    onSuccess(data) {
+      setSentences(data);
+    },
+  });
+  const findNormalGlossSentences =
+    api.admin.gloss.getSentencesByGloss.useMutation({
+      onSuccess(data) {
+        // setSentences(data);
+      },
+    });
+
   const findByRegexMutation = api.admin.gloss.findByRegex.useMutation({
     onSuccess(data) {
       setAiGlosses(data);
@@ -75,8 +88,8 @@ export default function GlossesPage() {
   const utils = api.useUtils();
   const { data: total } = api.admin.gloss.glossesTotal.useQuery();
 
-  const foundSentences = findAiSentences.data ?? [];
-  const sentencesLoading = findAiSentences.isPending;
+  const sentencesLoading =
+    findAiSentences.isPending || findNormalGlossSentences.isPending;
 
   const setHiddenMutation = api.admin.gloss.setHidden.useMutation({
     onSuccess() {
@@ -98,6 +111,7 @@ export default function GlossesPage() {
     const found = glossesData?.find((g) => g.id === id);
     // setRegexFieldValue(found?.kana?.slice(1) ?? "");
     void findByGlossIdMutation.mutate({ glossId: id });
+    void findNormalGlossSentences.mutate({ glossId: id });
   };
 
   const onFindSimilarAis = () => {
@@ -121,6 +135,7 @@ export default function GlossesPage() {
   const onSetHiddenClick = (id: number) => {
     setHiddenMutation.mutate(id);
   };
+  const aiSentences = findAiSentences.data ?? [];
 
   return (
     <section>
@@ -202,14 +217,14 @@ export default function GlossesPage() {
       </Grid>
       <Flex direction="column" gap="4">
         {sentencesLoading && <Spinner />}
-        {foundSentences && !sentencesLoading && (
+        {aiSentences && (
           <Flex direction="column" gap="1">
             <Text size="1">
-              <Text size="2">{foundSentences.length}</Text> sentences found.
+              <Text size="2">{aiSentences.length}</Text> sentences found.
             </Text>
           </Flex>
         )}
-        {foundSentences.map((s, index) => (
+        {aiSentences.map((s, index) => (
           <SentenceSearchResult
             key={s.id}
             text={s.text}

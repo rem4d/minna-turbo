@@ -32,6 +32,7 @@ export const EditSentencePage: FC = () => {
   const [translation, setTranslation] = useState("");
   const [en, setEn] = useState("");
   const [ru, setRu] = useState("");
+  const [comment, setComment] = useState("");
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -120,6 +121,7 @@ export const EditSentencePage: FC = () => {
       setTextWithFuriganaHtml(sentence.text_with_furigana ?? "");
       setEn(sentence.en ?? "");
       setRu(sentence.ru ?? "");
+      setComment(sentence.comment ?? "");
     }
   }, [sentence]);
 
@@ -144,6 +146,7 @@ export const EditSentencePage: FC = () => {
         translation,
         en,
         ru,
+        comment,
         text_with_furigana: textWithFuriganaHtml,
       },
     });
@@ -301,6 +304,14 @@ export const EditSentencePage: FC = () => {
                   rows={4}
                   value={ru}
                   onChange={(e) => setRu(e.target.value)}
+                />
+              </Box>
+              <Box>
+                <Heading size="5">comment</Heading>
+                <TextArea
+                  rows={4}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
                 />
               </Box>
               <GrammarGlosses sentenceId={sentence?.id} />

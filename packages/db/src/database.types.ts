@@ -182,6 +182,7 @@ export type Database = {
           kana: string | null
           kanji_form: string | null
           number: number | null
+          ref: string | null
           romaji: string
           tmp: string | null
         }
@@ -193,6 +194,7 @@ export type Database = {
           kana?: string | null
           kanji_form?: string | null
           number?: number | null
+          ref?: string | null
           romaji: string
           tmp?: string | null
         }
@@ -204,6 +206,7 @@ export type Database = {
           kana?: string | null
           kanji_form?: string | null
           number?: number | null
+          ref?: string | null
           romaji?: string
           tmp?: string | null
         }
@@ -472,6 +475,7 @@ export type Database = {
       }
       sentences: {
         Row: {
+          comment: string | null
           created_at: string
           en: string | null
           id: number
@@ -491,6 +495,7 @@ export type Database = {
           vox_speaker_id: number | null
         }
         Insert: {
+          comment?: string | null
           created_at?: string
           en?: string | null
           id?: number
@@ -510,6 +515,7 @@ export type Database = {
           vox_speaker_id?: number | null
         }
         Update: {
+          comment?: string | null
           created_at?: string
           en?: string | null
           id?: number
@@ -576,12 +582,9 @@ export type Database = {
     }
     Functions: {
       additional_sentences: {
-        Args:
-          | Record<PropertyKey, never>
-          | { k_set_input: number; lvl_input: number }
-          | { k_set_input: string }
-          | { k_set_input: string; lvl_input: number }
+        Args: Record<PropertyKey, never>
         Returns: {
+          comment: string | null
           created_at: string
           en: string | null
           id: number
@@ -637,6 +640,29 @@ export type Database = {
           number: number
         }[]
       }
+      get_sentences_by_gloss_id: {
+        Args: { _gi: number }
+        Returns: {
+          comment: string | null
+          created_at: string
+          en: string | null
+          id: number
+          level: number | null
+          ru: string | null
+          ruby: string | null
+          source: string | null
+          status: string
+          text: string
+          text_with_furigana: string | null
+          tmp: string | null
+          tmp_gloss: string | null
+          translation: string | null
+          unknown_kanji_number: number | null
+          updated_at: string | null
+          vox_file_path: string | null
+          vox_speaker_id: number | null
+        }[]
+      }
       glosses_by_sentence_id: {
         Args: { sentence_id_arg: number }
         Returns: {
@@ -666,22 +692,6 @@ export type Database = {
           ru: string
         }[]
       }
-      stat_kanji_list: {
-        Args: { shift_input: number }
-        Returns: {
-          col1: string
-          col2: number
-          col3: number
-        }[]
-      }
-      stat_kanji_list1: {
-        Args: { shift_input: number }
-        Returns: {
-          col1: string
-          col2: number
-          col3: number
-        }[]
-      }
       stat_kanji_list2: {
         Args: { shift_input: number }
         Returns: {
@@ -696,6 +706,14 @@ export type Database = {
           cnt: number
           kanji: string
           lvl: number
+        }[]
+      }
+      stat_list_fn: {
+        Args: { _source: string }
+        Returns: {
+          cnt: number
+          kanji: string
+          pos: number
         }[]
       }
     }

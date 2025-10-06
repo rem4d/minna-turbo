@@ -20,7 +20,7 @@ export const adminGlossRouter = router({
         .eq("is_hidden", false)
         .order("created_at")
         .range((page - 1) * limit, page * limit)
-        .like("romaji", kana ? `%${kana}%` : "*");
+        .like("kana", kana ? `%${kana}%` : "*");
 
       if (error) {
         throw new Error(error.message);
@@ -59,9 +59,9 @@ export const adminGlossRouter = router({
       const glossId = input.glossId;
 
       const { data, error } = await ctx.db
-        .from("gloss_sentence")
-        .select("id:sentence_id,...sentences(text,text_with_furigana,en,ru)")
-        .eq("gloss_id", glossId);
+        .rpc("get_sentences_by_gloss_id", { _gi: glossId })
+        .select()
+        .limit(100);
 
       if (error) {
         throw new Error(error.message);
@@ -75,9 +75,7 @@ export const adminGlossRouter = router({
 
       const { data, error } = await ctx.db
         .from("aigloss_sentence")
-        .select(
-          "id:sentence_id,...sentences(text,text_with_furigana,en,ru,source)",
-        )
+        .select("id:sentence_id,...sentences(*)")
         .eq("gloss_id", glossId)
         .limit(100);
 
@@ -260,6 +258,7 @@ export const adminGlossRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      console.log("updateNumber: ", input);
       const { data: currentGloss, error } = await ctx.db
         .from("aiglosses")
         .select()

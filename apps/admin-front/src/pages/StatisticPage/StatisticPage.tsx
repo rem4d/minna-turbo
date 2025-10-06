@@ -11,6 +11,8 @@ import {
 } from "@radix-ui/themes";
 import { useCallback, useState } from "react";
 import { api } from "@/utils/api";
+import { ExternalLinkIcon } from "@radix-ui/react-icons";
+import { openUrl } from "@/utils";
 
 export const StatisticPage = () => {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
@@ -45,6 +47,8 @@ export const StatisticPage = () => {
         return "red";
       case "source4":
         return "orange";
+      case "massif":
+        return "purple";
       default:
         return "ruby";
     }
@@ -56,7 +60,7 @@ export const StatisticPage = () => {
       <ScrollArea scrollbars="vertical" style={{ height: 400, width: "100%" }}>
         <Grid columns="10" gap="4">
           {list?.map((l) => (
-            <Box key={`${l.kanji}-${l.position ?? "N/A"}`}>
+            <Box key={`${l.kanji}-${l.pos ?? "N/A"}`}>
               <Card>
                 <Flex mb="2" gap="2" align="center">
                   <Text className="whitespace-nowrap" size="4">
@@ -65,9 +69,9 @@ export const StatisticPage = () => {
                   <Badge
                     color="cyan"
                     className="cursor-pointer"
-                    onClick={() => onLevelClick(l.position)}
+                    onClick={() => onLevelClick(l.pos)}
                   >
-                    {l.position}
+                    {l.pos}
                   </Badge>
                 </Flex>
                 <Badge color="gray">( {l.cnt} )</Badge>
@@ -94,8 +98,17 @@ export const StatisticPage = () => {
                           __html: s.text_with_furigana ?? "",
                         }}
                       />
-                      <Badge color={"gray"}>{s.level}</Badge>
-                      {/* <Badge color={"gray"}>id {s.id}</Badge> */}
+                      {/* <Badge color={"gray"}>{s.level}</Badge> */}
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => openUrl(`/edit/${s.id}`)}
+                      >
+                        <ExternalLinkIcon
+                          style={{ color: "gray" }}
+                          width="15"
+                          height="15"
+                        />
+                      </div>
                       <Badge color={mapSourceColor(s.source)}>
                         {s.source?.substring(0, 2)}
                       </Badge>
@@ -104,28 +117,6 @@ export const StatisticPage = () => {
                 ))}
               </Flex>
             </Card>
-            {/* <Card mt="6"> */}
-            {/*   <Text>{getSenForLevel.data.additional.length}</Text> */}
-            {/*   <Flex direction="column" className="no-scroll overflow-x-scroll"> */}
-            {/*     {getSenForLevel.data.additional.map((s) => ( */}
-            {/*       <div key={`${s.id}s-r`}> */}
-            {/*         <Flex align="center"> */}
-            {/*           <Text */}
-            {/*             size="2" */}
-            {/*             className="whitespace-nowrap" */}
-            {/*             dangerouslySetInnerHTML={{ */}
-            {/*               __html: s.text_with_furigana ?? "", */}
-            {/*             }} */}
-            {/*           /> */}
-            {/*           <Badge color={"cyan"}>{s.level}</Badge> */}
-            {/*           <Badge color={mapSourceColor(s.source)}> */}
-            {/*             {s.source?.substring(0, 2)} */}
-            {/*           </Badge> */}
-            {/*         </Flex> */}
-            {/*       </div> */}
-            {/*     ))} */}
-            {/*   </Flex> */}
-            {/* </Card> */}
           </Flex>
         </Box>
       )}

@@ -120,14 +120,15 @@ export const adminSentenceRouter = router({
 
       const { data, error } = await ctx.db
         .from("sentences")
-        .select("*, aigloss_sentence(), sentence_member2()")
-        .eq("source", "neocities")
+        .select("*, aigloss_sentence(count), sentence_member2()")
+        .eq("source", "10k")
         .not("aigloss_sentence", "is", null)
         .not("sentence_member2", "is", null)
 
-        // .gt("level", 48)
-        // .lt("level", 500)
+        .gt("level", 90)
+        .lt("level", 500)
         // .lt("unknown_kanji_number", numberOfUnknownKanji)
+        // .order("aigloss_sentence(count)", { ascending: false })
         // .order("level", { ascending: true })
         .range(
           input.page * input.maxPerPage,
@@ -204,6 +205,7 @@ export const adminSentenceRouter = router({
           text_with_furigana: z.string(),
           en: z.string(),
           ru: z.string(),
+          comment: z.string(),
           translation: z.string(),
         }),
       }),

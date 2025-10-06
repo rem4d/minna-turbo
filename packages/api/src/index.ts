@@ -42,9 +42,11 @@ type KanjiInTheSentenceOutput =
 // type GlossOutput = RouterOutputs["viewer"]["sentence"]["glosses"][number];
 
 type AdminGlossOutput = RouterOutputs["admin"]["gloss"]["getGlosses"][number];
+type AdminSentenceOutput = RouterOutputs["admin"]["sentence"]["list"][number];
 
 export { createContext as createTRPCContext, appRouter, createCaller };
 export type {
+  AdminSentenceOutput,
   AppRouter,
   SentenceOutput,
   Member2Output,

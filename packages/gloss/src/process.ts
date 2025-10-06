@@ -60,7 +60,7 @@ export const processSentenceGlosses = async ({
           continue;
         }
         const r = checkSingleGloss({
-          number,
+          number: Number(number),
           dbGlosses,
           gloss,
           comment,
