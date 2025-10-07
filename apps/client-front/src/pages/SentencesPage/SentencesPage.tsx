@@ -130,8 +130,8 @@ export const SentencesPage: FC = () => {
 
   useEffect(() => {
     if (activeIndex === storedList.length - 1) {
-      const ids = storedList.map((l) => l.id);
-      void markAsSeenMutation.mutate({ ids });
+      // const ids = storedList.map((l) => l.id);
+      // void markAsSeenMutation.mutate({ ids });
       void queryClient.invalidateQueries({
         queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
       });
@@ -140,8 +140,8 @@ export const SentencesPage: FC = () => {
     activeIndex,
     storedList,
     markAsSeenMutation,
-    trpc.viewer.sentence.getRandomized,
-    queryClient,
+    // trpc.viewer.sentence.getRandomized,
+    // queryClient,
   ]);
 
   const handlePrevClick = () => {
