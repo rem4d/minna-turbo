@@ -37,6 +37,7 @@ export const getStatementsForLevel = async ({
     .gt("level", clamp(level - shift, 0, level))
     .not("ru", "is", null)
     .not("en", "is", null)
+    .in("source", ["source1", "source2", "source4", "source3", "challenge"])
     .eq("status", "member2_checked")
     .eq("source", "source1")
     .not("tmp", "is", null)

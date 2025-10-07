@@ -44,4 +44,3 @@ out
 *.txt
 *.dump
 *.csv
-postgrestools.json*
