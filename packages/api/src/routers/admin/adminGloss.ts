@@ -61,6 +61,7 @@ export const adminGlossRouter = router({
       const { data, error } = await ctx.db
         .rpc("get_sentences_by_gloss_id", { _gi: glossId })
         .select()
+        .order("id", { ascending: false })
         .limit(100);
 
       if (error) {
@@ -77,13 +78,14 @@ export const adminGlossRouter = router({
         .from("aigloss_sentence")
         .select("id:sentence_id,...sentences(*)")
         .eq("gloss_id", glossId)
+        .order("sentences(created_at)", { ascending: false })
         .limit(100);
 
-      // .order("source");
-
-      if (error) {
-        throw new Error(error.message);
+      if (!data) {
+        console.log(error);
+        throw new Error("No sentences found.");
       }
+
       return data;
     }),
   setHidden: publicProcedure

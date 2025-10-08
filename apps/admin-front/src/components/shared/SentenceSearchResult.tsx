@@ -12,6 +12,7 @@ interface SentenceSearchResultProps {
   text?: string | null;
 }
 
+const show = true;
 export default function SentenceSearchResult({
   id,
   index,
@@ -36,22 +37,29 @@ export default function SentenceSearchResult({
                   __html: html ?? "",
                 }}
               />
-              {/* <Text size="2">{text}</Text> */}
-              <div
-                className="cursor-pointer absolute -right-4 top-2"
-                onClick={() => openUrl(`/edit/${id}`)}
-              >
-                <ExternalLinkIcon
-                  style={{ color: "gray" }}
-                  width="15"
-                  height="15"
-                />
-              </div>
-              {source && <Badge>{source.substring(0, 3)}</Badge>}
+              {show && (
+                <>
+                  <div
+                    className="cursor-pointer absolute -right-4 top-2"
+                    onClick={() => openUrl(`/edit/${id}`)}
+                  >
+                    <ExternalLinkIcon
+                      style={{ color: "gray" }}
+                      width="15"
+                      height="15"
+                    />
+                  </div>
+                  {source && <Badge>{source.substring(0, 3)}</Badge>}
+                </>
+              )}
             </span>
           </Flex>
-          <Text size="2">{ru}</Text>
-          <Text size="2">{en}</Text>
+          {show && (
+            <>
+              <Text size="2">{ru}</Text>
+              <Text size="2">{en}</Text>
+            </>
+          )}
         </Flex>
       </Flex>
     </Box>

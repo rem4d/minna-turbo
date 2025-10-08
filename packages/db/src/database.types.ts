@@ -479,6 +479,7 @@ export type Database = {
           created_at: string
           en: string | null
           id: number
+          is_invalid: boolean
           level: number | null
           ru: string | null
           ruby: string | null
@@ -499,6 +500,7 @@ export type Database = {
           created_at?: string
           en?: string | null
           id?: number
+          is_invalid?: boolean
           level?: number | null
           ru?: string | null
           ruby?: string | null
@@ -519,6 +521,7 @@ export type Database = {
           created_at?: string
           en?: string | null
           id?: number
+          is_invalid?: boolean
           level?: number | null
           ru?: string | null
           ruby?: string | null
@@ -588,6 +591,7 @@ export type Database = {
           created_at: string
           en: string | null
           id: number
+          is_invalid: boolean
           level: number | null
           ru: string | null
           ruby: string | null
@@ -647,6 +651,7 @@ export type Database = {
           created_at: string
           en: string | null
           id: number
+          is_invalid: boolean
           level: number | null
           ru: string | null
           ruby: string | null
