@@ -55,7 +55,7 @@ const GlossaryContent: React.FC<{
               </React.Fragment>
             ))}
           </div>
-          {false && !loadingMembers && (
+          {!loadingMembers && (
             <div>
               <p className="text-md mt-6 mb-3 font-medium">
                 {t("kanji_in_this_sentence")}

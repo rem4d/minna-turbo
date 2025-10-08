@@ -128,21 +128,25 @@ export const SentencesPage: FC = () => {
     }
   }, [list, activeIndex, storedList]);
 
-  useEffect(() => {
-    if (activeIndex === storedList.length - 1) {
-      // const ids = storedList.map((l) => l.id);
-      // void markAsSeenMutation.mutate({ ids });
-      void queryClient.invalidateQueries({
-        queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
-      });
-    }
-  }, [
-    activeIndex,
-    storedList,
-    markAsSeenMutation,
-    // trpc.viewer.sentence.getRandomized,
-    // queryClient,
-  ]);
+  useEffect(
+    () => {
+      if (activeIndex === storedList.length - 1) {
+        // const ids = storedList.map((l) => l.id);
+        // void markAsSeenMutation.mutate({ ids });
+        void queryClient.invalidateQueries({
+          queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
+        });
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      activeIndex,
+      storedList,
+      markAsSeenMutation,
+      // trpc.viewer.sentence.getRandomized,
+      // queryClient,
+    ],
+  );
 
   const handlePrevClick = () => {
     hapticFeedback("light");

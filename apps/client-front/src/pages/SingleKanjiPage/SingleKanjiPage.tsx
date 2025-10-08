@@ -1,6 +1,6 @@
 import type { ExampleOutput } from "@rem4d/api";
 import type { UseQueryResult } from "@tanstack/react-query";
-import React, { Suspense, useEffect, useLayoutEffect, useState } from "react";
+import React, { Suspense, useLayoutEffect, useState } from "react";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import SentenceNavButtons from "@/components/SentenceViewer/SentenceNavButtons";

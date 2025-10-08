@@ -60,7 +60,6 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     ),
   );
 
-  console.log(glosses);
   useEffect(() => {
     setScreen("glossary");
     setIsAskAiClicked(false);
