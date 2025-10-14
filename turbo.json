@@ -16,6 +16,10 @@
       "persistent": true,
       "cache": false
     },
+    "py": {
+      "persistent": true,
+      "cache": false
+    },
     "clean": {
       "cache": false
     },

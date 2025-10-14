@@ -142,19 +142,22 @@ export type Database = {
       }
       gloss_sentence: {
         Row: {
+          end: number
           gloss_id: number
-          position: number
           sentence_id: number
+          start: number
         }
         Insert: {
+          end?: number
           gloss_id?: number
-          position?: number
           sentence_id?: number
+          start?: number
         }
         Update: {
+          end?: number
           gloss_id?: number
-          position?: number
           sentence_id?: number
+          start?: number
         }
         Relationships: [
           {
@@ -175,6 +178,7 @@ export type Database = {
       }
       glosses: {
         Row: {
+          code: string | null
           comment: string | null
           created_at: string
           id: number
@@ -187,6 +191,7 @@ export type Database = {
           tmp: string | null
         }
         Insert: {
+          code?: string | null
           comment?: string | null
           created_at?: string
           id?: number
@@ -199,6 +204,7 @@ export type Database = {
           tmp?: string | null
         }
         Update: {
+          code?: string | null
           comment?: string | null
           created_at?: string
           id?: number

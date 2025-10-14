@@ -6,7 +6,7 @@ import { StatisticPage } from "./pages/StatisticPage";
 import { EditSentencePage } from "./pages/EditSentencePage";
 import { DictionaryPage } from "./pages/DictionaryPage";
 import { FilterListPage } from "./pages/FilterListPage";
-import { GlossesPage } from "./pages/GlossesPage";
+import { GlossesPage, GlossesPage2 } from "./pages/GlossesPage";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: "/glosses",
         element: <GlossesPage />,
+      },
+      {
+        path: "/glosses2",
+        element: <GlossesPage2 />,
       },
     ],
   },

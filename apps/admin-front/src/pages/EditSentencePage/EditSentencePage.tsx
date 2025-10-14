@@ -22,7 +22,6 @@ import Speakers from "@/components/Speakers";
 import { Player } from "@/components/Player";
 import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
 import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
-import useAiMembers from "@/hooks/mistral/useAiMembers";
 import GrammarGlosses from "./GrammarGlosses";
 
 export const EditSentencePage: FC = () => {
@@ -37,8 +36,6 @@ export const EditSentencePage: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // const aiMembers = useAiMembers(input);
-
   const { data: sentence } = api.admin.sentence.getById.useQuery(Number(id), {
     enabled: !!id,
   });
@@ -49,6 +46,14 @@ export const EditSentencePage: FC = () => {
       enabled: !!sentence?.id,
     },
   );
+
+  const { data: glosses2, isLoading: glossesLoading } =
+    api.admin.sentence.glosses2.useQuery(
+      { id: sentence?.id ?? 0 },
+      {
+        enabled: !!sentence?.id,
+      },
+    );
 
   const { data: kanjisInTheSentence } =
     api.admin.member.sentenceKanjis.useQuery(
@@ -185,6 +190,22 @@ export const EditSentencePage: FC = () => {
     }
   };
 
+  const grammarifyMutation = api.admin.gloss.grammarify.useMutation({
+    onSuccess() {
+      toast.success("Successfully grammarified.");
+      void utils.admin.sentence.glosses2.invalidate();
+    },
+    onError(msg) {
+      toast.error(JSON.stringify(msg.message.slice(0, 100)));
+    },
+  });
+
+  const onGrammarifyClick = () => {
+    if (sentence && sentence.id) {
+      grammarifyMutation.mutate({ sentenceId: sentence.id });
+    }
+  };
+
   return (
     <Box>
       <Flex align="center" mr="5">
@@ -280,8 +301,27 @@ export const EditSentencePage: FC = () => {
                   </DataList.Value>
                 </DataList.Item>
               </DataList.Root>
+              <Box mt="8">
+                <Button onClick={onGrammarifyClick}>Grammarify</Button>
+                <Box mt="4">
+                  {glossesLoading && <Spinner />}
+                  {glosses2 &&
+                    glosses2.length > 0 &&
+                    glosses2.map((g) => (
+                      <Flex gap="2" key={g.id}>
+                        <Text weight="bold" size="2">
+                          {g.kana}
+                        </Text>
+                        <Text size="2">{g.comment}</Text>
+                      </Flex>
+                    ))}
+                  {!glossesLoading && glosses2 && glosses2.length === 0 && (
+                    <Text>No glosses found.</Text>
+                  )}
+                </Box>
+              </Box>
             </Flex>
-            <Flex direction="column" gap="4">
+            <Flex direction="column" gap="4" className="">
               <Box>
                 <Heading size="5">Translation</Heading>
                 <TextArea

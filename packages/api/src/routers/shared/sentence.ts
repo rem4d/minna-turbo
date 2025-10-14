@@ -82,4 +82,18 @@ export const sentenceRouter = router({
 
       return data;
     }),
+  glosses2: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const { data, error } = await ctx.db
+        .from("gloss_sentence")
+        .select("*, ...glosses(id,code,kana,comment,is_hidden)")
+        .eq("sentence_id", Number(input.id));
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return data;
+    }),
 });

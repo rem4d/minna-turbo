@@ -28,6 +28,30 @@ export const adminGlossRouter = router({
 
       return data;
     }),
+  getGlosses2: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().gt(0),
+        page: z.number(),
+        kana: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { page, limit, kana } = input;
+      const { data, error } = await ctx.db
+        .from("glosses")
+        .select("*")
+        .eq("is_hidden", false)
+        .order("code")
+        .not("code", "is", null)
+        .range((page - 1) * limit, page * limit);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return data;
+    }),
   getAllGlosses: publicProcedure.mutation(async ({ ctx }) => {
     const { data, error } = await ctx.db
       .from("glosses")
@@ -43,8 +67,8 @@ export const adminGlossRouter = router({
   glossesTotal: publicProcedure.query(async ({ ctx }) => {
     const { count: total, error } = await ctx.db
       .from("glosses")
-      .select("*,gloss_sentence()", { count: "exact" })
-      // .not("gloss_sentence", "is", null)
+      .select("*", { count: "exact" })
+      .not("code", "is", null)
       .eq("is_hidden", false);
 
     if (error) {
@@ -302,6 +326,79 @@ export const adminGlossRouter = router({
         throw new Error(errorUpdate.message);
       }
 
+      return true;
+    }),
+  grammarify: publicProcedure
+    .input(z.object({ sentenceId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const { data: sentence, error } = await ctx.db
+        .from("sentences")
+        .select("*")
+        .eq("id", input.sentenceId)
+        .single();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (!sentence || !sentence?.text) {
+        throw new Error("No sentence found.");
+      }
+      const { data: dbGlosses, error: dbError } = await ctx.db
+        .from("glosses")
+        .select("*")
+        .eq("is_hidden", false);
+
+      if (dbError || !dbGlosses) {
+        throw new Error("No glosses found");
+      }
+
+      const res = await fetch(
+        "http://127.0.0.1:5000/gen?text=" + sentence.text,
+      );
+      if (!res.ok) {
+        throw new Error("Failed to fetch response");
+      }
+      const response = (await res.json()) as unknown as {
+        gloss: string;
+        start: number;
+        end: number;
+      }[];
+
+      const bulks = [];
+
+      for (const gloss of response) {
+        const foundGloss = dbGlosses.find((g) => g.code === gloss.gloss);
+
+        if (!foundGloss || error) {
+          console.log(gloss.gloss);
+          throw new Error("No gloss found");
+        }
+
+        bulks.push({
+          sentence_id: sentence.id,
+          gloss_id: foundGloss.id,
+          start: gloss.start,
+          end: gloss.end,
+        });
+      }
+
+      const { error: errDelete } = await ctx.db
+        .from("gloss_sentence")
+        .delete()
+        .eq("sentence_id", sentence.id);
+
+      if (errDelete) {
+        throw new Error(errDelete.message);
+      }
+
+      const { error: errorBulk } = await ctx.db
+        .from("gloss_sentence")
+        .insert(bulks);
+
+      if (errorBulk) {
+        throw new Error(errorBulk.message);
+      }
       return true;
     }),
 });
