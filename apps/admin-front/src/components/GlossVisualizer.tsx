@@ -44,13 +44,14 @@ const makeSpans = (text: string, glosses: Gloss[]) => {
 
   for (let i = 0; i < arr.length; i++) {
     if (arr[i]) {
-      if (map.has(arr[i].code)) {
-        map.set(arr[i].code, {
-          start: map.get(arr[i].code)!.start,
+      const k = `${arr[i].start}.${arr[i].end}`;
+      if (map.has(k)) {
+        map.set(k, {
+          start: map.get(k)!.start,
           end: i + 1,
         });
       } else {
-        map.set(arr[i].code, { start: i, end: i + 1 });
+        map.set(k, { start: i, end: i + 1 });
       }
     }
   }
@@ -64,11 +65,11 @@ const makeSpans = (text: string, glosses: Gloss[]) => {
       result.push(text[i]);
     } else {
       const node = arr[i];
-      const recNode = map.get(node.code);
-
       if (!node) {
         throw new Error("Node not found");
       }
+      const k = `${node.start}.${node.end}`;
+      const recNode = map.get(k);
 
       result.push(
         <span
@@ -89,7 +90,7 @@ const makeSpans = (text: string, glosses: Gloss[]) => {
             node.code === "DAKE_DE_WA_NAKU" && "text-yellow-700",
             node.code === "DAROU/DESYOU" && "text-blue-600",
             node.code === "DAROU_KA/DESYOU_KA" && "bg-gray-300",
-            node.code === "DASU" && "bg-gray-300",
+            node.code === "DASU" && "text-pink-400",
             node.code === "DOROU_GA-DAROU_GA/DOROU_TA-DAROU_TA" &&
               "text-yellow-500",
             node.code === "DOU" && "text-cyan-700",
@@ -153,6 +154,9 @@ const makeSpans = (text: string, glosses: Gloss[]) => {
             node.code === "TOKORO_DA" && "text-pink-600",
             node.code === "TO_OMOU" && "text-sky-500",
             node.code === "DOU_MO" && "text-cyan-700",
+            node.code === "MORAU_TE" && "text-cyan-700",
+            node.code === "KARA_TE" && "text-lime-600",
+            node.code === "KARA" && "text-lime-600",
             getColor(node.code),
           )}
         >
@@ -250,6 +254,9 @@ const getColor = (code: Code | undefined) => {
     TOKORO_DA: "text-purple-500",
     TO_OMOU: "text-purple-500",
     DOU_MO: "text-purple-500",
+    MORAU_TE: "text-purple-500",
+    KARA_TE: "text-purple-500",
+    KARA: "text-purple-500",
   };
 
   if (!colors[code]) {

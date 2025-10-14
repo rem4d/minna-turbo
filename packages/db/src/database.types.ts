@@ -143,20 +143,26 @@ export type Database = {
       gloss_sentence: {
         Row: {
           end: number
-          gloss_id: number
-          sentence_id: number
+          gloss_id: number | null
+          id: number
+          position: number
+          sentence_id: number | null
           start: number
         }
         Insert: {
           end?: number
-          gloss_id?: number
-          sentence_id?: number
+          gloss_id?: number | null
+          id?: number
+          position?: number
+          sentence_id?: number | null
           start?: number
         }
         Update: {
           end?: number
-          gloss_id?: number
-          sentence_id?: number
+          gloss_id?: number | null
+          id?: number
+          position?: number
+          sentence_id?: number | null
           start?: number
         }
         Relationships: [
