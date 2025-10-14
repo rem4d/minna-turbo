@@ -23,6 +23,7 @@ import { Player } from "@/components/Player";
 import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
 import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
 import GrammarGlosses from "./GrammarGlosses";
+import { GlossVisualizer } from "@/components/GlossVisualizer";
 
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
@@ -62,13 +63,6 @@ export const EditSentencePage: FC = () => {
         enabled: !!sentence?.id,
       },
     );
-
-  const { data: gptGlosses } = api.admin.sentence.gptGlosses.useQuery(
-    { id: sentence?.id ?? 0 },
-    {
-      enabled: !!sentence?.id,
-    },
-  );
 
   const utils = api.useUtils();
 
@@ -199,6 +193,7 @@ export const EditSentencePage: FC = () => {
       toast.error(JSON.stringify(msg.message.slice(0, 100)));
     },
   });
+  const showGrammarSpinner = glossesLoading || grammarifyMutation.isPending;
 
   const onGrammarifyClick = () => {
     if (sentence && sentence.id) {
@@ -304,8 +299,9 @@ export const EditSentencePage: FC = () => {
               <Box mt="8">
                 <Button onClick={onGrammarifyClick}>Grammarify</Button>
                 <Box mt="4">
-                  {glossesLoading && <Spinner />}
-                  {glosses2 &&
+                  {showGrammarSpinner && <Spinner />}
+                  {!showGrammarSpinner &&
+                    glosses2 &&
                     glosses2.length > 0 &&
                     glosses2.map((g) => (
                       <Flex gap="2" key={g.id}>
@@ -313,11 +309,15 @@ export const EditSentencePage: FC = () => {
                           {g.kana}
                         </Text>
                         <Text size="2">{g.comment}</Text>
+                        <Text size="2">
+                          {g.start},{g.end}
+                        </Text>
                       </Flex>
                     ))}
-                  {!glossesLoading && glosses2 && glosses2.length === 0 && (
+                  {!showGrammarSpinner && glosses2 && glosses2.length === 0 && (
                     <Text>No glosses found.</Text>
                   )}
+                  <GlossVisualizer text={sentence.text} glosses={glosses2} />
                 </Box>
               </Box>
             </Flex>
@@ -456,25 +456,6 @@ export const EditSentencePage: FC = () => {
               ))}
             </Flex>
           </Box>
-          <section>
-            <Heading size="5">gpt grammar</Heading>
-            <Box className="w-[70%]">
-              <Grid columns="4" my="8" gap="2" className="">
-                {gptGlosses?.map((a) => (
-                  <Fragment key={a.id}>
-                    <Text size="2" color="gray">
-                      {a.gloss_id}
-                    </Text>
-                    <Text size="3">{a.kana}</Text>
-                    <Text size="3">{a.comment}</Text>
-                    <Text size="2" color="gray">
-                      {a.number ?? "N/A"}
-                    </Text>
-                  </Fragment>
-                ))}
-              </Grid>
-            </Box>
-          </section>
 
           <div>
             <Button
