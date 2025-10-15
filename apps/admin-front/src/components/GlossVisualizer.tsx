@@ -29,6 +29,7 @@ const makeSpans = (text: string, glosses: Gloss[]) => {
   const arr: Gloss[] = [];
 
   for (const gloss of glosses) {
+    // console.log(`Processing gloss: ${gloss.code}`);
     for (let i = gloss.start; i < gloss.end; i++) {
       if (!arr[i]) {
         arr[i] = {
@@ -60,6 +61,7 @@ const makeSpans = (text: string, glosses: Gloss[]) => {
   console.log(arr);
 
   console.log(map);
+
   for (let i = 0; i < text.length; i++) {
     if (!arr[i]) {
       result.push(text[i]);
@@ -70,6 +72,13 @@ const makeSpans = (text: string, glosses: Gloss[]) => {
       }
       const k = `${node.start}.${node.end}`;
       const recNode = map.get(k);
+
+      if (!recNode) {
+        console.log("No recNode");
+        throw new Error("No recNode");
+      }
+
+      i = recNode.end - 1;
 
       result.push(
         <span
@@ -121,31 +130,31 @@ const makeSpans = (text: string, glosses: Gloss[]) => {
             node.code === "KOTO_NI_NARU" && "text-green-500",
             node.code === "KOTO_NI_SURU" && "text-green-500",
             node.code === "KOTO_NOM" && "text-green-500",
-            node.code === "KUDASAI" && "text-rose-600",
+            node.code === "KUDASAI" && "text-rose-400",
             node.code === "KURAI" && "text-emerald-700",
             node.code === "KURERU_TE" && "text-orange-500",
-            node.code === "MAE_NI" && "bg-gray-300",
+            node.code === "MAE_NI" && "text-orange-600",
             node.code === "MAMA" && "bg-gray-300",
             node.code === "MASHOU" && "text-pink-800",
             node.code === "MASHOU_KA" && "text-pink-600",
-            node.code === "MIERU" && "bg-gray-300",
+            node.code === "MIERU" && "text-blue-500",
             node.code === "MIRU" && "text-amber-700",
             node.code === "MO_MO" && "bg-gray-300",
-            node.code === "MONO_DA" && "bg-gray-300",
-            node.code === "NADO" && "bg-gray-300",
-            node.code === "NAGARA" && "bg-gray-300",
+            node.code === "MONO_DA" && "text-red-500",
+            node.code === "NADO" && "text-amber-600",
+            node.code === "NAGARA" && "text-rose-500",
             node.code === "NAI_DE" && "text-green-500",
             node.code === "NAKEREBA_NARANAI" && "text-pink-700",
-            node.code === "NAKU_NARU" && "bg-gray-300",
+            node.code === "NAKU_NARU" && "text-cyan-600",
             node.code === "NAKUTE" && "text-emerald-700",
-            node.code === "NARA" && "bg-gray-300",
-            node.code === "NASAI" && "bg-gray-300",
+            node.code === "NARA" && "text-cyan-700",
+            node.code === "NASAI" && "text-cyan-500",
             node.code === "N_DESU" && "text-sky-600",
-            node.code === "NIKUI" && "bg-gray-300",
-            node.code === "NI_SHITE_WA" && "bg-gray-300",
+            node.code === "NIKUI" && "text-cyan-500",
+            node.code === "NI_SHITE_WA" && "text-rose-400",
             node.code === "NODE" && "text-purple-600",
-            node.code === "NONI" && "bg-gray-300",
-            node.code === "OKU" && "text-blue-500",
+            node.code === "NONI" && "text-purple-500",
+            node.code === "OKU" && "text-purple-500",
             node.code === "RASHII" && "text-purple-600",
             node.code === "SA" && "bg-gray-300",
             node.code === "SASERU" && "text-pink-600",
@@ -157,13 +166,32 @@ const makeSpans = (text: string, glosses: Gloss[]) => {
             node.code === "MORAU_TE" && "text-cyan-700",
             node.code === "KARA_TE" && "text-lime-600",
             node.code === "KARA" && "text-lime-600",
+            node.code === "TO_IU_NO_WA" && "text-blue-600",
+            node.code === "TEMO" && "text-blue-600",
+            node.code === "TEMO_II" && "text-red-600",
+            node.code === "NAKUTE_MO_II" && "text-orange-400",
+            node.code === "SHIKA" && "text-emerald-600",
+            node.code === "TE_FORM" && "text-red-600",
+            node.code === "IRU_TE" && "text-red-600",
+            node.code === "YOU_NI" && "text-red-600",
+            node.code === "YOU_NI_SURU" && "text-sky-600",
+            node.code === "YOU_NI_NARU" && "text-sky-600",
+            node.code === "YOU_NI_IU" && "text-sky-600",
+            node.code === "TARA" && "text-pink-600",
+            node.code === "TARA_DOU_DESU_KA" && "text-pink-600",
+            node.code === "KURU_TE" && "text-pink-500",
+            node.code === "KURU_TE" && "text-pink-500",
+            node.code === "TARI_TARI" && "text-pink-500",
+            node.code === "ITADAKU" && "text-yellow-600",
+            node.code === "DEMO" && "text-green-700",
+            node.code === "NAN_DEMO" && "text-green-700",
+            node.code === "DAKE_POTENTIAL" && "text-green-700",
             getColor(node.code),
           )}
         >
           {text.slice(recNode?.start, recNode?.end)}
         </span>,
       );
-      i = node.end - 1;
     }
   }
 
@@ -257,6 +285,25 @@ const getColor = (code: Code | undefined) => {
     MORAU_TE: "text-purple-500",
     KARA_TE: "text-purple-500",
     KARA: "text-purple-500",
+    TO_IU_NO_WA: "text-purple-500",
+    TEMO: "text-purple-500",
+    TEMO_II: "text-purple-500",
+    NAKUTE_MO_II: "text-purple-500",
+    SHIKA: "text-purple-500",
+    TE_FORM: "text-purple-500",
+    IRU_TE: "text-purple-500",
+    YOU_NI: "text-purple-500",
+    YOU_NI_SURU: "text-purple-500",
+    YOU_NI_NARU: "text-purple-500",
+    YOU_NI_IU: "text-purple-500",
+    TARA: "text-purple-500",
+    TARA_DOU_DESU_KA: "text-purple-500",
+    KURU_TE: "text-purple-500",
+    TARI_TARI: "text-purple-500",
+    ITADAKU: "text-purple-500",
+    DEMO: "text-purple-500",
+    NAN_DEMO: "text-purple-500",
+    DAKE_POTENTIAL: "text-purple-500",
   };
 
   if (!colors[code]) {

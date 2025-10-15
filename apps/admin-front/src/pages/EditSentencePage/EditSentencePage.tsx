@@ -305,7 +305,11 @@ export const EditSentencePage: FC = () => {
                     glosses2.length > 0 &&
                     glosses2.map((g) => (
                       <Flex gap="2" key={g.id}>
-                        <Text weight="bold" size="2">
+                        <Text
+                          weight="bold"
+                          size="2"
+                          className="whitespace-nowrap"
+                        >
                           {g.kana}
                         </Text>
                         <Text size="2">{g.comment}</Text>
