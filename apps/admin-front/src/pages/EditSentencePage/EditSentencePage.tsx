@@ -424,7 +424,7 @@ export const EditSentencePage: FC = () => {
                       {/*   }} */}
                       {/* /> */}
                       <Text size="1">{m.reading}</Text>
-                      <Text className="select-none" size="6">
+                      <Text className="" size="6">
                         {m.pos === "auxiliary verb" || m.pos === "auxiliary" ? (
                           <>
                             {m.original} <Text size="2">({m.basic_form})</Text>

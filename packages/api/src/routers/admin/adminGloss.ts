@@ -28,30 +28,20 @@ export const adminGlossRouter = router({
 
       return data;
     }),
-  getGlosses2: publicProcedure
-    .input(
-      z.object({
-        limit: z.number().gt(0),
-        page: z.number(),
-        kana: z.string().optional(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const { page, limit, kana } = input;
-      const { data, error } = await ctx.db
-        .from("glosses")
-        .select("*")
-        .eq("is_hidden", false)
-        .order("code")
-        .not("code", "is", null)
-        .range((page - 1) * limit, page * limit);
+  getGlosses2: publicProcedure.query(async ({ ctx }) => {
+    const { data, error } = await ctx.db
+      .from("glosses")
+      .select("*")
+      .eq("is_hidden", false)
+      .order("code")
+      .not("code", "is", null);
 
-      if (error) {
-        throw new Error(error.message);
-      }
+    if (error) {
+      throw new Error(error.message);
+    }
 
-      return data;
-    }),
+    return data;
+  }),
   getAllGlosses: publicProcedure.mutation(async ({ ctx }) => {
     const { data, error } = await ctx.db
       .from("glosses")
@@ -83,9 +73,10 @@ export const adminGlossRouter = router({
       const glossId = input.glossId;
 
       const { data, error } = await ctx.db
-        .rpc("get_sentences_by_gloss_id", { _gi: glossId })
-        .select()
-        .order("id", { ascending: false })
+        .from("gloss_sentence")
+        .select("id:sentence_id,...sentences(*)")
+        .eq("gloss_id", glossId)
+        .order("sentences(created_at)", { ascending: false })
         .limit(100);
 
       if (error) {

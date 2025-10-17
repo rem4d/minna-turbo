@@ -20,11 +20,7 @@ export default function GlossTable({
     <Table.Root size="2" variant="ghost">
       <Table.Header>
         <Table.Row>
-          <Table.ColumnHeaderCell>
-            <Text color="gray" size="1">
-              id
-            </Text>
-          </Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell></Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell className="whitespace-nowrap">
             <Text color="gray" size="1">
               code
@@ -51,7 +47,7 @@ export default function GlossTable({
       </Table.Header>
 
       <Table.Body>
-        {glossesData?.map((gloss) => (
+        {glossesData?.map((gloss, index) => (
           <Table.Row
             key={gloss.id}
             className={twMerge(
@@ -62,7 +58,7 @@ export default function GlossTable({
           >
             <Table.Cell className="whitespace-nowrap">
               <div className="whitespace-nowrap text-xs text-gray-500">
-                {gloss.id}
+                {index + 1}
               </div>
             </Table.Cell>
             <Table.Cell>
