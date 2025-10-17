@@ -344,9 +344,7 @@ export const adminGlossRouter = router({
         throw new Error("No glosses found");
       }
 
-      const res = await fetch(
-        "http://127.0.0.1:5000/gen?text=" + sentence.text,
-      );
+      const res = await fetch("http://127.0.0.1:5000?text=" + sentence.text);
       if (!res.ok) {
         throw new Error("Failed to fetch response");
       }

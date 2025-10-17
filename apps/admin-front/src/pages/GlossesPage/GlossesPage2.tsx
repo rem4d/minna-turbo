@@ -38,7 +38,10 @@ export default function GlossesPage2() {
                     className="hover:bg-gray-500/10 py-2 px-2 cursor-pointer"
                     onClick={() => onTableGlossClick(gloss.id)}
                   >
-                    <Grid gap="2" columns="1fr 1.2fr 2fr 1fr">
+                    <Grid gap="2" columns="0.3fr 1fr 1.2fr 2fr 1fr">
+                      <Text size="1" color="gray">
+                        {index + 1}
+                      </Text>
                       <Text size="1" weight="bold">
                         {gloss.code}
                       </Text>
@@ -54,7 +57,7 @@ export default function GlossesPage2() {
             )}
           </ScrollAreaFn>
         </div>
-        <ScrollAreaFn>
+        <div>
           <Flex direction="column" gap="4">
             {sentencesLoading && <Spinner />}
             {aiSentences && (
@@ -77,7 +80,7 @@ export default function GlossesPage2() {
               />
             ))}
           </Flex>
-        </ScrollAreaFn>
+        </div>
       </div>
     </section>
   );

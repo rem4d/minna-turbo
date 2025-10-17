@@ -116,17 +116,14 @@ export const adminSentenceRouter = router({
   list: publicProcedure
     .input(z.object({ maxPerPage: z.number().gt(0), page: z.number() }))
     .query(async ({ ctx, input }) => {
-      // const numberOfUnknownKanji = 3;
-
       const { data, error } = await ctx.db
         .from("sentences")
-        .select("*, aigloss_sentence(count), sentence_member2()")
+        .select("*, gloss_sentence()")
         .eq("source", "10k")
-        .not("aigloss_sentence", "is", null)
-        .not("sentence_member2", "is", null)
-
-        .gt("level", 90)
+        .not("gloss_sentence", "is", null)
+        .gt("level", 0)
         .lt("level", 500)
+        .like("text", "%あげ%")
         // .lt("unknown_kanji_number", numberOfUnknownKanji)
         // .order("aigloss_sentence(count)", { ascending: false })
         // .order("level", { ascending: true })
