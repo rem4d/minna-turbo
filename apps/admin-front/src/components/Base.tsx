@@ -59,12 +59,6 @@ export function Base() {
           >
             Glosses
           </TabNav.Link>
-          <TabNav.Link
-            onClick={() => navigate("/glosses2")}
-            active={Boolean(glosses2Match)}
-          >
-            Glosses2
-          </TabNav.Link>
         </TabNav.Root>
         <div
           className="size-[32px] hover:bg-gray-400/10 rounded-sm relative"

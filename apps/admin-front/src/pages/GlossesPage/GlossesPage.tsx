@@ -1,249 +1,94 @@
 import SentenceSearchResult from "@/components/shared/SentenceSearchResult";
 import { api } from "@/utils/api";
-import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
-import {
-  Box,
-  Flex,
-  Grid,
-  IconButton,
-  Text,
-  TextField,
-  Spinner,
-  Button,
-} from "@radix-ui/themes";
+import { Box, Flex, Grid, Text, Spinner } from "@radix-ui/themes";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { PropsWithChildren, useState } from "react";
-import AITable from "./AITable";
-import GlossTable from "./GlossTable";
-import toast from "react-hot-toast";
-import { useDebounce } from "@uidotdev/usehooks";
-import { AdminSentenceOutput } from "@rem4d/api";
+import { PropsWithChildren, useCallback } from "react";
 
-type AiGlossOutput = {
-  id: number;
-  kana: string | null;
-  comment: string | null;
-  number: number | null;
-  cnt?: number | null;
-};
-
-export default function GlossesPage() {
-  const [pageNumber, setPageNumber] = useState(1);
-  const [currentGlossId, setCurrentGlossId] = useState<number | null>(null);
-  const [currentAIGlossId, setCurrentAIGlossId] = useState<number | null>(null);
-  const [regexFieldValue, setRegexFieldValue] = useState("");
-  const [aiGlosses, setAiGlosses] = useState<AiGlossOutput[]>([]);
-  const [glossesFilterValue, setGlossesFilterValue] = useState("");
-  const debouncedValue = useDebounce(glossesFilterValue, 500);
-  const [sentences, setSentences] = useState<AdminSentenceOutput[]>([]);
-
-  const MAX_PER_PAGE = 20;
+export default function GlossesPage2() {
   const { data: glossesData, isLoading: glossesLoading } =
-    api.admin.gloss.getGlosses.useQuery({
-      limit: MAX_PER_PAGE,
-      page: pageNumber,
-      kana: debouncedValue,
-    });
+    api.admin.gloss.getGlosses2.useQuery();
 
-  const findAiSentences = api.admin.gloss.ai_getSentencesByGloss.useMutation({
-    onSuccess(data) {
-      setSentences(data);
-    },
-  });
-  const findNormalGlossSentences =
-    api.admin.gloss.getSentencesByGloss.useMutation({
-      onSuccess(data) {
-        // setSentences(data);
-      },
-    });
+  const findSentencesMutation =
+    api.admin.gloss.getSentencesByGloss.useMutation();
 
-  const findByRegexMutation = api.admin.gloss.findByRegex.useMutation({
-    onSuccess(data) {
-      setAiGlosses(data);
-    },
-  });
-  const createMutation = api.admin.gloss.createGloss.useMutation({
-    onSuccess() {
-      void utils.admin.gloss.getGlosses.invalidate();
-      toast.success("Successfully created.");
-    },
-  });
+  const sentencesLoading = findSentencesMutation.isPending;
+  const aiSentences = findSentencesMutation.data ?? [];
+  const showTable = !glossesLoading && glossesData && glossesData.length > 0;
 
-  const connectGlosses = api.admin.gloss.connectGlosses.useMutation({
-    onSuccess() {
-      toast.success("Successfully connected.");
-      findByRegexMutation.mutate({ regex: regexFieldValue });
-    },
-  });
-
-  const findByGlossIdMutation = api.admin.gloss.findByGlossId.useMutation({
-    onSuccess(data) {
-      setAiGlosses(data);
-    },
-  });
-
-  const aiGlossesPending =
-    findByRegexMutation.isPending || findByGlossIdMutation.isPending;
-
-  const utils = api.useUtils();
-  const { data: total } = api.admin.gloss.glossesTotal.useQuery();
-
-  const sentencesLoading =
-    findAiSentences.isPending || findNormalGlossSentences.isPending;
-
-  const setHiddenMutation = api.admin.gloss.setHidden.useMutation({
-    onSuccess() {
-      toast.success("Success.");
-      findByRegexMutation.mutate({ regex: regexFieldValue });
-    },
-  });
-
-  const onAiGlossClick = (id: number) => {
-    setCurrentAIGlossId(id);
-    void findAiSentences.mutate({
-      glossId: id,
-    });
-  };
-
-  const onTableGlossClick = (id: number) => {
-    setCurrentGlossId(id);
-    setCurrentAIGlossId(null);
-    const found = glossesData?.find((g) => g.id === id);
-    // setRegexFieldValue(found?.kana?.slice(1) ?? "");
-    void findByGlossIdMutation.mutate({ glossId: id });
-    void findNormalGlossSentences.mutate({ glossId: id });
-  };
-
-  const onFindSimilarAis = () => {
-    findByRegexMutation.mutate({ regex: regexFieldValue });
-  };
-
-  const onCreateGlossClick = (id: number) => {
-    createMutation.mutate({ id });
-    console.log("Create gloss with id: ", id);
-  };
-
-  const onConnectWithSelectedClick = (id: number) => {
-    if (!currentGlossId) {
-      toast.error("No selected gloss id.");
-      return;
-    }
-    connectGlosses.mutate({ glossId: currentGlossId, aiGlossId: id });
-    console.log("Connect with selected gloss: ", id);
-  };
-
-  const onSetHiddenClick = (id: number) => {
-    setHiddenMutation.mutate(id);
-  };
-  const aiSentences = findAiSentences.data ?? [];
+  const onTableGlossClick = useCallback((id: number) => {
+    findSentencesMutation.mutate({ glossId: id });
+  }, []);
 
   return (
     <section>
-      <Grid mb="8" columns="2" gap="4">
+      <div>
         <Box>
-          <Flex gap="2" align="center" justify="start">
-            <Flex gap="2">
-              <IconButton
-                onClick={() => setPageNumber(pageNumber - 1)}
-                disabled={pageNumber === 1}
-              >
-                <ArrowLeftIcon width="18" height="18" />
-              </IconButton>
-              <IconButton
-                onClick={() => setPageNumber(pageNumber + 1)}
-                disabled={glossesData && glossesData.length < MAX_PER_PAGE}
-              >
-                <ArrowRightIcon width="18" height="18" />
-              </IconButton>
-
-              <Flex align="center" gap="2"></Flex>
-            </Flex>
-            <Flex>
-              <Text size="1" color="gray">
-                {pageNumber * MAX_PER_PAGE} /{total}
-              </Text>
-            </Flex>
-            <TextField.Root
-              onChange={(e) => setGlossesFilterValue(e.target.value)}
-              value={glossesFilterValue}
-              placeholder="Search..."
-            />
-          </Flex>
           {glossesLoading && <Spinner />}
           {!glossesLoading && glossesData?.length === 0 && (
             <Text>No glosses found.</Text>
           )}
         </Box>
-        <Box>
-          <Flex gap="2">
-            <TextField.Root
-              onChange={(e) => setRegexFieldValue(e.target.value)}
-              value={regexFieldValue}
-              placeholder="Search..."
-            />
-            <Button onClick={onFindSimilarAis}>Search</Button>
+        <div className="">
+          <ScrollAreaFn>
+            {showTable && (
+              <div className="flex flex-col divide-y divide-gray-200">
+                {glossesData.map((gloss, index) => (
+                  <div
+                    key={gloss.id}
+                    className="hover:bg-gray-500/10 py-2 px-2 cursor-pointer"
+                    onClick={() => onTableGlossClick(gloss.id)}
+                  >
+                    <Grid gap="2" columns="0.3fr 1fr 1.2fr 2fr 1fr">
+                      <Text size="1" color="gray">
+                        {index + 1}
+                      </Text>
+                      <Text size="1" weight="bold">
+                        {gloss.code}
+                      </Text>
+                      <Text size="1" className="whitespace-nowrap">
+                        {gloss.kana}
+                      </Text>
+                      <Text size="1">{gloss.comment}</Text>
+                      <Text size="1">{gloss.ref}</Text>
+                    </Grid>
+                  </div>
+                ))}
+              </div>
+            )}
+          </ScrollAreaFn>
+        </div>
+        <div>
+          <Flex direction="column" gap="4">
+            {sentencesLoading && <Spinner />}
+            {aiSentences && (
+              <Flex direction="column" gap="1">
+                <Text size="1">
+                  <Text size="2">{aiSentences.length}</Text> sentences found.
+                </Text>
+              </Flex>
+            )}
+            {aiSentences.map((s, index) => (
+              <SentenceSearchResult
+                key={s.id}
+                text={s.text}
+                id={s.id}
+                index={index}
+                html={s.text_with_furigana}
+                ru={s.ru}
+                en={s.en}
+                source={s.source}
+              />
+            ))}
           </Flex>
-          {aiGlossesPending && <Spinner />}
-          {!aiGlossesPending && (
-            <Flex direction="column" gap="1">
-              <Text size="1">
-                <Text size="2">{aiGlosses.length}</Text> AI glosses found.
-              </Text>
-            </Flex>
-          )}
-        </Box>
-        <ScrollAreaFn>
-          {!glossesLoading && glossesData && glossesData.length > 0 && (
-            <GlossTable
-              glossesData={glossesData}
-              currentGlossId={currentGlossId}
-              onTableGlossClick={onTableGlossClick}
-            />
-          )}
-        </ScrollAreaFn>
-        <ScrollAreaFn>
-          {!aiGlossesPending && (
-            <AITable
-              glossesData={aiGlosses}
-              currentGlossId={currentAIGlossId}
-              currentLeftTableGlossId={currentGlossId}
-              onTableGlossClick={onAiGlossClick}
-              onCreateGlossClick={onCreateGlossClick}
-              onConnectWithSelected={onConnectWithSelectedClick}
-              onSetHiddenClick={onSetHiddenClick}
-            />
-          )}
-        </ScrollAreaFn>
-      </Grid>
-      <Flex direction="column" gap="4">
-        {sentencesLoading && <Spinner />}
-        {aiSentences && (
-          <Flex direction="column" gap="1">
-            <Text size="1">
-              <Text size="2">{aiSentences.length}</Text> sentences found.
-            </Text>
-          </Flex>
-        )}
-        {aiSentences.map((s, index) => (
-          <SentenceSearchResult
-            key={s.id}
-            text={s.text}
-            id={s.id}
-            index={index}
-            html={s.text_with_furigana}
-            ru={s.ru}
-            en={s.en}
-            source={s.source}
-          />
-        ))}
-      </Flex>
+        </div>
+      </div>
     </section>
   );
 }
 
 const ScrollAreaFn = ({ children }: PropsWithChildren) => {
   return (
-    <ScrollArea.Root className="w-full h-[600px] relative overflow-hidden">
+    <ScrollArea.Root className="w-full h-[500px] relative overflow-hidden">
       <ScrollArea.Viewport className="size-full">
         {children}
       </ScrollArea.Viewport>
