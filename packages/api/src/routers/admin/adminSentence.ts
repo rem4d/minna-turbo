@@ -119,11 +119,10 @@ export const adminSentenceRouter = router({
       const { data, error } = await ctx.db
         .from("sentences")
         .select("*, gloss_sentence()")
-        .eq("source", "10k")
         .not("gloss_sentence", "is", null)
         .gt("level", 0)
         .lt("level", 500)
-        .like("text", "%あげ%")
+        // .like("text", `%間%`)
         // .lt("unknown_kanji_number", numberOfUnknownKanji)
         // .order("aigloss_sentence(count)", { ascending: false })
         // .order("level", { ascending: true })

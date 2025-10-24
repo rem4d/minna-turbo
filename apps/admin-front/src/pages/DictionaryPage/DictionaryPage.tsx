@@ -1,3 +1,7 @@
+export default function DictionaryPage() {
+  return <div>DictionaryPage</div>;
+}
+/*
 import { api } from "@/utils/api";
 import {
   ArrowLeftIcon,
@@ -276,7 +280,6 @@ export const DictionaryPage: FC = () => {
               <Table.Root size="2" variant="ghost">
                 <Table.Header>
                   <Table.Row>
-                    {/* <Table.ColumnHeaderCell>id</Table.ColumnHeaderCell> */}
                     <Table.ColumnHeaderCell className="whitespace-nowrap">
                       basic form
                     </Table.ColumnHeaderCell>
@@ -297,9 +300,6 @@ export const DictionaryPage: FC = () => {
                         m.id === currentMemberId && "bg-gray-800",
                       )}
                     >
-                      {/* <Table.Cell> */}
-                      {/*   <Text color="gray">{m.id}</Text> */}
-                      {/* </Table.Cell> */}
                       <Table.Cell className="whitespace-nowrap">
                         {m.basic_form}
                       </Table.Cell>
@@ -347,7 +347,6 @@ export const DictionaryPage: FC = () => {
                             >
                               Find sentences
                             </DropdownMenu.Item>
-                            {/* <DropdownMenu.Item>Find on jisho</DropdownMenu.Item> */}
                             <DropdownMenu.Separator />
                             <DropdownMenu.Item
                               onClick={(e) => onEditMeaningClick(e, m.id)}
@@ -403,3 +402,4 @@ export const DictionaryPage: FC = () => {
   );
 };
 export default DictionaryPage;
+*/

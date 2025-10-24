@@ -41,7 +41,6 @@ type KanjiInTheSentenceOutput =
   RouterOutputs["viewer"]["member"]["sentenceKanjis"][number];
 // type GlossOutput = RouterOutputs["viewer"]["sentence"]["glosses"][number];
 
-type AdminGlossOutput = RouterOutputs["admin"]["gloss"]["getGlosses"][number];
 type AdminGlossOutput2 = RouterOutputs["admin"]["gloss"]["getGlosses2"][number];
 type AdminSentenceOutput = RouterOutputs["admin"]["sentence"]["list"][number];
 
@@ -54,6 +53,5 @@ export type {
   KanjiOutput,
   KanjiInTheSentenceOutput,
   ExampleOutput,
-  AdminGlossOutput,
   AdminGlossOutput2,
 };

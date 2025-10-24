@@ -189,6 +189,7 @@ export type Database = {
           created_at: string
           id: number
           is_hidden: boolean
+          jlpt_level: number | null
           kana: string | null
           kanji_form: string | null
           number: number | null
@@ -202,6 +203,7 @@ export type Database = {
           created_at?: string
           id?: number
           is_hidden?: boolean
+          jlpt_level?: number | null
           kana?: string | null
           kanji_form?: string | null
           number?: number | null
@@ -215,6 +217,7 @@ export type Database = {
           created_at?: string
           id?: number
           is_hidden?: boolean
+          jlpt_level?: number | null
           kana?: string | null
           kanji_form?: string | null
           number?: number | null
@@ -597,7 +600,7 @@ export type Database = {
     }
     Functions: {
       additional_sentences: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           comment: string | null
           created_at: string
@@ -619,6 +622,12 @@ export type Database = {
           vox_file_path: string | null
           vox_speaker_id: number | null
         }[]
+        SetofOptions: {
+          from: "*"
+          to: "sentences"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       additional_sentences_p: {
         Args: { k_set_input: number; lvl_input: number }
@@ -679,6 +688,12 @@ export type Database = {
           vox_file_path: string | null
           vox_speaker_id: number | null
         }[]
+        SetofOptions: {
+          from: "*"
+          to: "sentences"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       glosses_by_sentence_id: {
         Args: { sentence_id_arg: number }
@@ -687,16 +702,6 @@ export type Database = {
           id: number
           kana: string
           number: number
-        }[]
-      }
-      kanji_examples: {
-        Args: { kanji_input: string }
-        Returns: {
-          basic_form: string
-          cnt: number
-          en: string
-          reading: string
-          ru: string
         }[]
       }
       kanji_examples2: {

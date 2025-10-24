@@ -4,30 +4,6 @@ import { publicProcedure, router } from "../../trpc";
 import { callAiForExceptionNumber } from "@rem4d/gloss";
 
 export const adminGlossRouter = router({
-  getGlosses: publicProcedure
-    .input(
-      z.object({
-        limit: z.number().gt(0),
-        page: z.number(),
-        kana: z.string().optional(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const { page, limit, kana } = input;
-      const { data, error } = await ctx.db
-        .from("glosses")
-        .select("*,connected:gloss_aigloss(*)")
-        .eq("is_hidden", false)
-        .order("created_at")
-        .range((page - 1) * limit, page * limit)
-        .like("kana", kana ? `%${kana}%` : "*");
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return data;
-    }),
   getGlosses2: publicProcedure.query(async ({ ctx }) => {
     const { data, error } = await ctx.db
       .from("glosses")
@@ -41,31 +17,6 @@ export const adminGlossRouter = router({
     }
 
     return data;
-  }),
-  getAllGlosses: publicProcedure.mutation(async ({ ctx }) => {
-    const { data, error } = await ctx.db
-      .from("glosses")
-      .select()
-      .eq("is_hidden", false);
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    return data;
-  }),
-  glossesTotal: publicProcedure.query(async ({ ctx }) => {
-    const { count: total, error } = await ctx.db
-      .from("glosses")
-      .select("*", { count: "exact" })
-      .not("code", "is", null)
-      .eq("is_hidden", false);
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    return total;
   }),
   getSentencesByGloss: publicProcedure
     .input(z.object({ glossId: z.number() }))

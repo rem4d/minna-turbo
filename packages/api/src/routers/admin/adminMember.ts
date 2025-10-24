@@ -1,3 +1,5 @@
+export {};
+/*
 import { z } from "zod";
 import { publicProcedure, router } from "../../trpc";
 import { findSentencesMembers } from "../util/findSentenceMembers";
@@ -237,3 +239,4 @@ export const adminMemberRouter = router({
       }
     }),
 });
+*/

@@ -38,7 +38,7 @@ export default function GlossesPage2() {
                     className="hover:bg-gray-500/10 py-2 px-2 cursor-pointer"
                     onClick={() => onTableGlossClick(gloss.id)}
                   >
-                    <Grid gap="2" columns="0.3fr 1fr 1.2fr 2fr 1fr">
+                    <Grid gap="2" columns="0.3fr 1fr 1.2fr 2fr 1fr 0.3fr">
                       <Text size="1" color="gray">
                         {index + 1}
                       </Text>
@@ -50,6 +50,9 @@ export default function GlossesPage2() {
                       </Text>
                       <Text size="1">{gloss.comment}</Text>
                       <Text size="1">{gloss.ref}</Text>
+                      <Text size="1">
+                        {gloss.jlpt_level ? `N${gloss.jlpt_level}` : null}
+                      </Text>
                     </Grid>
                   </div>
                 ))}

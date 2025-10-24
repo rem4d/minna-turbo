@@ -8,8 +8,6 @@ export function Base() {
   const statsMatch = useMatch("/stats");
   const createMatch = useMatch("/create");
   const glossesMatch = useMatch("/glosses");
-  const glosses2Match = useMatch("/glosses2");
-  const dictionaryMatch = useMatch("/dictionary");
   const filterListMatch = useMatch("/filter");
   const [theme, setTheme] = useLocalStorage<"dark" | "light">("theme", "light");
 
@@ -40,12 +38,6 @@ export function Base() {
             active={Boolean(statsMatch)}
           >
             Statistics
-          </TabNav.Link>
-          <TabNav.Link
-            onClick={() => navigate("/dictionary")}
-            active={Boolean(dictionaryMatch)}
-          >
-            Dictionary
           </TabNav.Link>
           <TabNav.Link
             onClick={() => navigate("/filter")}
