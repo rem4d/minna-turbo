@@ -47,6 +47,12 @@ export const EditSentencePage: FC = () => {
       enabled: !!sentence?.id,
     },
   );
+  const { data: members3 } = api.admin.member.sentenceMembers3.useQuery(
+    { id: sentence?.id ?? 0 },
+    {
+      enabled: !!sentence?.id,
+    },
+  );
 
   const { data: glosses2, isLoading: glossesLoading } =
     api.admin.sentence.glosses2.useQuery(
@@ -402,54 +408,13 @@ export const EditSentencePage: FC = () => {
               </Flex>
             </Flex>
           </Grid>
-
           {members2 && members2.length > 0 && (
-            <Box>
-              <Heading size="5">Members</Heading>
-              <Grid columns="3" my="8" className="">
-                <Grid
-                  columns="4"
-                  gridColumn="span 2"
-                  className="font-klee text-xl"
-                  gap="4"
-                >
-                  {members2?.map((m) => (
-                    <Flex key={m.basic_form} direction="column">
-                      {/* <Text */}
-                      {/*   size="6" */}
-                      {/*   onClick={() => onMemberClick(m.basic_form)} */}
-                      {/*   className="cursor-pointer whitespace-nowrap" */}
-                      {/*   dangerouslySetInnerHTML={{ */}
-                      {/*     __html: m.members.ruby ?? "", */}
-                      {/*   }} */}
-                      {/* /> */}
-                      <Text size="1">{m.reading}</Text>
-                      <Text className="" size="6">
-                        {m.pos === "auxiliary verb" || m.pos === "auxiliary" ? (
-                          <>
-                            {m.original} <Text size="2">({m.basic_form})</Text>
-                          </>
-                        ) : (
-                          m.basic_form
-                        )}
-                      </Text>
-                      <Text className="select-none" size="2">
-                        {m.en}
-                      </Text>
-                      <Text className="select-none" size="2">
-                        {m.ru}
-                      </Text>
-                      <Box>
-                        <Badge color="sky" size="1">
-                          {m.pos}
-                        </Badge>
-                      </Box>
-                    </Flex>
-                  ))}
-                </Grid>
-              </Grid>
-            </Box>
+            <Members n={2} members={members2} sentenceId={sentence?.id} />
           )}
+          {members3 && members3.length > 0 && (
+            <Members n={3} members={members3} sentenceId={sentence?.id} />
+          )}
+
           <Heading size="5">Kanjis in the sentence</Heading>
           <Box>
             <Flex my="8" className="">
@@ -477,4 +442,70 @@ export const EditSentencePage: FC = () => {
     </Box>
   );
 };
+
+const Members = ({
+  members,
+  sentenceId,
+  n,
+}: {
+  members: {
+    basic_form: string;
+    reading: string | null;
+    original: string | null;
+    pos: string | null;
+    en: string | null;
+    ru: string | null;
+  }[];
+  sentenceId: number;
+  n: number;
+}) => {
+  return (
+    <Box>
+      <Heading size="5">Members {n}</Heading>
+      <Grid columns="3" my="8" className="">
+        <Grid
+          columns="4"
+          gridColumn="span 2"
+          className="font-klee text-xl"
+          gap="4"
+        >
+          {members?.map((m) => (
+            <Flex key={m.basic_form} direction="column">
+              {/* <Text */}
+              {/*   size="6" */}
+              {/*   onClick={() => onMemberClick(m.basic_form)} */}
+              {/*   className="cursor-pointer whitespace-nowrap" */}
+              {/*   dangerouslySetInnerHTML={{ */}
+              {/*     __html: m.members.ruby ?? "", */}
+              {/*   }} */}
+              {/* /> */}
+              <Text size="1">{m.reading}</Text>
+              <Text className="" size="6">
+                {m.pos === "auxiliary verb" || m.pos === "auxiliary" ? (
+                  <>
+                    {m.original} <Text size="2">({m.basic_form})</Text>
+                  </>
+                ) : (
+                  m.basic_form
+                )}
+              </Text>
+              <Text className="select-none" size="2">
+                {m.en}
+              </Text>
+              <Text className="select-none" size="2">
+                {m.ru}
+              </Text>
+              <Box>
+                <Badge color="sky" size="1">
+                  {m.pos}
+                </Badge>
+              </Box>
+            </Flex>
+          ))}
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+
 export default EditSentencePage;

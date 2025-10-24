@@ -323,57 +323,6 @@ export type Database = {
         }
         Relationships: []
       }
-      members: {
-        Row: {
-          basic_form: string
-          created_at: string
-          en: string | null
-          id: number
-          is_hidden: boolean | null
-          is_invalid: boolean | null
-          level: number | null
-          original_sentence: string | null
-          pos: string
-          pos_detail_1: string
-          reading: string | null
-          ru: string | null
-          ruby: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          basic_form: string
-          created_at?: string
-          en?: string | null
-          id?: number
-          is_hidden?: boolean | null
-          is_invalid?: boolean | null
-          level?: number | null
-          original_sentence?: string | null
-          pos: string
-          pos_detail_1?: string
-          reading?: string | null
-          ru?: string | null
-          ruby?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          basic_form?: string
-          created_at?: string
-          en?: string | null
-          id?: number
-          is_hidden?: boolean | null
-          is_invalid?: boolean | null
-          level?: number | null
-          original_sentence?: string | null
-          pos?: string
-          pos_detail_1?: string
-          reading?: string | null
-          ru?: string | null
-          ruby?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
       members2: {
         Row: {
           basic_form: string
@@ -412,6 +361,57 @@ export type Database = {
           id?: number
           is_hidden?: boolean | null
           is_invalid?: boolean | null
+          level?: number | null
+          original?: string | null
+          pos?: string
+          reading?: string
+          ru?: string
+          ruby?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      members3: {
+        Row: {
+          basic_form: string
+          created_at: string
+          en: string | null
+          id: number
+          is_hidden: boolean | null
+          is_invalid: boolean | null
+          is_person: boolean | null
+          level: number | null
+          original: string | null
+          pos: string
+          reading: string
+          ru: string
+          ruby: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          basic_form: string
+          created_at?: string
+          en?: string | null
+          id: number
+          is_hidden?: boolean | null
+          is_invalid?: boolean | null
+          is_person?: boolean | null
+          level?: number | null
+          original?: string | null
+          pos: string
+          reading: string
+          ru: string
+          ruby?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          basic_form?: string
+          created_at?: string
+          en?: string | null
+          id?: number
+          is_hidden?: boolean | null
+          is_invalid?: boolean | null
+          is_person?: boolean | null
           level?: number | null
           original?: string | null
           pos?: string
@@ -481,6 +481,39 @@ export type Database = {
           },
           {
             foreignKeyName: "sentence_member2_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sentence_member3: {
+        Row: {
+          member_id: number
+          position: number
+          sentence_id: number
+        }
+        Insert: {
+          member_id: number
+          position?: number
+          sentence_id: number
+        }
+        Update: {
+          member_id?: number
+          position?: number
+          sentence_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sentence_member3_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members3"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sentence_member3_sentence_id_fkey"
             columns: ["sentence_id"]
             isOneToOne: false
             referencedRelation: "sentences"
