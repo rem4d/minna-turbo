@@ -135,7 +135,7 @@ const makeSpans = (text: string, glosses: Gloss[]) => {
             node.code === "KURAI" && "text-emerald-700",
             node.code === "KURERU_TE" && "text-orange-500",
             node.code === "MAE_NI" && "text-orange-600",
-            node.code === "MAMA" && "bg-gray-300",
+            node.code === "MAMA" && "text-blue-600",
             node.code === "MASHOU" && "text-pink-800",
             node.code === "MASHOU_KA" && "text-pink-600",
             node.code === "MIERU" && "text-blue-500",
@@ -234,6 +234,15 @@ const makeSpans = (text: string, glosses: Gloss[]) => {
             node.code === "SORE_DE_WA" && "text-purple-600",
             node.code === "NI_TSUITE" && "text-purple-600",
             node.code === "WA_DAME_DA" && "text-purple-600",
+            node.code === "TO_SHITE" && "text-purple-600",
+            node.code === "DE_WA_NAI" && "text-purple-600",
+            node.code === "BEKI" && "text-emerald-600",
+            node.code === "MITAI_DA" && "text-emerald-600",
+            node.code === "KURU_AUX" && "text-emerald-600",
+            node.code === "IKU_AUX" && "text-emerald-600",
+            node.code === "MADE" && "text-amber-700",
+            node.code === "MADE_NI" && "text-amber-700",
+            node.code === "UCHI_NI" && "text-purple-600",
             getColor(node.code),
           )}
         >
@@ -400,6 +409,15 @@ const getColor = (code: Code | undefined) => {
     SORE_DE_WA: "text-green-600",
     NI_TSUITE: "text-purple-600",
     WA_DAME_DA: "text-purple-600",
+    TO_SHITE: "text-purple-600",
+    DE_WA_NAI: "text-purple-600",
+    BEKI: "text-emerald-600",
+    MITAI_DA: "text-emerald-600",
+    IKU_AUX: "text-emerald-600",
+    KURU_AUX: "text-emerald-600",
+    MADE: "text-amber-600",
+    MADE_NI: "text-amber-600",
+    UCHI_NI: "text-purple-600",
   };
 
   if (!colors[code]) {

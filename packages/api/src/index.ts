@@ -1,4 +1,4 @@
-import type { inferRouterOutputs } from "@trpc/server";
+import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
 import type { AppRouter } from "./routers/_app";
 import { appRouter } from "./routers/_app";
@@ -43,8 +43,12 @@ type KanjiInTheSentenceOutput =
 
 type AdminGlossOutput2 = RouterOutputs["admin"]["gloss"]["getGlosses2"][number];
 type AdminSentenceOutput = RouterOutputs["admin"]["sentence"]["list"][number];
+type AdminMemberOutput =
+  RouterOutputs["admin"]["member"]["assignMembers"][number];
 
+type MemberOutput = RouterOutputs["admin"]["member"]["membersById"][number];
 export { createContext as createTRPCContext, appRouter, createCaller };
+
 export type {
   AdminSentenceOutput,
   AppRouter,
@@ -54,4 +58,6 @@ export type {
   KanjiInTheSentenceOutput,
   ExampleOutput,
   AdminGlossOutput2,
+  AdminMemberOutput,
+  MemberOutput,
 };

@@ -227,65 +227,87 @@ export type Database = {
         }
         Relationships: []
       }
-      gpt_gloss_sentence: {
+      jmdict_entries: {
         Row: {
-          gloss_id: number
-          sentence_id: number
+          en: string[] | null
+          id: number
+          pos: string | null
+          pos_long: string | null
+          ru: string[] | null
         }
         Insert: {
-          gloss_id?: number
-          sentence_id?: number
+          en?: string[] | null
+          id?: number
+          pos?: string | null
+          pos_long?: string | null
+          ru?: string[] | null
         }
         Update: {
-          gloss_id?: number
-          sentence_id?: number
+          en?: string[] | null
+          id?: number
+          pos?: string | null
+          pos_long?: string | null
+          ru?: string[] | null
+        }
+        Relationships: []
+      }
+      jmdict_readings: {
+        Row: {
+          id: number
+          is_common: boolean
+          jmdict_entry_id: number | null
+          txt: string | null
+        }
+        Insert: {
+          id?: number
+          is_common: boolean
+          jmdict_entry_id?: number | null
+          txt?: string | null
+        }
+        Update: {
+          id?: number
+          is_common?: boolean
+          jmdict_entry_id?: number | null
+          txt?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "gpt_gloss_sentence_gloss_id_fkey"
-            columns: ["gloss_id"]
+            foreignKeyName: "jmdict_readings_jmdict_entry_id_fkey"
+            columns: ["jmdict_entry_id"]
             isOneToOne: false
-            referencedRelation: "gpt_glosses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "gpt_gloss_sentence_sentence_id_fkey"
-            columns: ["sentence_id"]
-            isOneToOne: false
-            referencedRelation: "sentences"
+            referencedRelation: "jmdict_entries"
             referencedColumns: ["id"]
           },
         ]
       }
-      gpt_glosses: {
+      jmdict_words: {
         Row: {
-          comment: string | null
-          created_at: string
           id: number
-          is_hidden: boolean | null
-          kana: string | null
-          number: number | null
-          tmp: string | null
+          is_common: boolean
+          jmdict_entry_id: number | null
+          txt: string
         }
         Insert: {
-          comment?: string | null
-          created_at?: string
           id?: number
-          is_hidden?: boolean | null
-          kana?: string | null
-          number?: number | null
-          tmp?: string | null
+          is_common: boolean
+          jmdict_entry_id?: number | null
+          txt: string
         }
         Update: {
-          comment?: string | null
-          created_at?: string
           id?: number
-          is_hidden?: boolean | null
-          kana?: string | null
-          number?: number | null
-          tmp?: string | null
+          is_common?: boolean
+          jmdict_entry_id?: number | null
+          txt?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "jmdict_words_jmdict_entry_id_fkey"
+            columns: ["jmdict_entry_id"]
+            isOneToOne: false
+            referencedRelation: "jmdict_entries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       kanji: {
         Row: {
@@ -322,6 +344,99 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      member_jmdict_entry: {
+        Row: {
+          jmdict_entry_id: number
+          member_id: number
+          position: number
+        }
+        Insert: {
+          jmdict_entry_id: number
+          member_id: number
+          position?: number
+        }
+        Update: {
+          jmdict_entry_id?: number
+          member_id?: number
+          position?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_jmdict_entry_jmdict_entry_id_fkey"
+            columns: ["jmdict_entry_id"]
+            isOneToOne: false
+            referencedRelation: "jmdict_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "member_jmdict_entry_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      members: {
+        Row: {
+          id: number
+          is_different_reading: boolean
+          is_expression: boolean
+          is_hidden: boolean
+          jmdict_entry_id: number | null
+          pattern_match: string | null
+          pos: string | null
+          position: number
+          reading: string
+          ruby: string
+          sentence_id: number | null
+          text: string | null
+        }
+        Insert: {
+          id?: number
+          is_different_reading?: boolean
+          is_expression?: boolean
+          is_hidden?: boolean
+          jmdict_entry_id?: number | null
+          pattern_match?: string | null
+          pos?: string | null
+          position?: number
+          reading: string
+          ruby: string
+          sentence_id?: number | null
+          text?: string | null
+        }
+        Update: {
+          id?: number
+          is_different_reading?: boolean
+          is_expression?: boolean
+          is_hidden?: boolean
+          jmdict_entry_id?: number | null
+          pattern_match?: string | null
+          pos?: string | null
+          position?: number
+          reading?: string
+          ruby?: string
+          sentence_id?: number | null
+          text?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "members_jmdict_entry_id_fkey"
+            columns: ["jmdict_entry_id"]
+            isOneToOne: false
+            referencedRelation: "jmdict_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "members_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       members2: {
         Row: {
@@ -361,57 +476,6 @@ export type Database = {
           id?: number
           is_hidden?: boolean | null
           is_invalid?: boolean | null
-          level?: number | null
-          original?: string | null
-          pos?: string
-          reading?: string
-          ru?: string
-          ruby?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      members3: {
-        Row: {
-          basic_form: string
-          created_at: string
-          en: string | null
-          id: number
-          is_hidden: boolean | null
-          is_invalid: boolean | null
-          is_person: boolean | null
-          level: number | null
-          original: string | null
-          pos: string
-          reading: string
-          ru: string
-          ruby: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          basic_form: string
-          created_at?: string
-          en?: string | null
-          id: number
-          is_hidden?: boolean | null
-          is_invalid?: boolean | null
-          is_person?: boolean | null
-          level?: number | null
-          original?: string | null
-          pos: string
-          reading: string
-          ru: string
-          ruby?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          basic_form?: string
-          created_at?: string
-          en?: string | null
-          id?: number
-          is_hidden?: boolean | null
-          is_invalid?: boolean | null
-          is_person?: boolean | null
           level?: number | null
           original?: string | null
           pos?: string
@@ -481,39 +545,6 @@ export type Database = {
           },
           {
             foreignKeyName: "sentence_member2_sentence_id_fkey"
-            columns: ["sentence_id"]
-            isOneToOne: false
-            referencedRelation: "sentences"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      sentence_member3: {
-        Row: {
-          member_id: number
-          position: number
-          sentence_id: number
-        }
-        Insert: {
-          member_id: number
-          position?: number
-          sentence_id: number
-        }
-        Update: {
-          member_id?: number
-          position?: number
-          sentence_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "sentence_member3_member_id_fkey"
-            columns: ["member_id"]
-            isOneToOne: false
-            referencedRelation: "members3"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "sentence_member3_sentence_id_fkey"
             columns: ["sentence_id"]
             isOneToOne: false
             referencedRelation: "sentences"

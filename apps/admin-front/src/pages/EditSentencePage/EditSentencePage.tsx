@@ -1,7 +1,6 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import type { FC } from "react";
 import toast from "react-hot-toast";
-import { openUrl } from "../../utils";
 import {
   Flex,
   Text,
@@ -24,6 +23,8 @@ import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
 import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
 import GrammarGlosses from "./GrammarGlosses";
 import { GlossVisualizer } from "@/components/GlossVisualizer";
+import { AdminMemberOutput } from "@rem4d/api";
+import Members from "./Members";
 
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
@@ -33,6 +34,7 @@ export const EditSentencePage: FC = () => {
   const [en, setEn] = useState("");
   const [ru, setRu] = useState("");
   const [comment, setComment] = useState("");
+  const [members3, setMembers3] = useState<AdminMemberOutput[]>([]);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -47,12 +49,30 @@ export const EditSentencePage: FC = () => {
       enabled: !!sentence?.id,
     },
   );
-  const { data: members3 } = api.admin.member.sentenceMembers3.useQuery(
+
+  const { data: members } = api.admin.member.membersById.useQuery(
     { id: sentence?.id ?? 0 },
     {
       enabled: !!sentence?.id,
     },
   );
+
+  // const { data: members3 } = api.admin.member.sentenceMembers3.useQuery(
+  //   { id: sentence?.id ?? 0 },
+  //   {
+  //     enabled: !!sentence?.id,
+  //   },
+  // );
+
+  const assignMembersMutation = api.admin.member.assignMembers.useMutation({
+    onSuccess(data) {
+      setMembers3(data);
+      toast.success("Successfully assigned members.");
+    },
+    onError(err) {
+      toast.error(err.message);
+    },
+  });
 
   const { data: glosses2, isLoading: glossesLoading } =
     api.admin.sentence.glosses2.useQuery(
@@ -205,6 +225,10 @@ export const EditSentencePage: FC = () => {
     if (sentence && sentence.id) {
       grammarifyMutation.mutate({ sentenceId: sentence.id });
     }
+  };
+
+  const onAssignMembersClick = () => {
+    assignMembersMutation.mutate({ text: input });
   };
 
   return (
@@ -409,11 +433,18 @@ export const EditSentencePage: FC = () => {
             </Flex>
           </Grid>
           {members2 && members2.length > 0 && (
-            <Members n={2} members={members2} sentenceId={sentence?.id} />
+            <MembersOld n={2} members={members2} sentenceId={sentence?.id} />
           )}
           {members3 && members3.length > 0 && (
-            <Members n={3} members={members3} sentenceId={sentence?.id} />
+            <MembersNew
+              n={3}
+              members={members3}
+              sentenceId={sentence?.id}
+              showRuby
+            />
           )}
+          {members && members.length > 0 && <Members members={members} />}
+          <Button onClick={onAssignMembersClick}> Assign members</Button>
 
           <Heading size="5">Kanjis in the sentence</Heading>
           <Box>
@@ -443,9 +474,153 @@ export const EditSentencePage: FC = () => {
   );
 };
 
-const Members = ({
+const MemberItem = ({ entry }: { entry: AdminMemberOutput["entries"][0] }) => {
+  const [showMeaning, setShowMeaning] = useState(false);
+  return (
+    <div
+      className="bg-slate-500/9 rounded-md p-2 relative"
+      onClick={() => setShowMeaning(!showMeaning)}
+    >
+      <Flex direction="column">
+        <Text size="3" truncate>
+          {entry.text}
+        </Text>
+        <Text size="1">({entry.reading})</Text>
+      </Flex>
+      <Box className="absolute top-0 right-2">
+        <Flex direction="column" gap="1">
+          {entry.pos !== "VERB" ? (
+            <Badge color="sky" size="1">
+              {entry.pos}
+            </Badge>
+          ) : (
+            <Badge color="green" size="1">
+              {entry.pattern_match}
+            </Badge>
+          )}
+          {entry.is_crush && (
+            <Badge color="bronze" size="1">
+              crush
+            </Badge>
+          )}
+          {entry.is_different_reading && (
+            <Badge color="yellow" size="1">
+              different reading
+            </Badge>
+          )}
+          {entry.is_hidden && (
+            <Badge color="bronze" size="1">
+              hidden
+            </Badge>
+          )}
+          {entry.is_expression && (
+            <Badge color="red" size="1">
+              Expression
+            </Badge>
+          )}
+        </Flex>
+      </Box>
+      <div className={showMeaning ? "block" : "hidden"}>
+        {entry.ru.length > 0 && (
+          <Box className="p-2">
+            <Heading mb="2" size="2">
+              Ru
+            </Heading>
+            <Flex direction="column" gap="1">
+              {entry.ru.map((e) => (
+                <Text key={e} className="" size="2">
+                  {e}
+                </Text>
+              ))}
+            </Flex>
+          </Box>
+        )}
+        {entry.en.length > 0 && (
+          <Box className="mt-2 rounded-md p-2">
+            <Heading mb="2" size="2">
+              En
+            </Heading>
+            <Flex direction="column" gap="1">
+              {entry.en.map((e) => (
+                <Text key={e} className="" size="2">
+                  {e}
+                </Text>
+              ))}
+            </Flex>
+          </Box>
+        )}
+        <div>
+          [
+          {entry.readings.map((r) => (
+            <Text size="2">{r}, </Text>
+          ))}
+          ]
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const MembersNew = ({
   members,
-  sentenceId,
+  showRuby = false,
+  n,
+}: {
+  members: AdminMemberOutput[];
+  sentenceId: number;
+  n: number;
+  showRuby?: boolean;
+}) => {
+  return (
+    <Box>
+      <Heading size="5">Members {n}</Heading>
+      <Grid columns="3" my="8" className="">
+        <Grid
+          columns="4"
+          gridColumn="span 2"
+          className="font-klee text-xl"
+          gap="4"
+        >
+          {members?.map((m, i) => (
+            <Flex key={m.entries[0].id + i} direction="column">
+              {showRuby ? (
+                <Text
+                  truncate
+                  size="6"
+                  className="whitespace-nowrap"
+                  dangerouslySetInnerHTML={{
+                    __html: m.entries[0]?.ruby,
+                  }}
+                />
+              ) : null}
+              {m.entries[0] ? (
+                <>
+                  <Text size="2" truncate>
+                    {m.entries[0].ru?.[0]}
+                  </Text>
+                  <Text size="2" truncate>
+                    {m.entries[0].en?.[0]}
+                  </Text>
+                </>
+              ) : null}
+              <Flex direction="column" gap="2">
+                {m.entries.map((entry) => (
+                  <div key={entry.id}>
+                    <MemberItem entry={entry} />
+                  </div>
+                ))}
+              </Flex>
+            </Flex>
+          ))}
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+
+const MembersOld = ({
+  members,
+  showRuby = false,
   n,
 }: {
   members: {
@@ -455,9 +630,14 @@ const Members = ({
     pos: string | null;
     en: string | null;
     ru: string | null;
+    ruby: string | null;
+    is_jmdict: boolean;
+    is_crush: boolean;
+    pattern_match: string;
   }[];
   sentenceId: number;
   n: number;
+  showRuby?: boolean;
 }) => {
   return (
     <Box>
@@ -471,24 +651,28 @@ const Members = ({
         >
           {members?.map((m) => (
             <Flex key={m.basic_form} direction="column">
-              {/* <Text */}
-              {/*   size="6" */}
-              {/*   onClick={() => onMemberClick(m.basic_form)} */}
-              {/*   className="cursor-pointer whitespace-nowrap" */}
-              {/*   dangerouslySetInnerHTML={{ */}
-              {/*     __html: m.members.ruby ?? "", */}
-              {/*   }} */}
-              {/* /> */}
-              <Text size="1">{m.reading}</Text>
-              <Text className="" size="6">
-                {m.pos === "auxiliary verb" || m.pos === "auxiliary" ? (
-                  <>
-                    {m.original} <Text size="2">({m.basic_form})</Text>
-                  </>
-                ) : (
-                  m.basic_form
-                )}
-              </Text>
+              {showRuby ? (
+                <Text
+                  size="6"
+                  className="whitespace-nowrap"
+                  dangerouslySetInnerHTML={{
+                    __html: m.ruby ?? "",
+                  }}
+                />
+              ) : (
+                <>
+                  <Text size="1">{m.reading}</Text>
+                  <Text className="" size="6">
+                    {m.pos === "auxiliary verb" || m.pos === "auxiliary" ? (
+                      <>
+                        {m.original} <Text size="2">({m.basic_form})</Text>
+                      </>
+                    ) : (
+                      m.basic_form
+                    )}
+                  </Text>
+                </>
+              )}
               <Text className="select-none" size="2">
                 {m.en}
               </Text>
@@ -496,9 +680,26 @@ const Members = ({
                 {m.ru}
               </Text>
               <Box>
-                <Badge color="sky" size="1">
-                  {m.pos}
-                </Badge>
+                {m.pos !== "VERB" && (
+                  <Badge color="sky" size="1">
+                    {m.pos}
+                  </Badge>
+                )}
+                {m.is_jmdict && (
+                  <Badge color="yellow" size="1">
+                    jmdict
+                  </Badge>
+                )}
+                {m.is_crush && (
+                  <Badge color="bronze" size="1">
+                    crush
+                  </Badge>
+                )}
+                {m.pattern_match && (
+                  <Badge color="green" size="1">
+                    {m.pattern_match}
+                  </Badge>
+                )}
               </Box>
             </Flex>
           ))}
