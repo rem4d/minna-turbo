@@ -115,7 +115,11 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
         </Accordion.Content>
       </Accordion.Item>
 
-      <Drawer open={!!modalOpen} onOpenChange={() => setModalOpen(false)}>
+      <Drawer
+        contentClassName="bg-white"
+        open={!!modalOpen}
+        onOpenChange={() => setModalOpen(false)}
+      >
         {selectedMember && <MemberModalContent member={selectedMember} />}
       </Drawer>
     </Accordion.Root>

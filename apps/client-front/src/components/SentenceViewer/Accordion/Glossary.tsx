@@ -32,7 +32,10 @@ const GlossaryContent: React.FC<{
                     __html: m.ruby,
                   }}
                 />
-                <div className="relative top-1 max-w-3/4 truncate text-sm leading-5">
+                <div
+                  className="relative top-1 max-w-3/4 truncate text-sm leading-5"
+                  onClick={() => onMemberClick(m.id)}
+                >
                   {transLang === "ru" ? m.entries[0]?.ru : m.entries[0]?.en}
                 </div>
               </React.Fragment>

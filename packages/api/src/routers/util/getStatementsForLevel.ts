@@ -38,8 +38,8 @@ export const getStatementsForLevel = async ({
     .not("en", "is", null)
     .in("source", ["source1", "source2", "source4", "source3", "challenge"])
     .not("members()", "is", null)
-    // .eq("id", 31619);
     .lte("unknown_kanji_number", numberOfUnknownKanji);
+  // .eq("id", 6217);
 
   if (error) {
     throw new Error(error.message);
@@ -59,6 +59,7 @@ export const getStatementsForLevel = async ({
   }
 
   const additional: Sentence[] = [];
+
   if (userKanjiMap.size > 0) {
     const keys = [...userKanjiMap.keys()];
     const kanjiString = keys.join("");

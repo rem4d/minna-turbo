@@ -2,24 +2,48 @@ import { type MemberOutput } from "@rem4d/api";
 import { twMerge } from "tailwind-merge";
 
 interface EntryProps {
-  ruby: string;
-  reading: string | null;
+  ruby: string | null;
+  text?: string | null;
+  reading?: string | null;
   readings: { txt: string | null }[] | null;
   en: string[] | null;
   ru: string[] | null;
   pos: string | null;
+  className?: string;
 }
 
-const Entry = ({ ruby, readings, en, ru, pos }: EntryProps) => {
+const Entry = ({
+  ruby,
+  text,
+  reading,
+  readings,
+  en,
+  ru,
+  pos,
+  className,
+}: EntryProps) => {
+  const showRuby = ruby ? true : !ruby && !text && reading;
+  const rubyText = ruby ? ruby : reading;
+
   return (
-    <div className="flex items-start space-x-8 py-4">
+    <div className={twMerge("flex items-start space-x-8 py-4", className)}>
       <div className="flex flex-col space-y-2">
-        <div
-          className="font-yu-gothic cursor-pointer text-xl font-medium whitespace-nowrap"
-          dangerouslySetInnerHTML={{
-            __html: ruby,
-          }}
-        />
+        {showRuby && (
+          <div
+            className="font-yu-gothic cursor-pointer text-xl font-medium whitespace-nowrap"
+            dangerouslySetInnerHTML={{
+              __html: rubyText ?? "",
+            }}
+          />
+        )}
+        {!ruby && text && (
+          <div className="flex flex-col space-y-1">
+            <div className="font-yu-gothic cursor-pointer text-xl font-medium whitespace-nowrap">
+              {text}
+            </div>
+            {reading && <span className="text-denim text-xs">[{reading}]</span>}
+          </div>
+        )}
         {pos && <Badge color="blue">{pos.toLowerCase()}</Badge>}
         {readings && readings.length > 0 && (
           <div>
@@ -62,6 +86,7 @@ const MemberModalContent = ({ member }: { member: MemberOutput }) => {
   return (
     <div className="bg-white px-4 py-4">
       <Entry
+        className="pt-0"
         ruby={member.ruby}
         reading={member.reading}
         readings={[]}
@@ -71,9 +96,9 @@ const MemberModalContent = ({ member }: { member: MemberOutput }) => {
       />
       {member.entries.length > 1 ? (
         <div>
-          <div className="my-8 h-[1px] w-full bg-black/20" />
+          <div className="my-4 h-[1px] w-full bg-black/20" />
 
-          <div className="text-bold mb-6 text-sm font-semibold text-black/80">
+          <div className="text-bold mb-4 text-sm font-semibold text-black/80">
             Возможные другие значения
           </div>
 
@@ -81,7 +106,8 @@ const MemberModalContent = ({ member }: { member: MemberOutput }) => {
             {member.entries.slice(1).map((e) => (
               <Entry
                 key={e.id}
-                ruby={e.words[0]?.txt}
+                ruby={null}
+                text={e.words[0]?.txt}
                 reading={e.readings[0]?.txt}
                 readings={e.readings.slice(1)}
                 en={e.en}
