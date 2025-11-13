@@ -1,6 +1,6 @@
 import type { GetGlossesOutput } from "@rem4d/api";
+import Cross2Icon from "@/assets/icons/cross.svg?react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Cross2Icon } from "@radix-ui/react-icons";
 
 interface ConfirmModalProps {
   open: boolean;

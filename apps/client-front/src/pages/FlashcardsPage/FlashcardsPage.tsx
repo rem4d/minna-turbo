@@ -334,7 +334,7 @@ const CongratsScreen = ({ onCloseClick, level }: CongratsScreenProps) => {
           className="absolute right-3 size-[40px] cursor-pointer rounded-full bg-white"
           onClick={onCloseClick}
         >
-          <CrossIcon className="absolute top-1/2 left-1/2 size-[34px] -translate-x-1/2 -translate-y-1/2 rotate-[45deg]" />
+          <CrossIcon className="absolute top-1/2 left-1/2 size-[34px] -translate-x-1/2 -translate-y-1/2" />
         </div>
       </div>
       <div className="absolute top-1/2 flex size-full h-auto min-h-[300px] -translate-y-1/2 flex-col space-y-6 px-3 text-center">
