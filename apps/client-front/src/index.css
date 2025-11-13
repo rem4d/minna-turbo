@@ -29,6 +29,8 @@
   --color-super-silver: #eee;
   --color-geyser: #DEE3E9;
   --color-gallery: #eaeaea;
+  --color-sea-serpent: #61BCC7;
+  --color-slate-blue: #6361C7;
 
   --font-epkyoka: Epkyoka;
   --font-klee: Klee;
@@ -302,4 +304,8 @@ animation-delay: -0.15s;
   100% {
     background-position: 500px 0;
   }
+}
+
+[data-vaul-drawer]{
+  user-select: text!important;
 }

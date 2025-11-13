@@ -57,13 +57,6 @@ export const EditSentencePage: FC = () => {
     },
   );
 
-  // const { data: members3 } = api.admin.member.sentenceMembers3.useQuery(
-  //   { id: sentence?.id ?? 0 },
-  //   {
-  //     enabled: !!sentence?.id,
-  //   },
-  // );
-
   const assignMembersMutation = api.admin.member.assignMembers.useMutation({
     onSuccess(data) {
       setMembers3(data);

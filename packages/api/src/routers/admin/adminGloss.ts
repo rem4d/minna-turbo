@@ -188,7 +188,7 @@ export const adminGlossRouter = router({
         throw new Error(error.message);
       }
 
-      if (!sentence || !sentence?.text) {
+      if (!sentence?.text) {
         throw new Error("No sentence found.");
       }
 
@@ -201,7 +201,7 @@ export const adminGlossRouter = router({
       if (errorGloss) {
         throw new Error(errorGloss.message);
       }
-      if (!found || !found.kana) {
+      if (!found?.kana) {
         throw new Error("No gloss found.");
       }
 
@@ -236,7 +236,7 @@ export const adminGlossRouter = router({
       if (error) {
         throw new Error(error.message);
       }
-      if (!currentGloss || !currentGloss.kana) {
+      if (!currentGloss?.kana) {
         throw new Error("No gloss found.");
       }
 
@@ -283,7 +283,7 @@ export const adminGlossRouter = router({
         throw new Error(error.message);
       }
 
-      if (!sentence || !sentence?.text) {
+      if (!sentence?.text) {
         throw new Error("No sentence found.");
       }
       const { data: dbGlosses, error: dbError } = await ctx.db
@@ -305,7 +305,12 @@ export const adminGlossRouter = router({
         end: number;
       }[];
 
-      const bulks = [];
+      const bulks: {
+        sentence_id: number;
+        gloss_id: number;
+        start: number;
+        end: number;
+      }[] = [];
 
       for (const gloss of response) {
         const foundGloss = dbGlosses.find((g) => g.code === gloss.gloss);

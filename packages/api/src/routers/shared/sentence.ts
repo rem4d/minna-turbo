@@ -37,36 +37,36 @@ export const sentenceRouter = router({
   //
   //     return data;
   //   }),
-  aiGlosses: publicProcedure
-    .input(z.object({ id: z.number() }))
-    .query(async ({ input, ctx }) => {
-      const { data, error } = await ctx.db
-        .from("aigloss_sentence")
-        .select("*,...aiglosses(id,kana,comment,number,is_hidden)")
-        .eq("sentence_id", Number(input.id));
-
-      if (error) {
-        throw new Error(error.message);
-      }
-      const data_ = data.filter((d) => !d.is_hidden);
-
-      return data_;
-    }),
-  normalGlosses: publicProcedure
-    .input(z.object({ sentenceId: z.number() }))
-    .query(async ({ input, ctx }) => {
-      const { data, error } = await ctx.db
-        .rpc("glosses_by_sentence_id", {
-          sentence_id_arg: input.sentenceId,
-        })
-        .select("*");
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return data;
-    }),
+  // aiGlosses: publicProcedure
+  //   .input(z.object({ id: z.number() }))
+  //   .query(async ({ input, ctx }) => {
+  //     const { data, error } = await ctx.db
+  //       .from("aigloss_sentence")
+  //       .select("*,...aiglosses(id,kana,comment,number,is_hidden)")
+  //       .eq("sentence_id", Number(input.id));
+  //
+  //     if (error) {
+  //       throw new Error(error.message);
+  //     }
+  //     const data_ = data.filter((d) => !d.is_hidden);
+  //
+  //     return data_;
+  //   }),
+  // normalGlosses: publicProcedure
+  //   .input(z.object({ sentenceId: z.number() }))
+  //   .query(async ({ input, ctx }) => {
+  //     const { data, error } = await ctx.db
+  //       .rpc("glosses_by_sentence_id", {
+  //         sentence_id_arg: input.sentenceId,
+  //       })
+  //       .select("*");
+  //
+  //     if (error) {
+  //       throw new Error(error.message);
+  //     }
+  //
+  //     return data;
+  //   }),
   glosses2: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input, ctx }) => {

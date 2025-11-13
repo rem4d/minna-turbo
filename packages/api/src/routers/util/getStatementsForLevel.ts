@@ -17,31 +17,28 @@ export const getStatementsForLevel = async ({
   db: SupabaseClient<Database>;
   redis: RedisClientType;
 }) => {
-  // const cached = await redis.get(`${level}-${shift}`);
-  //
-  // if (cached) {
-  //   const arr = JSON.parse(cached) as {
-  //     additional: Sentence[];
-  //     sentences: Sentence[];
-  //   };
-  //   return arr;
-  // }
+  const cached = await redis.get(`${level}-${shift}`);
+
+  if (cached) {
+    const arr = JSON.parse(cached) as {
+      additional: Sentence[];
+      sentences: Sentence[];
+    };
+    return arr;
+  }
 
   const { data: sentences, error } = await db
     .from("sentences")
     .select(
-      "id,text,ruby,level,text_with_furigana,en,ru,vox_file_path,vox_speaker_id,sentence_gloss()",
+      "id,text,ruby,level,text_with_furigana,en,ru,vox_file_path,vox_speaker_id,members()",
     )
-    // .eq("level", level)
     .lte("level", level)
     .gt("level", clamp(level - shift, 0, level))
     .not("ru", "is", null)
     .not("en", "is", null)
     .in("source", ["source1", "source2", "source4", "source3", "challenge"])
-    .eq("status", "member2_checked")
-    .eq("source", "source1")
-    .not("tmp", "is", null)
-    // .not("sentence_gloss", "is", null)
+    .not("members()", "is", null)
+    // .eq("id", 31619);
     .lte("unknown_kanji_number", numberOfUnknownKanji);
 
   if (error) {

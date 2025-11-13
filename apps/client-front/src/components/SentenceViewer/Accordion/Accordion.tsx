@@ -1,7 +1,8 @@
-import type { SentenceOutput } from "@rem4d/api";
+import type { MemberOutput, SentenceOutput } from "@rem4d/api";
 import { useEffect, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { AnimateHeight } from "@/components/AnimateHeight";
+import Drawer from "@/components/Drawer";
 import { useAppStore } from "@/store";
 import { useTRPC } from "@/utils/api";
 import * as Accordion from "@radix-ui/react-accordion";
@@ -10,26 +11,25 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
 
-import { runStream } from "./ai";
-import AiScreen from "./AiScreen";
 import GlossaryContent from "./Glossary";
+import MemberModalContent from "./MemberModalContent";
 import TranslationContent from "./TranslationContent";
 
 interface AccordionProps {
   sentence: SentenceOutput;
 }
 export default function AccordionComponent({ sentence }: AccordionProps) {
-  const [isAskAiClicked, setIsAskAiClicked] = useState(false);
-  const [screen, setScreen] = useState<"ai" | "glossary">("glossary");
-  const [chunks, setChunks] = useState("");
-  const [isAiLoading, setIsAiLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<
+    MemberOutput | null | undefined
+  >(null);
 
   const openItems = useAppStore((state) => state.openItems);
   const setOpenItems = useAppStore((state) => state.setOpenItems);
   const closeItem = useAppStore((state) => state.closeItem);
 
   const { t } = useTranslation();
-  const [title, setTitle] = useState(t("glossary"));
+  const title = t("glossary");
 
   const [transLang] = useLocalStorage<"ru" | "en" | null>(
     "kic:translation_language",
@@ -37,35 +37,14 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
   );
   const trpc = useTRPC();
 
-  const {
-    data: members,
-    isFetching: loadingMembers,
-    isSuccess,
-  } = useQuery(
-    trpc.viewer.member.sentenceMembers2.queryOptions(
-      { id: sentence.id },
+  const { data: members, isFetching: loadingMembers } = useQuery(
+    trpc.viewer.member.membersById.queryOptions(
+      { id: sentence?.id ?? 0 },
       {
-        enabled: !!sentence.text && openItems.includes("2"),
-        placeholderData: (prev) => prev,
+        enabled: !!sentence?.id,
       },
     ),
   );
-
-  const { data: kanjisInTheSentence } = useQuery(
-    trpc.viewer.member.sentenceKanjis.queryOptions(
-      { id: sentence.id },
-      {
-        enabled: !!sentence.text && openItems.includes("2"),
-      },
-    ),
-  );
-
-  useEffect(() => {
-    setScreen("glossary");
-    setIsAskAiClicked(false);
-    setChunks("");
-    setTitle(t("glossary"));
-  }, [sentence.id, t]);
 
   useEffect(() => {
     if (openItems.includes("1")) {
@@ -79,21 +58,9 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     setOpenItems(v);
   };
 
-  const handleAskAiClick = async () => {
-    setScreen("ai");
-    setIsAiLoading(true);
-    setTitle(t("ai_review"));
-
-    const stream = await runStream(sentence.text);
-
-    for await (const delta of stream) {
-      if ("content" in delta.data) {
-        setIsAiLoading(false);
-        // @ts-ignore
-        const text = delta.data.content as unknown as string;
-        setChunks((ch) => `${ch}${text}`);
-      }
-    }
+  const onMemberClick = (id: number) => {
+    setModalOpen(true);
+    setSelectedMember(members?.find((m) => m.id === id));
   };
 
   return (
@@ -138,24 +105,19 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
           )}
         >
           <AnimateHeight>
-            {screen === "ai" && (
-              <AiScreen loading={isAiLoading} text={chunks} />
-            )}
-            {screen === "glossary" && (
-              <GlossaryContent
-                members={members}
-                kanjisInTheSentence={kanjisInTheSentence}
-                loadingMembers={loadingMembers}
-                isSuccess={isSuccess}
-                askAiClicked={isAskAiClicked}
-                onAskAiClick={handleAskAiClick}
-                setAskAiClicked={setIsAskAiClicked}
-                transLang={transLang}
-              />
-            )}
+            <GlossaryContent
+              members={members}
+              loadingMembers={loadingMembers}
+              transLang={transLang}
+              onMemberClick={onMemberClick}
+            />
           </AnimateHeight>
         </Accordion.Content>
       </Accordion.Item>
+
+      <Drawer open={!!modalOpen} onOpenChange={() => setModalOpen(false)}>
+        {selectedMember && <MemberModalContent member={selectedMember} />}
+      </Drawer>
     </Accordion.Root>
   );
 }

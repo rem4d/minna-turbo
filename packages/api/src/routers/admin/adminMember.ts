@@ -21,7 +21,12 @@ export const adminMemberRouter = router({
       const res = data.map((m) => {
         return {
           ...m,
-          entries: m.entries.toSorted((a, b) => a.position - b.position),
+          entries: m.entries
+            .toSorted((a, b) => a.position - b.position)
+            .map((entry) => ({
+              ...entry,
+              words: entry.words,
+            })),
         };
       });
 
@@ -62,7 +67,7 @@ export const adminMemberRouter = router({
   //   }),
   assignMembers: publicProcedure
     .input(z.object({ text: z.string() }))
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const text = input.text;
       const result = await fetch(
         "http://127.0.0.1:5000/dictionary?text=" + text,
@@ -91,28 +96,6 @@ export const adminMemberRouter = router({
           is_expression: boolean;
         }[];
       }[];
-      /*
-      const members3 = data.map((d) => {
-        return {
-          basic_form: d.text,
-          en: d.en,
-          is_hidden: false,
-          is_invalid: false,
-          is_person: d.is_person,
-          level: null,
-          original: d.text,
-          pos: d.pos,
-          reading: d.reading,
-          ru: d.ru,
-          ruby: d.ruby,
-          updated_at: "",
-          created_at: "",
-          is_crush: d.is_crush,
-          is_jmdict: d.is_jmdict,
-          pattern_match: d.pattern_match,
-        };
-      });
-      */
 
       return data;
     }),
