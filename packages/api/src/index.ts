@@ -50,6 +50,8 @@ type MemberOutput = RouterOutputs["admin"]["member"]["membersById"][number];
 type MemberOutputClient =
   RouterOutputs["viewer"]["member"]["membersById"][number];
 export { createContext as createTRPCContext, appRouter, createCaller };
+type GetGlossesOutput =
+  RouterOutputs["viewer"]["sentence"]["getGlosses"][number];
 
 export type {
   AdminSentenceOutput,
@@ -63,4 +65,5 @@ export type {
   AdminMemberOutput,
   MemberOutput,
   MemberOutputClient,
+  GetGlossesOutput,
 };

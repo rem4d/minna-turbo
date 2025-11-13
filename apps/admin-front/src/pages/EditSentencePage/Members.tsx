@@ -6,6 +6,7 @@ import { useState } from "react";
 type Props = {
   members: MemberOutput[];
 };
+
 export default function Members({ members }: Props) {
   return (
     <Box>
@@ -147,8 +148,8 @@ const MemberItem = ({ entry }: { entry: MemberOutput["entries"][number] }) => {
         )}
         <div>
           [
-          {entry.readings.map((r) => (
-            <Text key={r} size="2">
+          {entry.readings.map((r, i) => (
+            <Text key={r.txt + i} size="2">
               {r.txt},{" "}
             </Text>
           ))}

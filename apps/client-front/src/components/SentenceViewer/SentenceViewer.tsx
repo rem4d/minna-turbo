@@ -1,4 +1,4 @@
-import type { SentenceOutput } from "@rem4d/api";
+import type { GetGlossesOutput, SentenceOutput } from "@rem4d/api";
 import type { FC } from "react";
 import { useCallback, useEffect, useState } from "react";
 import Dropdown from "@/components/Dropdown";
@@ -6,9 +6,12 @@ import { EyeToggle } from "@/components/EyeToggle";
 import PlaySound from "@/components/PlaySound";
 import Accordion from "@/components/SentenceViewer/Accordion";
 import { usePlaySoundContext } from "@/context/playSoundContext";
+import { useTRPC } from "@/utils/api";
 import { hapticFeedback } from "@/utils/tgUtils";
+import { useMutation } from "@tanstack/react-query";
 
 import type { DropdownItem } from "../Dropdown";
+import GlossModal from "../Modal/GlossModal";
 import ModeButton from "./ModeButton";
 import { SentenceText } from "./SentenceText";
 
@@ -25,9 +28,29 @@ export const SentenceViewer: FC<Props> = ({
 }: Props) => {
   const [showFurigana, setShowFurigana] = useState(false);
   const [mode, setMode] = useState<"grammar" | "kanji" | null>(null);
+  const [glosses, setGlosses] = useState<GetGlossesOutput[]>([]);
+  const [glossModalOpen, setGlossModalOpen] = useState(false);
+  const [selectedGloss, setSelectedGloss] = useState<GetGlossesOutput | null>(
+    null,
+  );
+
+  const trpc = useTRPC();
+
+  const getGlossesMutation = useMutation(
+    trpc.viewer.sentence.getGlosses.mutationOptions({
+      onSuccess(data) {
+        // @TODO: show toast
+        // if (data && data.length === 0) {
+        // }
+        setGlosses(data);
+      },
+    }),
+  );
 
   useEffect(() => {
     setShowFurigana(false);
+    setMode(null);
+    setGlosses([]);
   }, [sentence]);
 
   const {
@@ -68,7 +91,21 @@ export const SentenceViewer: FC<Props> = ({
       setMode(null);
       return;
     }
+
+    if (m === "grammar" && glosses.length === 0) {
+      getGlossesMutation.mutate({ id: sentence?.id ?? 0 });
+    }
+
     setMode(m);
+  };
+
+  const onGlossClick = (code: string) => {
+    const found = glosses.find((g) => g.code === code);
+
+    if (found) {
+      setSelectedGloss(found);
+      setGlossModalOpen(true);
+    }
   };
 
   return (
@@ -92,15 +129,16 @@ export const SentenceViewer: FC<Props> = ({
             onClick={() => setShowFurigana((s) => !s)}
           />
           <ModeButton
-            selected={mode === "grammar"}
+            isLoading={getGlossesMutation.isPending}
+            selected={mode === "grammar" && !getGlossesMutation.isPending}
             onClick={() => onModeChange("grammar")}
             mode="grammar"
           />
-          <ModeButton
-            selected={mode === "kanji"}
-            onClick={() => onModeChange("kanji")}
-            mode="kanji"
-          />
+          {/* <ModeButton */}
+          {/*   selected={mode === "kanji"} */}
+          {/*   onClick={() => onModeChange("kanji")} */}
+          {/*   mode="kanji" */}
+          {/* /> */}
 
           {dropdownItems && (
             <Dropdown items={dropdownItems} onOpen={onSettingsOpen} />
@@ -112,13 +150,24 @@ export const SentenceViewer: FC<Props> = ({
           <SentenceText
             sentence={sentence}
             showFurigana={showFurigana}
+            glosses={glosses}
             msg={msg}
+            onGlossClick={onGlossClick}
+            showGlosses={mode === "grammar"}
           />
           <div className="absolute bottom-0 left-0 w-full px-2">
             <Accordion sentence={sentence} />
           </div>
         </div>
       ) : null}
+
+      {selectedGloss && (
+        <GlossModal
+          gloss={selectedGloss}
+          open={glossModalOpen}
+          onOpenChange={setGlossModalOpen}
+        />
+      )}
     </div>
   );
 };

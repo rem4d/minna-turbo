@@ -62,11 +62,11 @@ const Entry = ({
           className={twMerge("flex flex-col space-y-4 overflow-hidden text-sm")}
         >
           <div className="flex flex-col space-y-2">
-            {ru?.map((r) => <div key={r}>{r}</div>)}
+            {ru?.map((r, i) => <div key={r + i}>{r}</div>)}
           </div>
           <Badge color="purple">En</Badge>
           <div className="flex flex-col space-y-2">
-            {en?.map((r) => <div key={r}>{r}</div>)}
+            {en?.map((r, i) => <div key={r + i}>{r}</div>)}
           </div>
         </div>
         {/* <div */}

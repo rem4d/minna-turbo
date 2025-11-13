@@ -67,7 +67,7 @@ export const sentenceRouter = router({
   //
   //     return data;
   //   }),
-  glosses2: publicProcedure
+  glosses: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input, ctx }) => {
       const { data, error } = await ctx.db
@@ -80,5 +80,27 @@ export const sentenceRouter = router({
       }
 
       return data;
+    }),
+  getGlosses: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const { data, error } = await ctx.db
+        .from("gloss_sentence")
+        .select(
+          "*, ...glosses(id,code,kana,comment,is_hidden, romaji, jlpt_level)",
+        )
+        .eq("sentence_id", Number(input.id));
+
+      if (error) {
+        throw new Error(error.message);
+      }
+      const mapped = data.map((d) => {
+        return {
+          ...d,
+          romaji: d.romaji?.replace(/~/g, "〜"),
+        };
+      });
+
+      return mapped;
     }),
 });

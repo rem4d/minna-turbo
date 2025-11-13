@@ -11,6 +11,11 @@ const TranslationContent: React.FC<{
   sentence: SentenceOutput;
 }> = ({ val, transLang, sentence }) => {
   const { t } = useTranslation();
+  let text = transLang === "ru" ? sentence.ru : sentence.en;
+
+  if (!text) {
+    text = sentence.en;
+  }
 
   return (
     <Accordion.Item
@@ -37,9 +42,7 @@ const TranslationContent: React.FC<{
       >
         <AnimateHeight>
           <div>
-            <div className="text-sm">
-              {transLang === "ru" ? sentence.ru : sentence.en}
-            </div>
+            <div className="text-sm">{text}</div>
           </div>
         </AnimateHeight>
       </Accordion.Content>

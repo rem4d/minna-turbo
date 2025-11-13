@@ -30,16 +30,19 @@ export const getStatementsForLevel = async ({
   const { data: sentences, error } = await db
     .from("sentences")
     .select(
-      "id,text,ruby,level,text_with_furigana,en,ru,vox_file_path,vox_speaker_id,members()",
+      "id,text,ruby,level,text_with_furigana,en,ru,vox_file_path,vox_speaker_id",
     )
     .lte("level", level)
     .gt("level", clamp(level - shift, 0, level))
     .not("ru", "is", null)
     .not("en", "is", null)
-    .in("source", ["source1", "source2", "source4", "source3", "challenge"])
-    .not("members()", "is", null)
+    .in("source", ["djg", "10k", "massif"])
+    // .not("gloss_sentence()", "is", null)
+    // .not("members()", "is", null)
     .lte("unknown_kanji_number", numberOfUnknownKanji);
-  // .eq("id", 6217);
+  // .order("id")
+  // .range(10, 1000);
+  // .limit(1000);
 
   if (error) {
     throw new Error(error.message);

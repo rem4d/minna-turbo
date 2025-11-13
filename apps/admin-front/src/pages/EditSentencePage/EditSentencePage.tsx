@@ -68,7 +68,7 @@ export const EditSentencePage: FC = () => {
   });
 
   const { data: glosses2, isLoading: glossesLoading } =
-    api.admin.sentence.glosses2.useQuery(
+    api.admin.sentence.glosses.useQuery(
       { id: sentence?.id ?? 0 },
       {
         enabled: !!sentence?.id,
@@ -206,7 +206,7 @@ export const EditSentencePage: FC = () => {
   const grammarifyMutation = api.admin.gloss.grammarify.useMutation({
     onSuccess() {
       toast.success("Successfully grammarified.");
-      void utils.admin.sentence.glosses2.invalidate();
+      void utils.admin.sentence.glosses.invalidate();
     },
     onError(msg) {
       toast.error(JSON.stringify(msg.message.slice(0, 100)));

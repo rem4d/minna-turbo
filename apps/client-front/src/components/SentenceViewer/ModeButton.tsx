@@ -3,13 +3,34 @@ import KanjiIcon from "@/assets/icons/mode-kanji.svg?react";
 import * as motion from "motion/react-client";
 import { twMerge } from "tailwind-merge";
 
+import Spinner from "../Spinner";
+
 interface Props {
   onClick: () => void;
   selected?: boolean;
+  isLoading: boolean;
   mode: "grammar" | "kanji" | null;
 }
 
-export default function ModeButton({ onClick, selected, mode }: Props) {
+export default function ModeButton({
+  onClick,
+  selected,
+  isLoading,
+  mode,
+}: Props) {
+  let content: React.ReactNode;
+
+  if (isLoading) {
+    content = <Spinner />;
+  } else {
+    content =
+      mode === "kanji" ? (
+        <KanjiIcon className="fill-current" />
+      ) : (
+        <GrammarIcon className="fill-current" />
+      );
+  }
+
   return (
     <div
       className={twMerge(
@@ -31,11 +52,7 @@ export default function ModeButton({ onClick, selected, mode }: Props) {
             selected ? "text-white" : "text-rolling-stone",
           )}
         >
-          {mode === "kanji" ? (
-            <KanjiIcon className="fill-current" />
-          ) : (
-            <GrammarIcon className="fill-current" />
-          )}
+          {content}
         </div>
       </motion.div>
     </div>
