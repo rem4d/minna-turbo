@@ -9,6 +9,7 @@ import { usePlaySoundContext } from "@/context/playSoundContext";
 import { hapticFeedback } from "@/utils/tgUtils";
 
 import type { DropdownItem } from "../Dropdown";
+import ModeButton from "./ModeButton";
 import { SentenceText } from "./SentenceText";
 
 interface Props {
@@ -23,6 +24,7 @@ export const SentenceViewer: FC<Props> = ({
   dropdownItems,
 }: Props) => {
   const [showFurigana, setShowFurigana] = useState(false);
+  const [mode, setMode] = useState<"grammar" | "kanji" | null>(null);
 
   useEffect(() => {
     setShowFurigana(false);
@@ -61,6 +63,14 @@ export const SentenceViewer: FC<Props> = ({
     hapticFeedback("light");
   };
 
+  const onModeChange = (m: "grammar" | "kanji") => {
+    if (m === mode) {
+      setMode(null);
+      return;
+    }
+    setMode(m);
+  };
+
   return (
     <div>
       <div className="flex justify-center px-4">
@@ -80,6 +90,16 @@ export const SentenceViewer: FC<Props> = ({
           <EyeToggle
             show={showFurigana}
             onClick={() => setShowFurigana((s) => !s)}
+          />
+          <ModeButton
+            selected={mode === "grammar"}
+            onClick={() => onModeChange("grammar")}
+            mode="grammar"
+          />
+          <ModeButton
+            selected={mode === "kanji"}
+            onClick={() => onModeChange("kanji")}
+            mode="kanji"
           />
 
           {dropdownItems && (
