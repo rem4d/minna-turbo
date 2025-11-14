@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   authedProcedure,
+  Context,
   publicProcedure,
   redisPrecedure,
   router,
@@ -9,6 +10,59 @@ import { shuffle } from "../../util/shuffle";
 import { dedup } from "../../util/dedup";
 import { getUserByTelegramId } from "../util/getUserByTelegramId";
 import { getStatementsForLevel } from "../util/getStatementsForLevel";
+
+const shuffleSentences = async (ctx: Context, shift: number) => {
+  if (!ctx.user) {
+    throw new Error("No user has been found");
+  }
+
+  const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
+
+  if (!storedUser) {
+    throw new Error("No user has been found");
+  }
+
+  const level = storedUser.level;
+  const userId = storedUser.id;
+
+  console.log(`Getting sentences for user with level = `, level);
+
+  const numberOfUnknownKanji = 3;
+  const { sentences /*, additional */ } = await getStatementsForLevel({
+    level,
+    shift,
+    numberOfUnknownKanji,
+    db: ctx.db,
+    redis: ctx.redis,
+  });
+
+  let known: number[] = [];
+
+  const knownKey = await ctx.redis.get(`known.${userId}`);
+
+  if (knownKey) {
+    known = JSON.parse(knownKey) as number[];
+  }
+
+  const sentencesFiltered = sentences.filter((s) => !known.includes(s.id));
+  // const additionalFiltered = additional.filter((s) => !known.includes(s.id));
+
+  // console.log(
+  //   `Sentences: ${sentencesFiltered.length}, additional: ${additionalFiltered.length}`,
+  // );
+  console.log(`Sentences: ${sentencesFiltered.length}`);
+
+  const shuffledS = shuffle(sentencesFiltered).slice(0, 10);
+  // const shuffledA = shuffle(additionalFiltered).slice(0, 2);
+  const shuffled = shuffle(shuffledS.concat(/*shuffledA*/ []));
+  // const newKnown = known.concat(shuffled.map((s) => s.id));
+
+  // void ctx.redis.set(`known.${level}-${shift}`, JSON.stringify(newKnown), {
+  //   EX: 60 * 60 * 60 * 24, // expire in 3 months,
+  // });
+
+  return shuffled;
+};
 
 export const sentenceRouter = router({
   markAsSeen: authedProcedure
@@ -35,62 +89,16 @@ export const sentenceRouter = router({
 
       const newKnown = dedup(known.concat(input.ids));
 
-      void ctx.redis.set(`known.${userId}`, JSON.stringify(newKnown), {
+      await ctx.redis.set(`known.${userId}`, JSON.stringify(newKnown), {
         EX: 60 * 60 * 60 * 24,
       });
 
-      return true;
+      return shuffleSentences(ctx, 50);
     }),
   getRandomized: redisPrecedure
     .input(z.object({ init: z.boolean() }).optional())
     .mutation(async ({ ctx }) => {
-      const shift = 50;
-
-      const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
-
-      if (!storedUser) {
-        throw new Error("No user has been found");
-      }
-
-      const level = storedUser.level;
-      const userId = storedUser.id;
-      console.log(`Getting sentences for user with level = `, level);
-
-      const numberOfUnknownKanji = 3;
-      const { sentences /*, additional */ } = await getStatementsForLevel({
-        level,
-        shift,
-        numberOfUnknownKanji,
-        db: ctx.db,
-        redis: ctx.redis,
-      });
-
-      let known: number[] = [];
-
-      const knownKey = await ctx.redis.get(`known.${userId}`);
-
-      if (knownKey) {
-        known = JSON.parse(knownKey) as number[];
-      }
-
-      const sentencesFiltered = sentences.filter((s) => !known.includes(s.id));
-      // const additionalFiltered = additional.filter((s) => !known.includes(s.id));
-
-      // console.log(
-      //   `Sentences: ${sentencesFiltered.length}, additional: ${additionalFiltered.length}`,
-      // );
-      console.log(`Sentences: ${sentencesFiltered.length}`);
-
-      const shuffledS = shuffle(sentencesFiltered).slice(0, 10);
-      // const shuffledA = shuffle(additionalFiltered).slice(0, 2);
-      const shuffled = shuffle(shuffledS.concat(/*shuffledA*/ []));
-      // const newKnown = known.concat(shuffled.map((s) => s.id));
-
-      // void ctx.redis.set(`known.${level}-${shift}`, JSON.stringify(newKnown), {
-      //   EX: 60 * 60 * 60 * 24, // expire in 3 months,
-      // });
-
-      return shuffled;
+      return shuffleSentences(ctx, 50);
     }),
   resetCache: redisPrecedure.mutation(async ({ ctx }) => {
     const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
@@ -100,8 +108,8 @@ export const sentenceRouter = router({
     }
     const userId = storedUser.id;
     try {
-      void ctx.redis.del(`known.${userId}`);
-      return true;
+      await ctx.redis.del(`known.${userId}`);
+      return shuffleSentences(ctx, 50);
     } catch {
       throw new Error("Redis error.");
     }

@@ -69,6 +69,7 @@ export const SentencesPage: FC = () => {
         if (variables?.init) {
           setIdle(false);
           setSentences(data);
+          resetActiveIndex();
         } else {
           concatSentences(data);
         }
@@ -77,13 +78,19 @@ export const SentencesPage: FC = () => {
   );
 
   useEffect(() => {
-    if (isIdle) {
-      getRandomized({ init: true });
-    }
-  }, [isIdle, getRandomized]);
+    getRandomized({ init: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { mutate: markAsSeen } = useMutation(
-    trpc.viewer.sentence.markAsSeen.mutationOptions(),
+    trpc.viewer.sentence.markAsSeen.mutationOptions({
+      onSuccess(data) {
+        concatSentences(data);
+        if (data.length === 0) {
+          setShowNoSentencesMessage(true);
+        }
+      },
+    }),
   );
 
   const { data: user } = useQuery(
@@ -112,11 +119,10 @@ export const SentencesPage: FC = () => {
 
   const resetCacheMutation = useMutation(
     trpc.viewer.sentence.resetCache.mutationOptions({
-      onSuccess() {
-        resetSentences();
+      onSuccess(data) {
+        setSentences(data);
         resetActiveIndex();
-        getRandomized();
-        getRandomized({ init: true });
+        setShowNoSentencesMessage(false);
       },
     }),
   );
@@ -135,28 +141,18 @@ export const SentencesPage: FC = () => {
   });
 
   useEffect(() => {
-    if (
-      list &&
-      list.length === 0 &&
-      (sentences.length === 0 ||
-        (sentences.length > 0 && activeIndex === sentences.length - 1))
-    ) {
+    if (list && list.length === 0 && sentences.length === 0) {
       setShowNoSentencesMessage(true);
-    } else {
-      setShowNoSentencesMessage(false);
     }
   }, [list, activeIndex, sentences.length]);
 
   useEffect(() => {
     if (activeIndex === sentences.length - 1) {
-      // console.log("calling...");
-      // console.log(activeIndex, sentences.length);
       const ids = sentences.map((l) => l.id);
       void markAsSeen({ ids });
-      void getRandomized();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIndex, sentences.length, markAsSeen, getRandomized]);
+  }, [activeIndex, sentences.length, markAsSeen]);
 
   const handlePrevClick = () => {
     hapticFeedback("light");
@@ -239,9 +235,11 @@ export const SentencesPage: FC = () => {
   // console.log("activeIndex", activeIndex);
   // console.log("isIdle", isIdle);
   // console.log("list", list);
+  const showLoader =
+    (isSentencesLoading && isIdle) || resetCacheMutation.isPending;
   return (
     <Page backTo="/">
-      {isSentencesLoading && isIdle ? (
+      {showLoader ? (
         loader
       ) : (
         <div className="relative h-full overflow-hidden">
