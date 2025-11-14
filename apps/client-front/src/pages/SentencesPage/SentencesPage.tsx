@@ -1,6 +1,6 @@
 import type { Favourite } from "@/types";
 import type { FC } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Drawer from "@/components/Drawer";
 import { DrawerSettings } from "@/components/DrawerSettings";
 import ConfirmModal from "@/components/Modal/ConfirmModal";
@@ -69,6 +69,10 @@ export const SentencesPage: FC = () => {
         if (variables?.init) {
           setIdle(false);
           setSentences(data);
+          if (data.length === 0) {
+            setShowNoSentencesMessage(true);
+          }
+
           resetActiveIndex();
         } else {
           concatSentences(data);
@@ -77,16 +81,22 @@ export const SentencesPage: FC = () => {
     }),
   );
 
+  const mountRef = useRef(false);
+
   useEffect(() => {
-    getRandomized({ init: true });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (!mountRef.current) {
+      if (isIdle) {
+        getRandomized({ init: true });
+      }
+      mountRef.current = true;
+    }
+  }, [isIdle]);
 
   const { mutate: markAsSeen } = useMutation(
     trpc.viewer.sentence.markAsSeen.mutationOptions({
       onSuccess(data) {
         concatSentences(data);
-        if (data.length === 0) {
+        if (data.length < 2) {
           setShowNoSentencesMessage(true);
         }
       },
@@ -110,6 +120,7 @@ export const SentencesPage: FC = () => {
         resetSentences();
         resetActiveIndex();
         getRandomized({ init: true });
+        setShowNoSentencesMessage(false);
         void queryClient.resetQueries({
           queryKey: trpc.viewer.user.info.queryKey(),
         });
@@ -122,7 +133,9 @@ export const SentencesPage: FC = () => {
       onSuccess(data) {
         setSentences(data);
         resetActiveIndex();
-        setShowNoSentencesMessage(false);
+        if (data.length > 2) {
+          setShowNoSentencesMessage(false);
+        }
       },
     }),
   );

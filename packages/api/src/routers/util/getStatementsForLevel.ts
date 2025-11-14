@@ -35,7 +35,7 @@ export const getStatementsForLevel = async ({
     .gt("level", clamp(level - shift, 0, level))
     .not("ru", "is", null)
     .not("en", "is", null)
-    .in("source", ["djg", "10k", "massif"])
+    // .in("source", [])
     .eq("status", "glossed")
     // .not("gloss_sentence()", "is", null)
     // .not("members()", "is", null)
