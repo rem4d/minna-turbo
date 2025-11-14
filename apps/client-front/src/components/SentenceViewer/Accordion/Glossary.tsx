@@ -10,6 +10,15 @@ const GlossaryContent: React.FC<{
   transLang: "ru" | "en" | null;
   onMemberClick: (id: number) => void;
 }> = ({ members, loadingMembers, transLang, onMemberClick }) => {
+  const getShortText = (m: MemberOutputClient) => {
+    let text = transLang === "ru" ? m.entries[0]?.ru : m.entries[0]?.en;
+
+    if (text.length === 0) {
+      text = m.entries[0]?.en;
+    }
+    return text.join(", ");
+  };
+
   return (
     <div>
       <div className="no-scroll max-h-[40vh] w-full overflow-y-scroll py-2">
@@ -27,16 +36,19 @@ const GlossaryContent: React.FC<{
               <React.Fragment key={m.id}>
                 <div
                   onClick={() => onMemberClick(m.id)}
-                  className="font-yu-gothic cursor-pointer font-medium whitespace-nowrap"
+                  className="font-yu-gothic cursor-pointer border-b border-dashed border-transparent font-medium whitespace-nowrap hover:border-gray-600/40"
                   dangerouslySetInnerHTML={{
                     __html: m.ruby,
                   }}
                 />
                 <div
-                  className="relative top-1 max-w-3/4 truncate text-sm leading-5"
+                  className={twMerge(
+                    "relative top-1 max-w-3/4 cursor-pointer truncate text-sm leading-5",
+                    "border-b border-dashed border-transparent hover:border-gray-600/40",
+                  )}
                   onClick={() => onMemberClick(m.id)}
                 >
-                  {transLang === "ru" ? m.entries[0]?.ru : m.entries[0]?.en}
+                  {getShortText(m)}
                 </div>
               </React.Fragment>
             ))}

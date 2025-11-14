@@ -1,6 +1,5 @@
 import type { GetGlossesOutput, SentenceOutput } from "@rem4d/api";
 import type { ReactElement } from "react";
-import { Character } from "@/components/Character";
 import { useTRPC } from "@/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { twMerge } from "tailwind-merge";
@@ -33,7 +32,7 @@ export function SentenceText({
     sentence.ruby?.includes("<rt>") &&
     !sentence.text_with_furigana?.includes("<rt>");
 
-  const showMeta = user && user.id === 4245;
+  const showMeta = user && (user.id === 4245 || user.id === 6176);
   // const showMeta = true;
   const rawText = showFurigana ? (
     <div
@@ -56,23 +55,9 @@ export function SentenceText({
       <div className={!hasCharacter ? "w-full" : ""}>
         <div>
           <div className="flex">
-            {hasCharacter && (
-              <div className="relative size-[40px] overflow-hidden rounded-full">
-                <Character id={sentence.vox_speaker_id} size="1" />
-              </div>
-            )}
-            <div
-              className={twMerge(
-                "relative flex grow flex-col",
-                hasCharacter && "top-[19px] left-[2px]",
-              )}
-            >
+            <div className={twMerge("relative flex grow flex-col")}>
               <div
-                className={twMerge(
-                  "relative w-full overflow-hidden",
-                  hasCharacter && "top-[5px] -left-[5px]",
-                  !hasCharacter && "mt-[24px]",
-                )}
+                className={twMerge("relative mt-[24px] w-full overflow-hidden")}
               >
                 {showMeta && (
                   <div className="flex flex-col">
@@ -89,7 +74,6 @@ export function SentenceText({
                 <div
                   className={twMerge(
                     "font-yu-gothic relative min-h-[67px] rounded-[20px] border border-black/20 bg-white px-4 py-4 text-xl leading-6 font-medium text-black",
-                    hasCharacter && "ml-4 rounded-tl-[0px]",
                   )}
                 >
                   <div

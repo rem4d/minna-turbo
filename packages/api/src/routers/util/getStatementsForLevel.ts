@@ -18,8 +18,9 @@ export const getStatementsForLevel = async ({
   redis: RedisClientType;
 }) => {
   const cached = await redis.get(`${level}-${shift}`);
+  const isProd = process.env.NODE_ENV !== "development";
 
-  if (cached) {
+  if (cached && isProd) {
     const arr = JSON.parse(cached) as {
       additional: Sentence[];
       sentences: Sentence[];
@@ -29,9 +30,7 @@ export const getStatementsForLevel = async ({
 
   const { data: sentences, error } = await db
     .from("sentences")
-    .select(
-      "id,text,ruby,level,text_with_furigana,en,ru,vox_file_path,vox_speaker_id",
-    )
+    .select("id,text,ruby,level,text_with_furigana,en,ru")
     .lte("level", level)
     .gt("level", clamp(level - shift, 0, level))
     .not("ru", "is", null)
