@@ -83,6 +83,11 @@ const Entry = ({
 const MemberModalContent = ({ member }: { member: MemberOutput }) => {
   const first = member.entries[0];
 
+  if (!first) {
+    console.error("No entries found");
+    return null;
+  }
+
   return (
     <div className="bg-white px-4 py-4">
       <Entry

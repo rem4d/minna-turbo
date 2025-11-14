@@ -100,10 +100,9 @@ export const SentencesPage: FC = () => {
   const updateLevelMuatation = useMutation(
     trpc.viewer.user.updateLevel.mutationOptions({
       onSuccess() {
-        setIdle(true);
         resetSentences();
         resetActiveIndex();
-        getRandomized();
+        getRandomized({ init: true });
         void queryClient.resetQueries({
           queryKey: trpc.viewer.user.info.queryKey(),
         });
@@ -114,10 +113,10 @@ export const SentencesPage: FC = () => {
   const resetCacheMutation = useMutation(
     trpc.viewer.sentence.resetCache.mutationOptions({
       onSuccess() {
-        setIdle(true);
         resetSentences();
         resetActiveIndex();
         getRandomized();
+        getRandomized({ init: true });
       },
     }),
   );
@@ -150,8 +149,8 @@ export const SentencesPage: FC = () => {
 
   useEffect(() => {
     if (activeIndex === sentences.length - 1) {
-      console.log("calling...");
-      console.log(activeIndex, sentences.length);
+      // console.log("calling...");
+      // console.log(activeIndex, sentences.length);
       const ids = sentences.map((l) => l.id);
       void markAsSeen({ ids });
       void getRandomized();
@@ -236,6 +235,10 @@ export const SentencesPage: FC = () => {
     </div>
   );
 
+  // console.log("sentences", sentences);
+  // console.log("activeIndex", activeIndex);
+  // console.log("isIdle", isIdle);
+  // console.log("list", list);
   return (
     <Page backTo="/">
       {isSentencesLoading && isIdle ? (

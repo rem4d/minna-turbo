@@ -19,7 +19,7 @@ export const memberRouter = router({
       }
 
       const res = data
-        .filter((m) => m.is_hidden === false)
+        .filter((m) => m.is_hidden === false && Boolean(m.jmdict_entry_id))
         .map((m) => ({
           ...m,
           entries: m.entries
