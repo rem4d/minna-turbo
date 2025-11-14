@@ -12,6 +12,7 @@ import DrawerSettings from "@/components/DrawerSettings/DrawerSettings";
 import { Page } from "@/components/Page";
 import { SpinnerBig } from "@/components/Spinner";
 import Tabs from "@/components/Tabs";
+import { useAppStore } from "@/store";
 import { useTRPC } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import { hapticFeedback } from "@/utils/tgUtils";
@@ -26,6 +27,8 @@ export const FlashcardsPage = () => {
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [isFinished, setFinished] = useState(false);
   const [level, setLevel] = useState(0);
+
+  const setIdle = useAppStore((state) => state.setIdle);
 
   const [showHelpModal, setShowHelpModal] = useLocalStorage(
     "kic:show_help_modal",
@@ -102,9 +105,7 @@ export const FlashcardsPage = () => {
         void queryClient.resetQueries({
           queryKey: trpc.viewer.user.info.queryKey(),
         });
-        void queryClient.resetQueries({
-          queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
-        });
+        setIdle(true);
       },
     }),
   );

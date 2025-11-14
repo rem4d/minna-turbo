@@ -11,6 +11,7 @@ interface SentencesSlice {
   sentences: SentenceOutput[];
   idle: boolean;
   setSentences: (p: SentenceOutput[]) => void;
+  concatSentences: (p: SentenceOutput[]) => void;
   resetSentences: () => void;
   setIdle: (p: boolean) => void;
 }
@@ -61,7 +62,8 @@ const sentencesSlice: StateCreator<StoreType, [], [], SentencesSlice> = (
 ) => ({
   sentences: [],
   idle: true,
-  setSentences: (p) =>
+  setSentences: (p) => set({ sentences: p }),
+  concatSentences: (p) =>
     set((state) => ({ sentences: state.sentences.concat(p) })),
   setIdle: (p) => set({ idle: p }),
   resetSentences: () => set({ sentences: [] }),

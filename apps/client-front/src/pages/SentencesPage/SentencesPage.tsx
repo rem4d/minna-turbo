@@ -24,6 +24,7 @@ export const SentencesPage: FC = () => {
   const decreaseActiveIndex = useAppStore((state) => state.decrease);
   const resetActiveIndex = useAppStore((state) => state.reset);
   const resetSentences = useAppStore((state) => state.resetSentences);
+  const concatSentences = useAppStore((state) => state.concatSentences);
 
   const sentences = useAppStore((state) => state.sentences);
   const setSentences = useAppStore((state) => state.setSentences);
@@ -58,25 +59,30 @@ export const SentencesPage: FC = () => {
 
   const _isMobile = useIsMobile();
 
-  const getRandomizedMutation = useMutation(
+  const {
+    mutate: getRandomized,
+    isPending: isSentencesLoading,
+    data: list,
+  } = useMutation(
     trpc.viewer.sentence.getRandomized.mutationOptions({
-      onSuccess(data) {
-        setIdle(false);
-        setSentences(data);
+      onSuccess(data, variables) {
+        if (variables?.init) {
+          setIdle(false);
+          setSentences(data);
+        } else {
+          concatSentences(data);
+        }
       },
     }),
   );
 
   useEffect(() => {
     if (isIdle) {
-      getRandomizedMutation.mutate();
+      getRandomized({ init: true });
     }
-  }, [isIdle]);
+  }, [isIdle, getRandomized]);
 
-  const isLoadingSentences = getRandomizedMutation.isPending;
-  const mutationData = getRandomizedMutation.data;
-
-  const markAsSeenMutation = useMutation(
+  const { mutate: markAsSeen } = useMutation(
     trpc.viewer.sentence.markAsSeen.mutationOptions(),
   );
 
@@ -94,10 +100,10 @@ export const SentencesPage: FC = () => {
   const updateLevelMuatation = useMutation(
     trpc.viewer.user.updateLevel.mutationOptions({
       onSuccess() {
-        // void queryClient.resetQueries({
-        //   queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
-        // });
-        //
+        setIdle(true);
+        resetSentences();
+        resetActiveIndex();
+        getRandomized();
         void queryClient.resetQueries({
           queryKey: trpc.viewer.user.info.queryKey(),
         });
@@ -111,7 +117,7 @@ export const SentencesPage: FC = () => {
         setIdle(true);
         resetSentences();
         resetActiveIndex();
-        getRandomizedMutation.mutate();
+        getRandomized();
       },
     }),
   );
@@ -131,8 +137,8 @@ export const SentencesPage: FC = () => {
 
   useEffect(() => {
     if (
-      mutationData &&
-      mutationData.length === 0 &&
+      list &&
+      list.length === 0 &&
       (sentences.length === 0 ||
         (sentences.length > 0 && activeIndex === sentences.length - 1))
     ) {
@@ -140,15 +146,18 @@ export const SentencesPage: FC = () => {
     } else {
       setShowNoSentencesMessage(false);
     }
-  }, [mutationData, activeIndex, sentences.length]);
+  }, [list, activeIndex, sentences.length]);
 
   useEffect(() => {
-    if (sentences.length && activeIndex === sentences.length - 1) {
+    if (activeIndex === sentences.length - 1) {
+      console.log("calling...");
+      console.log(activeIndex, sentences.length);
       const ids = sentences.map((l) => l.id);
-      void markAsSeenMutation.mutate({ ids });
-      getRandomizedMutation.mutate();
+      void markAsSeen({ ids });
+      void getRandomized();
     }
-  }, [activeIndex, sentences.length, markAsSeenMutation.mutate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeIndex, sentences.length, markAsSeen, getRandomized]);
 
   const handlePrevClick = () => {
     hapticFeedback("light");
@@ -229,7 +238,7 @@ export const SentencesPage: FC = () => {
 
   return (
     <Page backTo="/">
-      {isLoadingSentences && isIdle ? (
+      {isSentencesLoading && isIdle ? (
         loader
       ) : (
         <div className="relative h-full overflow-hidden">
