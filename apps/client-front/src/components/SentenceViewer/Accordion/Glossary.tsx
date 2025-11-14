@@ -13,8 +13,8 @@ const GlossaryContent: React.FC<{
   const getShortText = (m: MemberOutputClient) => {
     let text = transLang === "ru" ? m.entries[0]?.ru : m.entries[0]?.en;
 
-    if (text.length === 0) {
-      text = m.entries[0]?.en;
+    if (!text || text.length === 0) {
+      text = m.entries[0]?.en ?? [];
     }
     return text.join(", ");
   };

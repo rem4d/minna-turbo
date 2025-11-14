@@ -146,7 +146,7 @@ export const SentenceViewer: FC<Props> = ({
         </div>
       </div>
       {sentence ? (
-        <div className="min-h-[400px] px-4">
+        <div className="px-4">
           <SentenceText
             sentence={sentence}
             showFurigana={showFurigana}

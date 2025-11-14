@@ -14,7 +14,6 @@ import { useTRPC } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import { hapticFeedback, useIsMobile } from "@/utils/tgUtils";
 import useUnmount from "@/utils/useUnmount";
-import { type SentenceOutput } from "@rem4d/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Trans, useTranslation } from "react-i18next";
@@ -24,6 +23,12 @@ export const SentencesPage: FC = () => {
   const increaseActiveIndex = useAppStore((state) => state.increase);
   const decreaseActiveIndex = useAppStore((state) => state.decrease);
   const resetActiveIndex = useAppStore((state) => state.reset);
+  const resetSentences = useAppStore((state) => state.resetSentences);
+
+  const sentences = useAppStore((state) => state.sentences);
+  const setSentences = useAppStore((state) => state.setSentences);
+  const isIdle = useAppStore((state) => state.idle);
+  const setIdle = useAppStore((state) => state.setIdle);
 
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [toastData, setToastOpen] = useState({
@@ -50,19 +55,26 @@ export const SentencesPage: FC = () => {
     "kic:favorites",
     [],
   );
-  const [storedList, setStoredList] = useState<SentenceOutput[]>(
-    [] as SentenceOutput[],
-  );
 
   const _isMobile = useIsMobile();
 
-  const getRandomizedQuery = trpc.viewer.sentence.getRandomized.queryOptions(
-    undefined,
-    {
-      throwOnError: true,
-    },
+  const getRandomizedMutation = useMutation(
+    trpc.viewer.sentence.getRandomized.mutationOptions({
+      onSuccess(data) {
+        setIdle(false);
+        setSentences(data);
+      },
+    }),
   );
-  const { data: list, isLoading } = useQuery(getRandomizedQuery);
+
+  useEffect(() => {
+    if (isIdle) {
+      getRandomizedMutation.mutate();
+    }
+  }, [isIdle]);
+
+  const isLoadingSentences = getRandomizedMutation.isPending;
+  const mutationData = getRandomizedMutation.data;
 
   const markAsSeenMutation = useMutation(
     trpc.viewer.sentence.markAsSeen.mutationOptions(),
@@ -82,13 +94,13 @@ export const SentencesPage: FC = () => {
   const updateLevelMuatation = useMutation(
     trpc.viewer.user.updateLevel.mutationOptions({
       onSuccess() {
-        void queryClient.resetQueries({
-          queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
-        });
+        // void queryClient.resetQueries({
+        //   queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
+        // });
+        //
         void queryClient.resetQueries({
           queryKey: trpc.viewer.user.info.queryKey(),
         });
-        resetActiveIndex();
       },
     }),
   );
@@ -96,57 +108,47 @@ export const SentencesPage: FC = () => {
   const resetCacheMutation = useMutation(
     trpc.viewer.sentence.resetCache.mutationOptions({
       onSuccess() {
-        void queryClient.resetQueries({
-          queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
-        });
+        setIdle(true);
+        resetSentences();
         resetActiveIndex();
+        getRandomizedMutation.mutate();
       },
     }),
   );
-  const sentence = storedList[activeIndex];
+
+  const sentence = sentences[activeIndex];
+
   const { t } = useTranslation();
 
   useUnmount(() => {
-    const ids = storedList.slice(0, activeIndex).map((l) => l.id);
-    if (ids.length > 0) {
-      markAsSeenMutation.mutate({ ids });
-    }
+    // if (list) {
+    //   const ids = list.slice(0, activeIndex).map((l) => l.id);
+    //   if (ids.length > 0) {
+    //     markAsSeenMutation.mutate({ ids });
+    //   }
+    // }
   });
 
   useEffect(() => {
-    if (list && list.length > 0) {
-      setStoredList((sl) => sl.concat(list));
-    }
-  }, [list]);
-
-  useEffect(() => {
-    if (list && list.length === 0 && activeIndex === storedList.length) {
+    if (
+      mutationData &&
+      mutationData.length === 0 &&
+      (sentences.length === 0 ||
+        (sentences.length > 0 && activeIndex === sentences.length - 1))
+    ) {
       setShowNoSentencesMessage(true);
-      // setStoredList([]);
     } else {
       setShowNoSentencesMessage(false);
     }
-  }, [list, activeIndex, storedList]);
+  }, [mutationData, activeIndex, sentences.length]);
 
-  useEffect(
-    () => {
-      if (activeIndex === storedList.length - 1) {
-        // const ids = storedList.map((l) => l.id);
-        // void markAsSeenMutation.mutate({ ids });
-        void queryClient.invalidateQueries({
-          queryKey: trpc.viewer.sentence.getRandomized.queryKey(),
-        });
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      activeIndex,
-      storedList,
-      markAsSeenMutation,
-      // trpc.viewer.sentence.getRandomized,
-      // queryClient,
-    ],
-  );
+  useEffect(() => {
+    if (sentences.length && activeIndex === sentences.length - 1) {
+      const ids = sentences.map((l) => l.id);
+      void markAsSeenMutation.mutate({ ids });
+      getRandomizedMutation.mutate();
+    }
+  }, [activeIndex, sentences.length, markAsSeenMutation.mutate]);
 
   const handlePrevClick = () => {
     hapticFeedback("light");
@@ -201,13 +203,13 @@ export const SentencesPage: FC = () => {
   };
 
   const onResetCacheClick = () => {
-    setStoredList([]);
     resetCacheMutation.mutate();
   };
 
   const disablePrevNav = activeIndex === 0;
+
   const disableNextNav =
-    activeIndex === storedList.length || storedList.length === 0;
+    sentences.length === 0 || activeIndex === sentences.length - 1;
 
   const handleModalConfirm = (msg: string) => {
     setFavorites(favorites.concat({ ...sentence, msg }));
@@ -227,7 +229,7 @@ export const SentencesPage: FC = () => {
 
   return (
     <Page backTo="/">
-      {isLoading ? (
+      {isLoadingSentences && isIdle ? (
         loader
       ) : (
         <div className="relative h-full overflow-hidden">
@@ -257,7 +259,7 @@ export const SentencesPage: FC = () => {
 
             {/* no sentences message*/}
             {showNoSentencesMessage && (
-              <div className="tems-center mt-8 flex flex-col items-center justify-center space-y-8 px-4">
+              <div className="tems-center mt-12 flex flex-col items-center justify-center space-y-8 px-12">
                 <div className="text-scorpion/90 text-center text-sm">
                   {/* <Trans i18nKey="no_sentences" /> */}
                   <div className="mb-4">{t("no_sentences_title")}</div>

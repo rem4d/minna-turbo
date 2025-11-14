@@ -41,7 +41,7 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
     trpc.viewer.member.membersById.queryOptions(
       { id: sentence?.id ?? 0 },
       {
-        enabled: !!sentence?.id,
+        enabled: !!sentence?.id && openItems.includes("2"),
       },
     ),
   );

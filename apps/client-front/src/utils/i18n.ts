@@ -86,7 +86,7 @@ In the "Flashcards" section, you can learn and repeat kanji. And then come back 
           again: "Again",
           no_sentences_title: `You've seen everything!`,
           no_sentences_desc: `You  may know very few kanji, so there's not many sentences could be made up.
-Please select more kanji in settings to see more sentences. Or you could reset cache using the button below.`,
+Please select more kanji in settings to see more sentences. Or you could reset cache using below button`,
           reset_cache: "Reset cache",
           ai_review: "AI review",
           cancel: "Cancel",

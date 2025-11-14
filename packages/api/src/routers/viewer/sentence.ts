@@ -41,7 +41,7 @@ export const sentenceRouter = router({
 
       return true;
     }),
-  getRandomized: redisPrecedure.query(async ({ ctx }) => {
+  getRandomized: redisPrecedure.mutation(async ({ ctx }) => {
     const shift = 50;
 
     const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
@@ -79,7 +79,7 @@ export const sentenceRouter = router({
     // );
     console.log(`Sentences: ${sentencesFiltered.length}`);
 
-    const shuffledS = shuffle(sentencesFiltered).slice(0, 20);
+    const shuffledS = shuffle(sentencesFiltered).slice(0, 10);
     // const shuffledA = shuffle(additionalFiltered).slice(0, 2);
     const shuffled = shuffle(shuffledS.concat(/*shuffledA*/ []));
     // const newKnown = known.concat(shuffled.map((s) => s.id));

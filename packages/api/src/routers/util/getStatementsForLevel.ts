@@ -18,7 +18,7 @@ export const getStatementsForLevel = async ({
   redis: RedisClientType;
 }) => {
   const cached = await redis.get(`${level}-${shift}`);
-  const isProd = process.env.NODE_ENV !== "development";
+  const isProd = true; // process.env.NODE_ENV !== "development";
 
   if (cached && isProd) {
     const arr = JSON.parse(cached) as {

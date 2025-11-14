@@ -1,7 +1,19 @@
 import type { StateCreator } from "zustand";
+import { type SentenceOutput } from "@rem4d/api";
 import { create } from "zustand";
 
-type StoreType = ActiveIndexSlice & AccordionSlice & SearchSlice;
+type StoreType = SentencesSlice &
+  ActiveIndexSlice &
+  AccordionSlice &
+  SearchSlice;
+
+interface SentencesSlice {
+  sentences: SentenceOutput[];
+  idle: boolean;
+  setSentences: (p: SentenceOutput[]) => void;
+  resetSentences: () => void;
+  setIdle: (p: boolean) => void;
+}
 
 interface ActiveIndexSlice {
   index: number;
@@ -24,6 +36,7 @@ interface AccordionSlice {
   setOpenItems: (p: string[]) => void;
   closeItem: (p: string) => void;
 }
+
 const accordionSlice: StateCreator<StoreType, [], [], AccordionSlice> = (
   set,
 ) => ({
@@ -43,8 +56,20 @@ const searchSlice: StateCreator<StoreType, [], [], SearchSlice> = (set) => ({
   setText: (p) => set({ text: p }),
 });
 
+const sentencesSlice: StateCreator<StoreType, [], [], SentencesSlice> = (
+  set,
+) => ({
+  sentences: [],
+  idle: true,
+  setSentences: (p) =>
+    set((state) => ({ sentences: state.sentences.concat(p) })),
+  setIdle: (p) => set({ idle: p }),
+  resetSentences: () => set({ sentences: [] }),
+});
+
 export const useAppStore = create<StoreType>((...a) => ({
   ...activeIndexSlice(...a),
   ...accordionSlice(...a),
   ...searchSlice(...a),
+  ...sentencesSlice(...a),
 }));

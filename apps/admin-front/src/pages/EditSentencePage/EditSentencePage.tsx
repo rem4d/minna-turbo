@@ -335,6 +335,13 @@ export const EditSentencePage: FC = () => {
                         >
                           {g.kana}
                         </Text>
+                        <Text
+                          weight="bold"
+                          size="2"
+                          className="whitespace-nowrap"
+                        >
+                          {g.code}
+                        </Text>
                         <Text size="2">{g.comment}</Text>
                         <Text size="2">
                           {g.start},{g.end}
