@@ -67,7 +67,7 @@ export const EditSentencePage: FC = () => {
     },
   });
 
-  const { data: glosses2, isLoading: glossesLoading } =
+  const { data: glosses, isLoading: glossesLoading } =
     api.admin.sentence.glosses.useQuery(
       { id: sentence?.id ?? 0 },
       {
@@ -335,9 +335,9 @@ export const EditSentencePage: FC = () => {
                 <Box mt="4" py="2">
                   {showGrammarSpinner && <Spinner />}
                   {!showGrammarSpinner &&
-                    glosses2 &&
-                    glosses2.length > 0 &&
-                    glosses2.map((g) => (
+                    glosses &&
+                    glosses.length > 0 &&
+                    glosses.map((g) => (
                       <Flex gap="2" key={g.id}>
                         <Text
                           weight="bold"
@@ -366,15 +366,15 @@ export const EditSentencePage: FC = () => {
                         </Text>
                       </Flex>
                     ))}
-                  <Box mb="4" />
-                  {!showGrammarSpinner && glosses2 && glosses2.length === 0 && (
+                  <Box mb="8" />
+                  {!showGrammarSpinner && glosses && glosses.length === 0 && (
                     <Text>No glosses found.</Text>
                   )}
-                  {glosses2 && (
+                  {glosses && furigana && (
                     <TextVisualizer
                       text={sentence.text}
                       readings={furigana}
-                      glosses={glosses2}
+                      glosses={glosses}
                       variant="color"
                     />
                   )}

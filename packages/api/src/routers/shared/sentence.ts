@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../../trpc";
 import { getStatementsForLevel } from "../util/getStatementsForLevel";
+import type { RequiredFields } from "@rem4d/utils";
 
 export const sentenceRouter = router({
   getSentencesForLevel: publicProcedure
@@ -79,7 +80,19 @@ export const sentenceRouter = router({
         throw new Error(error.message);
       }
 
-      return data;
+      if (data) {
+        type DataType = (typeof data)[number];
+        interface ValidGloss extends DataType {
+          code: string;
+        }
+
+        function isValid(d: DataType): d is ValidGloss {
+          return typeof d.code === "string";
+        }
+
+        const filtered = data.filter(isValid);
+        return filtered;
+      }
     }),
   getGlosses: publicProcedure
     .input(z.object({ id: z.number() }))
