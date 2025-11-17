@@ -22,9 +22,9 @@ import { Player } from "@/components/Player";
 import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
 import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
 import GrammarGlosses from "./GrammarGlosses";
-import { GlossVisualizer } from "@/components/GlossVisualizer";
-import { AdminMemberOutput } from "@rem4d/api";
+import { AdminMemberOutput, FuriganaOutput } from "@rem4d/api";
 import Members from "./Members";
+import { TextVisualizer } from "@/components/TextVisualizer";
 
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
@@ -107,6 +107,13 @@ export const EditSentencePage: FC = () => {
       },
     });
 
+  const { data: furigana } = api.admin.sentence.getFurigana.useQuery(
+    {
+      text: sentence?.text ?? "",
+    },
+    { enabled: !!sentence?.text },
+  );
+
   useEffect(() => {
     if (analyzeData) {
       setTextWithFuriganaHtml(analyzeData.text_with_furigana);
@@ -178,6 +185,10 @@ export const EditSentencePage: FC = () => {
 
   const onAnalyze = () => {
     void analyze(input);
+  };
+
+  const onGetFurigana = () => {
+    void getFurigana(input);
   };
 
   const onRemoveSpeaker = () => {
@@ -321,7 +332,7 @@ export const EditSentencePage: FC = () => {
               </DataList.Root>
               <Box mt="8">
                 <Button onClick={onGrammarifyClick}>Grammarify</Button>
-                <Box mt="4">
+                <Box mt="4" py="2">
                   {showGrammarSpinner && <Spinner />}
                   {!showGrammarSpinner &&
                     glosses2 &&
@@ -342,16 +353,32 @@ export const EditSentencePage: FC = () => {
                         >
                           {g.code}
                         </Text>
+                        <Text
+                          weight="bold"
+                          size="2"
+                          className="whitespace-nowrap"
+                        >
+                          {g.romaji}
+                        </Text>
                         <Text size="2">{g.comment}</Text>
                         <Text size="2">
                           {g.start},{g.end}
                         </Text>
                       </Flex>
                     ))}
+                  <Box mb="4" />
                   {!showGrammarSpinner && glosses2 && glosses2.length === 0 && (
                     <Text>No glosses found.</Text>
                   )}
-                  <GlossVisualizer text={sentence.text} glosses={glosses2} />
+                  {glosses2 && (
+                    <TextVisualizer
+                      text={sentence.text}
+                      readings={furigana}
+                      glosses={glosses2}
+                      variant="color"
+                    />
+                  )}
+                  {/* <GlossVisualizer text={sentence.text} glosses={glosses2} /> */}
                 </Box>
               </Box>
             </Flex>
@@ -388,7 +415,7 @@ export const EditSentencePage: FC = () => {
                   onChange={(e) => setComment(e.target.value)}
                 />
               </Box>
-              <GrammarGlosses sentenceId={sentence?.id} />
+              {/* <GrammarGlosses sentenceId={sentence?.id} /> */}
             </Flex>
           </Grid>
           <Grid className="" mt="6" columns="2" gap="2">
@@ -428,6 +455,23 @@ export const EditSentencePage: FC = () => {
                     mb="6"
                     onChange={(e) => setRubyHtml(e.target.value)}
                   />
+                </Flex>
+
+                <Flex direction="column" justify="start">
+                  <Button
+                    onClick={onGetFurigana}
+                    disabled={input.length === 0}
+                    mb="4"
+                  >
+                    Get furigana
+                  </Button>
+                  {/* <TextVisualizer text={input} furigana={furigana} /> */}
+                </Flex>
+                <Flex direction="column" gapY="2">
+                  <Heading size="4">Furigana</Heading>
+                  <Text size="7" className="font-klee">
+                    f
+                  </Text>
                 </Flex>
               </Flex>
             </Flex>

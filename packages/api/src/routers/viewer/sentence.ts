@@ -52,14 +52,7 @@ const shuffleSentences = async (ctx: Context, shift: number) => {
   // );
   console.log(`Sentences: ${sentencesFiltered.length}`);
 
-  const shuffledS = shuffle(sentencesFiltered).slice(0, 10);
-  // const shuffledA = shuffle(additionalFiltered).slice(0, 2);
-  const shuffled = shuffle(shuffledS.concat(/*shuffledA*/ []));
-  // const newKnown = known.concat(shuffled.map((s) => s.id));
-
-  // void ctx.redis.set(`known.${level}-${shift}`, JSON.stringify(newKnown), {
-  //   EX: 60 * 60 * 60 * 24, // expire in 3 months,
-  // });
+  const shuffled = shuffle(sentencesFiltered).slice(0, 10);
 
   return shuffled;
 };

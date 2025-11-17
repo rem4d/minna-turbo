@@ -72,7 +72,7 @@ export const sentenceRouter = router({
     .query(async ({ input, ctx }) => {
       const { data, error } = await ctx.db
         .from("gloss_sentence")
-        .select("*, ...glosses(id,code,kana,comment,is_hidden)")
+        .select("*, ...glosses(id,code,kana,comment,is_hidden,romaji)")
         .eq("sentence_id", Number(input.id));
 
       if (error) {

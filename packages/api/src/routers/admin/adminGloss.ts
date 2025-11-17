@@ -295,8 +295,18 @@ export const adminGlossRouter = router({
         throw new Error("No glosses found");
       }
 
-      const res = await fetch("http://127.0.0.1:5000?text=" + sentence.text);
+      const res = await fetch("http://127.0.0.1:5000/glosses", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: sentence.text,
+        }),
+      });
+
       if (!res.ok) {
+        console.log(res);
         throw new Error("Failed to fetch response");
       }
       const response = (await res.json()) as unknown as {

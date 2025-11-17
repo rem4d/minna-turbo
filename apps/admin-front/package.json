@@ -11,6 +11,7 @@
     "@rem4d/db": "workspace:*",
     "@rem4d/gloss": "workspace:^",
     "@rem4d/typescript-config": "workspace:*",
+    "@rem4d/utils": "workspace:^",
     "@tailwindcss/postcss": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-query-devtools": "catalog:",

@@ -69,11 +69,18 @@ export const adminMemberRouter = router({
     .input(z.object({ text: z.string() }))
     .mutation(async ({ input }) => {
       const text = input.text;
-      const result = await fetch(
-        "http://127.0.0.1:5000/dictionary?text=" + text,
-      );
+      const result = await fetch("http://127.0.0.1:5000/dictionary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: text,
+        }),
+      });
 
       if (!result.ok) {
+        console.log(result);
         throw new Error("Failed to fetch response");
       }
 
