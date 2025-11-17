@@ -1,3 +1,3 @@
-import { TextVisualizer } from "./TextVisualizer";
+import { TextVisualizer, type ReadingPositionItem } from "./TextVisualizer";
 
-export { TextVisualizer };
+export { TextVisualizer, ReadingPositionItem };

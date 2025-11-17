@@ -1,7 +1,8 @@
 import type { GetGlossesOutput, SentenceOutput } from "@rem4d/api";
 import type { ReactElement } from "react";
+import { useEffect, useState } from "react";
 import { useTRPC } from "@/utils/api";
-import { TextVisualizer } from "@app/ui";
+import { ReadingPositionItem, TextVisualizer } from "@app/ui";
 import { useQuery } from "@tanstack/react-query";
 import { twMerge } from "tailwind-merge";
 
@@ -25,7 +26,22 @@ export function SentenceText({
   const hasCharacter = false; // !!sentence.vox_speaker_id;
   const trpc = useTRPC();
   const glosses = glosses_.filter(isValid);
-  const readings = JSON.parse(sentence.text_with_furigana ?? "[]");
+  const [readings, setReadings] = useState<ReadingPositionItem[]>([]);
+
+  useEffect(() => {
+    const parse = (txt: string) => {
+      try {
+        const arr = JSON.parse(txt) as ReadingPositionItem[];
+        return arr;
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+    };
+    if (sentence.text_with_furigana) {
+      setReadings(parse(sentence.text_with_furigana));
+    }
+  }, [sentence]);
 
   const { data: user } = useQuery(trpc.viewer.user.info.queryOptions());
 

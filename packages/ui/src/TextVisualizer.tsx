@@ -7,7 +7,7 @@ interface GlossInput {
   end: number;
 }
 
-interface ReadingPositionItem {
+export interface ReadingPositionItem {
   kanji: string;
   reading: string;
   start: number;
@@ -62,6 +62,7 @@ const renderStructuredText = (
   const result: React.ReactNode[] = [];
 
   let i = 0;
+
   for (const { text, gloss, reading } of arr) {
     i++;
     const readingSpan = reading ? (

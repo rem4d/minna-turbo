@@ -7,7 +7,7 @@ interface GlossInput {
   end: number;
 }
 
-interface ReadingPositionItem {
+export interface ReadingPositionItem {
   kanji: string;
   reading: string;
   start: number;
