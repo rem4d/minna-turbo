@@ -81,17 +81,18 @@ export const sentenceRouter = router({
       }
 
       if (data) {
-        type DataType = (typeof data)[number];
-        interface ValidGloss extends DataType {
-          code: string;
-        }
-
-        function isValid(d: DataType): d is ValidGloss {
-          return typeof d.code === "string";
-        }
-
-        const filtered = data.filter(isValid);
-        return filtered;
+        // type DataType = (typeof data)[number];
+        // interface ValidGloss extends DataType {
+        //   code: string;
+        // }
+        //
+        // function isValid(d: DataType): d is ValidGloss {
+        //   return typeof d.code === "string";
+        // }
+        //
+        // const filtered = data.filter(isValid);
+        // return filtered;
+        return data;
       }
     }),
   getGlosses: publicProcedure

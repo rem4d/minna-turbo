@@ -1,4 +1,5 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { TextVisualizer } from "@app/ui";
 import type { FC } from "react";
 import toast from "react-hot-toast";
 import {
@@ -24,7 +25,6 @@ import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
 import GrammarGlosses from "./GrammarGlosses";
 import { AdminMemberOutput, FuriganaOutput } from "@rem4d/api";
 import Members from "./Members";
-import { TextVisualizer } from "@/components/TextVisualizer";
 
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
