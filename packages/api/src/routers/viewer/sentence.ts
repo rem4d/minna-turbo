@@ -130,4 +130,28 @@ export const sentenceRouter = router({
       }
       return data;
     }),
+  // getFurigana: publicProcedure
+  //   .input(
+  //     z.object({
+  //       text: z.string(),
+  //     }),
+  //   )
+  //   .query(async ({ input }) => {
+  //     const text = input.text;
+  //
+  //     const result = await fetch("http://127.0.0.1:5000/furigana?text=" + text);
+  //
+  //     if (!result.ok) {
+  //       throw new Error("Failed to fetch response");
+  //     }
+  //
+  //     const data = (await result.json()) as unknown as {
+  //       kanji: string;
+  //       reading: string;
+  //       start: number;
+  //       end: number;
+  //     }[];
+  //
+  //     return data;
+  //   }),
 });

@@ -1,10 +1,9 @@
 import type { GetGlossesOutput, SentenceOutput } from "@rem4d/api";
 import type { ReactElement } from "react";
 import { useTRPC } from "@/utils/api";
+import { TextVisualizer } from "@app/ui";
 import { useQuery } from "@tanstack/react-query";
 import { twMerge } from "tailwind-merge";
-
-import { GlossedText } from "./GlossedText";
 
 export interface Props {
   sentence: SentenceOutput;
@@ -18,37 +17,19 @@ export interface Props {
 export function SentenceText({
   sentence,
   msg,
-  glosses,
+  glosses: glosses_,
   showFurigana,
   showGlosses,
   onGlossClick,
 }: Props): ReactElement {
   const hasCharacter = false; // !!sentence.vox_speaker_id;
   const trpc = useTRPC();
+  const glosses = glosses_.filter(isValid);
+  const readings = JSON.parse(sentence.text_with_furigana ?? "[]");
 
   const { data: user } = useQuery(trpc.viewer.user.info.queryOptions());
 
-  const onlyOneHasFurigana =
-    sentence.ruby?.includes("<rt>") &&
-    !sentence.text_with_furigana?.includes("<rt>");
-
   const showMeta = user && (user.id === 4245 || user.id === 6176);
-  // const showMeta = true;
-  const rawText = showFurigana ? (
-    <div
-      className=""
-      dangerouslySetInnerHTML={{
-        __html: sentence.ruby ?? "",
-      }}
-    />
-  ) : (
-    <div
-      className={onlyOneHasFurigana ? "" : ""}
-      dangerouslySetInnerHTML={{
-        __html: sentence.text_with_furigana ?? "",
-      }}
-    />
-  );
 
   return (
     <>
@@ -83,15 +64,19 @@ export function SentenceText({
                     )}
                   >
                     <div className="flex flex-col items-center justify-center gap-2 leading-8">
-                      {showGlosses ? (
-                        <GlossedText
-                          text={sentence.text}
-                          glosses={glosses}
-                          onGlossClick={onGlossClick}
-                        />
-                      ) : (
-                        rawText
-                      )}
+                      <div className="flex flex-wrap items-center justify-center">
+                        {glosses && readings && (
+                          <TextVisualizer
+                            text={sentence.text}
+                            showGlosses={showGlosses}
+                            showReadings={showFurigana}
+                            readings={readings}
+                            glosses={glosses}
+                            variant="dash"
+                            onGlossClick={onGlossClick}
+                          />
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -102,4 +87,12 @@ export function SentenceText({
       </div>
     </>
   );
+}
+
+interface ValidGloss extends GetGlossesOutput {
+  code: string;
+}
+
+function isValid(d: GetGlossesOutput): d is ValidGloss {
+  return typeof d.code === "string";
 }

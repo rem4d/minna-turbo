@@ -19,6 +19,8 @@ type Variant = "color" | "dash";
 interface TextVisualizerProps {
   glosses: GlossInput[];
   onGlossClick?: (code: string) => void;
+  showGlosses: boolean;
+  showReadings: boolean;
   readings: ReadingPositionItem[];
   text: string;
   variant?: Variant;
@@ -30,14 +32,16 @@ export const TextVisualizer = ({
   glosses,
   readings,
   text,
+  showGlosses,
+  showReadings,
   variant = "color",
   onGlossClick,
 }: TextVisualizerProps) => {
   const readings_ = readings.map((r) => ({ ...r, code: r.reading }));
   // const glosses = [];
 
-  const r = structureText(text, readings_);
-  const g = structureText(text, glosses);
+  const r = structureText(text, showReadings ? readings_ : []);
+  const g = structureText(text, showGlosses ? glosses : []);
   const merged = mergePositions(r, g);
   const spans = renderStructuredText(merged, variant, onGlossClick);
 
@@ -45,7 +49,7 @@ export const TextVisualizer = ({
   // console.log(g);
   // console.log(merged);
   //
-  return <div className="">{spans}</div>;
+  return spans;
 };
 
 const Text = ({ t }: { t: string }) => <span>{`${t}`}</span>;
@@ -61,7 +65,13 @@ const renderStructuredText = (
   for (const { text, gloss, reading } of arr) {
     i++;
     const readingSpan = reading ? (
-      <span className="text-sm w-full text-center absolute top-[-16px] whitespace-nowrap">
+      <span
+        className="text-xs w-full -translate-x-1/2 left-1/2 text-center absolute whitespace-nowrap"
+        style={{
+          top: -10,
+          fontSize: 10,
+        }}
+      >
         {reading.code}
       </span>
     ) : null;
@@ -73,7 +83,7 @@ const renderStructuredText = (
           className={twMerge("inline", getVariantStyle(variant, gloss.code))}
           onClick={() => onGlossClick?.(gloss.code)}
         >
-          <div className="inline text-[28px] whitespace-nowrap">
+          <div className="inline whitespace-nowrap">
             <span className="relative">
               {readingSpan}
               {reading ? (
@@ -90,10 +100,7 @@ const renderStructuredText = (
       );
     } else {
       result.push(
-        <div
-          key={`t${i}`}
-          className="inline relative text-[28px] whitespace-nowrap"
-        >
+        <div key={`t${i}`} className="inline relative whitespace-nowrap">
           {readingSpan}
           <Text t={text} />
         </div>,
