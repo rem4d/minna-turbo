@@ -127,7 +127,7 @@ export const adminSentenceRouter = router({
         input: z.object({
           text: z.string(),
           ruby: z.string(),
-          text_with_furigana: z.string(),
+          // text_with_furigana: z.string(),
           en: z.string(),
           ru: z.string(),
           comment: z.string(),

@@ -22,14 +22,12 @@ import Speakers from "@/components/Speakers";
 import { Player } from "@/components/Player";
 import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
 import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
-import GrammarGlosses from "./GrammarGlosses";
-import { AdminMemberOutput, FuriganaOutput } from "@rem4d/api";
+import { AdminMemberOutput } from "@rem4d/api";
 import Members from "./Members";
 
 export const EditSentencePage: FC = () => {
   const [input, setInput] = useState("");
   const [rubyHtml, setRubyHtml] = useState("");
-  const [textWithFuriganaHtml, setTextWithFuriganaHtml] = useState("");
   const [translation, setTranslation] = useState("");
   const [en, setEn] = useState("");
   const [ru, setRu] = useState("");
@@ -116,7 +114,7 @@ export const EditSentencePage: FC = () => {
 
   useEffect(() => {
     if (analyzeData) {
-      setTextWithFuriganaHtml(analyzeData.text_with_furigana);
+      // setTextWithFuriganaHtml(analyzeData.text_with_furigana);
       setRubyHtml(analyzeData.ruby);
     }
   }, [analyzeData]);
@@ -143,7 +141,7 @@ export const EditSentencePage: FC = () => {
       setInput(sentence.text);
       setTranslation(sentence.translation ?? "");
       setRubyHtml(sentence.ruby ?? "");
-      setTextWithFuriganaHtml(sentence.text_with_furigana ?? "");
+      // setTextWithFuriganaHtml(sentence.text_with_furigana ?? "");
       setEn(sentence.en ?? "");
       setRu(sentence.ru ?? "");
       setComment(sentence.comment ?? "");
@@ -172,7 +170,6 @@ export const EditSentencePage: FC = () => {
         en,
         ru,
         comment,
-        text_with_furigana: textWithFuriganaHtml,
       },
     });
   };
@@ -188,7 +185,7 @@ export const EditSentencePage: FC = () => {
   };
 
   const onGetFurigana = () => {
-    void getFurigana(input);
+    // void getFurigana(input);
   };
 
   const onRemoveSpeaker = () => {
@@ -371,12 +368,16 @@ export const EditSentencePage: FC = () => {
                     <Text>No glosses found.</Text>
                   )}
                   {glosses && furigana && (
-                    <TextVisualizer
-                      text={sentence.text}
-                      readings={furigana}
-                      glosses={glosses}
-                      variant="color"
-                    />
+                    <div className="text-[24px] flex items-end">
+                      <TextVisualizer
+                        text={sentence.text}
+                        readings={furigana}
+                        glosses={glosses}
+                        variant="color"
+                        showReadings={true}
+                        showGlosses={true}
+                      />
+                    </div>
                   )}
                   {/* <GlossVisualizer text={sentence.text} glosses={glosses2} /> */}
                 </Box>
@@ -428,19 +429,6 @@ export const EditSentencePage: FC = () => {
                 </Button>
               </Flex>
               <Flex direction="column" gap="4">
-                <Flex direction="column" gapY="2">
-                  <Heading size="4">Displayed as</Heading>
-                  <Text
-                    size="7"
-                    className="font-klee"
-                    dangerouslySetInnerHTML={{ __html: textWithFuriganaHtml }}
-                  ></Text>
-                  <TextArea
-                    value={textWithFuriganaHtml}
-                    mb="6"
-                    onChange={(e) => setTextWithFuriganaHtml(e.target.value)}
-                  />
-                </Flex>
                 <Flex direction="column" gapY="2">
                   <Heading size="4">Ruby</Heading>
                   <Text

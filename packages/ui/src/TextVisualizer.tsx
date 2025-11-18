@@ -38,21 +38,14 @@ export const TextVisualizer = ({
   onGlossClick,
 }: TextVisualizerProps) => {
   const readings_ = readings.map((r) => ({ ...r, code: r.reading }));
-  // const glosses = [];
 
   const r = structureText(text, showReadings ? readings_ : []);
   const g = structureText(text, showGlosses ? glosses : []);
   const merged = mergePositions(r, g);
   const spans = renderStructuredText(merged, variant, onGlossClick);
 
-  // console.log(r);
-  // console.log(g);
-  // console.log(merged);
-  //
   return spans;
 };
-
-const Text = ({ t }: { t: string }) => <span>{`${t}`}</span>;
 
 const renderStructuredText = (
   arr: ReturnType<typeof mergePositions>,
@@ -65,46 +58,38 @@ const renderStructuredText = (
 
   for (const { text, gloss, reading } of arr) {
     i++;
-    const readingSpan = reading ? (
-      <span
-        className="text-xs w-full -translate-x-1/2 left-1/2 text-center absolute whitespace-nowrap"
-        style={{
-          top: -10,
-          fontSize: 10,
-        }}
-      >
-        {reading.code}
-      </span>
-    ) : null;
 
     if (gloss) {
       result.push(
         <div
           key={`g${i}`}
-          className={twMerge("inline", getVariantStyle(variant, gloss.code))}
+          className={getVariantStyle(variant, gloss.code)}
           onClick={() => onGlossClick?.(gloss.code)}
+          style={{ display: "inline-block" }}
         >
-          <div className="inline whitespace-nowrap">
-            <span className="relative">
-              {readingSpan}
-              {reading ? (
-                <Text t={text.slice(reading.start, reading.end)} />
-              ) : null}
-            </span>
-            {reading ? (
-              <Text t={text.slice(reading.end, gloss.end)} />
-            ) : (
-              <Text t={text} />
-            )}
-          </div>
+          {reading ? (
+            <>
+              <ruby>
+                {text.slice(reading.start, reading.end)}
+                <rt>{reading.code}</rt>
+              </ruby>
+              {text.slice(reading.end, gloss.end)}
+            </>
+          ) : (
+            text
+          )}
         </div>,
       );
     } else {
       result.push(
-        <div key={`t${i}`} className="inline relative whitespace-nowrap">
-          {readingSpan}
-          <Text t={text} />
-        </div>,
+        reading ? (
+          <ruby key={`g${i}`}>
+            {text}
+            <rt>{reading.code}</rt>
+          </ruby>
+        ) : (
+          text
+        ),
       );
     }
   }
