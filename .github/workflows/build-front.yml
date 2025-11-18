@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - apps/client-front/src/**
+      - packages/ui/src/**
 
 jobs:
   publish_front:
