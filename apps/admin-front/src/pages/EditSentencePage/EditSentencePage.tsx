@@ -455,12 +455,6 @@ export const EditSentencePage: FC = () => {
                   </Button>
                   {/* <TextVisualizer text={input} furigana={furigana} /> */}
                 </Flex>
-                <Flex direction="column" gapY="2">
-                  <Heading size="4">Furigana</Heading>
-                  <Text size="7" className="font-klee">
-                    f
-                  </Text>
-                </Flex>
               </Flex>
             </Flex>
           </Grid>
