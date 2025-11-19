@@ -40,6 +40,7 @@ export const getStatementsForLevel = async ({
     // .not("gloss_sentence()", "is", null)
     // .not("members()", "is", null)
     .lte("unknown_kanji_number", numberOfUnknownKanji);
+  // .eq("id", 41878);
   // .order("id")
   // .range(10, 1000);
   // .limit(1000);

@@ -55,11 +55,16 @@ const renderStructuredText = (
   const result: React.ReactNode[] = [];
 
   let i = 0;
+  let str = "";
 
   for (const { text, gloss, reading } of arr) {
     i++;
 
     if (gloss) {
+      if (str.length > 0) {
+        result.push(str);
+        str = "";
+      }
       result.push(
         <div
           key={`g${i}`}
@@ -81,24 +86,33 @@ const renderStructuredText = (
         </div>,
       );
     } else {
-      const txt = text.includes("\n") ? (
-        <div style={{ width: "100%", marginBottom: 20 }} />
-      ) : (
-        text
-      );
-      result.push(
-        reading ? (
+      if (text.includes("\n")) {
+        if (str.length > 0) {
+          result.push(str);
+          str = "";
+        }
+        result.push(<div style={{ width: "100%", marginBottom: 20 }} />);
+      } else if (reading) {
+        if (str.length > 0) {
+          result.push(str);
+          str = "";
+        }
+        result.push(
           <ruby key={`g${i}`}>
             {text}
             <rt>{reading.code}</rt>
-          </ruby>
-        ) : (
-          txt
-        ),
-      );
+          </ruby>,
+        );
+      } else {
+        str += text;
+      }
     }
   }
 
+  if (str.length > 0) {
+    result.push(str);
+    str = "";
+  }
   return result;
 };
 

@@ -1,6 +1,6 @@
 import type { Favourite } from "@/types";
 import type { FC } from "react";
-import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Drawer from "@/components/Drawer";
 import { DrawerSettings } from "@/components/DrawerSettings";
 import ConfirmModal from "@/components/Modal/ConfirmModal";
@@ -82,10 +82,6 @@ export const SentencesPage: FC = () => {
       },
     }),
   );
-
-  // console.log(randomizedPending, randomizedIdle, randomizedSuccess);
-
-  const sentencesLoading = !isIdle && randomizedPending;
 
   const mountRef = useRef(false);
 
@@ -281,11 +277,7 @@ export const SentencesPage: FC = () => {
             className="top-[40%]"
           />
           <div className={_isMobile ? "mt-16" : "mt-10"}>
-            <SentenceViewer
-              sentencesLoading={sentencesLoading}
-              sentence={sentence}
-              dropdownItems={dropdownItems}
-            />
+            <SentenceViewer sentence={sentence} dropdownItems={dropdownItems} />
 
             {/* no sentences message*/}
             {showNoSentencesMessage && (

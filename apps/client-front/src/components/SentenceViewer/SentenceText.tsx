@@ -1,7 +1,8 @@
+import type { ReadingPositionItem } from "@app/ui";
 import type { GetGlossesOutput, SentenceOutput } from "@rem4d/api";
 import type { ReactElement } from "react";
 import { useEffect, useState } from "react";
-import { ReadingPositionItem, TextVisualizer } from "@app/ui";
+import { TextVisualizer } from "@app/ui";
 import { twMerge } from "tailwind-merge";
 
 export interface Props {
@@ -64,7 +65,7 @@ export function SentenceText({
           >
             <div className={twMerge("flex items-start justify-center gap-x-2")}>
               <div className="flex flex-col items-center justify-center gap-2 leading-8">
-                <div className="flex flex-wrap items-end">
+                <div className="text-center">
                   {glosses && readings && (
                     <TextVisualizer
                       text={sentence.text}

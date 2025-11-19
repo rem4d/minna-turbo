@@ -19,14 +19,12 @@ interface Props {
   sentence?: SentenceOutput;
   dropdownItems?: DropdownItem[];
   msg?: string;
-  sentencesLoading?: boolean;
 }
 
 export const SentenceViewer: FC<Props> = ({
   sentence,
   msg,
   dropdownItems,
-  sentencesLoading,
 }: Props) => {
   const [showFurigana, setShowFurigana] = useState(false);
   const [mode, setMode] = useState<"grammar" | "kanji" | null>(null);
@@ -133,14 +131,14 @@ export const SentenceViewer: FC<Props> = ({
           <EyeToggle
             show={showFurigana}
             onClick={() => setShowFurigana((s) => !s)}
-            disabled={!Boolean(sentence?.id)}
+            disabled={!sentence?.id}
           />
           <ModeButton
             isLoading={getGlossesMutation.isPending}
             selected={mode === "grammar" && !getGlossesMutation.isPending}
             onClick={() => onModeChange("grammar")}
             mode="grammar"
-            disabled={!Boolean(sentence?.id)}
+            disabled={!sentence?.id}
           />
           {/* <ModeButton */}
           {/*   selected={mode === "kanji"} */}
