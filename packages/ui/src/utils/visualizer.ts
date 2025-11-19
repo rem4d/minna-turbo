@@ -46,7 +46,7 @@ export const structureText = (text: string, sourceArray: PositionedItem[]) => {
   for (let i = 0; i < text.length; i++) {
     if (!arr[i]) {
       if (text[i] === "\n") {
-        // result.push(<br />);
+        result.push({ text: "\n", p: null });
       } else {
         result.push({ text: text[i], p: null });
       }

@@ -368,7 +368,7 @@ export const EditSentencePage: FC = () => {
                     <Text>No glosses found.</Text>
                   )}
                   {glosses && furigana && (
-                    <div className="text-[24px] flex items-end">
+                    <div className="flex flex-wrap items-end">
                       <TextVisualizer
                         text={sentence.text}
                         readings={furigana}

@@ -80,7 +80,7 @@ export function SentenceText({
                     )}
                   >
                     <div className="flex flex-col items-center justify-center gap-2 leading-8">
-                      <div className="flex flex-wrap items-end justify-center">
+                      <div className="flex flex-wrap items-end">
                         {glosses && readings && (
                           <TextVisualizer
                             text={sentence.text}

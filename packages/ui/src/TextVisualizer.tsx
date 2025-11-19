@@ -81,6 +81,11 @@ const renderStructuredText = (
         </div>,
       );
     } else {
+      const txt = text.includes("\n") ? (
+        <div style={{ width: "100%", marginBottom: 20 }} />
+      ) : (
+        text
+      );
       result.push(
         reading ? (
           <ruby key={`g${i}`}>
@@ -88,7 +93,7 @@ const renderStructuredText = (
             <rt>{reading.code}</rt>
           </ruby>
         ) : (
-          text
+          txt
         ),
       );
     }
