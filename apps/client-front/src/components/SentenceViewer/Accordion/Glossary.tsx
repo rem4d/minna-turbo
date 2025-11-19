@@ -1,5 +1,6 @@
 import type { MemberOutputClient } from "@rem4d/api";
 import React from "react";
+import { getMemberShortText } from "@/utils/memberShortText";
 import { twMerge } from "tailwind-merge";
 
 import { LoadingMembersPlaceholder } from "./LoadingMembersPlaceholder";
@@ -10,15 +11,6 @@ const GlossaryContent: React.FC<{
   transLang: "ru" | "en" | null;
   onMemberClick: (id: number) => void;
 }> = ({ members, loadingMembers, transLang, onMemberClick }) => {
-  const getShortText = (m: MemberOutputClient) => {
-    let text = transLang === "ru" ? m.entries[0]?.ru : m.entries[0]?.en;
-
-    if (!text || text.length === 0) {
-      text = m.entries[0]?.en ?? [];
-    }
-    return text.join(", ");
-  };
-
   return (
     <div>
       <div className="no-scroll max-h-[40vh] w-full overflow-y-scroll py-2">
@@ -48,7 +40,11 @@ const GlossaryContent: React.FC<{
                   )}
                   onClick={() => onMemberClick(m.id)}
                 >
-                  {getShortText(m)}
+                  {getMemberShortText({
+                    transLang,
+                    ru: m.entries[0]?.ru,
+                    en: m.entries[0]?.en,
+                  })}
                 </div>
               </React.Fragment>
             ))}

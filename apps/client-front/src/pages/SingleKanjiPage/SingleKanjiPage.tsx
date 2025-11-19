@@ -127,10 +127,7 @@ export default function SingleKanjiPage() {
           disableNextNav={disableNextNav}
           handleNextClick={handleNextClick}
           handlePrevClick={handlePrevClick}
-          className={twMerge(
-            // false && "top-1/2",
-            "bottom-[calc(var(--tg-bottom)+25px)]",
-          )}
+          className={twMerge("bottom-[calc(var(--tg-bottom)+25px)]")}
         />
       </div>
     </Page>

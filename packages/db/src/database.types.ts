@@ -195,6 +195,7 @@ export type Database = {
           number: number | null
           ref: string | null
           romaji: string
+          ru: string | null
           tmp: string | null
         }
         Insert: {
@@ -209,6 +210,7 @@ export type Database = {
           number?: number | null
           ref?: string | null
           romaji: string
+          ru?: string | null
           tmp?: string | null
         }
         Update: {
@@ -223,6 +225,7 @@ export type Database = {
           number?: number | null
           ref?: string | null
           romaji?: string
+          ru?: string | null
           tmp?: string | null
         }
         Relationships: []
@@ -776,6 +779,31 @@ export type Database = {
           en: string
           reading: string
           ru: string
+        }[]
+      }
+      kanji_examples3: {
+        Args: { kanji_input: string }
+        Returns: {
+          cnt: number
+          en: string[]
+          pos: string
+          reading: string
+          ru: string[]
+          ruby: string
+          text: string
+        }[]
+      }
+      pg_firstaid: {
+        Args: never
+        Returns: {
+          category: string
+          check_name: string
+          current_value: string
+          documentation_link: string
+          issue_description: string
+          object_name: string
+          recommended_action: string
+          severity: string
         }[]
       }
       stat_kanji_list2: {

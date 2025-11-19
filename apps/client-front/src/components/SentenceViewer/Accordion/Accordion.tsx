@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { AnimateHeight } from "@/components/AnimateHeight";
 import Drawer from "@/components/Drawer";
+import MemberModalContent from "@/components/Modal/MemberModalContent";
 import { useAppStore } from "@/store";
 import { useTRPC } from "@/utils/api";
 import * as Accordion from "@radix-ui/react-accordion";
@@ -12,7 +13,6 @@ import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
 
 import GlossaryContent from "./Glossary";
-import MemberModalContent from "./MemberModalContent";
 import TranslationContent from "./TranslationContent";
 
 interface AccordionProps {
@@ -120,7 +120,17 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
         open={!!modalOpen}
         onOpenChange={() => setModalOpen(false)}
       >
-        {selectedMember && <MemberModalContent member={selectedMember} />}
+        {selectedMember && (
+          <MemberModalContent
+            pos={selectedMember.pos}
+            ruby={selectedMember.ruby}
+            reading={selectedMember.reading}
+            en={selectedMember?.entries[0]?.en}
+            ru={selectedMember?.entries[0]?.ru}
+            entries={selectedMember?.entries}
+            readings={selectedMember?.entries[0]?.readings}
+          />
+        )}
       </Drawer>
     </Accordion.Root>
   );

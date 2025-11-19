@@ -5,7 +5,7 @@ interface EntryProps {
   ruby: string | null;
   text?: string | null;
   reading?: string | null;
-  readings: { txt: string | null }[] | null;
+  readings?: { txt: string | null }[] | null;
   en: string[] | null;
   ru: string[] | null;
   pos: string | null;
@@ -16,7 +16,7 @@ const Entry = ({
   ruby,
   text,
   reading,
-  readings,
+  readings = [],
   en,
   ru,
   pos,
@@ -45,7 +45,7 @@ const Entry = ({
           </div>
         )}
         {pos && <Badge color="blue">{pos.toLowerCase()}</Badge>}
-        {readings && readings.length > 0 && (
+        {readings && readings.length > 1 && (
           <div>
             [
             {readings.map((r) => (
@@ -80,26 +80,35 @@ const Entry = ({
   );
 };
 
-const MemberModalContent = ({ member }: { member: MemberOutput }) => {
-  const first = member.entries[0];
-
-  if (!first) {
-    console.error("No entries found");
-    return null;
-  }
-
+const MemberModalContent = ({
+  entries = [],
+  pos,
+  ruby,
+  reading,
+  readings,
+  en,
+  ru,
+}: {
+  pos: string | null;
+  ruby: string | null;
+  reading: string | null;
+  readings?: { txt: string | null }[] | null;
+  en: string[] | null;
+  ru: string[] | null;
+  entries?: MemberOutput["entries"];
+}) => {
   return (
     <div className="bg-white px-4 py-4">
       <Entry
         className="pt-0"
-        ruby={member.ruby}
-        reading={member.reading}
-        readings={[]}
-        en={first.en}
-        ru={first.ru}
-        pos={member.pos}
+        ruby={ruby}
+        reading={reading}
+        readings={readings}
+        en={en}
+        ru={ru}
+        pos={pos}
       />
-      {member.entries.length > 1 ? (
+      {entries.length > 1 ? (
         <div>
           <div className="my-4 h-[1px] w-full bg-black/20" />
 
@@ -108,7 +117,7 @@ const MemberModalContent = ({ member }: { member: MemberOutput }) => {
           </div>
 
           <div className="flex flex-col divide-y divide-black/20">
-            {member.entries.slice(1).map((e) => (
+            {entries.slice(1).map((e) => (
               <Entry
                 key={e.id}
                 ruby={null}
@@ -117,7 +126,7 @@ const MemberModalContent = ({ member }: { member: MemberOutput }) => {
                 readings={e.readings.slice(1)}
                 en={e.en}
                 ru={e.ru}
-                pos={member.pos}
+                pos={pos}
               />
             ))}
           </div>
