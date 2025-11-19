@@ -8,7 +8,7 @@ import Accordion from "@/components/SentenceViewer/Accordion";
 import { usePlaySoundContext } from "@/context/playSoundContext";
 import { useTRPC } from "@/utils/api";
 import { hapticFeedback } from "@/utils/tgUtils";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import type { DropdownItem } from "../Dropdown";
 import GlossModal from "../Modal/GlossModal";
@@ -19,12 +19,14 @@ interface Props {
   sentence?: SentenceOutput;
   dropdownItems?: DropdownItem[];
   msg?: string;
+  sentencesLoading?: boolean;
 }
 
 export const SentenceViewer: FC<Props> = ({
   sentence,
   msg,
   dropdownItems,
+  sentencesLoading,
 }: Props) => {
   const [showFurigana, setShowFurigana] = useState(false);
   const [mode, setMode] = useState<"grammar" | "kanji" | null>(null);
@@ -108,6 +110,10 @@ export const SentenceViewer: FC<Props> = ({
     }
   };
 
+  const { data: user } = useQuery(trpc.viewer.user.info.queryOptions());
+
+  const showMeta = user ? user.id === 4245 || user.id === 6176 : false;
+
   return (
     <div>
       <div className="flex justify-center px-4">
@@ -127,12 +133,14 @@ export const SentenceViewer: FC<Props> = ({
           <EyeToggle
             show={showFurigana}
             onClick={() => setShowFurigana((s) => !s)}
+            disabled={!Boolean(sentence?.id)}
           />
           <ModeButton
             isLoading={getGlossesMutation.isPending}
             selected={mode === "grammar" && !getGlossesMutation.isPending}
             onClick={() => onModeChange("grammar")}
             mode="grammar"
+            disabled={!Boolean(sentence?.id)}
           />
           {/* <ModeButton */}
           {/*   selected={mode === "kanji"} */}
@@ -154,12 +162,15 @@ export const SentenceViewer: FC<Props> = ({
             msg={msg}
             onGlossClick={onGlossClick}
             showGlosses={mode === "grammar"}
+            showMeta={showMeta}
           />
           <div className="absolute bottom-0 left-0 w-full px-2">
             <Accordion sentence={sentence} />
           </div>
         </div>
-      ) : null}
+      ) : (
+        <Fallback />
+      )}
 
       {selectedGloss && (
         <GlossModal
@@ -168,6 +179,16 @@ export const SentenceViewer: FC<Props> = ({
           onOpenChange={setGlossModalOpen}
         />
       )}
+    </div>
+  );
+};
+
+const Fallback = () => {
+  return (
+    <div className="mt-[24px] px-4">
+      <div className="flex h-full w-full flex-col space-y-3 opacity-80">
+        <div className="fallback h-[67px] w-full rounded-[20px]" />
+      </div>
     </div>
   );
 };

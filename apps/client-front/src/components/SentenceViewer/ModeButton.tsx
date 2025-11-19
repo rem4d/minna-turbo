@@ -10,6 +10,7 @@ interface Props {
   selected?: boolean;
   isLoading: boolean;
   mode: "grammar" | "kanji" | null;
+  disabled?: boolean;
 }
 
 export default function ModeButton({
@@ -17,6 +18,7 @@ export default function ModeButton({
   selected,
   isLoading,
   mode,
+  disabled = false,
 }: Props) {
   let content: React.ReactNode;
 
@@ -35,6 +37,7 @@ export default function ModeButton({
     <div
       className={twMerge(
         "relative flex size-[24px] items-center justify-center",
+        disabled && "events-none opacity-50",
       )}
       onClick={onClick}
     >

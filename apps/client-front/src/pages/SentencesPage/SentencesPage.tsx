@@ -1,6 +1,6 @@
 import type { Favourite } from "@/types";
 import type { FC } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Drawer from "@/components/Drawer";
 import { DrawerSettings } from "@/components/DrawerSettings";
 import ConfirmModal from "@/components/Modal/ConfirmModal";
@@ -61,7 +61,9 @@ export const SentencesPage: FC = () => {
 
   const {
     mutate: getRandomized,
-    isPending: isSentencesLoading,
+    isPending: randomizedPending,
+    // isIdle: randomizedIdle,
+    // isSuccess: randomizedSuccess,
     data: list,
   } = useMutation(
     trpc.viewer.sentence.getRandomized.mutationOptions({
@@ -80,6 +82,10 @@ export const SentencesPage: FC = () => {
       },
     }),
   );
+
+  // console.log(randomizedPending, randomizedIdle, randomizedSuccess);
+
+  const sentencesLoading = !isIdle && randomizedPending;
 
   const mountRef = useRef(false);
 
@@ -244,12 +250,9 @@ export const SentencesPage: FC = () => {
     </div>
   );
 
-  // console.log("sentences", sentences);
-  // console.log("activeIndex", activeIndex);
-  // console.log("isIdle", isIdle);
-  // console.log("list", list);
   const showLoader =
-    (isSentencesLoading && isIdle) || resetCacheMutation.isPending;
+    (randomizedPending && isIdle) || resetCacheMutation.isPending;
+
   return (
     <Page backTo="/">
       {showLoader ? (
@@ -278,7 +281,11 @@ export const SentencesPage: FC = () => {
             className="top-[40%]"
           />
           <div className={_isMobile ? "mt-16" : "mt-10"}>
-            <SentenceViewer sentence={sentence} dropdownItems={dropdownItems} />
+            <SentenceViewer
+              sentencesLoading={sentencesLoading}
+              sentence={sentence}
+              dropdownItems={dropdownItems}
+            />
 
             {/* no sentences message*/}
             {showNoSentencesMessage && (

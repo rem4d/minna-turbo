@@ -140,91 +140,16 @@ export default function SingleKanjiPage() {
 function ExamplesFallback() {
   return (
     <div className="flex h-full w-full flex-col space-y-3 opacity-80">
-      <div className="fallback h-[28px] w-[70%]" />
-      <div className="fallback h-[28px] w-[80%]" />
-      <div className="fallback h-[28px] w-[90%]" />
-      <div className="fallback h-[28px] w-[70%]" />
-      <div className="fallback h-[28px] w-[80%]" />
-      <div className="fallback h-[28px] w-[90%]" />
+      <div className="fallback h-[28px] w-[70%] rounded-[8px]" />
+      <div className="fallback h-[28px] w-[80%] rounded-[8px]" />
+      <div className="fallback h-[28px] w-[90%] rounded-[8px]" />
+      <div className="fallback h-[28px] w-[70%] rounded-[8px]" />
+      <div className="fallback h-[28px] w-[80%] rounded-[8px]" />
+      <div className="fallback h-[28px] w-[90%] rounded-[8px]" />
     </div>
   );
 }
 
-// function _InfoFallback() {
-//   return (
-//     <div className="grid grid-cols-2 gap-4">
-//       <div className="fallback aspect-square" />
-//       <div className="flex flex-col space-y-2">
-//         <div className="fallback h-[28px] w-[80%]" />
-//         <div className="fallback h-[28px] w-[60%]" />
-//         <div className="fallback h-[28px] w-[60%]" />
-//       </div>
-//     </div>
-//   );
-// }
-
-// function Info({
-//   query,
-//   kanjiId,
-// }: {
-//   kanjiId: number;
-//   query: UseQueryResult<KanjiOutput[], any>;
-// }) {
-//   const list = React.use(query.promise);
-//   const found = list.find((d) => d.id === Number(kanjiId));
-//
-//   const [transLang] = useLocalStorage<"ru" | "en" | null>(
-//     "kic:translation_language",
-//     null,
-//   );
-//
-//   if (!found) {
-//     return null;
-//   }
-//
-//   const kanji = found.kanji;
-//   const level = found.position;
-//
-//   const onClick = () => {};
-//   const id = found.id;
-//
-//   const currentMeaning = String(
-//     transLang === "ru" ? found.ru : found.en,
-//   ).toLowerCase();
-//
-//   const { kun, on_ } = found;
-//
-//   return (
-//     <div className="grid grid-cols-2 gap-4">
-//       <div className="">
-//         <Thumbnail
-//           title={kanji}
-//           level={level}
-//           onClick={onClick}
-//           id={id}
-//           means={""}
-//           large
-//         />
-//       </div>
-//       <div className="flex flex-col items-start space-y-2">
-//         <div className="font-inter mb-4 text-xl font-semibold text-black">
-//           {currentMeaning}
-//         </div>
-//         {kun && kun.length > 0 && (
-//           <span className="font-digi rounded-[18px] border bg-white px-2 py-1 text-lg leading-5 text-black">
-//             {kun.join("、")}
-//           </span>
-//         )}
-//         {on_ && on_.length > 0 && (
-//           <span className="font-digi rounded-[18px] border bg-white px-2 py-1 text-lg leading-5 text-black">
-//             {on_.join("、")}
-//           </span>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
-//
 function Examples({ query }: { query: UseQueryResult<ExampleOutput[], any> }) {
   const data = React.use(query.promise);
 
