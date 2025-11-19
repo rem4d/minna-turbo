@@ -35,10 +35,6 @@ export const getStatementsForLevel = async ({
     .gt("level", clamp(level - shift, 0, level))
     .not("ru", "is", null)
     .not("en", "is", null)
-    // .in("source", [])
-    .eq("status", "furigana")
-    // .not("gloss_sentence()", "is", null)
-    // .not("members()", "is", null)
     .lte("unknown_kanji_number", numberOfUnknownKanji);
   // .eq("id", 41878);
   // .order("id")

@@ -93,6 +93,9 @@ export const sentenceRouter = router({
     .mutation(async ({ ctx }) => {
       return shuffleSentences(ctx, 50);
     }),
+  getRandomizedQuery: redisPrecedure.query(async ({ ctx }) => {
+    return shuffleSentences(ctx, 50);
+  }),
   resetCache: redisPrecedure.mutation(async ({ ctx }) => {
     const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
 

@@ -13,7 +13,10 @@ export const EyeToggle = ({
 }) => {
   return (
     <div
-      className={twMerge("cursor-pointer", disabled && "opacity-50")}
+      className={twMerge(
+        "cursor-pointer",
+        disabled && "pointer-events-none opacity-50",
+      )}
       onClick={onClick}
     >
       {show ? (

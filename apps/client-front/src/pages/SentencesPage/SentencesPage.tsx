@@ -14,7 +14,12 @@ import { useTRPC } from "@/utils/api";
 import { convertLevel } from "@/utils/convert";
 import { hapticFeedback, useIsMobile } from "@/utils/tgUtils";
 import useUnmount from "@/utils/useUnmount";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useMutationState,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Trans, useTranslation } from "react-i18next";
 
@@ -116,7 +121,7 @@ export const SentencesPage: FC = () => {
     }),
   );
 
-  const updateLevelMuatation = useMutation(
+  const updateLevelMutation = useMutation(
     trpc.viewer.user.updateLevel.mutationOptions({
       onSuccess() {
         resetSentences();
@@ -217,7 +222,7 @@ export const SentencesPage: FC = () => {
   ];
 
   const onChangeLevel = (newLevel: number) => {
-    void updateLevelMuatation.mutate(newLevel);
+    void updateLevelMutation.mutate(newLevel);
     hapticFeedback("medium");
   };
 
@@ -249,6 +254,15 @@ export const SentencesPage: FC = () => {
   const showLoader =
     (randomizedPending && isIdle) || resetCacheMutation.isPending;
 
+  const getRandomizedStatus = useMutationState({
+    filters: { mutationKey: [["viewer", "sentence", "getRandomized"]] },
+    select: (m) => m.state.status,
+  });
+
+  const latest = getRandomizedStatus[getRandomizedStatus.length - 1];
+
+  const showFallback = updateLevelMutation.isPending || latest === "pending";
+
   return (
     <Page backTo="/">
       {showLoader ? (
@@ -277,7 +291,11 @@ export const SentencesPage: FC = () => {
             className="top-[40%]"
           />
           <div className={_isMobile ? "mt-16" : "mt-10"}>
-            <SentenceViewer sentence={sentence} dropdownItems={dropdownItems} />
+            <SentenceViewer
+              sentence={sentence}
+              loading={showFallback}
+              dropdownItems={dropdownItems}
+            />
 
             {/* no sentences message*/}
             {showNoSentencesMessage && (

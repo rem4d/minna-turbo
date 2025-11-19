@@ -37,7 +37,7 @@ export default function ModeButton({
     <div
       className={twMerge(
         "relative flex size-[24px] items-center justify-center",
-        disabled && "events-none opacity-50",
+        disabled && "pointer-events-none opacity-50",
       )}
       onClick={onClick}
     >

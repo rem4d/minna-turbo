@@ -19,12 +19,14 @@ interface Props {
   sentence?: SentenceOutput;
   dropdownItems?: DropdownItem[];
   msg?: string;
+  loading: boolean;
 }
 
 export const SentenceViewer: FC<Props> = ({
   sentence,
   msg,
   dropdownItems,
+  loading,
 }: Props) => {
   const [showFurigana, setShowFurigana] = useState(false);
   const [mode, setMode] = useState<"grammar" | "kanji" | null>(null);
@@ -151,7 +153,7 @@ export const SentenceViewer: FC<Props> = ({
           )}
         </div>
       </div>
-      {sentence ? (
+      {!loading && sentence ? (
         <div className="px-4">
           <SentenceText
             sentence={sentence}
@@ -166,9 +168,8 @@ export const SentenceViewer: FC<Props> = ({
             <Accordion sentence={sentence} />
           </div>
         </div>
-      ) : (
-        <Fallback />
-      )}
+      ) : null}
+      {loading && <Fallback />}
 
       {selectedGloss && (
         <GlossModal

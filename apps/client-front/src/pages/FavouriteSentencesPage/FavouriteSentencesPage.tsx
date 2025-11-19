@@ -113,7 +113,7 @@ export const FavouriteSentencesPage: FC = () => {
             handleNextClick={handleNextClick}
             handlePrevClick={handlePrevClick}
           />
-          <SentenceViewer msg={msg} sentence={sentence} />
+          <SentenceViewer loading={false} msg={msg} sentence={sentence} />
         </div>
       </Drawer>
     </Page>
