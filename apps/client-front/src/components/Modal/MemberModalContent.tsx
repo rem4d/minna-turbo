@@ -30,7 +30,7 @@ const Entry = ({
       <div className="flex flex-col space-y-2">
         {showRuby && (
           <div
-            className="font-yu-gothic cursor-pointer text-xl font-medium whitespace-nowrap"
+            className="font-yu-gothic text-xl font-medium whitespace-nowrap"
             dangerouslySetInnerHTML={{
               __html: rubyText ?? "",
             }}
@@ -38,7 +38,7 @@ const Entry = ({
         )}
         {!ruby && text && (
           <div className="flex flex-col space-y-1">
-            <div className="font-yu-gothic cursor-pointer text-xl font-medium whitespace-nowrap">
+            <div className="font-yu-gothic text-xl font-medium whitespace-nowrap">
               {text}
             </div>
             {reading && <span className="text-denim text-xs">[{reading}]</span>}

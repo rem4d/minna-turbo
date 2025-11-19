@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TextVisualizer } from "@app/ui";
+import { TextVisualizer } from "./TextVisualizer";
 import type { FC } from "react";
 import toast from "react-hot-toast";
 import {
