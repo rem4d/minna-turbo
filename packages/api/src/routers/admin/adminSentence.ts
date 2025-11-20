@@ -25,8 +25,6 @@ export const adminSentenceRouter = router({
         .lt("level", 500)
         // .eq("source", "10k")
         // .not("members", "is", null)
-        .range(0, 200)
-
         // .like("text", `%間%`)
         // .lt("unknown_kanji_number", numberOfUnknownKanji)
         // .order("aigloss_sentence(count)", { ascending: false })

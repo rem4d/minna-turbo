@@ -681,6 +681,30 @@ export type Database = {
           number: number
         }[]
       }
+      kanji_examples_distinct: {
+        Args: { kanji_input: string }
+        Returns: {
+          cnt: number
+          en: string[]
+          pos: string
+          reading: string
+          ru: string[]
+          ruby: string
+          text: string
+        }[]
+      }
+      kanji_examples_lateral: {
+        Args: { kanji_input: string }
+        Returns: {
+          cnt: number
+          en: string[]
+          pos: string
+          reading: string
+          ru: string[]
+          ruby: string
+          text: string
+        }[]
+      }
       kanji_examples2: {
         Args: { kanji_input: string }
         Returns: {
@@ -716,6 +740,8 @@ export type Database = {
           severity: string
         }[]
       }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
       stat_kanji_list2: {
         Args: { shift_input: number }
         Returns: {
