@@ -1,3 +1,6 @@
+import React from "react";
+import { useRouter } from "@/router/router";
+import { useAppStore } from "@/store";
 import { type MemberOutput } from "@rem4d/api";
 import { twMerge } from "tailwind-merge";
 
@@ -24,6 +27,26 @@ const Entry = ({
 }: EntryProps) => {
   const showRuby = ruby ? true : !ruby && !text && reading;
   const rubyText = ruby ? ruby : reading;
+  const kanjiMap = useAppStore((state) => state.kanjiMap);
+
+  const tmpText = ruby ?? text ?? "";
+  const { navigate } = useRouter();
+
+  const kanjis = React.useMemo(() => {
+    const kanjiRegex = /[\u4E00-\u9FAF]/;
+    return tmpText
+      .split("")
+      .filter((ch) => kanjiRegex.exec(tmpText) && kanjiMap.get(ch))
+      .map((k) => (
+        <div
+          className="inline items-center justify-center rounded-md border bg-white px-3 py-2"
+          onClick={() => navigate(`/kanji/${kanjiMap.get(k)}`)}
+          key={k}
+        >
+          <span className="text-md font-semibold">{k}</span>
+        </div>
+      ));
+  }, [tmpText, navigate, kanjiMap]);
 
   return (
     <div className={twMerge("flex items-start space-x-8 py-4", className)}>
@@ -69,12 +92,7 @@ const Entry = ({
             {en?.map((r, i) => <div key={r + i}>{r}</div>)}
           </div>
         </div>
-        {/* <div */}
-        {/*   onClick={() => setExpanded(!expanded)} */}
-        {/*   className="text-denim cursor-pointer self-start text-sm font-semibold" */}
-        {/* > */}
-        {/*   Развернуть */}
-        {/* </div> */}
+        <div className="flex space-x-4">{kanjis}</div>
       </div>
     </div>
   );
@@ -112,7 +130,7 @@ const MemberModalContent = ({
         <div>
           <div className="my-4 h-[1px] w-full bg-black/20" />
 
-          <div className="text-bold mb-4 text-sm font-semibold text-black/80">
+          <div className="text-bold mb-4 cursor-default text-sm">
             Возможные другие значения
           </div>
 

@@ -1,18 +1,27 @@
 import { useEffect, useRef } from "react";
+import { useAppStore } from "@/store";
 import { useTRPC } from "@/utils/api";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import StackNavigator from "./StackNavigator";
 
 export function Base() {
   const trpc = useTRPC();
   const userCreator = useMutation(trpc.viewer.user.create.mutationOptions());
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
+  const setKanjiMap = useAppStore((state) => state.setKanjiMap);
 
   const initialized = useRef(false);
+  const { isSuccess, data } = useQuery(trpc.viewer.kanji.all.queryOptions());
 
   useEffect(() => {
-    void queryClient.prefetchQuery(trpc.viewer.kanji.all.queryOptions());
+    if (isSuccess) {
+      setKanjiMap(data);
+    }
+  }, [isSuccess, data, setKanjiMap]);
+
+  useEffect(() => {
+    // void queryClient.prefetchQuery(trpc.viewer.kanji.all.queryOptions());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
