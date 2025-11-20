@@ -124,7 +124,7 @@ export const AllKanjiPage: FC = () => {
         )}
         <div
           ref={containerRef}
-          className="no-scroll flex h-full max-h-[calc(100vh-140px)] w-full flex-col overflow-scroll"
+          className="no-scroll flex h-full max-h-[calc(100vh-40px)] w-full flex-col overflow-scroll"
         >
           <SearchBar
             onChange={setSearchValue}

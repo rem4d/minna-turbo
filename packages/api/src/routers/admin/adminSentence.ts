@@ -20,11 +20,11 @@ export const adminSentenceRouter = router({
     .query(async ({ ctx, input }) => {
       const { data, error } = await ctx.db
         .from("sentences")
-        .select("*, members()")
+        .select("*")
         .gt("level", 0)
         .lt("level", 500)
         // .eq("source", "10k")
-        .not("members", "is", null)
+        // .not("members", "is", null)
         .range(0, 200)
 
         // .like("text", `%間%`)

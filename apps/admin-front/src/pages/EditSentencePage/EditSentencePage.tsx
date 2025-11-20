@@ -56,9 +56,9 @@ export const EditSentencePage: FC = () => {
   );
 
   const assignMembersMutation = api.admin.member.assignMembers.useMutation({
-    onSuccess(data) {
-      setMembers3(data);
+    onSuccess() {
       toast.success("Successfully assigned members.");
+      void utils.admin.member.membersById.invalidate();
     },
     onError(err) {
       toast.error(err.message);
@@ -229,7 +229,9 @@ export const EditSentencePage: FC = () => {
   };
 
   const onAssignMembersClick = () => {
-    assignMembersMutation.mutate({ text: input });
+    if (sentence) {
+      assignMembersMutation.mutate({ text: input, sentenceId: sentence?.id });
+    }
   };
 
   return (

@@ -48,7 +48,7 @@ export function SentenceText({
         <div className={twMerge("relative mt-[24px] w-full overflow-hidden")}>
           {showMeta && (
             <div className="absolute top-0 left-0 z-10 flex flex-col">
-              <div className="text-mine-shaft/70 mt-2 text-center text-xs">
+              <div className="text-mine-shaft/50 mt-2 text-center text-xs">
                 ID: {sentence.id}
               </div>
               {msg && (
