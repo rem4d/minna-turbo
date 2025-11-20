@@ -1,7 +1,6 @@
 import type { FC, ReactElement } from "react";
 import React from "react";
 import BubbleIcon from "@/assets/images/bubble2.svg?react";
-import DeckIcon from "@/assets/images/deck2.svg?react";
 import { FooterMenu } from "@/components/FooterMenu";
 import { Page } from "@/components/Page";
 import { useRouter } from "@/router/router";
@@ -27,20 +26,6 @@ export const IndexPage = React.memo(() => {
               icon={
                 <div className="absolute -right-2 -bottom-2 z-0 w-[40%] opacity-40">
                   <BubbleIcon className="size-full" />
-                </div>
-              }
-            />
-            <Card
-              title={t("flashcards")}
-              desc={t("flashcards_desc")}
-              to="/flashcards"
-              color="cyan"
-              onClick={() =>
-                navigate("/flashcards", { animationStyle: "nav-forward" })
-              }
-              icon={
-                <div className="absolute right-2 -bottom-2 z-0 w-[70px] opacity-40">
-                  <DeckIcon className="size-full" />
                 </div>
               }
             />
