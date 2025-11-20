@@ -1,6 +1,6 @@
-import { StateCreator } from "zustand";
+import type { StateCreator } from "zustand";
 
-import { KanjiMapSlice, StoreType } from "./types";
+import type { KanjiMapSlice, StoreType } from "./types";
 
 export const kanjiMapSlice: StateCreator<StoreType, [], [], KanjiMapSlice> = (
   set,

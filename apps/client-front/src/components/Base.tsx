@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useAppStore } from "@/store";
 import { useTRPC } from "@/utils/api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import StackNavigator from "./StackNavigator";
 
@@ -19,11 +19,6 @@ export function Base() {
       setKanjiMap(data);
     }
   }, [isSuccess, data, setKanjiMap]);
-
-  useEffect(() => {
-    // void queryClient.prefetchQuery(trpc.viewer.kanji.all.queryOptions());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (!initialized.current) {

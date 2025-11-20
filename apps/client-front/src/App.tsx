@@ -4,7 +4,6 @@ import {
   Provider as RollbarProvider,
   ErrorBoundary as RoollbarErrorBoundary,
 } from "@rollbar/react";
-import { useQuery } from "@tanstack/react-query";
 
 import "./utils/i18n";
 import "./index.css";
@@ -18,7 +17,7 @@ import ErrorFallbackComponent from "./components/ErrorFallbackComponent";
 import { PlaySoundContextProvider } from "./context/playSoundContext";
 import { Router } from "./router/router";
 import { routes } from "./router/routes";
-import { ApiProvider, useTRPC } from "./utils/api";
+import { ApiProvider } from "./utils/api";
 import { useMiniAppSetup, userLanguage } from "./utils/tgUtils";
 
 function App() {
