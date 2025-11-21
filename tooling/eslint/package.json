@@ -1,5 +1,5 @@
 {
-  "name": "@app/eslint-config",
+  "name": "@rem4d/eslint-config",
   "version": "0.3.0",
   "dependencies": {
     "@eslint/compat": "^1.2.3",
@@ -11,7 +11,7 @@
     "typescript-eslint": "^8.15.0"
   },
   "devDependencies": {
-    "@app/typescript-config": "workspace:*",
+    "@rem4d/typescript-config": "workspace:*",
     "@types/eslint__js": "8.42.3",
     "eslint": "catalog:",
     "typescript": "catalog:"

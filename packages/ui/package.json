@@ -1,5 +1,5 @@
 {
-  "name": "@app/ui",
+  "name": "@rem4d/ui",
   "description": "",
   "version": "1.0.0",
   "author": "",
@@ -11,9 +11,9 @@
     "tailwindcss": "catalog:"
   },
   "devDependencies": {
-    "@app/eslint-config": "workspace:*",
-    "@app/typescript-config": "workspace:*",
-    "@app/tailwind-config": "workspace:^",
+    "@rem4d/eslint-config": "workspace:*",
+    "@rem4d/typescript-config": "workspace:*",
+    "@rem4d/tailwind-config": "workspace:^",
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",

@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge";
-import { mergePositions, structureText } from "@app/ui";
+import { mergePositions, structureText } from "@rem4d/ui";
 
 interface GlossInput {
   code: string;

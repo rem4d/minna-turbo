@@ -89,7 +89,9 @@ export async function init(options: {
   }
 
   if (viewport.mount.isAvailable()) {
+    // eslint-disable-next-line
     viewport.mount().then(() => {
+       
       viewport.bindCssVars();
     });
   }

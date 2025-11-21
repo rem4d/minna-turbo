@@ -18,8 +18,6 @@ export function getUserFromHeader(authHeader?: string) {
   const parsed = parse(authData);
   const tgUser = parsed.user;
 
-  console.log(authData);
-
   if (!tgUser) {
     console.log("No user has been found when parse init data.");
     return null;

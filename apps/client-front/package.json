@@ -2,15 +2,15 @@
   "name": "client-front",
   "version": "0.0.0",
   "dependencies": {
-    "@app/ui": "workspace:^",
+    "@rem4d/ui": "workspace:^",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-dropdown-menu": "^2.1.4",
     "@radix-ui/react-toast": "^1.2.6",
-    "@app/api": "workspace:*",
-    "@app/db": "workspace:*",
-    "@app/typescript-config": "workspace:*",
-    "@app/utils": "workspace:*",
+    "@rem4d/api": "workspace:*",
+    "@rem4d/db": "workspace:*",
+    "@rem4d/typescript-config": "workspace:*",
+    "@rem4d/utils": "workspace:*",
     "@rollbar/react": "^0.12.1",
     "@tailwindcss/postcss": "catalog:",
     "@tanstack/react-query-devtools": "catalog:",
@@ -39,9 +39,9 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
-    "@app/eslint-config": "workspace:*",
-    "@app/prettier-config": "workspace:*",
-    "@app/tailwind-config": "workspace:^",
+    "@rem4d/eslint-config": "workspace:*",
+    "@rem4d/prettier-config": "workspace:*",
+    "@rem4d/tailwind-config": "workspace:^",
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
@@ -68,5 +68,5 @@
     "lint": "eslint"
   },
   "type": "module",
-  "prettier": "@app/prettier-config"
+  "prettier": "@rem4d/prettier-config"
 }

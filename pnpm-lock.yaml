@@ -171,7 +171,7 @@ importers:
 
   apps/admin-front:
     dependencies:
-      '@app/ui':
+      '@rem4d/ui':
         specifier: workspace:^
         version: link:../../packages/ui
       '@mistralai/mistralai':
@@ -393,7 +393,7 @@ importers:
 
   apps/client-front:
     dependencies:
-      '@app/ui':
+      '@rem4d/ui':
         specifier: workspace:^
         version: link:../../packages/ui
       '@radix-ui/react-accordion':

@@ -1,8 +1,8 @@
-import type { ReadingPositionItem } from "@app/ui";
+import type { ReadingPositionItem } from "@rem4d/ui";
 import type { GetGlossesOutput, SentenceOutput } from "@rem4d/api";
 import type { ReactElement } from "react";
 import { useEffect, useState } from "react";
-import { TextVisualizer } from "@app/ui";
+import { TextVisualizer } from "@rem4d/ui";
 import { twMerge } from "tailwind-merge";
 
 export interface Props {
