@@ -12,7 +12,7 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN npm install -g corepack@latest
 RUN corepack enable
-RUN npm install turbo@2.3.3 --global
+RUN npm install turbo@2.6.1 --global
 # RUN npm install pnpm turbo --global
 RUN pnpm config set store-dir ~/.pnpm-store
 
