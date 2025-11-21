@@ -13,7 +13,7 @@ export const userRouter = router({
     const result = await ctx.db
       .from("users")
       .select()
-      .eq("id", user.id)
+      .eq("id", Number(user.id))
       .limit(1)
       .single();
 

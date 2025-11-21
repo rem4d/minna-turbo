@@ -121,7 +121,7 @@ export const adminSentenceRouter = router({
   update: publicProcedure
     .input(
       z.object({
-        id: z.string(),
+        id: z.number(),
         input: z.object({
           text: z.string(),
           ruby: z.string(),

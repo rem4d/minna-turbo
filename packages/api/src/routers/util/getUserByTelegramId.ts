@@ -7,10 +7,19 @@ export const getUserByTelegramId = async function (
   const { data, error } = await db
     .from("users")
     .select("*")
-    .eq("telegram_id", telegramId);
+    .eq("telegram_id", telegramId.toString());
 
   if (data && data.length > 0) {
-    return data[0];
+    const found = data[0];
+
+    if (found) {
+      const u = {
+        ...found,
+        id: found.id.toString(),
+      };
+
+      return u;
+    }
   }
 
   console.log(`getUserByTelegramId: no user has been found:`);
