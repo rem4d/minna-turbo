@@ -1,18 +1,17 @@
-import type { ThemeParams } from "@telegram-apps/sdk-react";
+// @ts-nocheck
+import type { ThemeParams } from "@tma.js/sdk-react";
 import {
-  bindThemeParamsCssVars,
-  bindViewportCssVars,
+  backButton,
   emitEvent,
+  initData,
   init as initSDK,
   miniApp,
   mockTelegramEnv,
-  mountBackButton,
-  mountViewport,
-  restoreInitData,
   retrieveLaunchParams,
   setDebug,
-  themeParamsState,
-} from "@telegram-apps/sdk-react";
+  themeParams,
+  viewport,
+} from "@tma.js/sdk-react";
 
 /**
  * Initializes the application and configures its dependencies.
@@ -53,10 +52,11 @@ export async function init(options: {
     let firstThemeSent = false;
     mockTelegramEnv({
       onEvent(event, next) {
-        if (event[0] === "web_app_request_theme") {
+        if (event.name === "web_app_request_theme") {
           let tp: ThemeParams = {};
+
           if (firstThemeSent) {
-            tp = themeParamsState();
+            tp = themeParams.state();
           } else {
             firstThemeSent = true;
             tp ||= retrieveLaunchParams().tgWebAppThemeParams;
@@ -64,7 +64,7 @@ export async function init(options: {
           return emitEvent("theme_changed", { theme_params: tp });
         }
 
-        if (event[0] === "web_app_request_safe_area") {
+        if (event.name === "web_app_request_safe_area") {
           return emitEvent("safe_area_changed", {
             left: 0,
             top: 0,
@@ -79,18 +79,18 @@ export async function init(options: {
   }
 
   // Mount all components used in the project.
-  mountBackButton.ifAvailable();
-  restoreInitData();
+  backButton.mount.ifAvailable();
+  initData.restore();
 
-  if (miniApp.mountSync.isAvailable()) {
-    miniApp.mountSync();
-    bindThemeParamsCssVars();
+  if (miniApp.mount.isAvailable()) {
+    themeParams.mount();
+    miniApp.mount();
+    themeParams.bindCssVars();
   }
 
-  const av = mountViewport.isAvailable();
-  if (av) {
-    void mountViewport().then(() => {
-      bindViewportCssVars();
+  if (viewport.mount.isAvailable()) {
+    viewport.mount().then(() => {
+      viewport.bindCssVars();
     });
   }
 }

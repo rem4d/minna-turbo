@@ -1,4 +1,4 @@
-import type { InitData } from "@telegram-apps/sdk-react";
+import type { InitDataType } from "@tma.js/sdk-react";
 
 export const mockInitDataString = new URLSearchParams([
   ["auth_date", ((new Date().getTime() / 1000) | 0).toString()],
@@ -15,7 +15,7 @@ export const mockInitDataString = new URLSearchParams([
   ],
 ]).toString();
 
-export const mockInitData: InitData = {
+export const mockInitData: InitDataType = {
   user: {
     id: 1,
     first_name: "Andrew",

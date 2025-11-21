@@ -6,11 +6,9 @@
   "dependencies": {
     "@redis/client": "^1.6.0",
     "@rem4d/db": "workspace:*",
-    "@rem4d/gloss": "workspace:^",
     "@rem4d/tokenizer": "workspace:*",
     "@rem4d/utils": "workspace:^",
-    "@telegram-apps/init-data-node": "^2.0.2",
-    "@telegram-apps/sdk": "^3.5.0",
+    "@tma.js/init-data-node": "^2.0.3",
     "@trpc/server": "catalog:",
     "envalid": "^8.0.0",
     "openai": "^4.77.0",

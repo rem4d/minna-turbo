@@ -1,4 +1,4 @@
-import { validate, parse } from "@telegram-apps/init-data-node";
+import { validate, parse } from "@tma.js/init-data-node";
 
 const BOT_TOKEN = process.env.BOT_TOKEN ?? "";
 
@@ -8,15 +8,17 @@ export function getUserFromHeader(authHeader?: string) {
     return null;
   }
 
-  const [authType, initData = ""] = authHeader.split(" ");
+  const [authType, authData = ""] = authHeader.split(" ");
 
   if (authType !== "tma") {
     return null;
   }
 
   // console.log(0);
-  const parsed = parse(initData);
+  const parsed = parse(authData);
   const tgUser = parsed.user;
+
+  console.log(authData);
 
   if (!tgUser) {
     console.log("No user has been found when parse init data.");
@@ -37,7 +39,7 @@ export function getUserFromHeader(authHeader?: string) {
   }
 
   try {
-    validate(initData, BOT_TOKEN, { expiresIn: 0 });
+    validate(authData, BOT_TOKEN, { expiresIn: 0 });
     const user = {
       id: tgUser.id,
       username: tgUser.username,
@@ -45,9 +47,9 @@ export function getUserFromHeader(authHeader?: string) {
       last_name: tgUser.last_name,
       language: tgUser.language_code,
     };
-    const date = new Date();
-    console.log(`[${date.toISOString()}] PASSED___ Validated user:`);
-    console.log(user);
+    // const date = new Date();
+    // console.log(`[${date.toISOString()}] PASSED___ Validated user:`);
+    // console.log(user);
     return user;
   } catch (err) {
     console.log(err);

@@ -1,15 +1,15 @@
-import type { LaunchParams } from "@telegram-apps/sdk-react";
+import type { LaunchParams } from "@tma.js/sdk-react";
 import { useEffect } from "react";
 import {
   miniApp,
-  requestFullscreen,
   backButton as SDKBackButton,
   hapticFeedback as sdkHapticFeedback,
-  initDataRaw as SDKInitDataRaw,
+  initData as SDKInitData,
+  // initDataRaw as SDKInitDataRaw,
   retrieveLaunchParams as SDKRetrieveLaunchParams,
   swipeBehavior,
   viewport,
-} from "@telegram-apps/sdk-react";
+} from "@tma.js/sdk-react";
 
 import {
   mockInitData,
@@ -23,7 +23,7 @@ export const initDataRaw = () => {
   if (noSdk) {
     return mockInitDataString;
   }
-  return SDKInitDataRaw();
+  return SDKInitData.raw();
 };
 
 export const useIsMobile = () => {
@@ -63,13 +63,13 @@ export const useMiniAppSetup = () => {
     }
     viewport.expand();
 
-    miniApp.setBackgroundColor("#f3f3f3");
+    miniApp.setBgColor("#f3f3f3");
     miniApp.setHeaderColor("#f3f3f3");
 
-    const fcIsAvail = requestFullscreen.isAvailable();
+    const fcIsAvail = viewport.requestFullscreen.isAvailable();
 
     if (fcIsAvail && !lp.tgWebAppPlatform.includes("desktop")) {
-      void requestFullscreen();
+      void viewport.requestFullscreen();
     }
   }, [lp.tgWebAppPlatform]);
 };

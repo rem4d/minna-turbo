@@ -20,23 +20,23 @@ export const getStatementsForLevel = async ({
   const cached = await redis.get(`${level}-${shift}`);
   const isProd = true; // process.env.NODE_ENV !== "development";
 
-  // if (cached && isProd) {
-  //   const arr = JSON.parse(cached) as {
-  //     additional: Sentence[];
-  //     sentences: Sentence[];
-  //   };
-  //   return arr;
-  // }
+  if (cached && isProd) {
+    const arr = JSON.parse(cached) as {
+      additional: Sentence[];
+      sentences: Sentence[];
+    };
+    return arr;
+  }
 
   const { data: sentences, error } = await db
     .from("sentences")
     .select("id,text,ruby,level,text_with_furigana,en,ru")
-    // .lte("level", level)
-    // .gt("level", clamp(level - shift, 0, level))
+    .lte("level", level)
+    .gt("level", clamp(level - shift, 0, level))
     .not("ru", "is", null)
     .not("en", "is", null)
-    .lte("unknown_kanji_number", numberOfUnknownKanji)
-    .like("text", "%と%");
+    .lte("unknown_kanji_number", numberOfUnknownKanji);
+  // .like("text", "%と%");
   // .eq("id", 4517);
   // .order("id")
   // .range(10, 1000);
