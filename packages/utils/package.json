@@ -1,5 +1,5 @@
 {
-  "name": "@rem4d/utils",
+  "name": "@app/utils",
   "description": "",
   "version": "1.0.0",
   "author": "",
@@ -7,8 +7,8 @@
     "react": "^19.0.0"
   },
   "devDependencies": {
-    "@rem4d/eslint-config": "workspace:*",
-    "@rem4d/typescript-config": "workspace:*",
+    "@app/eslint-config": "workspace:*",
+    "@app/typescript-config": "workspace:*",
     "@types/node": "^22.10.2",
     "bunchee": "catalog:",
     "typescript": "catalog:"

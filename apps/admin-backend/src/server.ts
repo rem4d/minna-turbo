@@ -3,7 +3,7 @@ import cors from "cors";
 import express, { Router } from "express";
 import dotenv from "dotenv";
 import * as trpcExpress from "@trpc/server/adapters/express";
-import { appRouter, createTRPCContext } from "@rem4d/api";
+import { appRouter, createTRPCContext } from "@app/api";
 import logger from "./logger";
 import errorMiddleware from "./middleware/errorMiddleware";
 import {

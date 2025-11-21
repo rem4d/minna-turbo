@@ -1,5 +1,5 @@
 {
-  "name": "@rem4d/db",
+  "name": "@app/db",
   "description": "",
   "version": "1.0.0",
   "author": "",
@@ -10,8 +10,8 @@
     "redis": "^4.7.0"
   },
   "devDependencies": {
-    "@rem4d/eslint-config": "workspace:*",
-    "@rem4d/typescript-config": "workspace:*",
+    "@app/eslint-config": "workspace:*",
+    "@app/typescript-config": "workspace:*",
     "bunchee": "catalog:",
     "typescript": "catalog:"
   },

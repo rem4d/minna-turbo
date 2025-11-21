@@ -1,13 +1,13 @@
 {
-  "name": "@rem4d/api",
+  "name": "@app/api",
   "description": "",
   "version": "1.0.0",
   "author": "",
   "dependencies": {
     "@redis/client": "^1.6.0",
-    "@rem4d/db": "workspace:*",
-    "@rem4d/tokenizer": "workspace:*",
-    "@rem4d/utils": "workspace:^",
+    "@app/db": "workspace:*",
+    "@app/tokenizer": "workspace:*",
+    "@app/utils": "workspace:^",
     "@tma.js/init-data-node": "^2.0.3",
     "@trpc/server": "catalog:",
     "envalid": "^8.0.0",
@@ -15,8 +15,8 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@rem4d/eslint-config": "workspace:*",
-    "@rem4d/typescript-config": "workspace:*",
+    "@app/eslint-config": "workspace:*",
+    "@app/typescript-config": "workspace:*",
     "typescript": "catalog:"
   },
   "exports": {
