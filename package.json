@@ -1,26 +1,24 @@
 {
   "name": "minna-turbo",
-  "version": "0.0.0",
-  "devDependencies": {
-    "turbo": "^2.6.1",
-    "typescript": "catalog:"
-  },
-  "packageManager": "pnpm@10.14.0",
   "private": true,
+  "engines": {
+    "node": "^22.21.0",
+    "pnpm": "^10.19.0"
+  },
+  "packageManager": "pnpm@10.19.0",
   "scripts": {
-    "build": "tsc -b && vite build",
-    "clean": "git clean -xdfe .env",
-    "dev": "vite",
+    "build": "turbo run build",
+    "clean": "git clean -xdf node_modules",
+    "clean:workspaces": "turbo run clean",
+    "dev": "turbo watch dev --continue",
     "lint": "eslint .",
     "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
     "preview": "vite preview",
     "test": "turbo run test",
     "test:watch": "vitest --watch"
   },
-  "type": "module",
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "tooling/*"
-  ]
+  "devDependencies": {
+    "turbo": "^2.6.1",
+    "typescript": "catalog:"
+  }
 }

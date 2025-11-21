@@ -4,12 +4,12 @@
   "version": "1.0.0",
   "author": "",
   "dependencies": {
-    "react": "^19.0.0"
+    "react": "catalog:react19"
   },
   "devDependencies": {
     "@rem4d/eslint-config": "workspace:*",
     "@rem4d/typescript-config": "workspace:*",
-    "@types/node": "^22.10.2",
+    "@types/node": "catalog:",
     "bunchee": "catalog:",
     "typescript": "catalog:"
   },

@@ -1,6 +1,15 @@
 {
   "name": "client-front",
-  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b && vite build",
+    "deploy": "./deploy.sh",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "vite --clearScreen false",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint"
+  },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-dialog": "^1.1.14",
@@ -13,6 +22,7 @@
     "@rem4d/utils": "workspace:*",
     "@rollbar/react": "^0.12.1",
     "@tailwindcss/postcss": "catalog:",
+    "@tanstack/react-query": "catalog:",
     "@tanstack/react-query-devtools": "catalog:",
     "@tanstack/react-virtual": "^3.13.12",
     "@tma.js/sdk-react": "^3.0.9",
@@ -24,8 +34,8 @@
     "i18next": "^25.6.3",
     "lottie-react": "^2.4.1",
     "motion": "^12.23.24",
-    "react": "catalog:",
-    "react-dom": "catalog:",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19",
     "react-i18next": "^15.7.4",
     "react-loading-skeleton": "^3.5.0",
     "react-markdown": "^10.1.0",
@@ -41,8 +51,8 @@
     "@rem4d/tailwind-config": "workspace:^",
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
-    "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
+    "@types/react": "catalog:react19",
+    "@types/react-dom": "catalog:react19",
     "@vitejs/plugin-react": "catalog:",
     "@vitejs/plugin-react-swc": "catalog:",
     "eslint": "catalog:",
@@ -54,15 +64,5 @@
     "vite-plugin-svgr": "catalog:",
     "vite-tsconfig-paths": "catalog:"
   },
-  "private": true,
-  "scripts": {
-    "build": "tsc -b && vite build",
-    "deploy": "./deploy.sh",
-    "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "vite --clearScreen false",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint"
-  },
-  "type": "module",
   "prettier": "@rem4d/prettier-config"
 }

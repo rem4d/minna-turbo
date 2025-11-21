@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "author": "",
   "dependencies": {
-    "react": "catalog:",
-    "react-dom": "catalog:",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19",
     "@tailwindcss/postcss": "catalog:",
     "tailwind-merge": "catalog:",
     "tailwindcss": "catalog:"
@@ -16,8 +16,8 @@
     "@rem4d/tailwind-config": "workspace:^",
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
-    "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
+    "@types/react": "catalog:react19",
+    "@types/react-dom": "catalog:react19",
     "@vitejs/plugin-react": "catalog:",
     "@vitejs/plugin-react-swc": "catalog:",
     "typescript": "catalog:",
