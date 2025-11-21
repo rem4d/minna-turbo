@@ -8,27 +8,21 @@
     "@rem4d/typescript-config": "workspace:*",
     "@sglkc/kuromoji": "^1.1.0",
     "@trpc/server": "catalog:",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "envalid": "^8.0.0",
-    "express": "^4.21.2",
+    "cors": "catalog:",
+    "dotenv": "catalog:",
+    "envalid": "catalog:",
+    "express": "catalog:",
     "http-status-codes": "^2.3.0",
-    "pino": "^9.5.0",
-    "pino-http": "^10.3.0"
+    "pino": "catalog:",
+    "pino-http": "catalog:"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/dotenv": "^6.1.1",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.10.2",
-    "pino-pretty": "^13.0.0",
+    "@types/cors": "catalog:",
+    "@types/dotenv": "catalog:",
+    "@types/express": "catalog:",
+    "@types/node": "catalog:",
+    "pino-pretty": "catalog:",
     "tsx": "catalog:"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    }
   },
   "license": "MIT",
   "private": true,
@@ -36,6 +30,5 @@
     "build": "tsc",
     "clean": "git clean -xdfe .env",
     "dev": "tsx watch --clear-screen=false src/index.ts | pino-pretty"
-  },
-  "type": "module"
+  }
 }

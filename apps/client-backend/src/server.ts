@@ -13,6 +13,7 @@ dotenv.config();
 const app = express();
 
 export let httpServer: ReturnType<typeof http.createServer>;
+console.log(1);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

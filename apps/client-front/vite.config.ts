@@ -3,7 +3,6 @@ import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
 import checker from "vite-plugin-checker";
 import mkcert from "vite-plugin-mkcert";
-import { nodePolyfills } from "vite-plugin-node-polyfills";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -32,7 +31,6 @@ export default defineConfig(({ mode }) => {
   return {
     server,
     plugins: [
-      nodePolyfills(),
       // Allows using React dev server along with building a React application with Vite.
       // https://npmjs.com/package/@vitejs/plugin-react-swc
       react(),
