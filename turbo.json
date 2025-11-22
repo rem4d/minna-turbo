@@ -45,15 +45,10 @@
   "globalEnv": [
     "SUPABASE_ANON_KEY",
     "SUPABASE_URL",
-    "OPENAI_API_KEY",
     "PORT",
     "HOST",
     "VITE_API_SERVER",
     "VITE_ROLLBAR_API_TOKEN"
   ],
-  "globalPassThroughEnv": ["NODE_ENV"],
-  "env": {
-    "VITE_ROLLBAR_API_TOKEN": "required",
-    "DEV": "optional"
-  }
+  "globalPassThroughEnv": ["NODE_ENV"]
 }

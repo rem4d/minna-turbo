@@ -1,4 +1,4 @@
-ARG NODE_VERSION=22.12.0
+ARG NODE_VERSION=22.21.0
 ARG NGINX_VERSION=1.27.4
 
 # 1. Alpine image
@@ -29,6 +29,7 @@ RUN turbo prune ${PROJECT} --docker
 # 3. Build the project
 FROM base AS builder
 ARG PROJECT
+ENV CI=true
 
 WORKDIR /app
 

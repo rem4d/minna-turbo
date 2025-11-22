@@ -1,6 +1,14 @@
 {
   "name": "client-backend",
-  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "tsx watch --clear-screen=false src/index.ts",
+    "build": "tsup",
+    "check-types": "tsc --noEmit",
+    "clean": "git clean -xdfe .env"
+  },
   "dependencies": {
     "@rem4d/db": "workspace:*",
     "@rem4d/tokenizer": "workspace:*",
@@ -28,13 +36,5 @@
     "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
-  },
-  "private": true,
-  "scripts": {
-    "start": "node dist/index.js",
-    "dev": "tsx watch --clear-screen=false src/index.ts",
-    "build": "tsup",
-    "check-types": "tsc --noEmit",
-    "clean": "git clean -xdfe .env"
   }
 }
