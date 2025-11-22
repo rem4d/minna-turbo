@@ -50,10 +50,11 @@ export const SentenceViewer: FC<Props> = ({
   );
 
   useEffect(() => {
+    // eslint-disable-next-line
     setShowFurigana(false);
     setMode(null);
     setGlosses([]);
-  }, [sentence]);
+  }, [sentence?.id]);
 
   const {
     isPlaying,

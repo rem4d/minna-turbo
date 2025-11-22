@@ -1,12 +1,12 @@
 {
-	"$schema": "https://json.schemastore.org/tsconfig",
-	"extends": "./tsconfig.base.json",
-	"compilerOptions": {
-		/** Emit types for internal packages to speed up editor performance. */
-		"declaration": true,
-		"declarationMap": true,
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    /** Emit types for internal packages to speed up editor performance. */
+    "declaration": true,
+    "declarationMap": true,
     "emitDeclarationOnly": true,
-		"noEmit": true,
-		"outDir": "${configDir}/dist"
-	}
+    "noEmit": false,
+    "outDir": "${configDir}/dist"
+  }
 }

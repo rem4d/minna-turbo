@@ -87,6 +87,8 @@ export const PlaySoundContextProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     dispatch({ type: "stop" });
+    // @TODO: later
+    // eslint-disable-next-line
     setBlobSrc(undefined);
   }, [text]);
 
@@ -127,6 +129,8 @@ export const PlaySoundContextProvider = ({ children }: PropsWithChildren) => {
     hapticFeedback("light");
 
     if (reducerState.currentText !== text) {
+      // @TODO: later
+      // eslint-disable-next-line
       setText(reducerState.currentText);
       void callMutation(reducerState.currentText);
     }
@@ -163,9 +167,7 @@ export const PlaySoundContextProvider = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <PlaySoundContext.Provider
-      value={contextValue}
-    >
+    <PlaySoundContext.Provider value={contextValue}>
       {children}
       <audio
         className="hidden"

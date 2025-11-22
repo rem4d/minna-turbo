@@ -27,7 +27,7 @@ export const structureText = (text: string, sourceArray: PositionedItem[]) => {
 
   for (let i = 0; i < arr.length; i++) {
     if (arr[i]) {
-      const k = `${arr[i].start}.${arr[i].end}`;
+      const k = `${arr[i]?.start}.${arr[i]?.end}`;
       if (map.has(k)) {
         map.set(k, {
           start: map.get(k)!.start,
@@ -48,7 +48,7 @@ export const structureText = (text: string, sourceArray: PositionedItem[]) => {
       if (text[i] === "\n") {
         result.push({ text: "\n", p: null });
       } else {
-        result.push({ text: text[i], p: null });
+        result.push({ text: text[i] ?? "", p: null });
       }
     } else {
       const node = arr[i];
@@ -66,9 +66,10 @@ export const structureText = (text: string, sourceArray: PositionedItem[]) => {
       }
 
       i = recNode.end - 1;
+
       result.push({
-        text: text.slice(recNode?.start, recNode?.end),
-        p: { start: node.start, end: node.end, code: arr[i].code },
+        text: text.slice(recNode.start, recNode.end),
+        p: { start: node.start, end: node.end, code: arr[i]?.code ?? "" },
       });
     }
   }
@@ -124,7 +125,7 @@ export const mergePositions = (readings: R, glosses: R) => {
       continue;
     }
 
-    result.push({ text: text[i] });
+    result.push({ text: text[i] ?? "" });
   }
   return result;
 };

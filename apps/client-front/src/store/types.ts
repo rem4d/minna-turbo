@@ -1,4 +1,4 @@
-import { type KanjiOutput, type SentenceOutput } from "@rem4d/api";
+import type { KanjiOutput, SentenceOutput } from "@rem4d/api";
 
 export type StoreType = SentencesSlice &
   ActiveIndexSlice &

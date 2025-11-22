@@ -1,9 +1,5 @@
-import React, {
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  unstable_ViewTransition as ViewTransition,
-} from "react";
+import type React from "react";
+import { useCallback, useLayoutEffect, useRef, ViewTransition } from "react";
 import { IsHiddenScreenContext } from "@/context/isHiddenScreenContext";
 import { useRouter } from "@/router/router";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
@@ -32,6 +28,8 @@ export default function StackNavigator() {
     if (!canGoBack) return;
 
     const touch = e.touches[0];
+    if (!touch) return;
+
     touchStartX.current = touch.clientX;
 
     // Only start gesture from left edge (first 20px)
@@ -46,6 +44,8 @@ export default function StackNavigator() {
       if (!gestureStarted.current || !canGoBack) return;
 
       const touch = e.touches[0];
+      if (!touch) return;
+
       const deltaX = touch.clientX - touchStartX.current;
 
       // Only allow rightward swipes

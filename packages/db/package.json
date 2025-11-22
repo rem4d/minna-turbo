@@ -12,6 +12,7 @@
   "devDependencies": {
     "@rem4d/eslint-config": "workspace:*",
     "@rem4d/typescript-config": "workspace:*",
+    "eslint": "catalog:",
     "bunchee": "catalog:",
     "typescript": "catalog:"
   },

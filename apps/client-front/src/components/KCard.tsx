@@ -33,10 +33,7 @@ export function KCard({
   const trpc = useTRPC();
 
   const { data: examples, isLoading: examplesLoading } = useQuery(
-    trpc.viewer.kanji.examples.queryOptions(
-      { k: k.kanji ?? "" },
-      { enabled: !!k },
-    ),
+    trpc.viewer.kanji.examples.queryOptions({ k: k.kanji }, { enabled: !!k }),
   );
 
   useLayoutEffect(() => {

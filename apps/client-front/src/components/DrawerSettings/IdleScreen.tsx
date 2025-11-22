@@ -9,21 +9,13 @@ import { List, ListItem } from "../List";
 
 interface IdleScreenProps {
   selectedLevel: number;
-  showRepeatDeckOption: boolean;
-  rangeTo: number | null;
-  rangeFrom: number | null;
   onChooseLastKanjiClick: () => void;
-  onSelectRepeatDeckClick: () => void;
   onSubmit: () => void;
 }
 
 export default function IdleScreen({
   selectedLevel,
-  rangeTo,
-  rangeFrom,
-  showRepeatDeckOption,
   onChooseLastKanjiClick,
-  onSelectRepeatDeckClick,
   onSubmit,
 }: IdleScreenProps) {
   const { t } = useTranslation();
@@ -32,8 +24,6 @@ export default function IdleScreen({
   const kanjis = kanjisQuery.data ?? [];
 
   const currentK = kanjis.find((k) => k.position === selectedLevel);
-  const kFrom = kanjis.find((k) => k.position === rangeFrom);
-  const kTo = kanjis.find((k) => k.position === rangeTo);
 
   return (
     <motion.div
@@ -51,32 +41,6 @@ export default function IdleScreen({
             sub={`${convertLevel(currentK?.position)} ${t("level")}`}
           />
         </List>
-        {showRepeatDeckOption && (
-          <List title={t("repeat_deck")}>
-            <ListItem
-              icon={
-                <div className="text-[16px] whitespace-nowrap">
-                  {kFrom && kTo
-                    ? `${kFrom?.kanji}...${kTo?.kanji}`
-                    : t("not_assigned")}
-                </div>
-              }
-              sub={
-                kFrom && kTo
-                  ? `(${kTo.position - kFrom.position + 1})`
-                  : undefined
-              }
-              right={
-                <button
-                  className="text-azure-radiance text-md inline-block cursor-pointer bg-transparent"
-                  onClick={onSelectRepeatDeckClick}
-                >
-                  {t("change")}
-                </button>
-              }
-            />
-          </List>
-        )}
       </div>
       <Button className="w-full" onClick={onSubmit}>
         {t("save")}

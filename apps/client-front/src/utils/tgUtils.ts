@@ -32,9 +32,9 @@ export const useIsMobile = () => {
 };
 
 export const userLanguage = () => {
-  const lp = retrieveLaunchParams();
-  const lang = lp.tgWebAppData?.user?.language_code;
-  return lang;
+  // const lp = retrieveLaunchParams();
+  // const lang = lp.tgWebAppData?.user?.language_code;
+  return "ru"; // lang;
 };
 
 export const retrieveLaunchParams = (): LaunchParams => {

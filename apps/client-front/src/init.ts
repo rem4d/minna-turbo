@@ -59,7 +59,7 @@ export async function init(options: {
             tp = themeParams.state();
           } else {
             firstThemeSent = true;
-            tp ||= retrieveLaunchParams().tgWebAppThemeParams;
+            tp = retrieveLaunchParams().tgWebAppThemeParams;
           }
           return emitEvent("theme_changed", { theme_params: tp });
         }
@@ -91,7 +91,6 @@ export async function init(options: {
   if (viewport.mount.isAvailable()) {
     // eslint-disable-next-line
     viewport.mount().then(() => {
-       
       viewport.bindCssVars();
     });
   }

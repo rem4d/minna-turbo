@@ -10,6 +10,7 @@
     "@rem4d/eslint-config": "workspace:*",
     "@rem4d/typescript-config": "workspace:*",
     "@types/node": "catalog:",
+    "eslint": "catalog:",
     "bunchee": "catalog:",
     "typescript": "catalog:"
   },

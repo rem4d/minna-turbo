@@ -58,7 +58,7 @@ export const AllKanjiPage: FC = () => {
   const list = listQuery.data ?? [];
 
   const displayData = searchValueDeferred
-    ? list?.filter((d) => {
+    ? list.filter((d) => {
         const value = searchValueDeferred.trim().toLowerCase();
         const containsWord = getSearchReadings(d).some((v) =>
           v.startsWith(value),
@@ -171,7 +171,7 @@ export const AllKanjiPage: FC = () => {
                         d={
                           displayData[
                             virtualRow.index * colCount + virtualColumn.index
-                          ]
+                          ]!
                         }
                         onClick={onCardClick}
                       />

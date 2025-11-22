@@ -1,7 +1,7 @@
+import type { SentenceOutput } from "@rem4d/api";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { AnimateHeight } from "@/components/AnimateHeight";
 import * as Accordion from "@radix-ui/react-accordion";
-import { type SentenceOutput } from "@rem4d/api";
 import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
 
@@ -11,11 +11,7 @@ const TranslationContent: React.FC<{
   sentence: SentenceOutput;
 }> = ({ val, transLang, sentence }) => {
   const { t } = useTranslation();
-  let text = transLang === "ru" ? sentence.ru : sentence.en;
-
-  if (!text) {
-    text = sentence.en;
-  }
+  const text = transLang === "ru" ? sentence.ru : sentence.en;
 
   return (
     <Accordion.Item

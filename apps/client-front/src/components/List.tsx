@@ -99,14 +99,12 @@ export const ListItem: FC<ListItemProps> = ({
             )}
           </div>
         </div>
-        {rightElem && (
-          <div
-            className="relative mr-[0px] flex h-full justify-center"
-            onClick={(e) => onRightIconClick?.(e)}
-          >
-            {rightElem()}
-          </div>
-        )}
+        <div
+          className="relative mr-[0px] flex h-full justify-center"
+          onClick={(e) => onRightIconClick?.(e)}
+        >
+          {rightElem()}
+        </div>
       </div>
     </div>
   );

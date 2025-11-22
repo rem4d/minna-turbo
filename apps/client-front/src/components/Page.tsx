@@ -20,6 +20,7 @@ export function Page({
   backAnimationStyle = "nav-back",
 }: PropsWithChildren<PageProps>) {
   const { navigateBack, animationStyle: routerAnimationStyle } = useRouter();
+  // eslint-disable-next-line
   const showNav = import.meta.env.DEV;
 
   const back = Boolean(backTo);

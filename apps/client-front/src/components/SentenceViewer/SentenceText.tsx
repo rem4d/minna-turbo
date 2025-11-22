@@ -1,7 +1,7 @@
-import type { ReadingPositionItem } from "@rem4d/ui";
 import type { GetGlossesOutput, SentenceOutput } from "@rem4d/api";
+import type { ReadingPositionItem } from "@rem4d/ui";
 import type { ReactElement } from "react";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { TextVisualizer } from "@rem4d/ui";
 import { twMerge } from "tailwind-merge";
 
@@ -25,22 +25,17 @@ export function SentenceText({
   showMeta,
 }: Props): ReactElement {
   const glosses = glosses_.filter(isValid);
-  const [readings, setReadings] = useState<ReadingPositionItem[]>([]);
 
-  useEffect(() => {
-    const parse = (txt: string) => {
-      try {
-        const arr = JSON.parse(txt) as ReadingPositionItem[];
-        return arr;
-      } catch (error) {
-        console.error(error);
-        return [];
-      }
-    };
-    if (sentence.text_with_furigana) {
-      setReadings(parse(sentence.text_with_furigana));
+  const readings = useMemo(() => {
+    const txt = sentence.text_with_furigana ?? "";
+    try {
+      const arr = JSON.parse(txt) as ReadingPositionItem[];
+      return arr;
+    } catch (error) {
+      console.error(error);
+      return [];
     }
-  }, [sentence]);
+  }, [sentence.text_with_furigana]);
 
   return (
     <div className="w-full">
@@ -66,17 +61,15 @@ export function SentenceText({
             <div className={twMerge("flex items-start justify-center gap-x-2")}>
               <div className="flex flex-col items-center justify-center gap-2 leading-8">
                 <div className="text-center">
-                  {glosses && readings && (
-                    <TextVisualizer
-                      text={sentence.text}
-                      showGlosses={showGlosses}
-                      showReadings={showFurigana}
-                      readings={readings}
-                      glosses={glosses}
-                      variant="dash"
-                      onGlossClick={onGlossClick}
-                    />
-                  )}
+                  <TextVisualizer
+                    text={sentence.text}
+                    showGlosses={showGlosses}
+                    showReadings={showFurigana}
+                    readings={readings}
+                    glosses={glosses}
+                    variant="dash"
+                    onGlossClick={onGlossClick}
+                  />
                 </div>
               </div>
             </div>

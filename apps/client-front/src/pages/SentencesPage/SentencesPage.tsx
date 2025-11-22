@@ -97,7 +97,7 @@ export const SentencesPage: FC = () => {
       }
       mountRef.current = true;
     }
-  }, [isIdle]);
+  }, [isIdle, getRandomized]);
 
   const { mutate: markAsSeen } = useMutation(
     trpc.viewer.sentence.markAsSeen.mutationOptions({
@@ -161,7 +161,7 @@ export const SentencesPage: FC = () => {
   });
 
   useEffect(() => {
-    if (list && list.length === 0 && sentences.length === 0) {
+    if (list?.length === 0 && sentences.length === 0) {
       setShowNoSentencesMessage(true);
     }
   }, [list, activeIndex, sentences.length]);
@@ -193,7 +193,7 @@ export const SentencesPage: FC = () => {
       if (favIndex === -1) {
         setConfirmModalOpen(true);
       } else {
-        setFavorites(favorites.toSpliced(favIndex, 1));
+        setFavorites(() => favorites.toSpliced(favIndex, 1));
         setToastOpen({ open: true, text: t("sentence_removed") });
       }
     }
@@ -236,7 +236,10 @@ export const SentencesPage: FC = () => {
     sentences.length === 0 || activeIndex === sentences.length - 1;
 
   const handleModalConfirm = (msg: string) => {
-    setFavorites(favorites.concat({ ...sentence, msg }));
+    if (sentence) {
+      setFavorites((prev) => prev.concat({ id: sentence.id, msg }));
+    }
+
     setToastOpen({ open: true, text: t("sentence_added") });
     setConfirmModalOpen(false);
   };
@@ -307,7 +310,7 @@ export const SentencesPage: FC = () => {
                 </div>
                 <div
                   className="w-fit cursor-pointer px-10 text-blue-500"
-                  onClick={() => onResetCacheClick?.()}
+                  onClick={() => onResetCacheClick()}
                 >
                   {t("reset_cache")}
                 </div>

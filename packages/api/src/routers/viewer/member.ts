@@ -29,13 +29,13 @@ export const memberRouter = router({
               ru: entry.ru ?? [],
               en: entry.en ?? [],
               // words: entry.words.filter((w) => w.is_common),
-              words: entry.words ?? [],
+              words: entry.words,
             })),
         }));
 
       return res.toSorted((a, b) => a.position - b.position);
     }),
-  suggestedVocabulariesList: publicProcedure.query(async () => {
+  suggestedVocabulariesList: publicProcedure.query(() => {
     return [];
     // const { data, error } = await ctx.db
     //   .from("suggested_vocabularies_list")
@@ -52,10 +52,10 @@ export const memberRouter = router({
         level: z.number(),
       }),
     )
-    .query(async ({ input }) => {
-      const frontLevel = input.level;
-      const levelFrom = frontLevel * 7 - 7;
-      const levelTo = frontLevel * 7 - 1;
+    .query(() => {
+      // const frontLevel = input.level;
+      // const levelFrom = frontLevel * 7 - 7;
+      // const levelTo = frontLevel * 7 - 1;
 
       // const { data, error } = await ctx.db
       //   .from("suggested_vocabularies")

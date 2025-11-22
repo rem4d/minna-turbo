@@ -1,5 +1,7 @@
-import type { Favourite } from "@/types";
 import type { FC } from "react";
+
+/*
+import type { Favourite } from "@/types";
 import { useCallback, useState } from "react";
 import Drawer from "@/components/Drawer";
 import { List, ListItem } from "@/components/List";
@@ -12,8 +14,11 @@ import { useTRPC } from "@/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useTranslation } from "react-i18next";
+*/
 
 export const FavouriteSentencesPage: FC = () => {
+  return <div>FavouriteSentencesPage</div>;
+  /*
   const [favorites, setFavorites] = useLocalStorage<Favourite[]>(
     "kic:favorites",
     [],
@@ -118,6 +123,7 @@ export const FavouriteSentencesPage: FC = () => {
       </Drawer>
     </Page>
   );
+    */
 };
 
 export default FavouriteSentencesPage;

@@ -4,36 +4,37 @@ packages:
   - tooling/*
 
 catalog:
+  "@eslint/js": ^9.38.0
   "@tailwindcss/postcss": ^4.1.17
   "@tailwindcss/vite": ^4.1.17
   "@tanstack/react-query": ^5.62.11
   "@tanstack/react-query-devtools": ^5.90.2
   "@trpc/client": ^11.7.1
+  "@trpc/react-query": ^11.7.1
   "@trpc/server": ^11.7.1
   "@trpc/tanstack-react-query": ^11.7.1
-  "@trpc/react-query": ^11.7.1
   "@types/cors": ^2.8.17
-  "@types/node": ^22.18.12
   "@types/dotenv": "^6.1.1"
   "@types/express": "^5.0.0"
+  "@types/node": ^22.18.12
   "@vitejs/plugin-react": 5.1.0
   "@vitejs/plugin-react-swc": ^4.2.2
   bunchee: ^6.3.2
-  express: "^4.21.2"
   cors: "^2.8.5"
   dotenv: "^16.4.7"
   envalid: "^8.1.1"
   eslint: ^9.39.1
-  prettier: ^3.6.2
-  pino: "^9.14.0"
-  pino-pretty: "^13.0.0"
-  rimraf: "^6.1.2"
-  tsup: "^8.5.1"
+  express: "^4.21.2"
   pino-http: "^10.5.0"
+  pino-pretty: "^13.0.0"
+  pino: "^9.14.0"
+  prettier: ^3.6.2
   react-hot-toast: ^2.5.1
   react-router-dom: ^7.8.0
+  rimraf: "^6.1.2"
   tailwind-merge: ^3.4.0
   tailwindcss: ^4.1.17
+  tsup: "^8.5.1"
   tsx: ^4.20.6
   typescript: ^5.9.3
   vite-plugin-checker: ^0.10.3

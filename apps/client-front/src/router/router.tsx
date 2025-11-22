@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import {
-  unstable_addTransitionType as addTransitionType,
+  addTransitionType,
   createContext,
   use,
   useEffect,
@@ -114,7 +114,7 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
     startTransition(() => {
       addTransitionType(as);
       go(prevUrl);
-      setScreens(screens.toSpliced(screens.length - 1, 1));
+      setScreens((s) => s.toSpliced(s.length - 1, 1));
     });
   };
 
@@ -142,8 +142,8 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
     pendingNav();
   }, [pendingNav]);
 
-  const currentScreen = screens[screens.length - 1];
-  const previousScreen = screens[screens.length - 2];
+  const currentScreen = screens[screens.length - 1] ?? null;
+  const previousScreen = screens[screens.length - 2] ?? null;
   const canGoBack = screens.length > 1;
   // console.log("ROUTER screens:", screens);
 
@@ -195,6 +195,9 @@ const getInitialScreens = (routes: Route[]): Screen[] => {
   const initialRoute = routes.find((route) => route.path === pathname);
 
   const active = initialRoute ?? routes[0];
+  if (!active) {
+    throw new Error("No active route found.");
+  }
 
   const screen = {
     url: active.path,

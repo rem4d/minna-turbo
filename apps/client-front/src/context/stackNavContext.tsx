@@ -17,8 +17,8 @@ interface StackNavContextValue {
   push: (elem: React.ElementType, title: string) => void;
   len: number;
   direction: number;
-  currentScreen: Screen;
-  previousScreen: Screen;
+  currentScreen: Screen | undefined;
+  previousScreen: Screen | undefined;
 }
 
 export const StackNavContext = createContext<StackNavContextValue>({
@@ -50,7 +50,7 @@ export const StackNavContextProvider = ({
       id: "initial",
       component: initialScreen,
       title: "Home",
-      key: Date.now(),
+      key: 0,
     },
   ]);
 
@@ -60,19 +60,20 @@ export const StackNavContextProvider = ({
     if (screens.length > 1) {
       setDirection(-1);
       const newScreens = screens.toSpliced(screens.length - 1, 1);
-      setScreens(newScreens);
+      setScreens(() => newScreens);
     }
   }, [screens]);
 
   const push = (ScreenComponent: React.ElementType, title = "Screen") => {
     setDirection(1);
+    const key = Date.now();
     setScreens((prev) => [
       ...prev,
       {
         id: `screen-${Date.now()}`,
         component: ScreenComponent,
         title,
-        key: Date.now(),
+        key,
       },
     ]);
   };

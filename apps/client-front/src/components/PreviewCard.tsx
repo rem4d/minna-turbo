@@ -1,7 +1,7 @@
+import type { KanjiOutput } from "@rem4d/api";
 import React from "react";
 import { STORAGE_LANG } from "@/config/const";
 import { useRouter } from "@/router/router";
-import { type KanjiOutput } from "@rem4d/api";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
 import Thumbnail from "./Thumbnail";
@@ -27,9 +27,9 @@ const PreviewCard = React.memo(function PreviewCardFn({
   const [transLang] = useLocalStorage<"ru" | "en" | null>(STORAGE_LANG, null);
 
   const data = d; // ?? mock;
-  if (!d) return null;
+
   const means_ = transLang === "ru" ? data.ru : data.en;
-  const means = means_?.split(/[,;]/)?.[0] ?? "";
+  const means = means_?.split(/[,;]/)[0] ?? "";
 
   return (
     <div onClick={_onClick}>

@@ -39,9 +39,9 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
 
   const { data: members, isFetching: loadingMembers } = useQuery(
     trpc.viewer.member.membersById.queryOptions(
-      { id: sentence?.id ?? 0 },
+      { id: sentence.id },
       {
-        enabled: !!sentence?.id && openItems.includes("2"),
+        enabled: !!sentence.id && openItems.includes("2"),
       },
     ),
   );
@@ -125,10 +125,10 @@ export default function AccordionComponent({ sentence }: AccordionProps) {
             pos={selectedMember.pos}
             ruby={selectedMember.ruby}
             reading={selectedMember.reading}
-            en={selectedMember?.entries[0]?.en}
-            ru={selectedMember?.entries[0]?.ru}
-            entries={selectedMember?.entries}
-            readings={selectedMember?.entries[0]?.readings}
+            en={selectedMember.entries[0]?.en ?? null}
+            ru={selectedMember.entries[0]?.ru ?? null}
+            entries={selectedMember.entries}
+            readings={selectedMember.entries[0]?.readings}
           />
         )}
       </Drawer>

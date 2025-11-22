@@ -1,5 +1,6 @@
 import type { AppRouter } from "@rem4d/api";
-import React, { useState } from "react";
+import type { ReactNode } from "react";
+import { useState } from "react";
 import { initDataRaw } from "@/utils/tgUtils";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -33,7 +34,7 @@ export const { useTRPC } = trpc;
  * A wrapper for your app that provides the TRPC context.
  * Use only in _app.tsx
  */
-export function ApiProvider(props: { children: React.ReactNode }) {
+export function ApiProvider(props: { children: ReactNode }) {
   const dataRaw = initDataRaw();
 
   const url = `${import.meta.env.VITE_API_SERVER}trpc/api`;

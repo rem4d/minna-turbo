@@ -17,6 +17,7 @@
   "devDependencies": {
     "@rem4d/eslint-config": "workspace:*",
     "@rem4d/typescript-config": "workspace:*",
+    "eslint": "catalog:",
     "typescript": "catalog:"
   },
   "exports": {

@@ -1,6 +1,6 @@
 import type { ExampleOutput } from "@rem4d/api";
 import type { UseQueryResult } from "@tanstack/react-query";
-import React, { Suspense, useLayoutEffect, useState } from "react";
+import React, { Suspense, useState } from "react";
 import { Page } from "@/components/Page";
 import SectionHeader from "@/components/SectionHeader";
 import SentenceNavButtons from "@/components/SentenceViewer/SentenceNavButtons";
@@ -28,12 +28,10 @@ export default function SingleKanjiPage() {
 
   const list = listQuery.data ?? [];
 
-  useLayoutEffect(() => {
-    if (activeIndex === -1) {
-      const foundIndex = list.findIndex((d) => d.id === Number(kanjiId));
-      setActiveIndex(foundIndex);
-    }
-  }, [list]);
+  if (activeIndex === -1) {
+    const foundIndex = list.findIndex((d) => d.id === Number(kanjiId));
+    setActiveIndex(foundIndex);
+  }
 
   const found =
     activeIndex === -1

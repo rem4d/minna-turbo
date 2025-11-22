@@ -1,7 +1,6 @@
 import { StrictMode } from "react";
-import { init } from "@/init.ts";
-// import { useLaunchParams } from "@/utils/tgUtils.ts";
-import { retrieveLaunchParams } from "@/utils/tgUtils.ts";
+import { init } from "@/init";
+import { retrieveLaunchParams } from "@/utils/tgUtils";
 import { createRoot } from "react-dom/client";
 
 import App from "./App";
@@ -15,9 +14,11 @@ try {
   // const launchParams = useLaunchParams();
   const launchParams = retrieveLaunchParams();
   const { tgWebAppPlatform: platform } = launchParams;
+  // eslint-disable-next-line
+  const isDev = import.meta.env.DEV;
   const debug =
     (launchParams.tgWebAppStartParam ?? "").includes("platformer_debug") ||
-    import.meta.env.DEV;
+    isDev;
 
   // Configure all application dependencies.
   await init({
@@ -34,6 +35,7 @@ try {
     }
   });
 } catch (err) {
+  console.error(err);
   if (root) {
     createRoot(root).render(
       <div>

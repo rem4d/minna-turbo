@@ -5,11 +5,13 @@ import { twMerge } from "tailwind-merge";
 
 import { LoadingMembersPlaceholder } from "./LoadingMembersPlaceholder";
 
+type Id = MemberOutputClient["id"];
+
 const GlossaryContent: React.FC<{
   members: MemberOutputClient[] | undefined;
   loadingMembers: boolean;
   transLang: "ru" | "en" | null;
-  onMemberClick: (id: number) => void;
+  onMemberClick: (id: Id) => void;
 }> = ({ members, loadingMembers, transLang, onMemberClick }) => {
   return (
     <div>
@@ -42,8 +44,8 @@ const GlossaryContent: React.FC<{
                 >
                   {getMemberShortText({
                     transLang,
-                    ru: m.entries[0]?.ru,
-                    en: m.entries[0]?.en,
+                    ru: m.entries[0]?.ru ?? null,
+                    en: m.entries[0]?.en ?? null,
                   })}
                 </div>
               </React.Fragment>

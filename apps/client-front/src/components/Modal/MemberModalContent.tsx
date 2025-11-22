@@ -1,7 +1,7 @@
+import type { MemberOutput } from "@rem4d/api";
 import React from "react";
 import { useRouter } from "@/router/router";
 import { useAppStore } from "@/store";
-import { type MemberOutput } from "@rem4d/api";
 import { twMerge } from "tailwind-merge";
 
 interface EntryProps {
@@ -26,7 +26,7 @@ const Entry = ({
   className,
 }: EntryProps) => {
   const showRuby = ruby ? true : !ruby && !text && reading;
-  const rubyText = ruby ? ruby : reading;
+  const rubyText = ruby ?? reading;
   const kanjiMap = useAppStore((state) => state.kanjiMap);
 
   const tmpText = ruby ?? text ?? "";
@@ -85,11 +85,15 @@ const Entry = ({
           className={twMerge("flex flex-col space-y-4 overflow-hidden text-sm")}
         >
           <div className="flex flex-col space-y-2">
-            {ru?.map((r, i) => <div key={r + i}>{r}</div>)}
+            {ru?.map((r, i) => (
+              <div key={r + i}>{r}</div>
+            ))}
           </div>
           <Badge color="purple">En</Badge>
           <div className="flex flex-col space-y-2">
-            {en?.map((r, i) => <div key={r + i}>{r}</div>)}
+            {en?.map((r, i) => (
+              <div key={r + i}>{r}</div>
+            ))}
           </div>
         </div>
         <div className="flex space-x-4">{kanjis}</div>

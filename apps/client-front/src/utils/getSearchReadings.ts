@@ -1,4 +1,4 @@
-import { type KanjiOutput } from "@rem4d/api";
+import type { KanjiOutput } from "@rem4d/api";
 import { toHiragana, toRomaji } from "wanakana";
 
 export default function getSearchReadings(kanji: KanjiOutput) {

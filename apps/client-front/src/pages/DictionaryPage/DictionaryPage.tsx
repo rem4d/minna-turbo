@@ -20,16 +20,12 @@ export const DictionaryPage: FC = () => {
     }),
   );
 
-  if (!level) {
-    return null;
-  }
-
   return (
     <Page backTo="/library">
       <div className="relative px-4">
         {!isLoading && (
           <>
-            <SectionHeader>{`${t("dict_level", { val: level ?? 1 })}`}</SectionHeader>
+            <SectionHeader>{`${t("dict_level", { val: level })}`}</SectionHeader>
             <WordReadings list={vocabList} asGrid />
           </>
         )}
