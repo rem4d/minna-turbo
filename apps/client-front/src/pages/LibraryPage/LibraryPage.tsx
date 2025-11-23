@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import KanjiIcon from "@/assets/icons/kanji.svg?react";
 import { FooterMenu } from "@/components/FooterMenu";
 import { List, ListItem } from "@/components/List";
@@ -15,15 +15,7 @@ export const LibraryPage: FC = () => {
   //   api.viewer.member.suggestedVocabulariesList.useQuery(undefined, {
   //     throwOnError: true,
   //   });
-  const [isLoading, setIsLoading] = useState(() => Math.random() > 0.5);
-
-  useEffect(() => {
-    const id = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(id);
-  }, []);
+  const [isLoading] = useState(false);
 
   const { t } = useTranslation();
   const { navigate } = useRouter();

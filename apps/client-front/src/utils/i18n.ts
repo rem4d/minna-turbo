@@ -91,6 +91,10 @@ Please select more kanji in settings to see more sentences. Or you could reset c
           ai_review: "AI review",
           cancel: "Cancel",
           search_no_results: "No results",
+
+          member_modal: {
+            other: "Other possible values",
+          },
         },
       },
       ru: {
@@ -180,6 +184,9 @@ Please select more kanji in settings to see more sentences. Or you could reset c
           ai_review: "AI разбор",
           cancel: "Отмена",
           search_no_results: "Ничего не найдено",
+          member_modal: {
+            other: "Возможные другие значения",
+          },
         },
       },
     },
