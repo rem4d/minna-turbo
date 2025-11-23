@@ -24,6 +24,7 @@ interface TextVisualizerProps {
   readings: ReadingPositionItem[];
   text: string;
   variant?: Variant;
+  glossGlassName?: string;
 }
 
 type Code = string;
@@ -36,13 +37,19 @@ export const TextVisualizer = ({
   showReadings,
   variant = "color",
   onGlossClick,
+  glossGlassName = "",
 }: TextVisualizerProps) => {
   const readings_ = readings.map((r) => ({ ...r, code: r.reading }));
 
   const r = structureText(text, showReadings ? readings_ : []);
   const g = structureText(text, showGlosses ? glosses : []);
   const merged = mergePositions(r, g);
-  const spans = renderStructuredText(merged, variant, onGlossClick);
+  const spans = renderStructuredText(
+    merged,
+    variant,
+    glossGlassName,
+    onGlossClick,
+  );
 
   return spans;
 };
@@ -50,6 +57,7 @@ export const TextVisualizer = ({
 const renderStructuredText = (
   arr: ReturnType<typeof mergePositions>,
   variant: Variant,
+  glossGlassName: string,
   onGlossClick?: (code: string) => void,
 ) => {
   const result: React.ReactNode[] = [];
@@ -65,10 +73,14 @@ const renderStructuredText = (
         result.push(str);
         str = "";
       }
+
+      const gcn =
+        variant === "color" ? getVariantStyle(gloss.code) : glossGlassName;
+
       result.push(
         <div
           key={`g${i}`}
-          className={getVariantStyle(variant, gloss.code)}
+          className={gcn}
           onClick={() => onGlossClick?.(gloss.code)}
           style={{ display: "inline-block" }}
         >
@@ -291,11 +303,7 @@ const getColor = (code: Code | undefined) => {
   return colors[code] ? "" : "bg-gray-300";
 };
 
-const getVariantStyle = (variant: Variant, code: Code) => {
-  if (variant === "dash") {
-    return "mx-2 cursor-pointer border-b border-dashed border-black";
-  }
-
+const getVariantStyle = (code: Code) => {
   return twMerge(
     code === "AGERU" && "text-blue-500",
     code === "AGERU_TE" && "text-blue-500",

@@ -62,6 +62,7 @@ export function SentenceText({
               <div className="flex flex-col items-center justify-center gap-2 leading-8">
                 <div className="text-center">
                   <TextVisualizer
+                    glossGlassName="mx-2 cursor-pointer border-b border-dashed border-black/60"
                     text={sentence.text}
                     showGlosses={showGlosses}
                     showReadings={showFurigana}

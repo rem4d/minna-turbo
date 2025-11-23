@@ -61,3 +61,7 @@ linkWorkspacePackages: true
 
 overrides:
   vite: 7.2.4
+
+publicHoistPattern:
+  - "@ianvs/prettier-plugin-sort-imports"
+  - prettier-plugin-tailwindcss

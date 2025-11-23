@@ -1,4 +1,6 @@
-import { TextVisualizer, type ReadingPositionItem } from "./TextVisualizer";
-export * from "./utils/visualizer";
+import { TextVisualizer } from "./TextVisualizer";
+import type { ReadingPositionItem } from "./TextVisualizer";
+import Label from "./Label";
 
-export { TextVisualizer, ReadingPositionItem };
+export type { ReadingPositionItem };
+export { TextVisualizer, Label };

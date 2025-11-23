@@ -1,46 +1,30 @@
 {
   "name": "@rem4d/ui",
-  "description": "",
-  "version": "1.0.0",
-  "author": "",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./TextVisualizer": "./src/TextVisualizer.tsx"
+  },
   "dependencies": {
-    "react": "catalog:react19",
-    "react-dom": "catalog:react19",
-    "@tailwindcss/postcss": "catalog:",
-    "tailwind-merge": "catalog:",
-    "tailwindcss": "catalog:"
+    "tailwind-merge": "catalog:"
   },
   "devDependencies": {
     "@rem4d/eslint-config": "workspace:*",
+    "@rem4d/prettier-config": "workspace:*",
     "@rem4d/typescript-config": "workspace:*",
-    "@rem4d/tailwind-config": "workspace:^",
-    "@tailwindcss/vite": "catalog:",
-    "@types/node": "catalog:",
     "@types/react": "catalog:react19",
-    "@types/react-dom": "catalog:react19",
-    "@vitejs/plugin-react": "catalog:",
-    "@vitejs/plugin-react-swc": "catalog:",
-    "typescript": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "vite": "catalog:",
-    "vite-plugin-checker": "catalog:",
-    "vite-plugin-svgr": "catalog:",
-    "vite-tsconfig-paths": "catalog:"
+    "react": "catalog:react19",
+    "typescript": "catalog:"
   },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    }
+  "peerDependencies": {
+    "react": "catalog:react19"
   },
-  "license": "ISC",
-  "private": true,
+  "license": "MIT",
   "scripts": {
-    "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "check-types": "tsc --noEmit",
-    "dev": "vite --clearScreen false"
-  },
-  "type": "module"
+    "check-types": "tsc --noEmit"
+  }
 }

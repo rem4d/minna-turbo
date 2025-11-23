@@ -1,8 +1,6 @@
-@import "@radix-ui/colors/black-alpha.css" layer(base);
-@import "@radix-ui/colors/mauve.css" layer(base);
-@import "@radix-ui/colors/violet.css" layer(base);
-
 @import "tailwindcss";
+
+@source "../../../packages/ui/src/*.{ts,tsx}";
 
 @theme {
   --color-almost-white: #fefefe;

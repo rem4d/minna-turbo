@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @import "react-loading-skeleton/dist/skeleton.css";
 
+@source "../../../../packages/ui/src/*.{ts,tsx}";
+
 @theme {
   --color-athens-gray: #f7f7f9;
   --color-butterfly-bush: #8f74b9;

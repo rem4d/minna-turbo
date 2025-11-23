@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { TextVisualizer } from "./TextVisualizer";
+import { useEffect, useMemo, useState } from "react";
+import { ReadingPositionItem, TextVisualizer } from "@rem4d/ui";
 import type { FC } from "react";
 import toast from "react-hot-toast";
 import {
@@ -105,12 +105,12 @@ export const EditSentencePage: FC = () => {
       },
     });
 
-  const { data: furigana } = api.admin.sentence.getFurigana.useQuery(
-    {
-      text: sentence?.text ?? "",
-    },
-    { enabled: !!sentence?.text },
-  );
+  // const { data: furigana } = api.admin.sentence.getFurigana.useQuery(
+  //   {
+  //     text: sentence?.text ?? "",
+  //   },
+  //   { enabled: !!sentence?.text },
+  // );
 
   useEffect(() => {
     if (analyzeData) {
@@ -147,6 +147,19 @@ export const EditSentencePage: FC = () => {
       setComment(sentence.comment ?? "");
     }
   }, [sentence]);
+
+  const readings = useMemo(() => {
+    const txt = sentence?.text_with_furigana ?? "";
+    if (!txt) return [];
+
+    try {
+      const arr = JSON.parse(txt) as ReadingPositionItem[];
+      return arr;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }, [sentence?.text_with_furigana]);
 
   const onPlayAudio = async () => {
     await initTTS(input);
@@ -369,11 +382,11 @@ export const EditSentencePage: FC = () => {
                   {!showGrammarSpinner && glosses && glosses.length === 0 && (
                     <Text>No glosses found.</Text>
                   )}
-                  {glosses && furigana && (
+                  {glosses && (
                     <div className="flex flex-wrap items-end">
                       <TextVisualizer
                         text={sentence.text}
-                        readings={furigana}
+                        readings={readings}
                         glosses={glosses}
                         variant="color"
                         showReadings={true}

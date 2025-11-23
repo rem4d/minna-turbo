@@ -1,7 +1,6 @@
 {
   "name": "@rem4d/prettier-config",
   "private": true,
-  "version": "0.1.0",
   "type": "module",
   "exports": {
     ".": "./index.js"
@@ -18,6 +17,7 @@
   },
   "devDependencies": {
     "@rem4d/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
     "typescript": "catalog:"
   },
   "prettier": "@rem4d/prettier-config"
