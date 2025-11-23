@@ -1,5 +1,6 @@
 ARG NODE_VERSION=22.21.0
 ARG NGINX_VERSION=1.27.4
+ARG TURBO_VERSION=2.6.1
 
 # 1. Alpine image
 FROM node:${NODE_VERSION}-alpine AS alpine
@@ -10,9 +11,11 @@ RUN apk add --no-cache libc6-compat
 FROM alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+ENV CI=true
+
 RUN npm install -g corepack@latest
 RUN corepack enable
-RUN npm install turbo@2.6.1 --global
+RUN npm install turbo@${TURBO_VERSION} --global
 # RUN npm install pnpm turbo --global
 RUN pnpm config set store-dir ~/.pnpm-store
 
@@ -29,13 +32,12 @@ RUN turbo prune ${PROJECT} --docker
 # 3. Build the project
 FROM base AS builder
 ARG PROJECT
-ENV CI=true
 
 WORKDIR /app
 
 # Copy lockfile and package.json's of isolated subworkspace
-COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+# COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+# COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=pruner /app/out/json/ .
 
 # First install the dependencies (as they change less often)
@@ -46,8 +48,9 @@ COPY --from=pruner /app/out/full/ .
 
 # Build project, create dist filder
 RUN turbo build --filter=${PROJECT}
-# remove devDependencies from node_modules as we don’t need them anymore.
-RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm prune --prod --no-optional
+
+# prune --prod for some reason doesn't work, see https://github.com/pnpm/pnpm/issues/8307
+# RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store CI=true pnpm prune --prod --no-optional
 # Remove source code
 RUN rm -rf ./apps/${PROJECT}/src
 
@@ -62,6 +65,7 @@ USER nodejs
 
 WORKDIR /app
 COPY --from=builder --chown=nodejs:nodejs /app .
+
 WORKDIR /app/apps/${PROJECT}
 
 RUN mkdir -p public/m
