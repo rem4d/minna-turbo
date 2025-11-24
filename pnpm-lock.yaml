@@ -23,13 +23,13 @@ catalogs:
       version: 5.91.0
     '@trpc/client':
       specifier: ^11.7.1
-      version: 11.7.1
+      version: 11.7.2
     '@trpc/react-query':
       specifier: ^11.7.1
-      version: 11.7.1
+      version: 11.7.2
     '@trpc/server':
       specifier: ^11.7.1
-      version: 11.7.1
+      version: 11.7.2
     '@types/cors':
       specifier: ^2.8.17
       version: 2.8.19
@@ -180,7 +180,7 @@ importers:
         version: 1.1.0
       '@trpc/server':
         specifier: 'catalog:'
-        version: 11.7.1(typescript@5.9.3)
+        version: 11.7.2(typescript@5.9.3)
       cors:
         specifier: 'catalog:'
         version: 2.8.5
@@ -265,10 +265,10 @@ importers:
         version: 5.91.0(@tanstack/react-query@5.90.10(react@19.1.1))(react@19.1.1)
       '@trpc/client':
         specifier: 'catalog:'
-        version: 11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3)
+        version: 11.7.2(@trpc/server@11.7.2(typescript@5.9.3))(typescript@5.9.3)
       '@trpc/react-query':
         specifier: 'catalog:'
-        version: 11.7.1(@tanstack/react-query@5.90.10(react@19.1.1))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.3)
+        version: 11.7.2(@tanstack/react-query@5.90.10(react@19.1.1))(@trpc/client@11.7.2(@trpc/server@11.7.2(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.2(typescript@5.9.3))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.3)
       '@uidotdev/usehooks':
         specifier: ^2.4.1
         version: 2.4.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -387,7 +387,7 @@ importers:
         version: link:../../tooling/typescript
       '@trpc/server':
         specifier: 'catalog:'
-        version: 11.7.1(typescript@5.9.3)
+        version: 11.7.2(typescript@5.9.3)
       cors:
         specifier: 'catalog:'
         version: 2.8.5
@@ -496,13 +496,13 @@ importers:
         version: 3.13.12(react-dom@0.0.0-experimental-8ac5f4eb-20251119(react@0.0.0-experimental-8ac5f4eb-20251119))(react@0.0.0-experimental-8ac5f4eb-20251119)
       '@tma.js/sdk-react':
         specifier: ^3.0.9
-        version: 3.0.9(@types/react@19.2.6)(react@0.0.0-experimental-8ac5f4eb-20251119)(typescript@5.9.3)
+        version: 3.0.11(@types/react@19.2.6)(react@0.0.0-experimental-8ac5f4eb-20251119)(typescript@5.9.3)
       '@trpc/client':
         specifier: 'catalog:'
-        version: 11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3)
+        version: 11.7.2(@trpc/server@11.7.2(typescript@5.9.3))(typescript@5.9.3)
       '@trpc/tanstack-react-query':
         specifier: ^11.7.1
-        version: 11.7.1(@tanstack/react-query@5.90.10(react@0.0.0-experimental-8ac5f4eb-20251119))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@0.0.0-experimental-8ac5f4eb-20251119(react@0.0.0-experimental-8ac5f4eb-20251119))(react@0.0.0-experimental-8ac5f4eb-20251119)(typescript@5.9.3)
+        version: 11.7.2(@tanstack/react-query@5.90.10(react@0.0.0-experimental-8ac5f4eb-20251119))(@trpc/client@11.7.2(@trpc/server@11.7.2(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.2(typescript@5.9.3))(react-dom@0.0.0-experimental-8ac5f4eb-20251119(react@0.0.0-experimental-8ac5f4eb-20251119))(react@0.0.0-experimental-8ac5f4eb-20251119)(typescript@5.9.3)
       '@uidotdev/usehooks':
         specifier: ^2.4.1
         version: 2.4.1(react-dom@0.0.0-experimental-8ac5f4eb-20251119(react@0.0.0-experimental-8ac5f4eb-20251119))(react@0.0.0-experimental-8ac5f4eb-20251119)
@@ -579,6 +579,9 @@ importers:
       '@vitejs/plugin-react-swc':
         specifier: 'catalog:'
         version: 4.2.2(@swc/helpers@0.5.17)(vite@7.2.4(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6))
+      babel-plugin-react-compiler:
+        specifier: ^1.0.0
+        version: 1.0.0
       eslint:
         specifier: 'catalog:'
         version: 9.39.1(jiti@2.6.1)
@@ -623,7 +626,7 @@ importers:
         version: 2.0.3(typescript@5.9.3)
       '@trpc/server':
         specifier: 'catalog:'
-        version: 11.7.1(typescript@5.9.3)
+        version: 11.7.2(typescript@5.9.3)
       envalid:
         specifier: ^8.0.0
         version: 8.1.1
@@ -829,15 +832,15 @@ importers:
 
   tooling/tailwind:
     dependencies:
+      '@tailwindcss/postcss':
+        specifier: 'catalog:'
+        version: 4.1.17
       postcss:
         specifier: ^8.4.49
         version: 8.5.6
       tailwindcss:
         specifier: 'catalog:'
         version: 4.1.17
-      tailwindcss-animate:
-        specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@4.1.17)
     devDependencies:
       '@rem4d/eslint-config':
         specifier: workspace:*
@@ -2638,8 +2641,8 @@ packages:
   '@tma.js/init-data-node@2.0.3':
     resolution: {integrity: sha512-WUpltHfypbWjyYx8bR0hKxYkVNqVH6W58YSHcLiQ+gIq6DYthhaquWWJAa7dWXxZ95wCwVWFACon8pTYbE1mUA==}
 
-  '@tma.js/sdk-react@3.0.9':
-    resolution: {integrity: sha512-/hlaLy+CTa2OHQ8cMZdYkXO22Rzwf7qkdONvRvhilNOtiuYYK01u06VdRZRvHUWAIMxmWi3zxKc5ai9PB5vx3Q==}
+  '@tma.js/sdk-react@3.0.11':
+    resolution: {integrity: sha512-HWDLLbd7nVTw6/QtgzKGvQ6t6OBfWSw2HM3iRIWZz07BZa2yZqIAPHGNpSMTGTam8I7G+MBMCQJcEoe+1n2BOg==}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -2647,8 +2650,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@tma.js/sdk@3.1.0':
-    resolution: {integrity: sha512-cx93PleKyJuZokUp9EwtCX8Gd3eK01+XTdyOY6rPJiDlrCPdf/f49G0c154ibSHC4fk1VnH9pcxaBfKFEZpw2g==}
+  '@tma.js/sdk@3.1.2':
+    resolution: {integrity: sha512-ZeQwtQrrKzCLV/iWKppuNHpEbsX990wnO2axDNYrYxokJ2ZRrBWGO66GCsG7jd+k++wo3K3egmozjTd3pT87Lg==}
 
   '@tma.js/signals@1.0.1':
     resolution: {integrity: sha512-i2HUuwGqL4BmM5KAklAUhMhlEgUOF+F4nMHHS/zxrmD0upHE/0CiXCEdQxVeeOGN6e2RrKlonA40sDtR6OUDCw==}
@@ -2665,33 +2668,33 @@ packages:
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
-  '@trpc/client@11.7.1':
-    resolution: {integrity: sha512-uOnAjElKI892/U6aQMcBHYs3x7mme3Cvv1F87ytBL56rBvs7+DyK7r43zgaXKf13+GtPEI6ex5xjVUfyDW8XcQ==}
+  '@trpc/client@11.7.2':
+    resolution: {integrity: sha512-OQxqUMfpDvjcszo9dbnqWQXnW2L5IbrKSz2H7l8s+mVM3EvYw7ztQ/gjFIN3iy0NcamiQfd4eE6qjcb9Lm+63A==}
     peerDependencies:
-      '@trpc/server': 11.7.1
+      '@trpc/server': 11.7.2
       typescript: '>=5.7.2'
 
-  '@trpc/react-query@11.7.1':
-    resolution: {integrity: sha512-dEHDjIqSTzO8nLlCbtiFBMBwhbSkK1QP7aYVo3nP3sYBna0b+iCtrPXdxVPCSopr9/aIqDTEh+dMRZa7yBgjfQ==}
+  '@trpc/react-query@11.7.2':
+    resolution: {integrity: sha512-IcLDMqx2mvlGRxkr0/m37TtPvRQ8nonITH3EwYv436x0Igx8eduR9z4tdgGBsjJY9e5W1G7cZ4zKCwrizSimFQ==}
     peerDependencies:
       '@tanstack/react-query': ^5.80.3
-      '@trpc/client': 11.7.1
-      '@trpc/server': 11.7.1
+      '@trpc/client': 11.7.2
+      '@trpc/server': 11.7.2
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
       typescript: '>=5.7.2'
 
-  '@trpc/server@11.7.1':
-    resolution: {integrity: sha512-N3U8LNLIP4g9C7LJ/sLkjuPHwqlvE3bnspzC4DEFVdvx2+usbn70P80E3wj5cjOTLhmhRiwJCSXhlB+MHfGeCw==}
+  '@trpc/server@11.7.2':
+    resolution: {integrity: sha512-AgB26PXY69sckherIhCacKLY49rxE2XP5h38vr/KMZTbLCL1p8IuIoKPjALTcugC2kbyQ7Lbqo2JDVfRSmPmfQ==}
     peerDependencies:
       typescript: '>=5.7.2'
 
-  '@trpc/tanstack-react-query@11.7.1':
-    resolution: {integrity: sha512-qc7kz4NY7CCvCxLy5HGptfKd3e3yJnWmTd6/Gkr4IY8B73PNFmcHKvLWE4kzU7r+R72MfT57TXrCEJ7ErLSMtw==}
+  '@trpc/tanstack-react-query@11.7.2':
+    resolution: {integrity: sha512-3XrY0b8lV0Fhj4Z2hVn1d1ZJzq2/stbc2F1e9Y6RrUWOfLmOKHlEVHYO1QfDGM6rqj66DkUj7eA593hAI0VTkQ==}
     peerDependencies:
       '@tanstack/react-query': ^5.80.3
-      '@trpc/client': 11.7.1
-      '@trpc/server': 11.7.1
+      '@trpc/client': 11.7.2
+      '@trpc/server': 11.7.2
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
       typescript: '>=5.7.2'
@@ -3069,6 +3072,9 @@ packages:
       react-native-b4a:
         optional: true
 
+  babel-plugin-react-compiler@1.0.0:
+    resolution: {integrity: sha512-Ixm8tFfoKKIPYdCCKYTsqv+Fd4IJ0DQqMyEimo+pxUOMUR9cVPlwTrFt9Avu+3cb6Zp3mAzl+t1MrG2fxxKsxw==}
+
   bail@2.0.2:
     resolution: {integrity: sha512-0xO6mYd7JB2YesxDKplafRpsiOzPt9V02ddPCLbY1xYGPOX24NTyN50qnUxgCPcSoYMhKpAuBTjQoRZCAkUDRw==}
 
@@ -3116,8 +3122,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  baseline-browser-mapping@2.8.30:
-    resolution: {integrity: sha512-aTUKW4ptQhS64+v2d6IkPzymEzzhw+G0bA1g3uBRV3+ntkH+svttKseW5IOR4Ed6NUVKqnY7qT3dKvzQ7io4AA==}
+  baseline-browser-mapping@2.8.31:
+    resolution: {integrity: sha512-a28v2eWrrRWPpJSzxc+mKwm0ZtVx/G8SepdQZDArnXYU/XS+IF6mp8aB/4E+hH1tyGCoDo3KlUCdlSxGDsRkAw==}
     hasBin: true
 
   basic-ftp@5.0.5:
@@ -4530,8 +4536,8 @@ packages:
   mdast-util-phrasing@4.1.0:
     resolution: {integrity: sha512-TqICwyvJJpBwvGAMZjj4J2n0X8QWp21b9l0o7eXyVJ25YNWYbJDVIyD1bZXE6WtV6RmKJVYmQAKWa0zWOABz2w==}
 
-  mdast-util-to-hast@13.2.0:
-    resolution: {integrity: sha512-QGYKEuUsYT9ykKBCMOEDLsU5JRObWQusAolFMeko/tYPufNkRffBAQjIE+99jbA87xv6FgmjLtwjh9wBWajwAA==}
+  mdast-util-to-hast@13.2.1:
+    resolution: {integrity: sha512-cctsq2wp5vTsLIcaymblUriiTcZd0CwWtCbLvrOzYCDZoWyMNV8sZ7krj09FSnsiJi3WVsHLM4k6Dq/yaPyCXA==}
 
   mdast-util-to-markdown@2.1.2:
     resolution: {integrity: sha512-xj68wMTvGXVOKonmog6LwyJKrYXZPvlwabaryTjLh9LuvovB/KAH+kvi8Gjj+7rJjsFi23nkUxRQv1KqSroMqA==}
@@ -5602,11 +5608,6 @@ packages:
 
   tailwind-merge@3.4.0:
     resolution: {integrity: sha512-uSaO4gnW+b3Y2aWoWfFpX62vn2sR3skfhbjsEnaBI81WD1wBLlHZe5sWf0AqjksNdYTbGBEd0UasQMT3SNV15g==}
-
-  tailwindcss-animate@1.0.7:
-    resolution: {integrity: sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA==}
-    peerDependencies:
-      tailwindcss: '>=3.0.0 || insiders'
 
   tailwindcss@4.1.17:
     resolution: {integrity: sha512-j9Ee2YjuQqYT9bbRTfTZht9W/ytp5H+jJpZKiYdP/bpnXARAuELt9ofP0lPnmHjbga7SNQIxdTAXCmtKVYjN+Q==}
@@ -8186,16 +8187,16 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@tma.js/sdk-react@3.0.9(@types/react@19.2.6)(react@0.0.0-experimental-8ac5f4eb-20251119)(typescript@5.9.3)':
+  '@tma.js/sdk-react@3.0.11(@types/react@19.2.6)(react@0.0.0-experimental-8ac5f4eb-20251119)(typescript@5.9.3)':
     dependencies:
-      '@tma.js/sdk': 3.1.0(typescript@5.9.3)
+      '@tma.js/sdk': 3.1.2(typescript@5.9.3)
       react: 0.0.0-experimental-8ac5f4eb-20251119
     optionalDependencies:
       '@types/react': 19.2.6
     transitivePeerDependencies:
       - typescript
 
-  '@tma.js/sdk@3.1.0(typescript@5.9.3)':
+  '@tma.js/sdk@3.1.2(typescript@5.9.3)':
     dependencies:
       '@tma.js/bridge': 2.2.0(typescript@5.9.3)
       '@tma.js/signals': 1.0.1
@@ -8229,29 +8230,29 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3)':
+  '@trpc/client@11.7.2(@trpc/server@11.7.2(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
-      '@trpc/server': 11.7.1(typescript@5.9.3)
+      '@trpc/server': 11.7.2(typescript@5.9.3)
       typescript: 5.9.3
 
-  '@trpc/react-query@11.7.1(@tanstack/react-query@5.90.10(react@19.1.1))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.3)':
+  '@trpc/react-query@11.7.2(@tanstack/react-query@5.90.10(react@19.1.1))(@trpc/client@11.7.2(@trpc/server@11.7.2(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.2(typescript@5.9.3))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.3)':
     dependencies:
       '@tanstack/react-query': 5.90.10(react@19.1.1)
-      '@trpc/client': 11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3)
-      '@trpc/server': 11.7.1(typescript@5.9.3)
+      '@trpc/client': 11.7.2(@trpc/server@11.7.2(typescript@5.9.3))(typescript@5.9.3)
+      '@trpc/server': 11.7.2(typescript@5.9.3)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
       typescript: 5.9.3
 
-  '@trpc/server@11.7.1(typescript@5.9.3)':
+  '@trpc/server@11.7.2(typescript@5.9.3)':
     dependencies:
       typescript: 5.9.3
 
-  '@trpc/tanstack-react-query@11.7.1(@tanstack/react-query@5.90.10(react@0.0.0-experimental-8ac5f4eb-20251119))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@0.0.0-experimental-8ac5f4eb-20251119(react@0.0.0-experimental-8ac5f4eb-20251119))(react@0.0.0-experimental-8ac5f4eb-20251119)(typescript@5.9.3)':
+  '@trpc/tanstack-react-query@11.7.2(@tanstack/react-query@5.90.10(react@0.0.0-experimental-8ac5f4eb-20251119))(@trpc/client@11.7.2(@trpc/server@11.7.2(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.2(typescript@5.9.3))(react-dom@0.0.0-experimental-8ac5f4eb-20251119(react@0.0.0-experimental-8ac5f4eb-20251119))(react@0.0.0-experimental-8ac5f4eb-20251119)(typescript@5.9.3)':
     dependencies:
       '@tanstack/react-query': 5.90.10(react@0.0.0-experimental-8ac5f4eb-20251119)
-      '@trpc/client': 11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3)
-      '@trpc/server': 11.7.1(typescript@5.9.3)
+      '@trpc/client': 11.7.2(@trpc/server@11.7.2(typescript@5.9.3))(typescript@5.9.3)
+      '@trpc/server': 11.7.2(typescript@5.9.3)
       react: 0.0.0-experimental-8ac5f4eb-20251119
       react-dom: 0.0.0-experimental-8ac5f4eb-20251119(react@0.0.0-experimental-8ac5f4eb-20251119)
       typescript: 5.9.3
@@ -8733,6 +8734,10 @@ snapshots:
 
   b4a@1.7.3: {}
 
+  babel-plugin-react-compiler@1.0.0:
+    dependencies:
+      '@babel/types': 7.28.5
+
   bail@2.0.2: {}
 
   balanced-match@1.0.2: {}
@@ -8776,7 +8781,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.8.30: {}
+  baseline-browser-mapping@2.8.31: {}
 
   basic-ftp@5.0.5: {}
 
@@ -8870,7 +8875,7 @@ snapshots:
 
   browserslist@4.28.0:
     dependencies:
-      baseline-browser-mapping: 2.8.30
+      baseline-browser-mapping: 2.8.31
       caniuse-lite: 1.0.30001756
       electron-to-chromium: 1.5.259
       node-releases: 2.0.27
@@ -10457,7 +10462,7 @@ snapshots:
       '@types/mdast': 4.0.4
       unist-util-is: 6.0.1
 
-  mdast-util-to-hast@13.2.0:
+  mdast-util-to-hast@13.2.1:
     dependencies:
       '@types/hast': 3.0.4
       '@types/mdast': 4.0.4
@@ -11263,7 +11268,7 @@ snapshots:
       devlop: 1.1.0
       hast-util-to-jsx-runtime: 2.3.6
       html-url-attributes: 3.0.1
-      mdast-util-to-hast: 13.2.0
+      mdast-util-to-hast: 13.2.1
       react: 0.0.0-experimental-8ac5f4eb-20251119
       remark-parse: 11.0.0
       remark-rehype: 11.1.2
@@ -11409,7 +11414,7 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.4
       '@types/mdast': 4.0.4
-      mdast-util-to-hast: 13.2.0
+      mdast-util-to-hast: 13.2.1
       unified: 11.0.5
       vfile: 6.0.3
 
@@ -11829,10 +11834,6 @@ snapshots:
   svg-parser@2.0.4: {}
 
   tailwind-merge@3.4.0: {}
-
-  tailwindcss-animate@1.0.7(tailwindcss@4.1.17):
-    dependencies:
-      tailwindcss: 4.1.17
 
   tailwindcss@4.1.17: {}
 

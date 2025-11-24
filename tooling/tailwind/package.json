@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./client": "./client.ts",
-    "./admin": "./admin.ts"
+    "./theme": "./theme.css",
+    "./postcss-config": "./postcss-config.js"
   },
   "license": "MIT",
   "scripts": {
@@ -15,9 +15,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "catalog:",
     "postcss": "^8.4.49",
-    "tailwindcss": "catalog:",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss": "catalog:"
   },
   "devDependencies": {
     "@rem4d/eslint-config": "workspace:*",

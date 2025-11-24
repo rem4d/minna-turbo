@@ -1,9 +1,5 @@
-import baseConfig from "@rem4d/eslint-config/base";
+import { defineConfig } from "eslint/config";
 
-/** @type {import('typescript-eslint').Config} */
-export default [
-  {
-    ignores: ["dist/**"],
-  },
-  ...baseConfig,
-];
+import { baseConfig } from "@rem4d/eslint-config/base";
+
+export default defineConfig(baseConfig);

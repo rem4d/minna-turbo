@@ -1,5 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react-swc";
+// import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import checker from "vite-plugin-checker";
 import mkcert from "vite-plugin-mkcert";
@@ -34,6 +35,11 @@ export default defineConfig(({ mode }) => {
       // Allows using React dev server along with building a React application with Vite.
       // https://npmjs.com/package/@vitejs/plugin-react-swc
       react(),
+      // react({
+      //   babel: {
+      //     plugins: ["babel-plugin-rect-compiler"],
+      //   }
+      // }),
       // Allows using the compilerOptions.paths property in tsconfig.json.
       // https://www.npmjs.com/package/vite-tsconfig-paths
       tsconfigPaths(),

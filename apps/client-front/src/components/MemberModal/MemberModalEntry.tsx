@@ -1,10 +1,10 @@
-import type { MemberOutput } from "@rem4d/api";
-import React, { useCallback } from "react";
+import React from "react";
 import { useAppStore } from "@/store";
-import { useTranslation } from "react-i18next";
+
+
 import { twMerge } from "tailwind-merge";
 
-interface EntryProps {
+interface MemberModalEntryProps {
   ruby: string | null;
   text?: string | null;
   reading?: string | null;
@@ -13,9 +13,10 @@ interface EntryProps {
   ru: string[] | null;
   pos: string | null;
   className?: string;
+  onKanjiClick?: (id: number) => void;
 }
 
-const Entry = ({
+const MemberModalEntry = ({
   ruby,
   text,
   reading,
@@ -24,17 +25,14 @@ const Entry = ({
   ru,
   pos,
   className,
-}: EntryProps) => {
+  onKanjiClick,
+}: MemberModalEntryProps) => {
   const showRuby = ruby ? true : !ruby && !text && reading;
   const rubyText = ruby ?? reading;
   const kanjiMap = useAppStore((state) => state.kanjiMap);
 
   const tmpText = ruby ?? text ?? "";
 
-  const onKanjiClick = useCallback((id: number) => {
-    console.log(id);
-    // navigate(`/kanji/${kanjiMap.get(k)}`);
-  }, []);
 
   const kanjis = React.useMemo(() => {
     const kanjiRegex = /[\u4E00-\u9FAF]/;
@@ -44,7 +42,7 @@ const Entry = ({
       .map((k) => (
         <div
           className="inline items-center justify-center rounded-md border bg-white px-3 py-2"
-          onClick={() => onKanjiClick(kanjiMap.get(k)!)}
+          onClick={() => onKanjiClick?.(kanjiMap.get(k)!)}
           key={k}
         >
           <span className="text-md font-semibold">{k}</span>
@@ -106,63 +104,6 @@ const Entry = ({
   );
 };
 
-const MemberModalContent = ({
-  entries = [],
-  pos,
-  ruby,
-  reading,
-  readings,
-  en,
-  ru,
-}: {
-  pos: string | null;
-  ruby: string | null;
-  reading: string | null;
-  readings?: { txt: string | null }[] | null;
-  en: string[] | null;
-  ru: string[] | null;
-  entries?: MemberOutput["entries"];
-}) => {
-  const { t } = useTranslation();
-  return (
-    <div className="bg-white px-4 py-4">
-      <Entry
-        className="pt-0"
-        ruby={ruby}
-        reading={reading}
-        readings={readings}
-        en={en}
-        ru={ru}
-        pos={pos}
-      />
-      {entries.length > 1 ? (
-        <div>
-          <div className="my-4 h-[1px] w-full bg-black/20" />
-
-          <div className="mb-4 cursor-default text-sm font-bold text-black/80">
-            {t("member_modal.other")}
-          </div>
-
-          <div className="flex flex-col divide-y divide-black/20">
-            {entries.slice(1).map((e) => (
-              <Entry
-                key={e.id}
-                ruby={null}
-                text={e.words[0]?.txt}
-                reading={e.readings[0]?.txt}
-                readings={e.readings.slice(1)}
-                en={e.en}
-                ru={e.ru}
-                pos={pos}
-              />
-            ))}
-          </div>
-        </div>
-      ) : null}
-    </div>
-  );
-};
-
 const Badge = ({
   children,
   color,
@@ -179,4 +120,4 @@ const Badge = ({
     </span>
   );
 };
-export default MemberModalContent;
+export default MemberModalEntry;

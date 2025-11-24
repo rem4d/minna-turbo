@@ -55,6 +55,7 @@
     "@types/react-dom": "catalog:react0",
     "@vitejs/plugin-react": "catalog:",
     "@vitejs/plugin-react-swc": "catalog:",
+    "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "catalog:",
     "globals": "^15.15.0",
     "prettier": "catalog:",

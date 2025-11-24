@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import ArrowIcon from "@/assets/icons/arrow.svg?react";
 import { AnimateHeight } from "@/components/AnimateHeight";
 import Drawer from "@/components/Drawer";
-import MemberModalContent from "@/components/Modal/MemberModalContent";
+import MemberModalContent from "@/components/MemberModal/MemberModalContent";
 import { useAppStore } from "@/store";
 import { useTRPC } from "@/utils/api";
 import * as Accordion from "@radix-ui/react-accordion";

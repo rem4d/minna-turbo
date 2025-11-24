@@ -1,6 +1,6 @@
 import { Fragment, useCallback, useState } from "react";
 import Drawer from "@/components/Drawer";
-import MemberModalContent from "@/components/Modal/MemberModalContent";
+import MemberModalContent from "@/components/MemberModal/MemberModalContent";
 import PlaySound from "@/components/PlaySound";
 import { STORAGE_LANG } from "@/config/const";
 import { usePlaySoundContext } from "@/context/playSoundContext";

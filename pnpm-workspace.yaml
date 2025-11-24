@@ -14,48 +14,48 @@ catalog:
   "@trpc/server": ^11.7.1
   "@trpc/tanstack-react-query": ^11.7.1
   "@types/cors": ^2.8.17
-  "@types/dotenv": "^6.1.1"
-  "@types/express": "^5.0.0"
+  "@types/dotenv": ^6.1.1
+  "@types/express": ^5.0.0
   "@types/node": ^22.18.12
   "@vitejs/plugin-react": 5.1.0
   "@vitejs/plugin-react-swc": ^4.2.2
   bunchee: ^6.3.2
-  cors: "^2.8.5"
-  dotenv: "^16.4.7"
-  envalid: "^8.1.1"
+  cors: ^2.8.5
+  dotenv: ^16.4.7
+  envalid: ^8.1.1
   eslint: ^9.39.1
-  express: "^4.21.2"
-  pino-http: "^10.5.0"
-  pino-pretty: "^13.0.0"
-  pino: "^9.14.0"
+  express: ^4.21.2
+  pino: ^9.14.0
+  pino-http: ^10.5.0
+  pino-pretty: ^13.0.0
   prettier: ^3.6.2
   react-hot-toast: ^2.5.1
   react-router-dom: ^7.8.0
-  rimraf: "^6.1.2"
+  rimraf: ^6.1.2
   tailwind-merge: ^3.4.0
   tailwindcss: ^4.1.17
-  tsup: "^8.5.1"
+  tsup: ^8.5.1
   tsx: ^4.20.6
   typescript: ^5.9.3
+  vite: ^7.2.4
   vite-plugin-checker: ^0.10.3
   vite-plugin-node-polyfills: ^0.22.0
   vite-plugin-svgr: ^4.5.0
   vite-tsconfig-paths: ^5.1.4
-  vite: ^7.2.4
   vitest: 3.2.4
   wanakana: ^5.3.1
 
 catalogs:
+  react0:
+    "@types/react": ^19.2.5
+    "@types/react-dom": ^19.2.3
+    react: 0.0.0-experimental-8ac5f4eb-20251119
+    react-dom: 0.0.0-experimental-8ac5f4eb-20251119
   react19:
     "@types/react": ^19.1.12
     "@types/react-dom": ^19.1.9
     react: 19.1.1
     react-dom: 19.1.1
-  react0:
-    "@types/react": "^19.2.5"
-    "@types/react-dom": "^19.2.3"
-    react: 0.0.0-experimental-8ac5f4eb-20251119
-    react-dom: 0.0.0-experimental-8ac5f4eb-20251119
 
 linkWorkspacePackages: true
 
@@ -63,5 +63,4 @@ overrides:
   vite: 7.2.4
 
 publicHoistPattern:
-  - "@ianvs/prettier-plugin-sort-imports"
   - prettier-plugin-tailwindcss
