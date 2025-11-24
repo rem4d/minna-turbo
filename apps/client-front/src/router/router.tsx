@@ -114,13 +114,13 @@ export function Router({ children, routes }: PropsWithChildren<RouterProps>) {
     startTransition(() => {
       addTransitionType(as);
       go(prevUrl);
-      setScreens((s) => s.toSpliced(s.length - 1, 1));
+      setScreens(screens.toSpliced(screens.length - 1, 1));
     });
   };
 
   useEffect(() => {
     function handlePopState() {
-      setScreens((prev) => prev.toSpliced(prev.length - 1, 1));
+      setScreens(prev => prev.toSpliced(prev.length - 1, 1));
       startTransition(() => {
         setRouterState({
           url: document.location.pathname + document.location.search,
