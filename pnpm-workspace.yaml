@@ -17,7 +17,7 @@ catalog:
   "@types/dotenv": ^6.1.1
   "@types/express": ^5.0.0
   "@types/node": ^22.18.12
-  "@vitejs/plugin-react": 5.1.0
+  "@vitejs/plugin-react": ^5.1.0
   "@vitejs/plugin-react-swc": ^4.2.2
   bunchee: ^6.3.2
   cors: ^2.8.5

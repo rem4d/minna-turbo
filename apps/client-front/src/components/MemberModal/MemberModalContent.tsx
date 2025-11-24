@@ -1,8 +1,6 @@
-import React, { useCallback, useState } from "react";
+import { useState } from "react";
 import Drawer from "@/components/Drawer";
-import { useAppStore } from "@/store";
 import { useTranslation } from "react-i18next";
-import { twMerge } from "tailwind-merge";
 
 import type { MemberOutput } from "@rem4d/api";
 
@@ -28,9 +26,9 @@ const MemberModalContent = ({
   const [secondModalOpen, setSecondModalOpen] = useState(false);
   const { t } = useTranslation();
 
-  const onKanjiClick = useCallback((kId: number) => {
+  const onKanjiClick = (_kId: number) => {
     setSecondModalOpen(true);
-  }, []);
+  };
 
   return (
     <div className="bg-white px-4 py-4">
@@ -46,7 +44,7 @@ const MemberModalContent = ({
       />
       {entries.length > 1 ? (
         <div>
-          <div className="my-4 h-[1px] w-full bg-black/20" />
+          <div className="my-4 h-px w-full bg-black/20" />
 
           <div className="mb-4 cursor-default text-sm font-bold text-black/80">
             {t("member_modal.other")}

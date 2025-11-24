@@ -32,14 +32,11 @@ export default defineConfig(({ mode }) => {
   return {
     server,
     plugins: [
-      // Allows using React dev server along with building a React application with Vite.
-      // https://npmjs.com/package/@vitejs/plugin-react-swc
-      react(),
-      // react({
-      //   babel: {
-      //     plugins: ["babel-plugin-rect-compiler"],
-      //   }
-      // }),
+      react({
+        babel: {
+          plugins: [["babel-plugin-react-compiler"]],
+        },
+      }),
       // Allows using the compilerOptions.paths property in tsconfig.json.
       // https://www.npmjs.com/package/vite-tsconfig-paths
       tsconfigPaths(),
