@@ -1,13 +1,11 @@
-import type { MemberOutput } from "@rem4d/api";
-import Drawer from "@/components/Drawer";
 import React, { useCallback, useState } from "react";
-
-
-
-
+import Drawer from "@/components/Drawer";
 import { useAppStore } from "@/store";
 import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
+
+import type { MemberOutput } from "@rem4d/api";
+
 import MemberModalEntry from "./MemberModalEntry";
 
 const MemberModalContent = ({
@@ -71,8 +69,12 @@ const MemberModalContent = ({
         </div>
       ) : null}
       <Drawer
-
-        contentClassName="bg-white" open={!!secondModalOpen} onOpenChange={() => setSecondModalOpen(false)}>text</Drawer>
+        contentClassName="bg-white"
+        open={!!secondModalOpen}
+        onOpenChange={() => setSecondModalOpen(false)}
+      >
+        text
+      </Drawer>
     </div>
   );
 };

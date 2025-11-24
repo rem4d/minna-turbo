@@ -18,7 +18,10 @@
     "test:watch": "vitest --watch"
   },
   "devDependencies": {
+    "@rem4d/prettier-config": "workspace:*",
+    "prettier": "catalog:",
     "turbo": "^2.6.1",
     "typescript": "catalog:"
-  }
+  },
+  "prettier": "@rem4d/prettier-config"
 }
