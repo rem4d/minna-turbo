@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "author": "",
   "dependencies": {
-    "@supabase/supabase-js": "^2.47.10",
+    "@supabase/supabase-js": "^2.84.0",
     "dotenv": "^16.4.7",
     "envalid": "^8.0.0",
     "redis": "^4.7.0"
@@ -12,8 +12,8 @@
   "devDependencies": {
     "@rem4d/eslint-config": "workspace:*",
     "@rem4d/typescript-config": "workspace:*",
-    "eslint": "catalog:",
     "bunchee": "catalog:",
+    "eslint": "catalog:",
     "typescript": "catalog:"
   },
   "main": "./dist/es/index.js",

@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+
 import { authedProcedure, router } from "../../trpc";
 import { getUserByTelegramId } from "../util/getUserByTelegramId";
-import { z } from "zod";
 
 export const userRouter = router({
   info: authedProcedure.query(async ({ ctx }) => {
@@ -49,7 +50,7 @@ export const userRouter = router({
     }
 
     if (error) {
-      throw new TRPCError({ code: "BAD_REQUEST" });
+      console.log(error);
     }
 
     throw new Error("Could not create user.");

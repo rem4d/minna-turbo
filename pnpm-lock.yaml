@@ -656,7 +656,7 @@ importers:
   packages/db:
     dependencies:
       '@supabase/supabase-js':
-        specifier: ^2.47.10
+        specifier: ^2.84.0
         version: 2.84.0
       dotenv:
         specifier: ^16.4.7
