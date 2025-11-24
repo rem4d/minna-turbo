@@ -1,9 +1,0 @@
-{
-	"extends": ["//"],
-	"tasks": {
-		"deploy": {
-      "dependsOn": ["build"],
-      "cache": false
-		}
-	}
-}
