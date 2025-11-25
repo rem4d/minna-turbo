@@ -90,6 +90,13 @@ export type Database = {
             referencedRelation: "sentences"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "gloss_sentence_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences_jlpt5"
+            referencedColumns: ["id"]
+          },
         ]
       }
       glosses: {
@@ -349,6 +356,13 @@ export type Database = {
             referencedRelation: "sentences"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "members_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences_jlpt5"
+            referencedColumns: ["id"]
+          },
         ]
       }
       members2: {
@@ -430,6 +444,13 @@ export type Database = {
             referencedRelation: "sentences"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "sentence_kanji_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences_jlpt5"
+            referencedColumns: ["id"]
+          },
         ]
       }
       sentence_member2: {
@@ -461,6 +482,13 @@ export type Database = {
             columns: ["sentence_id"]
             isOneToOne: false
             referencedRelation: "sentences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sentence_member2_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences_jlpt5"
             referencedColumns: ["id"]
           },
         ]
@@ -566,6 +594,30 @@ export type Database = {
       }
     }
     Views: {
+      sentences_jlpt5: {
+        Row: {
+          comment: string | null
+          created_at: string | null
+          en: string | null
+          id: number | null
+          is_invalid: boolean | null
+          level: number | null
+          ru: string | null
+          ruby: string | null
+          source: string | null
+          status: string | null
+          text: string | null
+          text_with_furigana: string | null
+          tmp: string | null
+          tmp_gloss: string | null
+          translation: string | null
+          unknown_kanji_number: number | null
+          updated_at: string | null
+          vox_file_path: string | null
+          vox_speaker_id: number | null
+        }
+        Relationships: []
+      }
       stat_list_0: {
         Row: {
           cnt: number | null

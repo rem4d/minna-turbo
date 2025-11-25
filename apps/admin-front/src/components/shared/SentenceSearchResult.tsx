@@ -1,11 +1,10 @@
+import { openUrl } from "@/utils";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { Badge, Box, Flex, Text } from "@radix-ui/themes";
-import { openUrl } from "@/utils";
 
 interface SentenceSearchResultProps {
   index: number;
   id: number;
-  html: string | null;
   ru: string | null;
   en: string | null;
   source: string | null;
@@ -16,7 +15,6 @@ const show = true;
 export default function SentenceSearchResult({
   id,
   index,
-  html,
   ru,
   en,
   source,
@@ -31,16 +29,11 @@ export default function SentenceSearchResult({
         <Flex direction="column" gap="2">
           <Flex gap="2" align="center">
             <span className="relative">
-              <Text
-                size="2"
-                dangerouslySetInnerHTML={{
-                  __html: html ?? "",
-                }}
-              />
+              <Text size="2">{text}</Text>
               {show && (
                 <>
                   <div
-                    className="cursor-pointer absolute -right-4 top-2"
+                    className="absolute top-2 -right-4 cursor-pointer"
                     onClick={() => openUrl(`/edit/${id}`)}
                   >
                     <ExternalLinkIcon

@@ -1,8 +1,8 @@
+import { PropsWithChildren, useCallback } from "react";
 import SentenceSearchResult from "@/components/shared/SentenceSearchResult";
 import { api } from "@/utils/api";
-import { Box, Flex, Grid, Text, Spinner } from "@radix-ui/themes";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { PropsWithChildren, useCallback } from "react";
+import { Box, Flex, Grid, Spinner, Text } from "@radix-ui/themes";
 
 export default function GlossesPage2() {
   const { data: glossesData, isLoading: glossesLoading } =
@@ -35,7 +35,7 @@ export default function GlossesPage2() {
                 {glossesData.map((gloss, index) => (
                   <div
                     key={gloss.id}
-                    className="hover:bg-gray-500/10 py-2 px-2 cursor-pointer"
+                    className="cursor-pointer px-2 py-2 hover:bg-gray-500/10"
                     onClick={() => onTableGlossClick(gloss.id)}
                   >
                     <Grid gap="2" columns="0.3fr 1fr 1.2fr 2fr 1fr 0.3fr">
@@ -76,7 +76,6 @@ export default function GlossesPage2() {
                 text={s.text}
                 id={s.id}
                 index={index}
-                html={s.text_with_furigana}
                 ru={s.ru}
                 en={s.en}
                 source={s.source}
@@ -91,7 +90,7 @@ export default function GlossesPage2() {
 
 const ScrollAreaFn = ({ children }: PropsWithChildren) => {
   return (
-    <ScrollArea.Root className="w-full h-[500px] relative overflow-hidden">
+    <ScrollArea.Root className="relative h-[500px] w-full overflow-hidden">
       <ScrollArea.Viewport className="size-full">
         {children}
       </ScrollArea.Viewport>

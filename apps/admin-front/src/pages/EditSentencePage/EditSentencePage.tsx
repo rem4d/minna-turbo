@@ -1,28 +1,30 @@
-import { useEffect, useMemo, useState } from "react";
-import { ReadingPositionItem, TextVisualizer } from "@rem4d/ui";
 import type { FC } from "react";
-import toast from "react-hot-toast";
-import {
-  Flex,
-  Text,
-  Button,
-  Heading,
-  Box,
-  TextArea,
-  Grid,
-  Badge,
-  DataList,
-  Code,
-  Spinner,
-} from "@radix-ui/themes";
-import { useNavigate, useParams } from "react-router-dom";
-import { initTTS } from "../../utils/tts";
-import { api } from "@/utils/api";
-import Speakers from "@/components/Speakers";
+import { useEffect, useMemo, useState } from "react";
 import { Player } from "@/components/Player";
+import Speakers from "@/components/Speakers";
 import { useRemoveSpeakerMutation } from "@/rq/useRemoveSpeakerMutation";
 import { useSubmitVoiceMutation } from "@/rq/useSubmitVoiceMutation";
+import { api } from "@/utils/api";
+import {
+  Badge,
+  Box,
+  Button,
+  Code,
+  DataList,
+  Flex,
+  Grid,
+  Heading,
+  Spinner,
+  Text,
+  TextArea,
+} from "@radix-ui/themes";
+import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { AdminMemberOutput } from "@rem4d/api";
+import { ReadingPositionItem, TextVisualizer } from "@rem4d/ui";
+
+import { initTTS } from "../../utils/tts";
 import Members from "./Members";
 
 export const EditSentencePage: FC = () => {
@@ -175,7 +177,7 @@ export const EditSentencePage: FC = () => {
     }
 
     updateMutation.mutate({
-      id: id,
+      id: Number(id),
       input: {
         text: input,
         ruby: rubyHtml,
@@ -519,7 +521,7 @@ const MemberItem = ({ entry }: { entry: AdminMemberOutput["entries"][0] }) => {
   const [showMeaning, setShowMeaning] = useState(false);
   return (
     <div
-      className="bg-slate-500/9 rounded-md p-2 relative"
+      className="relative rounded-md bg-slate-500/9 p-2"
       onClick={() => setShowMeaning(!showMeaning)}
     >
       <Flex direction="column">

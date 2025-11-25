@@ -1,8 +1,8 @@
-import type { Database, Kanji, Sentence } from "@rem4d/db";
-import { analyze } from "@rem4d/tokenizer";
-import type { SupabaseClient } from "@rem4d/db";
-import type { RedisClientType } from "../../trpc";
+import type { Database, Kanji, Sentence, SupabaseClient } from "@rem4d/db";
+// import { analyze } from "@rem4d/tokenizer";
 import { clamp } from "@rem4d/utils";
+
+import type { RedisClientType } from "../../trpc";
 
 export const getStatementsForLevel = async ({
   level,
@@ -17,37 +17,48 @@ export const getStatementsForLevel = async ({
   db: SupabaseClient<Database>;
   redis: RedisClientType;
 }) => {
-  const cached = await redis.get(`${level}-${shift}`);
-  const isProd = true; // process.env.NODE_ENV !== "development";
-
-  if (cached && isProd) {
-    const arr = JSON.parse(cached) as {
-      additional: Sentence[];
-      sentences: Sentence[];
-    };
-    return arr;
-  }
+  // const cached = await redis.get(`${level}-${shift}`);
+  // const isProd = true; // process.env.NODE_ENV !== "development";
+  // if (cached && isProd) {
+  //   const arr = JSON.parse(cached) as {
+  //     additional: Sentence[];
+  //     sentences: Sentence[];
+  //   };
+  //   return arr;
+  // }
 
   const { data: sentences, error } = await db
-    .from("sentences")
-    .select("id,text,ruby,level,text_with_furigana,en,ru")
+    .from("sentences_jlpt5")
+    .select("*")
     .lte("level", level)
     .gt("level", clamp(level - shift, 0, level))
     .not("ru", "is", null)
     .not("en", "is", null)
-    .lte("unknown_kanji_number", numberOfUnknownKanji);
-  // .like("text", "%と%");
-  // .eq("id", 4517);
-  // .order("id")
-  // .range(10, 1000);
-  // .limit(1000);
+    // .lte("unknown_kanji_number", numberOfUnknownKanji)
+    .limit(20);
 
   if (error) {
+    console.log(error.message);
     throw new Error(error.message);
   }
 
   console.log(`Found: ${sentences.length} native sentences.`);
+  const additional: Sentence[] = [];
 
+  console.log(`Write cache for key: "${level}-${shift}"`);
+
+  void redis.set(
+    `${level}-${shift}`,
+    JSON.stringify({ sentences, additional }),
+    {
+      EX: 24 * 60 * 60 * 60, // expire in 3 months
+    },
+  );
+  return { sentences, additional };
+};
+
+// remove later
+/*
   const userKanjiMap = new Map<string, Kanji>();
   const { data: userKanjis } = await db
     .from("kanji")
@@ -59,7 +70,6 @@ export const getStatementsForLevel = async ({
     });
   }
 
-  const additional: Sentence[] = [];
 
   if (userKanjiMap.size > 0) {
     const keys = [...userKanjiMap.keys()];
@@ -118,5 +128,4 @@ export const getStatementsForLevel = async ({
       },
     );
   }
-  return { sentences, additional };
-};
+  */
