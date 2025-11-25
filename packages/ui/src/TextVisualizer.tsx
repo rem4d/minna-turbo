@@ -13,6 +13,7 @@ export interface ReadingPositionItem {
   reading: string;
   start: number;
   end: number;
+  hidden?: boolean;
 }
 
 type Variant = "color" | "dash";
@@ -42,7 +43,10 @@ export const TextVisualizer = ({
 }: TextVisualizerProps) => {
   const readings_ = readings.map((r) => ({ ...r, code: r.reading }));
 
-  const r = structureText(text, showReadings ? readings_ : []);
+  const r = structureText(
+    text,
+    showReadings ? readings_ : readings_.filter((r) => !r.hidden),
+  );
   const g = structureText(text, showGlosses ? glosses : []);
   const merged = mergePositions(r, g);
 
