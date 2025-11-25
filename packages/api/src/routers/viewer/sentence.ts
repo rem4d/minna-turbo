@@ -24,9 +24,13 @@ const shuffleSentences = async (ctx: Context, shift: number) => {
   }
 
   const level = storedUser.level;
-  // const userId = storedUser.id;
+  let knownIds: number[] = [];
+  const knownKey = await ctx.redis.get(`known.${storedUser.id}`);
 
-  console.log(`Getting sentences for user with level = `, level);
+  if (knownKey) {
+    knownIds = JSON.parse(knownKey) as number[];
+  }
+  // const userId = storedUser.id;
 
   const numberOfUnknownKanji = 3;
   const { sentences /*, additional */ } = await getStatementsForLevel({
@@ -34,24 +38,11 @@ const shuffleSentences = async (ctx: Context, shift: number) => {
     shift,
     numberOfUnknownKanji,
     db: ctx.db,
-    redis: ctx.redis,
+    knownIds,
   });
 
-  // let known: number[] = [];
-  //
-  // const knownKey = await ctx.redis.get(`known.${userId}`);
-  //
-  // if (knownKey) {
-  //   known = JSON.parse(knownKey) as number[];
-  // }
-
   const sentencesFiltered = sentences;
-  // const sentencesFiltered = sentences.filter((s) => !known.includes(s.id));
-  // const additionalFiltered = additional.filter((s) => !known.includes(s.id));
 
-  // console.log(
-  //   `Sentences: ${sentencesFiltered.length}, additional: ${additionalFiltered.length}`,
-  // );
   console.log(`Sentences: ${sentencesFiltered.length}`);
 
   const shuffled = shuffle(sentencesFiltered).slice(0, 10);
@@ -88,16 +79,13 @@ export const sentenceRouter = router({
         EX: 60 * 60 * 60 * 24,
       });
 
-      return shuffleSentences(ctx, 50);
+      return shuffleSentences(ctx, 10);
     }),
   getRandomized: redisPrecedure
     .input(z.object({ init: z.boolean() }).optional())
     .mutation(async ({ ctx }) => {
-      return shuffleSentences(ctx, 50);
+      return shuffleSentences(ctx, 10);
     }),
-  getRandomizedQuery: redisPrecedure.query(async ({ ctx }) => {
-    return shuffleSentences(ctx, 50);
-  }),
   resetCache: redisPrecedure.mutation(async ({ ctx }) => {
     const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
 
@@ -107,7 +95,7 @@ export const sentenceRouter = router({
     const userId = storedUser.id;
     try {
       await ctx.redis.del(`known.${userId}`);
-      return shuffleSentences(ctx, 50);
+      return shuffleSentences(ctx, 10);
     } catch {
       throw new Error("Redis error.");
     }

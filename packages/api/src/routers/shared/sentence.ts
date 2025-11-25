@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { publicProcedure, router } from "../../trpc";
 import { getStatementsForLevel } from "../util/getStatementsForLevel";
 
@@ -19,7 +20,6 @@ export const sentenceRouter = router({
         shift,
         numberOfUnknownKanji,
         db: ctx.db,
-        redis: ctx.redis,
       });
       return { sentences, additional };
     }),

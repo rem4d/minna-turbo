@@ -1,32 +1,20 @@
-import type { Database, Kanji, Sentence, SupabaseClient } from "@rem4d/db";
-// import { analyze } from "@rem4d/tokenizer";
+import type { Database, Sentence, SupabaseClient } from "@rem4d/db";
 import { clamp } from "@rem4d/utils";
-
-import type { RedisClientType } from "../../trpc";
 
 export const getStatementsForLevel = async ({
   level,
   shift,
   numberOfUnknownKanji,
   db,
-  redis,
+  knownIds = [],
 }: {
   level: number;
   shift: number;
   numberOfUnknownKanji: number;
   db: SupabaseClient<Database>;
-  redis: RedisClientType;
+  knownIds?: number[];
 }) => {
-  // const cached = await redis.get(`${level}-${shift}`);
-  // const isProd = true; // process.env.NODE_ENV !== "development";
-  // if (cached && isProd) {
-  //   const arr = JSON.parse(cached) as {
-  //     additional: Sentence[];
-  //     sentences: Sentence[];
-  //   };
-  //   return arr;
-  // }
-
+  const knownIdsString = `(${knownIds.join(",")})`;
   const { data: sentences, error } = await db
     .from("sentences_jlpt5")
     .select("*")
@@ -34,7 +22,7 @@ export const getStatementsForLevel = async ({
     .gt("level", clamp(level - shift, 0, level))
     .not("ru", "is", null)
     .not("en", "is", null)
-    // .lte("unknown_kanji_number", numberOfUnknownKanji)
+    .not("id", "in", knownIdsString)
     .limit(20);
 
   if (error) {
@@ -42,18 +30,8 @@ export const getStatementsForLevel = async ({
     throw new Error(error.message);
   }
 
-  console.log(`Found: ${sentences.length} native sentences.`);
   const additional: Sentence[] = [];
 
-  console.log(`Write cache for key: "${level}-${shift}"`);
-
-  void redis.set(
-    `${level}-${shift}`,
-    JSON.stringify({ sentences, additional }),
-    {
-      EX: 24 * 60 * 60 * 60, // expire in 3 months
-    },
-  );
   return { sentences, additional };
 };
 
