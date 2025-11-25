@@ -1,4 +1,5 @@
 import { twMerge } from "tailwind-merge";
+
 import { mergePositions, structureText } from "./utils/visualizer";
 
 interface GlossInput {
@@ -44,6 +45,7 @@ export const TextVisualizer = ({
   const r = structureText(text, showReadings ? readings_ : []);
   const g = structureText(text, showGlosses ? glosses : []);
   const merged = mergePositions(r, g);
+
   const spans = renderStructuredText(
     merged,
     variant,
@@ -86,6 +88,7 @@ const renderStructuredText = (
         >
           {reading ? (
             <>
+              {text.slice(0, reading.start)}
               <ruby>
                 {text.slice(reading.start, reading.end)}
                 <rt>{reading.code}</rt>

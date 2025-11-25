@@ -89,7 +89,7 @@ export const mergePositions = (readings: R, glosses: R) => {
   const text = readings.map((r) => r.text).join("");
 
   for (let i = 0; i < text.length; i++) {
-    const reading = readings.find((r) => r.p?.start === i);
+    let reading = readings.find((r) => r.p?.start === i);
 
     const gloss = glosses.find((r) => r.p?.start === i);
     const max = Math.max(reading?.p?.end ?? 0, gloss?.p?.end ?? 0);
@@ -103,6 +103,16 @@ export const mergePositions = (readings: R, glosses: R) => {
         start: gloss.p.start - i,
         end: gloss.p.end - i,
       };
+
+      if (!reading) {
+        const gp = gloss.p;
+        const reading2 = readings.find(
+          (r) => r.p?.start! >= gp.start && r.p?.end! <= gp.end,
+        );
+        if (reading2) {
+          reading = reading2;
+        }
+      }
     }
 
     if (reading?.p) {
