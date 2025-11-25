@@ -1,15 +1,16 @@
 import { z } from "zod";
+
+import type { Context } from "../../trpc";
 import {
   authedProcedure,
-  Context,
   publicProcedure,
   redisPrecedure,
   router,
 } from "../../trpc";
-import { shuffle } from "../../util/shuffle";
 import { dedup } from "../../util/dedup";
-import { getUserByTelegramId } from "../util/getUserByTelegramId";
+import { shuffle } from "../../util/shuffle";
 import { getStatementsForLevel } from "../util/getStatementsForLevel";
+import { getUserByTelegramId } from "../util/getUserByTelegramId";
 
 const shuffleSentences = async (ctx: Context, shift: number) => {
   if (!ctx.user) {
@@ -23,7 +24,7 @@ const shuffleSentences = async (ctx: Context, shift: number) => {
   }
 
   const level = storedUser.level;
-  const userId = storedUser.id;
+  // const userId = storedUser.id;
 
   console.log(`Getting sentences for user with level = `, level);
 
@@ -36,15 +37,16 @@ const shuffleSentences = async (ctx: Context, shift: number) => {
     redis: ctx.redis,
   });
 
-  let known: number[] = [];
+  // let known: number[] = [];
+  //
+  // const knownKey = await ctx.redis.get(`known.${userId}`);
+  //
+  // if (knownKey) {
+  //   known = JSON.parse(knownKey) as number[];
+  // }
 
-  const knownKey = await ctx.redis.get(`known.${userId}`);
-
-  if (knownKey) {
-    known = JSON.parse(knownKey) as number[];
-  }
-
-  const sentencesFiltered = sentences.filter((s) => !known.includes(s.id));
+  const sentencesFiltered = sentences;
+  // const sentencesFiltered = sentences.filter((s) => !known.includes(s.id));
   // const additionalFiltered = additional.filter((s) => !known.includes(s.id));
 
   // console.log(
