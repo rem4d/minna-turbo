@@ -56,9 +56,11 @@ export const userRouter = router({
     throw new Error("Could not create user.");
   }),
   updateLevel: authedProcedure
-    .input(z.number())
+    .input(z.object({ level: z.number(), shift: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const user = await getUserByTelegramId(ctx.user.id, ctx.db);
+      const level = input.level;
+      const shift = input.shift;
 
       if (!user) {
         throw new TRPCError({ code: "NOT_FOUND" });
@@ -66,7 +68,7 @@ export const userRouter = router({
 
       const { error } = await ctx.db
         .from("users")
-        .update({ level: input })
+        .update({ level, shift })
         .eq("id", Number(user.id));
 
       if (error) {

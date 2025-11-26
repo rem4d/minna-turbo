@@ -15,6 +15,7 @@ export const getStatementsForLevel = async ({
   knownIds?: number[];
 }) => {
   const knownIdsString = `(${knownIds.join(",")})`;
+  // console.log(level, shift);
   const { data: sentences, error } = await db
     .from("sentences_jlpt5")
     .select("*")

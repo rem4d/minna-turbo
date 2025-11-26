@@ -12,7 +12,7 @@ import { shuffle } from "../../util/shuffle";
 import { getStatementsForLevel } from "../util/getStatementsForLevel";
 import { getUserByTelegramId } from "../util/getUserByTelegramId";
 
-const shuffleSentences = async (ctx: Context, shift: number) => {
+const shuffleSentences = async (ctx: Context) => {
   if (!ctx.user) {
     throw new Error("No user has been found");
   }
@@ -24,6 +24,8 @@ const shuffleSentences = async (ctx: Context, shift: number) => {
   }
 
   const level = storedUser.level;
+  const shift = storedUser.shift;
+
   let knownIds: number[] = [];
   const knownKey = await ctx.redis.get(`known.${storedUser.id}`);
 
@@ -79,12 +81,12 @@ export const sentenceRouter = router({
         EX: 60 * 60 * 60 * 24,
       });
 
-      return shuffleSentences(ctx, 10);
+      return shuffleSentences(ctx);
     }),
   getRandomized: redisPrecedure
     .input(z.object({ init: z.boolean() }).optional())
     .mutation(async ({ ctx }) => {
-      return shuffleSentences(ctx, 10);
+      return shuffleSentences(ctx);
     }),
   resetCache: redisPrecedure.mutation(async ({ ctx }) => {
     const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
@@ -95,7 +97,7 @@ export const sentenceRouter = router({
     const userId = storedUser.id;
     try {
       await ctx.redis.del(`known.${userId}`);
-      return shuffleSentences(ctx, 10);
+      return shuffleSentences(ctx);
     } catch {
       throw new Error("Redis error.");
     }

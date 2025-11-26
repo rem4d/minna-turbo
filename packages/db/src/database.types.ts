@@ -567,6 +567,7 @@ export type Database = {
           level: number
           setting_hide_kana: boolean
           setting_hide_translation: boolean
+          shift: number
           telegram_id: string | null
           telegram_username: string | null
         }
@@ -577,6 +578,7 @@ export type Database = {
           level?: number
           setting_hide_kana?: boolean
           setting_hide_translation?: boolean
+          shift?: number
           telegram_id?: string | null
           telegram_username?: string | null
         }
@@ -587,6 +589,7 @@ export type Database = {
           level?: number
           setting_hide_kana?: boolean
           setting_hide_translation?: boolean
+          shift?: number
           telegram_id?: string | null
           telegram_username?: string | null
         }
