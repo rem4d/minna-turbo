@@ -1,4 +1,6 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+
 import { publicProcedure, router } from "../../trpc";
 
 export const memberRouter = router({
@@ -15,7 +17,7 @@ export const memberRouter = router({
 
       if (error) {
         console.log(error.message);
-        throw new Error(error.message);
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
 
       const res = data
