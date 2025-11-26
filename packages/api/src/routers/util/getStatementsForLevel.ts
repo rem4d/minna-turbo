@@ -23,6 +23,7 @@ export const getStatementsForLevel = async ({
     .not("ru", "is", null)
     .not("en", "is", null)
     .not("id", "in", knownIdsString)
+    .lt("unknown_kanji_number", 4)
     .limit(20);
 
   if (error) {
