@@ -26,6 +26,7 @@ export const getStatementsForLevel = async ({
     .lt("unknown_kanji_number", 4)
     .limit(20);
 
+  const sen = sentences as Sentence[];
   if (error) {
     console.log(error.message);
     throw new Error(error.message);
@@ -33,7 +34,7 @@ export const getStatementsForLevel = async ({
 
   const additional: Sentence[] = [];
 
-  return { sentences, additional };
+  return { sentences: sen, additional };
 };
 
 // remove later
