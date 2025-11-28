@@ -17,7 +17,8 @@ export const getStatementsForLevel = async ({
   const knownIdsString = `(${knownIds.join(",")})`;
   // console.log(level, shift);
   const { data: sentences, error } = await db
-    .from("sentences_jlpt5")
+    // .from("sentences_jlpt5")
+    .from("sentences")
     .select("*")
     .lte("level", level)
     .gt("level", clamp(level - shift, 0, level))
@@ -28,6 +29,7 @@ export const getStatementsForLevel = async ({
     .limit(20);
 
   const sen = sentences as Sentence[];
+
   if (error) {
     console.log(error.message);
     throw new Error(error.message);

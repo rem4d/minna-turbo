@@ -84,11 +84,10 @@ const renderStructuredText = (
         variant === "color" ? getVariantStyle(gloss.code) : glossGlassName;
 
       result.push(
-        <div
+        <span
           key={`g${i}`}
           className={gcn}
           onClick={() => onGlossClick?.(gloss.code)}
-          style={{ display: "inline-block" }}
         >
           {reading ? (
             <>
@@ -102,7 +101,7 @@ const renderStructuredText = (
           ) : (
             text
           )}
-        </div>,
+        </span>,
       );
     } else {
       if (text.includes("\n")) {
@@ -110,7 +109,7 @@ const renderStructuredText = (
           result.push(str);
           str = "";
         }
-        result.push(<div style={{ width: "100%", marginBottom: 20 }} />);
+        result.push(<br key={`br${i}`} />);
       } else if (reading) {
         if (str.length > 0) {
           result.push(str);
