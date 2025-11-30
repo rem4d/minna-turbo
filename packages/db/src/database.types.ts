@@ -50,6 +50,61 @@ export type Database = {
         }
         Relationships: []
       }
+      essay_sentence: {
+        Row: {
+          essay_id: number
+          position: number
+          sentence_id: number
+        }
+        Insert: {
+          essay_id: number
+          position?: number
+          sentence_id: number
+        }
+        Update: {
+          essay_id?: number
+          position?: number
+          sentence_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "essay_sentence_essay_id_fkey"
+            columns: ["essay_id"]
+            isOneToOne: false
+            referencedRelation: "essays"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "essay_sentence_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "essay_sentence_sentence_id_fkey"
+            columns: ["sentence_id"]
+            isOneToOne: false
+            referencedRelation: "sentences_jlpt5"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      essays: {
+        Row: {
+          id: number
+          title: string | null
+        }
+        Insert: {
+          id?: number
+          title?: string | null
+        }
+        Update: {
+          id?: number
+          title?: string | null
+        }
+        Relationships: []
+      }
       gloss_sentence: {
         Row: {
           end: number
