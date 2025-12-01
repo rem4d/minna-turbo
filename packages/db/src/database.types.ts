@@ -92,15 +92,21 @@ export type Database = {
       }
       essays: {
         Row: {
+          en: string | null
           id: number
+          ru: string | null
           title: string | null
         }
         Insert: {
+          en?: string | null
           id?: number
+          ru?: string | null
           title?: string | null
         }
         Update: {
+          en?: string | null
           id?: number
+          ru?: string | null
           title?: string | null
         }
         Relationships: []

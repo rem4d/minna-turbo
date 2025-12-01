@@ -4,6 +4,15 @@ import z from "zod";
 import { publicProcedure, router } from "../../trpc";
 
 export const essayRouter = router({
+  list: publicProcedure.query(async ({ ctx }) => {
+    const { data, error } = await ctx.db.from("essays").select("*").order("id");
+
+    if (error) {
+      console.log(error);
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    }
+    return data;
+  }),
   getById: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input, ctx }) => {
