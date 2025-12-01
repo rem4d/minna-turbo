@@ -40,7 +40,7 @@ export const structureText = (text: string, sourceArray: PositionedItem[]) => {
   }
 
   const result: { text: string; p: PositionedItem | null }[] = [];
-  // console.log(arr);
+  // console.log("arr:", arr);
   // console.log(map);
 
   for (let i = 0; i < text.length; i++) {
@@ -65,6 +65,7 @@ export const structureText = (text: string, sourceArray: PositionedItem[]) => {
         throw new Error("No recNode");
       }
 
+      // console.log(i, recNode, node, text);
       i = recNode.end - 1;
 
       result.push({
