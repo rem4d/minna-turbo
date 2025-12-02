@@ -77,17 +77,11 @@ const renderStructuredText = ({
   const result: React.ReactNode[] = [];
 
   let i = 0;
-  const str = "";
 
   for (const { text, gloss, reading } of arr) {
     i++;
 
     if (gloss) {
-      // if (str.length > 0) {
-      //   result.push(str);
-      //   str = "";
-      // }
-
       const gcn =
         variant === "color" ? getVariantStyle(gloss.code) : glossGlassName;
 
@@ -113,16 +107,8 @@ const renderStructuredText = ({
       );
     } else {
       if (text.includes("\n")) {
-        // if (str.length > 0) {
-        //   result.push(str);
-        //   str = "";
-        // }
-        result.push(<br key={`br${i}`} />);
+        // result.push(<br key={`br${i}`} />);
       } else {
-        // if (str.length > 0) {
-        //   result.push(str);
-        //   str = "";
-        // }
         result.push(
           <div
             className="relative inline-flex flex-col items-center"
@@ -143,10 +129,6 @@ const renderStructuredText = ({
     }
   }
 
-  // if (str.length > 0) {
-  //   result.push(<div className="wrap inline-flex">{str}</div>);
-  //   str = "";
-  // }
   return result;
 };
 
