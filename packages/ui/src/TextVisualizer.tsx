@@ -43,29 +43,120 @@ export const TextVisualizer = ({
 }: TextVisualizerProps) => {
   const readings_ = readings.map((r) => ({ ...r, code: r.reading }));
 
-  const r = structureText(
-    text,
-    showReadings ? readings_ : readings_.filter((r) => !r.hidden),
-  );
+  const r = structureText(text, readings_);
   const g = structureText(text, showGlosses ? glosses : []);
   const merged = mergePositions(r, g);
+  // console.log("render");
 
-  const spans = renderStructuredText(
-    merged,
+  const spans = renderStructuredText({
+    arr: merged,
     variant,
     glossGlassName,
     onGlossClick,
-  );
+    showReadings,
+  });
 
   return spans;
 };
 
-const renderStructuredText = (
-  arr: ReturnType<typeof mergePositions>,
-  variant: Variant,
-  glossGlassName: string,
-  onGlossClick?: (code: string) => void,
-) => {
+interface RenderStructuredTextProps {
+  arr: ReturnType<typeof mergePositions>;
+  variant: Variant;
+  glossGlassName: string;
+  onGlossClick?: (code: string) => void;
+  showReadings: boolean;
+}
+
+const renderStructuredText = ({
+  arr,
+  variant,
+  glossGlassName,
+  onGlossClick,
+  showReadings,
+}: RenderStructuredTextProps) => {
+  const result: React.ReactNode[] = [];
+
+  let i = 0;
+  const str = "";
+
+  for (const { text, gloss, reading } of arr) {
+    i++;
+
+    if (gloss) {
+      // if (str.length > 0) {
+      //   result.push(str);
+      //   str = "";
+      // }
+
+      const gcn =
+        variant === "color" ? getVariantStyle(gloss.code) : glossGlassName;
+
+      result.push(
+        <div
+          key={`g${i}`}
+          className={twMerge("inline-block", gcn)}
+          onClick={() => onGlossClick?.(gloss.code)}
+        >
+          {reading ? (
+            <>
+              {text.slice(0, reading.start)}
+              <ruby>
+                {text.slice(reading.start, reading.end)}
+                <rt>{reading.code}</rt>
+              </ruby>
+              {text.slice(reading.end, gloss.end)}
+            </>
+          ) : (
+            text
+          )}
+        </div>,
+      );
+    } else {
+      if (text.includes("\n")) {
+        // if (str.length > 0) {
+        //   result.push(str);
+        //   str = "";
+        // }
+        result.push(<br key={`br${i}`} />);
+      } else {
+        // if (str.length > 0) {
+        //   result.push(str);
+        //   str = "";
+        // }
+        result.push(
+          <div
+            className="relative inline-flex flex-col items-center"
+            key={`g${i}`}
+          >
+            <div
+              className={twMerge(
+                "text-xs whitespace-nowrap select-none",
+                reading && !showReadings && reading.hidden && "opacity-0",
+              )}
+            >
+              {reading ? reading.code : <>&nbsp;</>}
+            </div>
+            <div>{text}</div>
+          </div>,
+        );
+      }
+    }
+  }
+
+  // if (str.length > 0) {
+  //   result.push(<div className="wrap inline-flex">{str}</div>);
+  //   str = "";
+  // }
+  return result;
+};
+
+const renderStructuredTextRuby = ({
+  arr,
+  variant,
+  glossGlassName,
+  onGlossClick,
+  showReadings,
+}: RenderStructuredTextProps) => {
   const result: React.ReactNode[] = [];
 
   let i = 0;

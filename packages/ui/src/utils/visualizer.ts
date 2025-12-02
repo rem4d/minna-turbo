@@ -2,6 +2,7 @@ export interface PositionedItem {
   start: number;
   end: number;
   code: string;
+  hidden?: boolean;
 }
 
 export const structureText = (text: string, sourceArray: PositionedItem[]) => {
@@ -18,6 +19,7 @@ export const structureText = (text: string, sourceArray: PositionedItem[]) => {
           code: item.code,
           start: item.start,
           end: item.end,
+          hidden: item.hidden,
         };
       }
     }
@@ -70,7 +72,12 @@ export const structureText = (text: string, sourceArray: PositionedItem[]) => {
 
       result.push({
         text: text.slice(recNode.start, recNode.end),
-        p: { start: node.start, end: node.end, code: arr[i]?.code ?? "" },
+        p: {
+          start: node.start,
+          end: node.end,
+          code: arr[i]?.code ?? "",
+          hidden: node.hidden,
+        },
       });
     }
   }
@@ -103,6 +110,7 @@ export const mergePositions = (readings: R, glosses: R) => {
         code: gloss.p.code,
         start: gloss.p.start - i,
         end: gloss.p.end - i,
+        hidden: gloss.p.hidden,
       };
 
       if (!reading) {
@@ -121,6 +129,7 @@ export const mergePositions = (readings: R, glosses: R) => {
         code: reading.p.code,
         start: reading.p.start - i,
         end: reading.p.end - i,
+        hidden: reading.p.hidden,
       };
     }
 
