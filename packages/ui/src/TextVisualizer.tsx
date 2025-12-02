@@ -107,7 +107,7 @@ const renderStructuredText = ({
       );
     } else {
       if (text.includes("\n")) {
-        // result.push(<br key={`br${i}`} />);
+        continue;
       } else {
         result.push(
           <div
