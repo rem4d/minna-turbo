@@ -45,6 +45,7 @@ export const TextVisualizer = ({
 
   const r = structureText(text, readings_);
   const g = structureText(text, showGlosses ? glosses : []);
+
   const merged = mergePositions(r, g);
   // console.log("render");
 
@@ -78,6 +79,11 @@ const renderStructuredText = ({
 
   let i = 0;
 
+  const onGlossClick_ = (e: React.MouseEvent<HTMLDivElement>, code: string) => {
+    e.stopPropagation();
+    onGlossClick?.(code);
+  };
+
   for (const { text, gloss, reading } of arr) {
     i++;
 
@@ -88,21 +94,37 @@ const renderStructuredText = ({
       result.push(
         <div
           key={`g${i}`}
-          className={twMerge("inline-block", gcn)}
-          onClick={() => onGlossClick?.(gloss.code)}
+          className={twMerge("relative inline-flex flex-col items-center", gcn)}
+          onClick={(e) => onGlossClick_(e, gloss.code)}
         >
-          {reading ? (
+          {/*reading ? (
             <>
               {text.slice(0, reading.start)}
-              <ruby>
+              <div>
                 {text.slice(reading.start, reading.end)}
-                <rt>{reading.code}</rt>
-              </ruby>
+                <div>{reading.code}</div>
+              </div>
               {text.slice(reading.end, gloss.end)}
             </>
           ) : (
             text
+          )*/}
+          {reading && text.slice(0, reading.start) && (
+            <>
+              <div className="text-xs">&nbsp;</div>
+              <div>{text.slice(0, reading.start)}</div>
+            </>
           )}
+
+          <div
+            className={twMerge(
+              "text-xs whitespace-nowrap select-none",
+              reading && !showReadings && reading.hidden && "opacity-0",
+            )}
+          >
+            {reading ? reading.code : <>&nbsp;</>}
+          </div>
+          <div>{reading ? text.slice(reading.start, reading.end) : text}</div>
         </div>,
       );
     } else {
