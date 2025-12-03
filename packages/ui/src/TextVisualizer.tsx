@@ -26,7 +26,8 @@ interface TextVisualizerProps {
   readings: ReadingPositionItem[];
   text: string;
   variant?: Variant;
-  glossGlassName?: string;
+  glossClassName?: string;
+  rtClassName?: string;
 }
 
 type Code = string;
@@ -39,7 +40,8 @@ export const TextVisualizer = ({
   showReadings,
   variant = "color",
   onGlossClick,
-  glossGlassName = "",
+  glossClassName = "",
+  rtClassName = "",
 }: TextVisualizerProps) => {
   const readings_ = readings.map((r) => ({ ...r, code: r.reading }));
 
@@ -47,14 +49,14 @@ export const TextVisualizer = ({
   const g = structureText(text, showGlosses ? glosses : []);
 
   const merged = mergePositions(r, g);
-  // console.log("render");
 
   const spans = renderStructuredText({
     arr: merged,
     variant,
-    glossGlassName,
+    glossClassName,
     onGlossClick,
     showReadings,
+    rtClassName,
   });
 
   return spans;
@@ -63,17 +65,19 @@ export const TextVisualizer = ({
 interface RenderStructuredTextProps {
   arr: ReturnType<typeof mergePositions>;
   variant: Variant;
-  glossGlassName: string;
+  glossClassName: string;
   onGlossClick?: (code: string) => void;
   showReadings: boolean;
+  rtClassName: string;
 }
 
 const renderStructuredText = ({
   arr,
   variant,
-  glossGlassName,
+  glossClassName,
   onGlossClick,
   showReadings,
+  rtClassName,
 }: RenderStructuredTextProps) => {
   const result: React.ReactNode[] = [];
 
@@ -89,12 +93,12 @@ const renderStructuredText = ({
 
     if (gloss) {
       const gcn =
-        variant === "color" ? getVariantStyle(gloss.code) : glossGlassName;
+        variant === "color" ? getVariantStyle(gloss.code) : glossClassName;
 
       result.push(
         <div
           key={`g${i}`}
-          className={twMerge("relative inline-flex flex-col items-center", gcn)}
+          className={twMerge("relative inline-flex flex-col items-center")}
           onClick={(e) => onGlossClick_(e, gloss.code)}
         >
           {/*reading ? (
@@ -112,19 +116,22 @@ const renderStructuredText = ({
           {reading && text.slice(0, reading.start) && (
             <>
               <div className="text-xs">&nbsp;</div>
-              <div>{text.slice(0, reading.start)}</div>
+              <div className="leading-none">{text.slice(0, reading.start)}</div>
             </>
           )}
 
           <div
             className={twMerge(
-              "text-xs whitespace-nowrap select-none",
+              "text-xs leading-7 whitespace-nowrap select-none",
+              rtClassName,
               reading && !showReadings && reading.hidden && "opacity-0",
             )}
           >
             {reading ? reading.code : <>&nbsp;</>}
           </div>
-          <div>{reading ? text.slice(reading.start, reading.end) : text}</div>
+          <div className={twMerge("leading-none", gcn)}>
+            {reading ? text.slice(reading.start, reading.end) : text}
+          </div>
         </div>,
       );
     } else {
@@ -133,18 +140,19 @@ const renderStructuredText = ({
       } else {
         result.push(
           <div
-            className="relative inline-flex flex-col items-center"
             key={`g${i}`}
+            className="relative inline-flex flex-col items-center"
           >
             <div
               className={twMerge(
-                "text-xs whitespace-nowrap select-none",
+                "text-xs leading-7 whitespace-nowrap select-none",
+                rtClassName,
                 reading && !showReadings && reading.hidden && "opacity-0",
               )}
             >
               {reading ? reading.code : <>&nbsp;</>}
             </div>
-            <div>{text}</div>
+            <div className="leading-none">{text}</div>
           </div>,
         );
       }
@@ -153,7 +161,7 @@ const renderStructuredText = ({
 
   return result;
 };
-
+/*
 const renderStructuredTextRuby = ({
   arr,
   variant,
@@ -228,6 +236,7 @@ const renderStructuredTextRuby = ({
   }
   return result;
 };
+*/
 
 const getColor = (code: Code | undefined) => {
   if (!code) {
