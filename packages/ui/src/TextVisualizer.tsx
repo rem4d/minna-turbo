@@ -95,6 +95,11 @@ const renderStructuredText = ({
       const gcn =
         variant === "color" ? getVariantStyle(gloss.code) : glossClassName;
 
+      if (gloss.code === "SUGIRU") {
+        console.log(text);
+        console.log(gloss);
+        console.log(reading);
+      }
       result.push(
         <div
           key={`g${i}`}
@@ -134,6 +139,27 @@ const renderStructuredText = ({
           </div>
         </div>,
       );
+
+      if (reading && gloss.end > reading.end) {
+        result.push(
+          <div
+            key={`g${i}0`}
+            className="relative inline-flex flex-col items-center"
+          >
+            <div
+              className={twMerge(
+                "text-xs leading-7 whitespace-nowrap select-none",
+                rtClassName,
+              )}
+            >
+              &nbsp;
+            </div>
+            <div className={twMerge("leading-none", gcn)}>
+              {text.slice(reading.end, gloss.end)}
+            </div>
+          </div>,
+        );
+      }
     } else {
       if (text.includes("\n")) {
         continue;
@@ -408,6 +434,8 @@ const getColor = (code: Code | undefined) => {
     NI_IKU: "text-purple-600",
     KUTE_FORM: "text-purple-600",
     SUGI_SUFFIX: "text-purple-600",
+    SUGIRU: "text-amber-700",
+    MO: "text-emerald-600",
   };
 
   if (!colors[code]) {
@@ -473,7 +501,7 @@ const getVariantStyle = (code: Code) => {
     code === "MASHOU_KA" && "text-pink-600",
     code === "MIERU" && "text-blue-500",
     code === "MIRU" && "text-amber-700",
-    code === "MO_MO" && "bg-gray-300",
+    code === "MO_MO" && "text-amber-700",
     code === "MONO_DA" && "text-red-500",
     code === "NADO" && "text-amber-600",
     code === "NAGARA" && "text-rose-500",
@@ -583,6 +611,8 @@ const getVariantStyle = (code: Code) => {
     code === "NI_IKU" && "text-purple-600",
     code === "KUTE_FORM" && "text-purple-600",
     code === "SUGI_SUFFIX" && "text-purple-600",
+    code === "SUGIRU" && "text-amber-700",
+    code === "MO" && "text-emerald-600",
     getColor(code),
   );
 };
