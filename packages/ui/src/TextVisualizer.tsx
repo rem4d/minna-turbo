@@ -407,6 +407,7 @@ const getColor = (code: Code | undefined) => {
     TO_WHEN: "text-purple-600",
     NI_IKU: "text-purple-600",
     KUTE_FORM: "text-purple-600",
+    SUGI_SUFFIX: "text-purple-600",
   };
 
   if (!colors[code]) {
@@ -581,6 +582,7 @@ const getVariantStyle = (code: Code) => {
     code === "TO_WHEN" && "text-purple-600",
     code === "NI_IKU" && "text-purple-600",
     code === "KUTE_FORM" && "text-purple-600",
+    code === "SUGI_SUFFIX" && "text-purple-600",
     getColor(code),
   );
 };
