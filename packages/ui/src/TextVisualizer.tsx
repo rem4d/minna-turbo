@@ -95,29 +95,12 @@ const renderStructuredText = ({
       const gcn =
         variant === "color" ? getVariantStyle(gloss.code) : glossClassName;
 
-      if (gloss.code === "SUGIRU") {
-        console.log(text);
-        console.log(gloss);
-        console.log(reading);
-      }
       result.push(
         <div
           key={`g${i}`}
           className={twMerge("relative inline-flex flex-col items-center")}
           onClick={(e) => onGlossClick_(e, gloss.code)}
         >
-          {/*reading ? (
-            <>
-              {text.slice(0, reading.start)}
-              <div>
-                {text.slice(reading.start, reading.end)}
-                <div>{reading.code}</div>
-              </div>
-              {text.slice(reading.end, gloss.end)}
-            </>
-          ) : (
-            text
-          )*/}
           {reading && text.slice(0, reading.start) && (
             <>
               <div className="text-xs">&nbsp;</div>
@@ -187,82 +170,6 @@ const renderStructuredText = ({
 
   return result;
 };
-/*
-const renderStructuredTextRuby = ({
-  arr,
-  variant,
-  glossGlassName,
-  onGlossClick,
-  showReadings,
-}: RenderStructuredTextProps) => {
-  const result: React.ReactNode[] = [];
-
-  let i = 0;
-  let str = "";
-
-  for (const { text, gloss, reading } of arr) {
-    i++;
-
-    if (gloss) {
-      if (str.length > 0) {
-        result.push(str);
-        str = "";
-      }
-
-      const gcn =
-        variant === "color" ? getVariantStyle(gloss.code) : glossGlassName;
-
-      result.push(
-        <span
-          key={`g${i}`}
-          className={gcn}
-          onClick={() => onGlossClick?.(gloss.code)}
-        >
-          {reading ? (
-            <>
-              {text.slice(0, reading.start)}
-              <ruby>
-                {text.slice(reading.start, reading.end)}
-                <rt>{reading.code}</rt>
-              </ruby>
-              {text.slice(reading.end, gloss.end)}
-            </>
-          ) : (
-            text
-          )}
-        </span>,
-      );
-    } else {
-      if (text.includes("\n")) {
-        if (str.length > 0) {
-          result.push(str);
-          str = "";
-        }
-        result.push(<br key={`br${i}`} />);
-      } else if (reading) {
-        if (str.length > 0) {
-          result.push(str);
-          str = "";
-        }
-        result.push(
-          <ruby key={`g${i}`}>
-            {text}
-            <rt>{reading.code}</rt>
-          </ruby>,
-        );
-      } else {
-        str += text;
-      }
-    }
-  }
-
-  if (str.length > 0) {
-    result.push(str);
-    str = "";
-  }
-  return result;
-};
-*/
 
 const getColor = (code: Code | undefined) => {
   if (!code) {
