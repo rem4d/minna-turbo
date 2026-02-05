@@ -1,7 +1,6 @@
 import { z } from "zod";
+
 import { publicProcedure, router } from "../../trpc";
-import type { Kanji } from "@rem4d/db";
-import { analyze } from "@rem4d/tokenizer";
 
 export const adminSentenceRouter = router({
   getById: publicProcedure.input(z.number()).query(async ({ ctx, input }) => {
@@ -46,27 +45,27 @@ export const adminSentenceRouter = router({
     }
     return true;
   }),
-  analyze: publicProcedure
-    .input(z.string())
-    .mutation(async ({ ctx, input }) => {
-      const allKanjiMap = new Map<string, Kanji>();
-      const { data: kanjis, error } = await ctx.db.from("kanji").select();
-      if (error) {
-        throw new Error(error.message);
-      }
-      kanjis.forEach((d) => {
-        allKanjiMap.set(d.kanji, d);
-      });
-      const result = await analyze(input, allKanjiMap);
-      const params = {
-        // new fields
-        text_with_furigana: result.textWithHiragana,
-        ruby: result.ruby,
-        level: result.newLevel,
-        unknown_kanji_number: result.unknownKanjiNumber,
-      };
-      return params;
-    }),
+  // analyze: publicProcedure
+  //   .input(z.string())
+  //   .mutation(async ({ ctx, input }) => {
+  //     const allKanjiMap = new Map<string, Kanji>();
+  //     const { data: kanjis, error } = await ctx.db.from("kanji").select();
+  //     if (error) {
+  //       throw new Error(error.message);
+  //     }
+  //     kanjis.forEach((d) => {
+  //       allKanjiMap.set(d.kanji, d);
+  //     });
+  //     const result = await analyze(input, allKanjiMap);
+  //     const params = {
+  //       // new fields
+  //       text_with_furigana: result.textWithHiragana,
+  //       ruby: result.ruby,
+  //       level: result.newLevel,
+  //       unknown_kanji_number: result.unknownKanjiNumber,
+  //     };
+  //     return params;
+  //   }),
   getFurigana: publicProcedure
     .input(
       z.object({
