@@ -6,7 +6,6 @@
   "dependencies": {
     "@redis/client": "^1.6.0",
     "@rem4d/db": "workspace:*",
-    "@rem4d/tokenizer": "workspace:*",
     "@rem4d/utils": "workspace:^",
     "@tma.js/init-data-node": "^2.0.3",
     "@trpc/server": "catalog:",
