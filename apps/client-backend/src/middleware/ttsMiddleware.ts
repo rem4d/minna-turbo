@@ -1,6 +1,6 @@
-import { EdgeTTS } from "node-edge-tts";
 import fs from "node:fs";
 import { Request, Response } from "express";
+import { EdgeTTS } from "node-edge-tts";
 
 const tts = new EdgeTTS({
   voice: "ja-JP-NanamiNeural",
@@ -17,6 +17,7 @@ export const ttsReq = async (req: Request, res: Response) => {
     res.setHeader("Content-Type", "audio/wav");
     rs.pipe(res);
   } catch (err) {
+    console.log(err);
     throw new Error("Unexpected tts error.");
   }
 };
