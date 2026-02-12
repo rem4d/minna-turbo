@@ -2,7 +2,7 @@ import http from "http";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import cors from "cors";
 import dotenv from "dotenv";
-import express, { Router } from "express";
+import express from "express";
 
 import { appRouter, createTRPCContext } from "@rem4d/api";
 
@@ -30,11 +30,7 @@ app.use(
   }),
 );
 
-const ttsRouter: Router = express.Router();
-
-ttsRouter.post("/ms-tts", ttsReq);
-
-app.use("/tts", ttsRouter);
+app.get("/tts/ms-tts", ttsReq);
 
 app.use(errorMiddleware);
 

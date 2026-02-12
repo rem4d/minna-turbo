@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { EdgeTTS } from "node-edge-tts";
 
 const tts = new EdgeTTS({
@@ -8,7 +8,8 @@ const tts = new EdgeTTS({
 });
 
 export const ttsReq = async (req: Request, res: Response) => {
-  const text = req.body.text as string;
+  console.log(req.query);
+  const text = req.query.text as string;
   const filePath = "public/m/default.wav";
 
   try {
