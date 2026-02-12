@@ -8,7 +8,6 @@ const tts = new EdgeTTS({
 });
 
 export const ttsReq = async (req: Request, res: Response) => {
-  console.log(req.query);
   const text = req.query.text as string;
   const filePath = "public/m/default.wav";
 
