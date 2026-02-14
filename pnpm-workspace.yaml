@@ -4,21 +4,21 @@ packages:
   - tooling/*
 
 catalog:
-  "@eslint/js": ^9.38.0
-  "@tailwindcss/postcss": ^4.1.17
-  "@tailwindcss/vite": ^4.1.17
-  "@tanstack/react-query": ^5.62.11
-  "@tanstack/react-query-devtools": ^5.90.2
-  "@trpc/client": ^11.7.1
-  "@trpc/react-query": ^11.7.1
-  "@trpc/server": ^11.7.1
-  "@trpc/tanstack-react-query": ^11.7.1
-  "@types/cors": ^2.8.17
-  "@types/dotenv": ^6.1.1
-  "@types/express": ^5.0.0
-  "@types/node": ^22.18.12
-  "@vitejs/plugin-react": ^5.1.0
-  "@vitejs/plugin-react-swc": ^4.2.2
+  '@eslint/js': ^9.38.0
+  '@tailwindcss/postcss': ^4.1.17
+  '@tailwindcss/vite': ^4.1.17
+  '@tanstack/react-query': ^5.62.11
+  '@tanstack/react-query-devtools': ^5.90.2
+  '@trpc/client': ^11.7.1
+  '@trpc/react-query': ^11.7.1
+  '@trpc/server': ^11.7.1
+  '@trpc/tanstack-react-query': ^11.7.1
+  '@types/cors': ^2.8.17
+  '@types/dotenv': ^6.1.1
+  '@types/express': ^5.0.0
+  '@types/node': 22.19.1
+  '@vitejs/plugin-react': ^5.1.0
+  '@vitejs/plugin-react-swc': ^4.2.2
   bunchee: ^6.3.2
   cors: ^2.8.5
   dotenv: ^16.4.7
@@ -36,7 +36,7 @@ catalog:
   tailwindcss: ^4.1.17
   tsup: ^8.5.1
   tsx: ^4.20.6
-  typescript: ^5.9.3
+  typescript: 5.9.3
   vite: ^7.2.4
   vite-plugin-checker: ^0.10.3
   vite-plugin-node-polyfills: ^0.22.0
@@ -47,13 +47,13 @@ catalog:
 
 catalogs:
   react0:
-    "@types/react": ^19.2.5
-    "@types/react-dom": ^19.2.3
+    '@types/react': ^19.2.5
+    '@types/react-dom': ^19.2.3
     react: 0.0.0-experimental-8ac5f4eb-20251119
     react-dom: 0.0.0-experimental-8ac5f4eb-20251119
   react19:
-    "@types/react": ^19.1.12
-    "@types/react-dom": ^19.1.9
+    '@types/react': ^19.1.12
+    '@types/react-dom': ^19.1.9
     react: 19.1.1
     react-dom: 19.1.1
 
@@ -63,5 +63,5 @@ overrides:
   vite: 7.2.4
 
 publicHoistPattern:
-  - "@ianvs/prettier-plugin-sort-imports"
+  - '@ianvs/prettier-plugin-sort-imports'
   - prettier-plugin-tailwindcss
