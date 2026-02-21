@@ -19,7 +19,7 @@ export async function sessionMiddleware(
 
     await redis.set(
       `session:${sessionId}`,
-      JSON.stringify({ createdAt: Date.now() }),
+      JSON.stringify({ createdAt: Date.now(), level: 3, shift: 20 }),
       { EX: 60 * 60 * 24 * 7 }, // 7 дней
     );
 

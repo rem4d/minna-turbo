@@ -9,14 +9,31 @@ export interface ContextDeps {
   redis: RedisClientType;
 }
 
-type User = { username: string; id: number } | null;
+export interface User {
+  id: string;
+  level: number;
+  shift: number;
+}
 
 export function createContextFactory(deps: ContextDeps) {
   return async function createContext(
     _options: trpcExpress.CreateExpressContextOptions,
     extra: { sessionId?: string },
   ) {
-    const user = null as User;
+    let user: User | null = null;
+    const sessionId = extra.sessionId;
+
+    if (sessionId) {
+      const raw = await deps.redis.get(`session:${sessionId}`);
+      try {
+        user = raw ? JSON.parse(raw) : null;
+        if (user) {
+          user.id = sessionId;
+        }
+      } catch (err) {
+        console.error("Error while parsing JSON:", raw);
+      }
+    }
 
     return {
       db,

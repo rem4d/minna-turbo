@@ -10,18 +10,12 @@ import {
 import { dedup } from "../../util/dedup";
 import { shuffle } from "../../util/shuffle";
 import { getStatementsForLevel } from "../util/getStatementsForLevel";
-import { getUserByTelegramId } from "../util/getUserByTelegramId";
 
 const shuffleSentences = async (ctx: Context) => {
   if (!ctx.user) {
     throw new Error("No user has been found");
   }
-
-  const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
-
-  if (!storedUser) {
-    throw new Error("No user has been found");
-  }
+  const storedUser = ctx.user;
 
   const level = storedUser.level;
   const shift = storedUser.shift;
@@ -60,13 +54,7 @@ export const sentenceRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
-
-      if (!storedUser) {
-        throw new Error("No user has been found");
-      }
-
-      const userId = storedUser.id;
+      const userId = ctx.user.id;
       let known: number[] = [];
 
       const knownKey = await ctx.redis.get(`known.${userId}`);
@@ -89,12 +77,8 @@ export const sentenceRouter = router({
       return shuffleSentences(ctx);
     }),
   resetCache: redisPrecedure.mutation(async ({ ctx }) => {
-    const storedUser = await getUserByTelegramId(ctx.user.id, ctx.db);
+    const userId = ctx.user.id;
 
-    if (!storedUser) {
-      throw new Error("No user has been found");
-    }
-    const userId = storedUser.id;
     try {
       await ctx.redis.del(`known.${userId}`);
       return shuffleSentences(ctx);
