@@ -2,8 +2,7 @@ import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
 import type { AppRouter } from "./routers/_app";
 import { appRouter } from "./routers/_app";
-
-import { createCallerFactory, createContext } from "./trpc";
+import { createCallerFactory, createContextFactory } from "./trpc";
 
 /**
  * Create a server-side caller for the tRPC API
@@ -49,7 +48,7 @@ type AdminMemberOutput =
 type MemberOutput = RouterOutputs["admin"]["member"]["membersById"][number];
 type MemberOutputClient =
   RouterOutputs["viewer"]["member"]["membersById"][number];
-export { createContext as createTRPCContext, appRouter, createCaller };
+export { createContextFactory, appRouter, createCaller };
 type GetGlossesOutput =
   RouterOutputs["viewer"]["sentence"]["getGlosses"][number];
 type FuriganaOutput = RouterOutputs["admin"]["sentence"]["getFurigana"][number];

@@ -1,8 +1,8 @@
-import * as redis from "@redis/client";
+import { createClient } from "@redis/client";
 
 const url = process.env.REDIS_URL;
 
-const client = redis.createClient({
+const client = createClient({
   url: url ?? undefined,
 });
 

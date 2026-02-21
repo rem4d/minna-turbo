@@ -9,10 +9,12 @@
     "clean": "git clean -xdfe .env"
   },
   "dependencies": {
+    "@redis/client": "^5.11.0",
     "@rem4d/db": "workspace:*",
     "@rem4d/tokenizer": "workspace:*",
     "@rem4d/typescript-config": "workspace:*",
     "@trpc/server": "catalog:",
+    "cookie-parser": "^1.4.7",
     "cors": "catalog:",
     "dotenv": "catalog:",
     "envalid": "catalog:",
@@ -24,6 +26,7 @@
   "devDependencies": {
     "@rem4d/api": "workspace:*",
     "@rem4d/eslint-config": "workspace:*",
+    "@types/cookie-parser": "^1.4.10",
     "@types/cors": "catalog:",
     "@types/dotenv": "catalog:",
     "@types/express": "catalog:",

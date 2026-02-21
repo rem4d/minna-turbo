@@ -345,6 +345,9 @@ importers:
 
   apps/client-backend:
     dependencies:
+      '@redis/client':
+        specifier: ^5.11.0
+        version: 5.11.0
       '@rem4d/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -357,6 +360,9 @@ importers:
       '@trpc/server':
         specifier: 'catalog:'
         version: 11.7.2(typescript@5.9.3)
+      cookie-parser:
+        specifier: ^1.4.7
+        version: 1.4.7
       cors:
         specifier: 'catalog:'
         version: 2.8.5
@@ -385,6 +391,9 @@ importers:
       '@rem4d/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint
+      '@types/cookie-parser':
+        specifier: ^1.4.10
+        version: 1.4.10(@types/express@5.0.5)
       '@types/cors':
         specifier: 'catalog:'
         version: 2.8.19
@@ -2210,6 +2219,15 @@ packages:
     resolution: {integrity: sha512-/KCsg3xSlR+nCK8/8ZYSknYxvXHwubJrU82F3Lm1Fp6789VQ0/3RJKfsmRXjqfaTA++23CvC3hqmqe/2GEt6Kw==}
     engines: {node: '>=14'}
 
+  '@redis/client@5.11.0':
+    resolution: {integrity: sha512-GHoprlNQD51Xq2Ztd94HHV94MdFZQ3CVrpA04Fz8MVoHM0B7SlbmPEVIjwTbcv58z8QyjnrOuikS0rWF03k5dQ==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@node-rs/xxhash': ^1.1.0
+    peerDependenciesMeta:
+      '@node-rs/xxhash':
+        optional: true
+
   '@redis/graph@1.1.1':
     resolution: {integrity: sha512-FEMTcTHZozZciLRl6GiiIB4zGm5z5F3F6a6FZCyrfxdKOhFlGkiAqlexWMBzCi4DcRoyiOsuLfW+cjlGWyExOw==}
     peerDependencies:
@@ -2796,6 +2814,11 @@ packages:
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
 
+  '@types/cookie-parser@1.4.10':
+    resolution: {integrity: sha512-B4xqkqfZ8Wek+rCOeRxsjMS9OgvzebEzzLYw7NHYuvzb7IdxOkI0ZHGgeEBX4PUM7QGVvNSK60T3OvWj3YfBRg==}
+    peerDependencies:
+      '@types/express': '*'
+
   '@types/cors@2.8.19':
     resolution: {integrity: sha512-mFNylyeyqN93lfe/9CSxOGREz8cpzAhH+E93xJ4xWQf62V8sQ/24reV2nyzUWM6H6Xji+GGHpkbLe7pVoUEskg==}
 
@@ -3334,11 +3357,19 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
+  cookie-parser@1.4.7:
+    resolution: {integrity: sha512-nGUvgXnotP3BsjiLX2ypbQnWoGUPIIfHQNZkkC668ntrzGWEZVW70HDEB1qnNGMicPje6EttlIgzo51YSwNQGw==}
+    engines: {node: '>= 0.8.0'}
+
   cookie-signature@1.0.6:
     resolution: {integrity: sha512-QADzlaHc8icV8I7vbaJXJwod9HWYp8uCqf1xa4OfNu1T7JVxQIrUgOWtHdNDtPiywmFbiS12VjotIXLrKM3orQ==}
 
   cookie@0.7.1:
     resolution: {integrity: sha512-6DnInpx7SJ2AK3+CTUE/ZM0vWTUboZCegxhC2xiIydHR9jNuTAASBrfEpHhiGOZw/nX51bHt6YQl8jsGo4y/0w==}
+    engines: {node: '>= 0.6'}
+
+  cookie@0.7.2:
+    resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
 
   cookie@1.0.2:
@@ -7540,6 +7571,10 @@ snapshots:
       generic-pool: 3.9.0
       yallist: 4.0.0
 
+  '@redis/client@5.11.0':
+    dependencies:
+      cluster-key-slot: 1.1.2
+
   '@redis/graph@1.1.1(@redis/client@1.6.1)':
     dependencies:
       '@redis/client': 1.6.1
@@ -8104,6 +8139,10 @@ snapshots:
   '@types/connect@3.4.38':
     dependencies:
       '@types/node': 22.19.1
+
+  '@types/cookie-parser@1.4.10(@types/express@5.0.5)':
+    dependencies:
+      '@types/express': 5.0.5
 
   '@types/cors@2.8.19':
     dependencies:
@@ -8778,9 +8817,16 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
+  cookie-parser@1.4.7:
+    dependencies:
+      cookie: 0.7.2
+      cookie-signature: 1.0.6
+
   cookie-signature@1.0.6: {}
 
   cookie@0.7.1: {}
+
+  cookie@0.7.2: {}
 
   cookie@1.0.2: {}
 

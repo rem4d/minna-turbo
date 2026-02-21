@@ -1,25 +1,35 @@
-import { initTRPC, TRPCError } from "@trpc/server";
+import type { RedisClientType } from "@redis/client";
 import type * as trpcExpress from "@trpc/server/adapters/express";
+import { initTRPC, TRPCError } from "@trpc/server";
 import { ZodError } from "zod";
+
 import { client as db } from "@rem4d/db";
-import redisClient from "./redisClient";
-import { getUserFromHeader } from "./util/getUserFromHeader";
 
-export type RedisClientType = typeof redisClient;
+export interface ContextDeps {
+  redis: RedisClientType;
+}
 
-export const createContext = (
-  options: trpcExpress.CreateExpressContextOptions,
-) => {
-  const tgUser = getUserFromHeader(options.req.headers.authorization);
+type User = { username: string; id: number } | null;
 
-  return {
-    db,
-    user: tgUser,
-    redis: redisClient,
+export function createContextFactory(deps: ContextDeps) {
+  return async function createContext(
+    _options: trpcExpress.CreateExpressContextOptions,
+    extra: { sessionId?: string },
+  ) {
+    const user = null as User;
+
+    return {
+      db,
+      user,
+      redis: deps.redis,
+      sessionId: extra.sessionId,
+    };
   };
-};
+}
 
-export type Context = Awaited<ReturnType<typeof createContext>>;
+export type Context = Awaited<
+  ReturnType<ReturnType<typeof createContextFactory>>
+>;
 
 const t = initTRPC.context<Context>().create({
   // transformer: superjson,

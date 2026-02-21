@@ -1,14 +1,16 @@
 import http from "http";
-import cors from "cors";
-import express, { Router } from "express";
-import dotenv from "dotenv";
 import * as trpcExpress from "@trpc/server/adapters/express";
-import { appRouter, createTRPCContext } from "@rem4d/api";
+import cors from "cors";
+import dotenv from "dotenv";
+import express, { Router } from "express";
+
+import { appRouter, createContextFactory } from "@rem4d/api";
+
 import logger from "./logger";
 import errorMiddleware from "./middleware/errorMiddleware";
 import {
-  playSpeaker,
   createSpeakerFile,
+  playSpeaker,
   removeSpeakerFile,
 } from "./middleware/voicevoxMiddleware";
 
@@ -23,6 +25,8 @@ app.use(express.json());
 app.use(cors());
 
 app.use(express.static("public"));
+
+const createTRPCContext = createContextFactory({ redis: null });
 
 app.use(
   "/trpc/api",

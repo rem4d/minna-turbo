@@ -4,6 +4,7 @@
 		"strict": true,
 		"skipLibCheck": true,
     "outDir": "dist",
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": ["."],
   "exclude": ["node_modules", "dist"]
