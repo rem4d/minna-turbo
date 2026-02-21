@@ -36,12 +36,6 @@ export const baseConfig = defineConfig(
         2,
         { checksVoidReturn: { attributes: false } },
       ],
-      "@typescript-eslint/no-unnecessary-condition": [
-        "error",
-        {
-          allowConstantLoopConditions: true,
-        },
-      ],
       // "@typescript-eslint/no-non-null-assertion": "error",
       "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
 
@@ -52,7 +46,7 @@ export const baseConfig = defineConfig(
       "@typescript-eslint/no-unsafe-assignment": "off",
       "@typescript-eslint/no-unsafe-call": "off",
       "@typescript-eslint/no-unsafe-member-access": "off",
-      // "@typescript-eslint/no-unnecessary-condition": "off",
+      "@typescript-eslint/no-unnecessary-condition": "off",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
