@@ -16,10 +16,13 @@
     "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",
     "preview": "vite preview",
     "test": "turbo run test",
-    "test:watch": "vitest --watch"
+    "test:watch": "vitest --watch",
+    "knip": "knip"
   },
   "devDependencies": {
     "@rem4d/prettier-config": "workspace:*",
+    "@types/node": "catalog:",
+    "knip": "^5.83.1",
     "prettier": "catalog:",
     "turbo": "^2.6.1",
     "typescript": "catalog:"
