@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@redis/client": "^5.11.0",
-    "@rem4d/db": "workspace:*",
-    "@rem4d/tokenizer": "workspace:*",
-    "@rem4d/typescript-config": "workspace:*",
+    "@minna/db": "workspace:*",
+    "@minna/tokenizer": "workspace:*",
+    "@minna/typescript-config": "workspace:*",
     "@trpc/server": "catalog:",
     "cookie-parser": "^1.4.7",
     "cors": "catalog:",
@@ -24,8 +24,8 @@
     "pino-http": "catalog:"
   },
   "devDependencies": {
-    "@rem4d/api": "workspace:*",
-    "@rem4d/eslint-config": "workspace:*",
+    "@minna/api": "workspace:*",
+    "@minna/eslint-config": "workspace:*",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "catalog:",
     "@types/dotenv": "catalog:",

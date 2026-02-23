@@ -1,7 +1,7 @@
 import { defineConfig } from "eslint/config";
 
-import { baseConfig } from "@rem4d/eslint-config/base";
-import { reactConfig } from "@rem4d/eslint-config/react";
+import { baseConfig } from "@minna/eslint-config/base";
+import { reactConfig } from "@minna/eslint-config/react";
 
 export default defineConfig(
   {

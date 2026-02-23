@@ -1,5 +1,5 @@
 {
-  "name": "@rem4d/tokenizer",
+  "name": "@minna/tokenizer",
   "description": "",
   "version": "1.0.0",
   "author": "",
@@ -8,9 +8,9 @@
     "wanakana": "catalog:"
   },
   "devDependencies": {
-    "@rem4d/db": "workspace:*",
-    "@rem4d/eslint-config": "workspace:*",
-    "@rem4d/typescript-config": "workspace:*",
+    "@minna/db": "workspace:*",
+    "@minna/eslint-config": "workspace:*",
+    "@minna/typescript-config": "workspace:*",
     "@types/node": "^22.10.2",
     "bunchee": "catalog:",
     "typescript": "catalog:",

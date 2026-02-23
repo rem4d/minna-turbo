@@ -1,4 +1,4 @@
-// import reactConfig from "@rem4d/eslint-config/react";
+// import reactConfig from "@minna/eslint-config/react";
 //
 // /** @type {import('typescript-eslint').Config} */
 // export default [
@@ -9,8 +9,8 @@
 // ];
 //
 //
-import baseConfig from "@rem4d/eslint-config/base";
-import reactConfig from "@rem4d/eslint-config/react";
+import baseConfig from "@minna/eslint-config/base";
+import reactConfig from "@minna/eslint-config/react";
 
 /** @type {import('typescript-eslint').Config} */
 export default [

@@ -1,5 +1,5 @@
 {
-  "name": "@rem4d/tailwind-config",
+  "name": "@minna/tailwind-config",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -20,12 +20,12 @@
     "tailwindcss": "catalog:"
   },
   "devDependencies": {
-    "@rem4d/eslint-config": "workspace:*",
-    "@rem4d/prettier-config": "workspace:*",
-    "@rem4d/typescript-config": "workspace:*",
+    "@minna/eslint-config": "workspace:*",
+    "@minna/prettier-config": "workspace:*",
+    "@minna/typescript-config": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@rem4d/prettier-config"
+  "prettier": "@minna/prettier-config"
 }

@@ -1,6 +1,6 @@
 import { Box, Flex, Text, Grid, Heading, Badge } from "@radix-ui/themes";
 import { api } from "@/utils/api";
-import { MemberOutput } from "@rem4d/api";
+import { MemberOutput } from "@minna/api";
 import { useState } from "react";
 
 type Props = {

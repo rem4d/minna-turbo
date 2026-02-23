@@ -3,7 +3,7 @@ import type * as trpcExpress from "@trpc/server/adapters/express";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { ZodError } from "zod";
 
-import { client as db } from "@rem4d/db";
+import { client as db } from "@minna/db";
 
 export interface ContextDeps {
   redis: RedisClientType;

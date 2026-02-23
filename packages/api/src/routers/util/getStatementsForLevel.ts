@@ -1,5 +1,5 @@
-import type { Database, Sentence, SupabaseClient } from "@rem4d/db";
-import { clamp } from "@rem4d/utils";
+import type { Database, Sentence, SupabaseClient } from "@minna/db";
+import { clamp } from "@minna/utils";
 
 export const getStatementsForLevel = async ({
   level,

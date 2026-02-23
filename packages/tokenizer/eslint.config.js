@@ -1,4 +1,4 @@
-import baseConfig from "@rem4d/eslint-config/base";
+import baseConfig from "@minna/eslint-config/base";
 
 /** @type {import('typescript-eslint').Config} */
 export default [

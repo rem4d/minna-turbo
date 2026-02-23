@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../../trpc";
-import { Member, MemberJmdictEntry } from "@rem4d/db";
+import { Member, MemberJmdictEntry } from "@minna/db";
 
 export const adminMemberRouter = router({
   membersById: publicProcedure

@@ -1,7 +1,7 @@
 import { Request, Response, RequestHandler, NextFunction } from "express";
 import fs from "node:fs";
 import { Readable } from "stream";
-import { client as db } from "@rem4d/db";
+import { client as db } from "@minna/db";
 
 export const playSpeaker = async (req: Request, res: Response) => {
   const text = req.body.text as string;

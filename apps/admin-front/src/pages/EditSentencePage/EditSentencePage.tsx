@@ -21,8 +21,8 @@ import {
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { AdminMemberOutput } from "@rem4d/api";
-import { ReadingPositionItem, TextVisualizer } from "@rem4d/ui";
+import { AdminMemberOutput } from "@minna/api";
+import { ReadingPositionItem, TextVisualizer } from "@minna/ui";
 
 import { initTTS } from "../../utils/tts";
 import Members from "./Members";

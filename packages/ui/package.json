@@ -1,5 +1,5 @@
 {
-  "name": "@rem4d/ui",
+  "name": "@minna/ui",
   "private": true,
   "type": "module",
   "exports": {
@@ -10,9 +10,9 @@
     "tailwind-merge": "catalog:"
   },
   "devDependencies": {
-    "@rem4d/eslint-config": "workspace:*",
-    "@rem4d/prettier-config": "workspace:*",
-    "@rem4d/typescript-config": "workspace:*",
+    "@minna/eslint-config": "workspace:*",
+    "@minna/prettier-config": "workspace:*",
+    "@minna/typescript-config": "workspace:*",
     "@types/react": "catalog:react19",
     "eslint": "catalog:",
     "prettier": "catalog:",

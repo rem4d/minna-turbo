@@ -1,5 +1,5 @@
 {
-  "name": "@rem4d/eslint-config",
+  "name": "@minna/eslint-config",
   "private": true,
   "type": "module",
   "exports": {
@@ -17,7 +17,7 @@
     "typescript-eslint": "^8.46.2"
   },
   "devDependencies": {
-    "@rem4d/typescript-config": "workspace:*",
+    "@minna/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:"

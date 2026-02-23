@@ -20,12 +20,12 @@
     "knip": "knip"
   },
   "devDependencies": {
-    "@rem4d/prettier-config": "workspace:*",
+    "@minna/prettier-config": "workspace:*",
     "@types/node": "catalog:",
     "knip": "^5.83.1",
     "prettier": "catalog:",
     "turbo": "^2.6.1",
     "typescript": "catalog:"
   },
-  "prettier": "@rem4d/prettier-config"
+  "prettier": "@minna/prettier-config"
 }

@@ -6,7 +6,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
-import { appRouter, createContextFactory } from "@rem4d/api";
+import { appRouter, createContextFactory } from "@minna/api";
 
 import logger from "./logger";
 import errorMiddleware from "./middleware/errorMiddleware";

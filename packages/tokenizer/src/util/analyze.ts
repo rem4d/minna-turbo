@@ -1,4 +1,4 @@
-import type { Kanji } from "@rem4d/db";
+import type { Kanji } from "@minna/db";
 import { tokenize } from "./tokenize";
 import { createRubySentence, createRubyToken } from "./createRuby";
 

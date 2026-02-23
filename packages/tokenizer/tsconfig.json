@@ -1,5 +1,5 @@
 {
-	"extends": "@rem4d/typescript-config/tsconfig.package.json",
+	"extends": "@minna/typescript-config/tsconfig.package.json",
 	"include": ["src", "test"],
 	"exclude": ["node_modules"]
 }

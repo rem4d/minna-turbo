@@ -1,4 +1,4 @@
-import type { Database as SDatabase } from "@rem4d/db";
+import type { Database as SDatabase } from "@minna/db";
 
 export type Database = SDatabase;
 

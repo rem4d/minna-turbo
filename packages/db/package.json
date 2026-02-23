@@ -1,5 +1,5 @@
 {
-  "name": "@rem4d/db",
+  "name": "@minna/db",
   "description": "",
   "version": "1.0.0",
   "author": "",
@@ -10,8 +10,8 @@
     "redis": "^4.7.0"
   },
   "devDependencies": {
-    "@rem4d/eslint-config": "workspace:*",
-    "@rem4d/typescript-config": "workspace:*",
+    "@minna/eslint-config": "workspace:*",
+    "@minna/typescript-config": "workspace:*",
     "bunchee": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:"

@@ -1,4 +1,4 @@
-import type { Sentence } from "@rem4d/db";
+import type { Sentence } from "@minna/db";
 
 export interface KanjiMapped {
   word_id: number;
