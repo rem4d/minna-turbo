@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { authedProcedure, router } from "../../trpc";
@@ -12,24 +13,27 @@ export const userRouter = router({
   updateLevel: authedProcedure
     .input(z.object({ level: z.number(), shift: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      // const user = await getUserByTelegramId(ctx.user.id, ctx.db);
-      // const level = input.level;
-      // const shift = input.shift;
-      //
-      // if (!user) {
-      //   throw new TRPCError({ code: "NOT_FOUND" });
-      // }
-      //
-      // const { error } = await ctx.db
-      //   .from("users")
-      //   .update({ level, shift })
-      //   .eq("id", Number(user.id));
-      //
-      // if (error) {
-      //   console.log(error);
-      //   throw new Error(error.message);
-      // }
+      const user = ctx.user;
+      const level = input.level;
+      const shift = input.shift;
 
-      return true;
+      if (!user) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      try {
+        const raw = await ctx.redis.get(`session:${user.id}`);
+        const storedUser = raw ? JSON.parse(raw) : null;
+
+        await ctx.redis.set(
+          `session:${ctx.sessionId}`,
+          JSON.stringify({ createdAt: storedUser.createdAt, level, shift }),
+        );
+        console.log(`Updated level for: `, ctx.sessionId);
+
+        return true;
+      } catch (err) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
     }),
 });

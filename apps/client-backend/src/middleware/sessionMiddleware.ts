@@ -14,7 +14,7 @@ export async function sessionMiddleware(
 ) {
   let sessionId = req.cookies.sessionId;
 
-  async function updateCookie() {
+  async function createUser() {
     sessionId = generateSessionId();
 
     await redis.set(
@@ -34,10 +34,10 @@ export async function sessionMiddleware(
     const data = await redis.get(`session:${sessionId}`);
 
     if (!data) {
-      await updateCookie();
+      await createUser();
     }
   } else {
-    await updateCookie();
+    await createUser();
   }
 
   req.sessionId = sessionId;
