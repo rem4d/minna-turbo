@@ -2,6 +2,8 @@ services:
   watchtower:
     image: containrrr/watchtower
     command: --label-enable --interval 30 --cleanup
+    environment:
+      - DOCKER_API_VERSION=1.44
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
   frontend:
