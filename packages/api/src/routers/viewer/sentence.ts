@@ -7,7 +7,6 @@ import {
   redisPrecedure,
   router,
 } from "../../trpc";
-import { dedup } from "../../util/dedup";
 import { shuffle } from "../../util/shuffle";
 import { getStatementsForLevel } from "../util/getStatementsForLevel";
 
@@ -39,8 +38,6 @@ const shuffleSentences = async (ctx: Context) => {
 
   const sentencesFiltered = sentences;
 
-  console.log(`Sentences: ${sentencesFiltered.length}`);
-
   const shuffled = shuffle(sentencesFiltered).slice(0, 10);
 
   return shuffled;
@@ -63,7 +60,7 @@ export const sentenceRouter = router({
         known = JSON.parse(knownKey) as number[];
       }
 
-      const newKnown = dedup(known.concat(input.ids));
+      const newKnown = [...new Set(known.concat(input.ids))];
 
       await ctx.redis.set(`known.${userId}`, JSON.stringify(newKnown), {
         EX: 60 * 60 * 60 * 24,

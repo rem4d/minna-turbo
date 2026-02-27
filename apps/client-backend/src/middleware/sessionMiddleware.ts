@@ -14,13 +14,13 @@ export async function sessionMiddleware(
 ) {
   let sessionId = req.cookies.sessionId;
 
-  if (!sessionId) {
+  async function updateCookie() {
     sessionId = generateSessionId();
 
     await redis.set(
       `session:${sessionId}`,
       JSON.stringify({ createdAt: Date.now(), level: 3, shift: 20 }),
-      { EX: 60 * 60 * 24 * 7 }, // 7 дней
+      { EX: 60 * 60 * 24 * 7 }, // 7 days
     );
 
     res.cookie("sessionId", sessionId, {
@@ -28,6 +28,16 @@ export async function sessionMiddleware(
       secure: true,
       sameSite: "lax",
     });
+  }
+
+  if (sessionId) {
+    const data = await redis.get(`session:${sessionId}`);
+
+    if (!data) {
+      await updateCookie();
+    }
+  } else {
+    await updateCookie();
   }
 
   req.sessionId = sessionId;

@@ -1,9 +1,8 @@
 import type { RedisClientType } from "@redis/client";
 import type * as trpcExpress from "@trpc/server/adapters/express";
+import { client as db } from "@minna/db";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { ZodError } from "zod";
-
-import { client as db } from "@minna/db";
 
 export interface ContextDeps {
   redis: RedisClientType;
@@ -32,6 +31,7 @@ export function createContextFactory(deps: ContextDeps) {
         }
       } catch (err) {
         console.error("Error while parsing JSON:", raw);
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
     }
 

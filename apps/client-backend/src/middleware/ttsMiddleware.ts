@@ -17,7 +17,7 @@ export const ttsReq = async (req: Request, res: Response) => {
     res.setHeader("Content-Type", "audio/wav");
     rs.pipe(res);
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     throw new Error("Unexpected tts error.");
   }
 };
