@@ -1,0 +1,305 @@
+@import "tailwindcss";
+@import "react-loading-skeleton/dist/skeleton.css";
+
+@source "../../../../packages/ui/src/*.{ts,tsx}";
+
+@theme {
+  --color-athens-gray: #f7f7f9;
+  --color-butterfly-bush: #8f74b9;
+  --color-light-gray: #f3f3f3;
+  --color-wild-sand: #f5f5f5;
+  --color-pacific-blue: #0098c2;
+  --color-mercury: #e5e5e5;
+  --color-gray-chateau: #9ca2aa;
+  --color-polar: #e0f3f7;
+  --color-scooter: #2fb0c6;
+  --color-half-dutch-white: #fef7da;
+  --color-supernova: #ffcc00;
+  --color-black: #3e3d37;
+  --color-boulder: #7a7a7a;
+  --color-outer-space: #303437;
+  --color-heathered-gray: #b6ac94;
+  --color-jumbo: #858588;
+  --color-white: #fff;
+  --color-french-gray: #c5c5c7;
+  --color-silver: #c5c5c5;
+  --color-denim: #1673d9;
+  --color-scorpion: #595959;
+  --color-rolling-stone: #72777a;
+  --color-azure-radiance: #007aff;
+  --color-mine-shaft: #323232;
+  --color-super-silver: #eee;
+  --color-geyser: #dee3e9;
+  --color-gallery: #eaeaea;
+  --color-sea-serpent: #61bcc7;
+  --color-slate-blue: #6361c7;
+
+  --font-inter: Inter;
+  --font-yu-gothic:
+    YuGothic, "PingFang SC", "Yu Gothic", "Meiryo", "Noto Sans CJK JP",
+    system-ui, sans-serif;
+  --font-hiragino:
+    Hiragino, "Yu Gothic", "Noto Sans CJK JP", system-ui, sans-serif;
+  --font-digi:
+    Digi, "PingFang", "Yu Gothic", "Noto Sans CJK JP", system-ui, sans-serif;
+
+  --text-tiny: 0.625rem;
+
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 380px;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  --tg-top: 10px;
+  --tg-bottom: 10px
+    --tg-top-content: var(--tg-viewport-content-safe-area-inset-top, 10px);
+  --tg-bottom-content: var(--tg-viewport-content-safe-area-inset-bottom, 10px);
+
+  --tg-top-full: calc(var(--tg-top) + var(--tg-top-content));
+  --tg-bottom-full: calc(var(--tg-bottom) + var(--tg-bottom-content));
+
+  --page-offset-bottom-full: clamp(10px, var(--tg-bottom-full), 20px);
+
+  --footer-height: 100px;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@font-face {
+  font-family: "YuGothic";
+  src: url("/fonts/YuGothic/YuGothic-Medium.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Hiragino";
+  src: url("/fonts/Hiragino-Kaku-Gothic-Pro-W6.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "digi";
+  font-optical-sizing: auto;
+  src: url("/fonts/UDDigiKyokashoR.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.no-scroll::-webkit-scrollbar {
+  display: none; /* Убрать скроллбар в Chrome, Safari и Opera */
+}
+
+::-webkit-scrollbar {
+  background: transparent;
+  width: 8px;
+  height: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Prevent browser's swipe back */
+html,
+body {
+  overscroll-behavior-x: none;
+}
+#root {
+  touch-action: pan-y;
+}
+
+.hidden-rt rt {
+  opacity: 0;
+}
+
+rt {
+  font-size: 0.6em;
+  user-select: none;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+.lds-ring,
+.lds-ring div {
+  box-sizing: border-box;
+}
+.lds-ring div {
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: currentColor transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.ToastViewport {
+  --viewport-padding: 20px;
+  padding: var(--viewport-padding);
+}
+
+.ToastRoot[data-state="open"] {
+  animation: slideIn 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ToastRoot[data-state="closed"] {
+  animation: hide 100ms ease-in;
+}
+.ToastRoot[data-swipe="move"] {
+  transform: translateY(var(--radix-toast-swipe-move-y));
+}
+.ToastRoot[data-swipe="cancel"] {
+  transform: translateY(0);
+  transition: transform 200ms ease-out;
+}
+.ToastRoot[data-swipe="end"] {
+  animation: swipeOut 100ms ease-out;
+}
+
+@keyframes hide {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(calc(100% + var(--viewport-padding)));
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes swipeOut {
+  from {
+    transform: translateY(var(--radix-toast-swipe-end-x));
+  }
+  to {
+    transform: translateY(calc(100% + var(--viewport-padding)));
+  }
+}
+
+.GradientBg {
+  background: linear-gradient(0deg, #f1e9dd 0%, #f2e8df 50%, #e9e4ef 100%);
+}
+
+.fallback {
+  background-image: linear-gradient(90deg, #e6e6e6 25%, #ccc 50%, #e6e6e6 75%);
+  background-size: 500px 100%;
+
+  animation: shimmer 1.5s infinite;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -500px 0;
+  }
+
+  100% {
+    background-position: 500px 0;
+  }
+}
+
+[data-vaul-drawer],
+[data-vaul-overlay] {
+  user-select: text !important;
+  z-index: 20;
+  max-width: 450px; 
+  min-width: 320px;
+  margin: 0 auto;
+}
+[data-vaul-overlay] {
+  z-index: 10;
+}
+
+.masked-shadow {
+  overflow: auto;
+  mask-image: linear-gradient(to bottom, transparent 0%, red 80%);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

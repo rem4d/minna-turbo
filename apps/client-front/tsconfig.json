@@ -1,0 +1,14 @@
+{
+  "extends": "@minna/typescript-config/tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "dom", "dom.iterable"],
+    "jsx": "preserve",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["vite/client"],
+    "typeRoots": ["./node_modules/@types", "./src/types/*.d.ts"]
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}

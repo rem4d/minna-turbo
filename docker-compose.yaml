@@ -11,7 +11,7 @@ services:
       context: "./"
       target: frontend
       args:
-        - PROJECT=client-tg
+        - PROJECT=client-front
         - VITE_API_SERVER=${VITE_API_SERVER}
     image: "rem4d/client-tg:stage"
     labels:
