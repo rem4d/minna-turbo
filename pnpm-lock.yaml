@@ -434,7 +434,7 @@ importers:
         specifier: 'catalog:'
         version: 3.2.4(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)
 
-  apps/client-tg:
+  apps/client-front:
     dependencies:
       '@minna/api':
         specifier: workspace:*
@@ -8058,7 +8058,7 @@ snapshots:
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 22.19.1
+      '@types/node': 22.19.11
 
   '@types/chai@5.2.3':
     dependencies:
@@ -8067,7 +8067,7 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 22.19.1
+      '@types/node': 22.19.11
 
   '@types/cookie-parser@1.4.10(@types/express@5.0.6)':
     dependencies:
@@ -8087,7 +8087,7 @@ snapshots:
 
   '@types/express-serve-static-core@5.1.1':
     dependencies:
-      '@types/node': 22.19.1
+      '@types/node': 22.19.11
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
@@ -8139,12 +8139,12 @@ snapshots:
 
   '@types/send@1.2.1':
     dependencies:
-      '@types/node': 22.19.1
+      '@types/node': 22.19.11
 
   '@types/serve-static@2.2.0':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 22.19.1
+      '@types/node': 22.19.11
 
   '@types/ws@8.18.1':
     dependencies:

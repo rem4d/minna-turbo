@@ -13,7 +13,7 @@ services:
       args:
         - PROJECT=client-front
         - VITE_API_SERVER=${VITE_API_SERVER}
-    image: "rem4d/client-tg:stage"
+    image: "rem4d/client-front:stage"
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     container_name: frontend

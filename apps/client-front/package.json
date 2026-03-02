@@ -1,5 +1,5 @@
 {
-  "name": "client-tg",
+  "name": "client-front",
   "private": true,
   "type": "module",
   "scripts": {
