@@ -89,7 +89,7 @@ const AllKanjiLazy: FC = () => {
   const colCount = containerWidth > 350 || containerWidth === 0 ? 4 : 3;
 
   const colSize =
-    containerWidth > 0 ? (containerWidth - (colCount - 1) * 21) / colCount : 88;
+    containerWidth > 0 ? (containerWidth - (colCount - 1) * 21) / colCount : 87;
 
   const rowCount = Math.ceil(len / colCount);
 
@@ -130,7 +130,7 @@ const AllKanjiLazy: FC = () => {
     >
       <div
         ref={containerRef}
-        className="no-scroll flex h-[calc(100dvh-87px)] w-full flex-col overflow-scroll"
+        className="no-scroll flex h-[calc(100dvh-87px)] w-full flex-col overflow-scroll overflow-x-hidden"
       >
         <SectionHeader className={listQuery.isLoading ? "opacity-0" : ""}>
           {t("all_kanji")}
@@ -155,7 +155,7 @@ const AllKanjiLazy: FC = () => {
               {cols.map((virtualColumn) => (
                 <CardView
                   key={virtualColumn.key}
-                  size={virtualRow.size}
+                  size={virtualColumn.size}
                   id={`vt-${displayData[virtualRow.index * colCount + virtualColumn.index]?.id}`}
                   transform={`translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`}
                   onClick={onCardClick}
