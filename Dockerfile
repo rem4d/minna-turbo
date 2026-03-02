@@ -33,6 +33,10 @@ RUN turbo prune ${PROJECT} --docker
 FROM base AS builder
 ARG PROJECT
 
+ARG VITE_ROLLBAR_API_TOKEN
+
+ENV VITE_ROLLBAR_API_TOKEN=$VITE_ROLLBAR_API_TOKEN
+
 WORKDIR /app
 
 # Copy lockfile and package.json's of isolated subworkspace
@@ -83,6 +87,7 @@ FROM nginx:${NGINX_VERSION}-alpine AS frontend
 ARG PROJECT
 
 ARG VITE_API_SERVER
+
 ENV VITE_API_SERVER=$VITE_API_SERVER
 
 WORKDIR /usr/share/nginx/

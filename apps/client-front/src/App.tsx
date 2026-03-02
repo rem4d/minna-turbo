@@ -46,7 +46,6 @@ function App() {
 
 const rollbarConfig = {
   accessToken: import.meta.env.VITE_ROLLBAR_API_TOKEN,
-
   environment: import.meta.env.DEV ? "local" : "production",
   captureUncaught: true,
   captureUnhandledRejections: true,

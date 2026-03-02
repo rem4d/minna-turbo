@@ -48,7 +48,6 @@
     "PORT",
     "HOST",
     "VITE_API_SERVER",
-    "VITE_ROLLBAR_API_TOKEN"
   ],
   "globalPassThroughEnv": ["NODE_ENV"]
 }
