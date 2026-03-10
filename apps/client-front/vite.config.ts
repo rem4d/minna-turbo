@@ -5,6 +5,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 // import { analyzer } from "vite-bundle-analyzer";
 import checker from "vite-plugin-checker";
+import { VitePluginRadar } from "vite-plugin-radar";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -59,6 +60,13 @@ export default defineConfig(({ mode }) => {
       visualizer({
         filename: "stats.html",
         emitFile: true,
+      }),
+
+      VitePluginRadar({
+        // Google Analytics tag injection
+        analytics: {
+          id: "G-NB2ZXX0SP6",
+        },
       }),
     ],
     build: {
