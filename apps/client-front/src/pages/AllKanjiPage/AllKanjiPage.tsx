@@ -6,7 +6,6 @@ import Skeleton from "react-loading-skeleton";
 const LazyContent = React.lazy(() => import("./LazyContent"));
 
 export default function AllKanjiPage() {
-  console.log("");
   return (
     <>
       <Page>

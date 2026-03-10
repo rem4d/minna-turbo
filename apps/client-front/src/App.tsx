@@ -22,7 +22,6 @@ function App() {
   const hasTransLoaded = useTransLoaded();
 
   const errorFallback = () => <ErrorFallbackComponent />;
-  console.log("B3");
 
   return (
     <RollbarProvider config={rollbarConfig}>
