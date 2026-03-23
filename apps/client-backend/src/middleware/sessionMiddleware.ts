@@ -30,14 +30,18 @@ export async function sessionMiddleware(
     });
   }
 
-  if (sessionId) {
-    const data = await redis.get(`session:${sessionId}`);
+  try {
+    if (sessionId) {
+      const data = await redis.get(`session:${sessionId}`);
 
-    if (!data) {
+      if (!data) {
+        await createUser();
+      }
+    } else {
       await createUser();
     }
-  } else {
-    await createUser();
+  } catch (err) {
+    console.log(`Unexpected redis error: `, err);
   }
 
   req.sessionId = sessionId;
