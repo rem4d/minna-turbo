@@ -1,9 +1,12 @@
 import { createClient } from "@redis/client";
 
-const url = process.env.REDIS_URL;
-
 const client = createClient({
-  url: url ?? undefined,
+  socket: {
+    host: "redis_db",
+    port: 6379,
+  },
+  // username: "default", // Use 'default' for standard password auth
+  // password: process.env.REDIS_PASSWORD,
 });
 
 client.on("error", (err) => {
